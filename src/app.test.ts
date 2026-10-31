@@ -15,6 +15,7 @@ beforeEach(() => {
   // jsdom implements neither.
   Element.prototype.scrollIntoView = vi.fn();
   document.body.innerHTML = '<div id="app"></div>';
+  document.body.style.transform = '';
 });
 
 /** Cyber's own data for the NES, as public/systems/nes/info.json would give it. */
@@ -393,10 +394,18 @@ describe('the default theme', () => {
   });
 
   it('interface: the theme in use, a bigger text size, and systems by name', async () => {
-    const { press, text, openMenu } = await start();
+    const { press, text, openMenu } = await start(['settings.system']);
     await openMenu('Interface…');
     const rows = () => text('.page > .panel li .name');
-    await vi.waitFor(() => expect(text('.page li.heading')).toEqual(['Theme', 'Look', 'Sorting']));
+    await vi.waitFor(() =>
+      expect(text('.page li.heading')).toEqual(['Theme', 'Screen', 'Look', 'Sorting'])
+    );
+
+    // Overscan: everything shrinks evenly into what the TV shows.
+    while (!text('.page li.selected .name')[0]!.startsWith('Screen margins')) await press('down');
+    await press('right');
+    await vi.waitFor(() => expect(text('.page li.selected .name')).toEqual(['Screen margins: 1%']));
+    expect(document.body.style.transform).toBe('scale(0.98)');
     expect(text('.page li .description')[0]).toBe('In use');
     expect(rows()).toContain('Start on: Categories');
 

@@ -11,7 +11,16 @@ import type {
 import { FormaError } from '@ramraiders/forma-sdk';
 
 import { CATEGORIES, InfoStore, group } from './data/catalog.js';
-import { DEFAULT_PREFS, type Prefs, applyPrefs, loadPrefs, savePrefs } from './data/prefs.js';
+import {
+  DEFAULT_PREFS,
+  MARGINS_SETTING,
+  type Prefs,
+  applyMargins,
+  applyPrefs,
+  loadMargins,
+  loadPrefs,
+  savePrefs
+} from './data/prefs.js';
 import { type Move, moveGrid, moveList } from './logic/nav.js';
 import { LazyList } from './logic/pager.js';
 import { el } from './ui/dom.js';
@@ -75,6 +84,8 @@ export class App {
   #settingsKind: 'music' | 'ra' | 'netplay' | 'interface' | null = null;
   /** Cyber's look and order (Interface). */
   #prefs: Prefs = { ...DEFAULT_PREFS };
+  /** Screen margins for a TV's overscan, in percent per side (Forma's own setting). */
+  #margins = 0;
   #lastMusic: MusicStatus | null = null;
   /** What plays, in the header, when something does. */
   readonly #nowPlaying = el('div', { class: 'now-playing', hidden: '' });
@@ -147,6 +158,8 @@ export class App {
 
     this.#prefs = await loadPrefs(this.forma);
     this.#applyPrefs();
+    this.#margins = await loadMargins(this.forma);
+    applyMargins(this.#margins);
     await this.#loadViews();
     const boot = await this.forma.nav.defaultView();
     for (const note of boot.notes) this.#notify(note);
@@ -557,7 +570,15 @@ export class App {
                 this.forma,
                 this.#settings,
                 () => this.#prefs,
-                (update) => this.#changePrefs(update)
+                (update) => this.#changePrefs(update),
+                {
+                  get: () => this.#margins,
+                  set: async (value) => {
+                    this.#margins = value;
+                    applyMargins(value);
+                    await this.forma.settings.setSystem(MARGINS_SETTING, value);
+                  }
+                }
               )
             ]
           : id === 'music'

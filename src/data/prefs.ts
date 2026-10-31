@@ -29,6 +29,22 @@ export const DEFAULT_PREFS: Prefs = {
 
 const KEY = 'interface';
 
+/**
+ * A TV that cuts the picture's edges (overscan): Forma's own setting, shared by every theme and
+ * its start-up screen, in percent of each side to keep clear (0–10).
+ */
+export const MARGINS_SETTING = 'display.margins';
+
+export async function loadMargins(forma: Forma): Promise<number> {
+  const saved = await forma.settings.getSystem<number>(MARGINS_SETTING).catch(() => null);
+  return typeof saved === 'number' ? Math.min(10, Math.max(0, Math.round(saved))) : 0;
+}
+
+/** Everything (overlays too, being inside the body) shrinks evenly into the part the TV shows. */
+export function applyMargins(margins: number, body: HTMLElement = document.body): void {
+  body.style.transform = margins > 0 ? `scale(${1 - (2 * margins) / 100})` : '';
+}
+
 /** Saved prefs over the defaults; anything unknown or missing is the default. */
 export async function loadPrefs(forma: Forma): Promise<Prefs> {
   const saved = await forma.settings.get<Partial<Prefs>>(KEY).catch(() => null);

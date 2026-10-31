@@ -292,7 +292,8 @@ export function interfaceScreen(
   forma: Forma,
   page: Page,
   prefs: () => Prefs,
-  change: (update: Partial<Prefs>) => Promise<void>
+  change: (update: Partial<Prefs>) => Promise<void>,
+  margins: { get: () => number; set: (value: number) => Promise<void> }
 ): () => Promise<Row[]> {
   const cycle = <T extends string>(values: readonly T[], now: T, step: -1 | 1): T =>
     values[(values.indexOf(now) + step + values.length) % values.length]!;
@@ -349,7 +350,16 @@ export function interfaceScreen(
       adjust: pickView,
       run: () => pickView(1)
     });
+    const nudge = (step: -1 | 1) =>
+      margins.set(Math.min(10, Math.max(0, margins.get() + step))).then(() => page.refresh());
     rows.push(
+      {
+        heading: 'Screen',
+        label: `Screen margins: ${margins.get()}%`,
+        detail: 'If the TV cuts the edges off; or set the TV to “Just Scan” / “Screen Fit”',
+        adjust: nudge,
+        run: () => nudge(1)
+      },
       {
         ...choice('textSize', 'Text size', ['small', 'normal', 'large'], {
           small: 'Small',
