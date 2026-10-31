@@ -5,6 +5,7 @@ import type {
   Game,
   GameStart,
   InputEvent,
+  MusicStatus,
   ViewInfo
 } from '@ramraiders/forma-sdk';
 import { FormaError } from '@ramraiders/forma-sdk';
@@ -19,6 +20,8 @@ import { HomeView, type Tile } from './ui/home.js';
 import { Menu } from './ui/menu.js';
 import { loader } from './ui/loader.js';
 import { NetworkScreen } from './ui/network.js';
+import { Page } from './ui/page.js';
+import { musicScreen, netplayScreen, nowPlaying, retroAchievementsScreen } from './ui/screens.js';
 import { Switcher } from './ui/switcher.js';
 import { SystemView } from './ui/system.js';
 
@@ -60,6 +63,11 @@ export class App {
   readonly #switcher = new Switcher();
   readonly #menu = new Menu();
   readonly #network: NetworkScreen;
+  /** Music, RetroAchievements, Netplay: settings pages from the system menu. */
+  readonly #settings: Page;
+  #settingsKind: 'music' | 'ra' | 'netplay' | null = null;
+  /** What plays, in the header, when something does. */
+  readonly #nowPlaying = el('div', { class: 'now-playing', hidden: '' });
   readonly #backdrop = el('div', { class: 'backdrop', 'aria-hidden': 'true' });
   readonly #homeView = new HomeView();
   readonly #systemView: SystemView;
@@ -91,14 +99,19 @@ export class App {
       (message) => this.#notify(message),
       () => this.#renderChrome()
     );
+    this.#settings = new Page(
+      (message) => this.#notify(message),
+      () => this.#renderChrome()
+    );
     root.replaceChildren(
       this.#backdrop,
-      el('header', {}, this.#title, this.#trail),
+      el('header', {}, this.#title, this.#trail, this.#nowPlaying),
       this.#main,
       this.#hints,
       this.#switcher.root,
       this.#menu.root,
       this.#network.root,
+      this.#settings.root,
       this.#playing,
       this.#toast
     );
@@ -109,6 +122,14 @@ export class App {
     this.forma.events.on('library:changed', () => this.#reloadSoon());
     this.forma.events.on('views:changed', () => void this.#loadViews());
     this.forma.events.on('game:start', (game) => this.#showLaunch(game));
+    this.forma.events.on('music:changed', (status) => {
+      this.#showNowPlaying(status);
+      if (this.#settings.open && this.#settingsKind === 'music') void this.#settings.refresh();
+    });
+    void this.forma.music
+      .status()
+      .then((status) => this.#showNowPlaying(status))
+      .catch(() => {});
     this.forma.events.on('game:end', ({ error }) => {
       this.#playing.hidden = true;
       if (error) this.#notify(`The game could not run: ${error}`);
@@ -230,6 +251,18 @@ export class App {
     };
   }
 
+  #showNowPlaying(status: MusicStatus): void {
+    const playing = status.state !== 'stopped' && status.source !== null;
+    this.#nowPlaying.hidden = !playing;
+    if (!playing) return;
+    this.#nowPlaying.classList.toggle('paused', status.state === 'paused');
+    this.#nowPlaying.replaceChildren(
+      el('span', { class: 'note', 'aria-hidden': 'true' }, status.state === 'paused' ? '❚❚' : '♪'),
+      el('span', { class: 'title' }, nowPlaying(status)),
+      status.artist ? el('span', { class: 'artist' }, status.artist) : ''
+    );
+  }
+
   /** While the emulator starts: the game's art, its name and system, and the loader. */
   #showLaunch({ gameId, system, name }: GameStart): void {
     const art = el('img', {
@@ -300,27 +333,29 @@ export class App {
         : (this.#page?.trail ?? []).map((c) => c.label);
     this.#trail.replaceChildren(...crumbs.map((c) => el('span', { class: 'crumb' }, c)));
     const games = this.#mode === 'browse' && this.#page?.listing.kind === 'games';
-    const hints: [string, string][] = this.#network.open
-      ? this.#network.hints()
-      : this.#menu.open
-        ? [
-            ['A', 'Choose'],
-            ['B', 'Close']
-          ]
-        : this.#switcher.open
+    const hints: [string, string][] = this.#settings.open
+      ? this.#settings.hints()
+      : this.#network.open
+        ? this.#network.hints()
+        : this.#menu.open
           ? [
-              ['A', 'Show'],
-              ['Y', 'Make home view'],
+              ['A', 'Choose'],
               ['B', 'Close']
             ]
-          : [
-              ['A', games ? 'Play' : this.#mode === 'systems' ? 'Games' : 'Open'],
-              ...(games ? [['Y', 'Favourite'] as [string, string]] : []),
-              ...(this.#mode === 'systems' ? [['Y', 'Next fact'] as [string, string]] : []),
-              ...(this.#stack.length > 1 ? [['B', 'Back'] as [string, string]] : []),
-              ['Select', 'Views'],
-              ['Start', 'Menu']
-            ];
+          : this.#switcher.open
+            ? [
+                ['A', 'Show'],
+                ['Y', 'Make home view'],
+                ['B', 'Close']
+              ]
+            : [
+                ['A', games ? 'Play' : this.#mode === 'systems' ? 'Games' : 'Open'],
+                ...(games ? [['Y', 'Favourite'] as [string, string]] : []),
+                ...(this.#mode === 'systems' ? [['Y', 'Next fact'] as [string, string]] : []),
+                ...(this.#stack.length > 1 ? [['B', 'Back'] as [string, string]] : []),
+                ['Select', 'Views'],
+                ['Start', 'Menu']
+              ];
     this.#hints.replaceChildren(
       ...hints.map(([button, label]) => el('span', { class: 'hint' }, el('kbd', {}, button), label))
     );
@@ -328,6 +363,10 @@ export class App {
 
   #onInput(e: InputEvent): void {
     if (!e.pressed || !this.#playing.hidden) return;
+    if (this.#settings.open) {
+      this.#settings.input(e);
+      return this.#renderChrome();
+    }
     if (this.#network.open) {
       this.#network.input(e);
       return this.#renderChrome();
@@ -428,6 +467,13 @@ export class App {
     this.#confirming = null;
     this.#menu.show('Forma', [
       { id: 'views', label: 'Views…', description: 'Organise the library another way' },
+      { id: 'music', label: 'Music…', description: 'Folders, playlists and web radios' },
+      {
+        id: 'ra',
+        label: 'RetroAchievements…',
+        description: 'Your account and how achievements work'
+      },
+      { id: 'netplay', label: 'Netplay…', description: 'Playing online with others' },
       { id: 'network', label: 'Network…', description: 'Wi-Fi and Ethernet' },
       {
         id: 'emulationstation',
@@ -460,6 +506,18 @@ export class App {
     if (id === 'network') {
       m.close();
       this.#network.show();
+      return this.#renderChrome();
+    }
+    if (id === 'music' || id === 'ra' || id === 'netplay') {
+      m.close();
+      this.#settingsKind = id;
+      const [title, build] =
+        id === 'music'
+          ? ['Music', musicScreen(this.forma, this.#settings)]
+          : id === 'ra'
+            ? ['RetroAchievements', retroAchievementsScreen(this.forma, this.#settings)]
+            : ['Netplay', netplayScreen(this.forma, this.#settings)];
+      void this.#settings.show(title, build);
       return this.#renderChrome();
     }
     // Power actions need a second press within three seconds: a stray A must not shut down.

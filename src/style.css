@@ -735,6 +735,71 @@ kbd {
   pointer-events: none;
 }
 
+/* ---- Settings pages (music, RetroAchievements, netplay) ------------------------ */
+
+.page li.heading {
+  display: block;
+  margin-top: 0.8rem;
+  padding: 0.3rem 1rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--neon);
+}
+
+.page li.info .name {
+  color: var(--neon);
+}
+
+.page .adjust {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.page li.selected .adjust {
+  color: var(--fg);
+}
+
+/* ---- Now playing ----------------------------------------------------------------- */
+
+.now-playing {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  min-width: 0;
+  max-width: 40%;
+  margin-left: auto;
+  padding: 0.25rem 0.8rem;
+  border: 1px solid rgb(34 228 255 / 30%);
+  border-radius: 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.now-playing[hidden] {
+  display: none;
+}
+
+.now-playing .note {
+  color: var(--neon);
+}
+
+.now-playing .title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.now-playing .artist {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--muted);
+}
+
+.now-playing.paused {
+  opacity: 0.6;
+}
+
 /* ---- Loading ----------------------------------------------------------------- */
 
 /* A chip whose traces light up in turn, under it the label and a scan bar. Only opacity, stroke

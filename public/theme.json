@@ -3,7 +3,13 @@
   "name": "Cyber",
   "version": "0.1.0",
   "entry": "index.html",
-  "sdk": "^1",
-  "permissions": ["system.power", "system.network"],
+  "sdk": "^1.1",
+  "permissions": [
+    "system.power",
+    "system.network",
+    "settings.batocera",
+    "settings.system",
+    "music.manage"
+  ],
   "resolutions": ["1280x720", "1920x1080"]
 }

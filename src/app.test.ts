@@ -57,7 +57,16 @@ async function start(permissions: string[] = [], slow: Record<string, number> = 
   };
   const text = (selector: string) =>
     [...root.querySelectorAll(selector)].map((n) => n.textContent?.trim() ?? '');
-  return { root, press, text, forma };
+  /** Start, down to the entry called `label`, A. */
+  const openMenu = async (label: string) => {
+    await press('start');
+    for (let i = 0; i < 12 && text('.switcher li.selected .name')[0] !== label; i++) {
+      await press('down');
+    }
+    expect(text('.switcher li.selected .name')).toEqual([label]);
+    await press('confirm');
+  };
+  return { root, press, text, forma, openMenu };
 }
 
 describe('the default theme', () => {
@@ -189,14 +198,15 @@ describe('the default theme', () => {
     await press('start');
     expect(text('.switcher li .name')).toEqual([
       'Views…',
+      'Music…',
+      'RetroAchievements…',
+      'Netplay…',
       'Network…',
       'Switch to EmulationStation',
       'Restart',
       'Shut down'
     ]);
-    await press('down');
-    await press('down');
-    await press('down');
+    for (let i = 0; i < 6; i++) await press('down');
     await press('confirm');
     expect(text('.toast')).toEqual(['Press A again to restart']);
     await press('confirm');
@@ -208,10 +218,8 @@ describe('the default theme', () => {
   });
 
   it('joins a Wi-Fi network with a password typed on the on-screen keyboard', async () => {
-    const { press, text } = await start(['system.network']);
-    await press('start');
-    await press('down');
-    await press('confirm');
+    const { press, text, openMenu } = await start(['system.network']);
+    await openMenu('Network…');
     const rows = () => text('.network > .panel li .name');
     await vi.waitFor(() => expect(rows()).toContain('▮▮▯▯  Office 5G'));
     expect(rows()[0]).toBe('Ethernet');
@@ -245,10 +253,8 @@ describe('the default theme', () => {
   });
 
   it('sets a static Ethernet address, and refuses an 802.1X network up front', async () => {
-    const { press, text, forma } = await start(['system.network']);
-    await press('start');
-    await press('down');
-    await press('confirm');
+    const { press, text, forma, openMenu } = await start(['system.network']);
+    await openMenu('Network…');
     await vi.waitFor(() => expect(text('.network > .panel li .name')).toContain('▮▮▯▯  Campus'));
     for (let i = 0; i < 5; i++) await press('down');
     await press('confirm');
@@ -292,10 +298,8 @@ describe('the default theme', () => {
   });
 
   it('keeps the selection on Wi-Fi after turning it off, so A turns it back on', async () => {
-    const { press, text } = await start(['system.network']);
-    await press('start');
-    await press('down');
-    await press('confirm');
+    const { press, text, openMenu } = await start(['system.network']);
+    await openMenu('Network…');
     await vi.waitFor(() => expect(text('.network > .panel li .name')).toContain('Wi-Fi: on'));
     await press('down');
     await press('confirm');
@@ -310,5 +314,76 @@ describe('the default theme', () => {
     await vi.waitFor(() =>
       expect(text('.network > .panel li.selected .name')).toEqual(['Wi-Fi: on'])
     );
+  });
+
+  it('music: picks a playlist, shows it playing, and adds a web radio', async () => {
+    const { press, text, openMenu } = await start(['music.manage']);
+    await openMenu('Music…');
+    const rows = () => text('.page > .panel li .name');
+    await vi.waitFor(() => expect(rows()).toContain('Chiptune'));
+    expect(rows()[0]).toBe('Nothing playing');
+    expect(text('.page li.heading')).toEqual(['Folders and playlists', 'Web radios']);
+
+    // Down to Chiptune: Nothing playing, Volume, Shuffle, Music, Chiptune.
+    for (let i = 0; i < 4; i++) await press('down');
+    expect(text('.page li.selected .name')).toEqual(['Chiptune']);
+    await press('confirm');
+    await vi.waitFor(() => expect(rows()[0]).toBe('Track 1'));
+    expect(text('.now-playing .title')).toEqual(['Track 1']);
+    // Rows were added above it (Pause, Next…): the selection stayed on Chiptune.
+    expect(text('.page li.selected .name')).toEqual(['Chiptune']);
+    expect(rows()).toContain('Pause');
+
+    // Add a radio through the keyboard: name, then address.
+    for (let i = 0; i < 20 && text('.page li.selected .name')[0] !== 'Add a web radio…'; i++) {
+      await press('down');
+    }
+    expect(text('.page li.selected .name')).toEqual(['Add a web radio…']);
+    await press('confirm');
+    for (const key of 'Lofi') window.dispatchEvent(new KeyboardEvent('keydown', { key }));
+    await press('start');
+    for (const key of 'lofi.example/live') {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key }));
+    }
+    await press('start');
+    await vi.waitFor(() => expect(text('.toast')[0]).toBe('Lofi added'));
+    expect(rows()).toContain('Lofi');
+  });
+
+  it('RetroAchievements: signs in, and flips a switch', async () => {
+    const { press, text, openMenu } = await start(['settings.batocera', 'settings.system']);
+    await openMenu('RetroAchievements…');
+    const rows = () => text('.page > .panel li .name');
+    await vi.waitFor(() => expect(rows()[0]).toBe('Sign in…'));
+    await press('confirm');
+    expect(text('.keyboard h2')).toEqual(['RetroAchievements username']);
+    // Clear what is there (the fixture's user; B on an empty field would cancel), then type.
+    const filled = text('.keyboard .field')[0]!.length;
+    for (let i = 0; i < filled; i++) await press('back');
+    for (const key of 'mike') window.dispatchEvent(new KeyboardEvent('keydown', { key }));
+    await press('start');
+    expect(text('.keyboard h2')).toEqual(['Password for mike']);
+    for (const key of 'secret!') window.dispatchEvent(new KeyboardEvent('keydown', { key }));
+    await press('start');
+    await vi.waitFor(() => expect(text('.toast')[0]).toBe('Signed in as mike'));
+    expect(rows()[0]).toBe('Signed in as mike');
+
+    await press('down');
+    const before = text('.page li.selected .name')[0];
+    await press('right');
+    await vi.waitFor(() => expect(text('.page li.selected .name')[0]).not.toBe(before));
+  });
+
+  it('netplay: cycles the relay server and shows the custom one only when chosen', async () => {
+    const { press, text, openMenu } = await start(['settings.batocera']);
+    await openMenu('Netplay…');
+    const rows = () => text('.page > .panel li .name');
+    await vi.waitFor(() => expect(rows()).toContain('Relay server'));
+    expect(rows()).not.toContain('Custom server');
+    while (text('.page li.selected .name')[0] !== 'Relay server') await press('down');
+    // Back from the first choice wraps to the last: Custom server.
+    await press('left');
+    await vi.waitFor(() => expect(rows()).toContain('Custom server'));
+    expect(text('.page li.selected .description')).toEqual(['Custom server']);
   });
 });
