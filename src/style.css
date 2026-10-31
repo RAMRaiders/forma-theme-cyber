@@ -203,7 +203,7 @@ main {
 
 .home {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
   /* Rows share the screen's height; when they cannot all fit, they keep their content's
      height and the grid scrolls rather than squeezing them. */
   grid-auto-rows: minmax(min-content, 1fr);
@@ -215,72 +215,206 @@ main {
   scrollbar-width: none;
 }
 
+/* Each category has a colour of its own: its glow, its halo, its details. */
 .tile {
+  --cat: var(--neon);
+  --cat-rgb: 34 228 255;
   position: relative;
   display: grid;
-  grid-template-rows: minmax(5rem, 1fr) auto;
+  grid-template-rows: minmax(7rem, 1fr) auto;
   min-height: 0;
-  border: 1px solid #1d3346;
-  border-radius: var(--radius);
-  background: linear-gradient(160deg, #0b1830, #070b14);
-  overflow: hidden;
-}
-
-/* No growing or sliding: the selection lights up where it is. */
-.tile.selected {
-  border-color: var(--neon);
-  box-shadow:
-    0 0 0 0.12rem var(--neon),
-    0 0 0.5rem rgb(34 228 255 / 45%);
-}
-
-.tile .photos {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 0.4rem;
-  min-height: 0;
-  /* Sized by the tile, never by the photos' own height: rows then share the screen evenly. */
-  contain: size;
-  padding: 0.8rem 0.8rem 0;
+  border: 1px solid rgb(var(--cat-rgb) / 22%);
+  border-radius: calc(var(--radius) * 2);
   background:
-    repeating-linear-gradient(90deg, rgb(34 228 255 / 6%) 0 1px, transparent 1px 1.5rem),
-    repeating-linear-gradient(0deg, rgb(34 228 255 / 6%) 0 1px, transparent 1px 1.5rem);
+    radial-gradient(ellipse at 50% 38%, rgb(var(--cat-rgb) / 16%) 0%, transparent 62%),
+    linear-gradient(170deg, #0a1324 0%, #05070d 100%);
+  overflow: hidden;
+  isolation: isolate;
 }
 
-.tile .photos img {
-  max-height: 100%;
-  max-width: 33%;
+.tile-handhelds {
+  --cat: #3dffa0;
+  --cat-rgb: 61 255 160;
+}
+
+.tile-computers {
+  --cat: #ffb547;
+  --cat-rgb: 255 181 71;
+}
+
+.tile-arcade {
+  --cat: #ff2e88;
+  --cat-rgb: 255 46 136;
+}
+
+.tile-virtual {
+  --cat: #b6ff3d;
+  --cat-rgb: 182 255 61;
+}
+
+.tile-educational {
+  --cat: #ffe347;
+  --cat-rgb: 255 227 71;
+}
+
+.tile-ports {
+  --cat: #ff7a3d;
+  --cat-rgb: 255 122 61;
+}
+
+.tile-engines {
+  --cat: #a77bff;
+  --cat-rgb: 167 123 255;
+}
+
+/* The category's own circuit board, faint, as texture. */
+.tile .texture {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.35;
+}
+
+.tile .texture .circuit {
+  opacity: 1;
+}
+
+.tile .texture .trace,
+.tile .texture .via {
+  stroke: rgb(var(--cat-rgb) / 25%);
+}
+
+.tile .texture .chip,
+.tile .texture .pin,
+.tile .texture .part-small,
+.tile .texture .dot {
+  opacity: 0.25;
+}
+
+/* The stage: the biggest system in front on a halo, the next two set back on either side. */
+.tile .stage {
+  position: relative;
+  min-height: 0;
+  contain: size;
+}
+
+.tile .halo {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  width: 55%;
+  aspect-ratio: 2 / 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgb(var(--cat-rgb) / 45%) 0%, transparent 70%);
+  opacity: 0.6;
+  transition: opacity 200ms ease;
+}
+
+.tile .hero,
+.tile .side {
+  position: absolute;
+  bottom: 12%;
   object-fit: contain;
-  filter: drop-shadow(0 0.4rem 0.6rem rgb(0 0 0 / 60%));
+  -webkit-box-reflect: below 0.2rem linear-gradient(transparent 70%, rgb(0 0 0 / 22%));
+  filter: drop-shadow(0 0.6rem 0.8rem rgb(0 0 0 / 70%));
+  transition: transform 200ms ease;
+}
+
+.tile .hero {
+  left: 50%;
+  width: 62%;
+  height: 80%;
+  transform: translateX(-50%);
+}
+
+.tile .side {
+  width: 36%;
+  height: 52%;
+  opacity: 0.55;
+}
+
+.tile .side.left {
+  left: 4%;
+}
+
+.tile .side.right {
+  right: 4%;
 }
 
 .tile .text {
-  padding: 0.8rem 1rem 1rem;
+  padding: 0.4rem 1rem 0.8rem;
+  background: linear-gradient(transparent, rgb(4 6 12 / 85%) 40%);
 }
 
 .tile h2 {
   margin: 0;
   font-family: var(--mono);
-  font-size: 1.3rem;
-  letter-spacing: 0.05em;
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-.tile.selected h2 {
-  color: var(--neon);
-}
-
 .tile .tagline {
-  margin: 0.3rem 0 0;
+  margin: 0.1rem 0 0;
+  font-size: 0.85rem;
   color: var(--muted);
 }
 
-.tile .count {
-  margin: 0.5rem 0 0;
+.tile .counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.55rem 0 0;
+}
+
+.tile .chip {
+  padding: 0.1rem 0.55rem;
+  border: 1px solid rgb(var(--cat-rgb) / 40%);
+  border-radius: 1rem;
   font-family: var(--mono);
-  font-size: 0.85rem;
-  color: var(--accent);
+  font-size: 0.75rem;
+  color: var(--cat);
+}
+
+.tile .logos {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  height: 1.1rem;
+  margin-top: 0.5rem;
+  overflow: hidden;
+  opacity: 0.6;
+}
+
+.tile .logo {
+  max-height: 100%;
+  max-width: 5rem;
+  object-fit: contain;
+}
+
+/* Selected: lit in its colour, the hero a little forward, all inside the tile. */
+.tile.selected {
+  border-color: var(--cat);
+  box-shadow:
+    0 0 0 0.12rem var(--cat),
+    0 0 0.6rem rgb(var(--cat-rgb) / 45%);
+}
+
+.tile.selected h2 {
+  color: var(--cat);
+}
+
+.tile.selected .halo {
+  opacity: 1;
+}
+
+.tile.selected .hero {
+  transform: translateX(-50%) scale(1.06);
+}
+
+.tile.selected .logos {
+  opacity: 1;
 }
 
 /* ---- A category's systems ------------------------------------------------ */
@@ -995,12 +1129,25 @@ kbd {
   display: none;
 }
 
+:root[data-motion='off'] .tile .hero,
+:root[data-motion='off'] .tile .halo {
+  transition: none;
+}
+
 :root[data-motion='off'] .loader-core,
 :root[data-motion='off'] .loader-bar span {
   animation: none;
 }
 
 /* ---- Small screens (handhelds, 4:3) -------------------------------------- */
+
+/* A narrow screen: two columns of categories that scroll. */
+@media (max-width: 760px) {
+  .home {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: minmax(12rem, 1fr);
+  }
+}
 
 /* A narrow screen: the list gives way to the system, and secondary details go. */
 @media (max-width: 960px), (max-aspect-ratio: 4/3) {
@@ -1036,6 +1183,10 @@ kbd {
 
   .tile {
     grid-template-rows: minmax(3.5rem, 1fr) auto;
+  }
+
+  .tile .logos {
+    display: none;
   }
 
   .tile .tagline {
