@@ -202,6 +202,7 @@ describe('the default theme', () => {
     await press('start');
     expect(text('.switcher li .name')).toEqual([
       'Views…',
+      'Interface…',
       'Music…',
       'RetroAchievements…',
       'Netplay…',
@@ -210,7 +211,7 @@ describe('the default theme', () => {
       'Restart',
       'Shut down'
     ]);
-    for (let i = 0; i < 6; i++) await press('down');
+    for (let i = 0; i < 7; i++) await press('down');
     await press('confirm');
     expect(text('.toast')).toEqual(['Press A again to restart']);
     await press('confirm');
@@ -389,5 +390,34 @@ describe('the default theme', () => {
     await press('left');
     await vi.waitFor(() => expect(rows()).toContain('Custom server'));
     expect(text('.page li.selected .description')).toEqual(['Custom server']);
+  });
+
+  it('interface: the theme in use, a bigger text size, and systems by name', async () => {
+    const { press, text, openMenu } = await start();
+    await openMenu('Interface…');
+    const rows = () => text('.page > .panel li .name');
+    await vi.waitFor(() => expect(text('.page li.heading')).toEqual(['Theme', 'Look', 'Sorting']));
+    expect(text('.page li .description')[0]).toBe('In use');
+    expect(rows()).toContain('Start on: Categories');
+
+    while (!text('.page li.selected .name')[0]!.startsWith('Text size')) await press('down');
+    await press('right');
+    await vi.waitFor(() => expect(text('.page li.selected .name')).toEqual(['Text size: Large']));
+    expect(document.documentElement.dataset.textSize).toBe('large');
+
+    while (!text('.page li.selected .name')[0]!.startsWith('Systems')) await press('down');
+    await press('right');
+    await vi.waitFor(() => expect(text('.page li.selected .name')).toEqual(['Systems: By name']));
+    await press('back');
+    await press('confirm');
+    await vi.waitFor(() =>
+      expect(text('.system-list .name')).toEqual([
+        'Homebrew',
+        'Mega Drive',
+        'Nintendo Entertainment System',
+        'PlayStation',
+        'Super Famicom'
+      ])
+    );
   });
 });

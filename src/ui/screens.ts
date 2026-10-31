@@ -1,5 +1,6 @@
 import type { BatoceraSetting, Forma, MusicSource, MusicStatus } from '@ramraiders/forma-sdk';
 
+import type { Prefs } from '../data/prefs.js';
 import { type Page, type Row, onOff } from './page.js';
 
 /** Music: what plays, the controls, and everything there is to play. */
@@ -284,4 +285,101 @@ function choiceRow(
     });
   };
   return { label, detail: show(setting.value), adjust: pick, run: () => pick(1) };
+}
+
+/** Interface: which theme, where Forma opens, and Cyber's look and order. */
+export function interfaceScreen(
+  forma: Forma,
+  page: Page,
+  prefs: () => Prefs,
+  change: (update: Partial<Prefs>) => Promise<void>
+): () => Promise<Row[]> {
+  const cycle = <T extends string>(values: readonly T[], now: T, step: -1 | 1): T =>
+    values[(values.indexOf(now) + step + values.length) % values.length]!;
+  const choice = <K extends keyof Prefs>(
+    key: K,
+    label: string,
+    values: readonly (Prefs[K] & string)[],
+    names: Record<string, string>,
+    detail = ''
+  ): Row => {
+    const now = prefs()[key] as Prefs[K] & string;
+    const pick = (step: -1 | 1) =>
+      change({ [key]: cycle(values, now, step) }).then(() => page.refresh());
+    return {
+      label: `${label}: ${names[now] ?? now}`,
+      detail,
+      adjust: pick,
+      run: () => pick(1)
+    };
+  };
+  const toggle = (key: keyof Prefs, label: string, detail: string): Row => {
+    const flip = () => change({ [key]: !prefs()[key] }).then(() => page.refresh());
+    return { label: `${label}: ${prefs()[key] ? 'On' : 'Off'}`, detail, run: flip, adjust: flip };
+  };
+
+  return async () => {
+    const [themes, views, home] = await Promise.all([
+      forma.themes.list(),
+      forma.nav.views(),
+      forma.nav.defaultView()
+    ]);
+    const rows: Row[] = themes.map((t, i) => ({
+      heading: i === 0 ? 'Theme' : undefined,
+      label: `${t.name ?? t.id}${t.version ? ` ${t.version}` : ''}`,
+      detail: t.current
+        ? 'In use'
+        : t.unavailable
+          ? `Cannot load: ${t.unavailable}`
+          : t.origin === 'bundled'
+            ? 'Comes with Forma · A to use it'
+            : 'Installed · A to use it',
+      run:
+        t.current || t.unavailable
+          ? undefined
+          : () => page.run(`Switching to ${t.name ?? t.id}…`, () => forma.themes.select(t.id))
+    }));
+    const viewIds = views.map((v) => v.id);
+    const startOn = home.id ?? 'systems';
+    const pickView = (step: -1 | 1) =>
+      page.run('Saving…', () => forma.nav.setDefaultView(cycle(viewIds, startOn, step)));
+    rows.push({
+      label: `Start on: ${startOn === 'systems' ? 'Categories' : (views.find((v) => v.id === startOn)?.name ?? startOn)}`,
+      detail: 'What Forma opens on',
+      adjust: pickView,
+      run: () => pickView(1)
+    });
+    rows.push(
+      {
+        ...choice('textSize', 'Text size', ['small', 'normal', 'large'], {
+          small: 'Small',
+          normal: 'Normal',
+          large: 'Large'
+        }),
+        heading: 'Look'
+      },
+      choice(
+        'board',
+        'Circuit board',
+        ['on', 'dim', 'off'],
+        { on: 'On', dim: 'Dimmed', off: 'Off' },
+        'The system’s board behind the screens'
+      ),
+      toggle('motion', 'Animations', 'Pulsing traces, loaders'),
+      toggle('previews', 'Video previews', 'In a game list, after a moment on a game'),
+      toggle('nowPlaying', 'Now playing', 'The song in the header'),
+      toggle('rotateFacts', 'Rotate curiosities', 'On a system’s page, every 10 seconds'),
+      {
+        ...choice(
+          'systemsSort',
+          'Systems',
+          ['games', 'name', 'year', 'maker'],
+          { games: 'Most games first', name: 'By name', year: 'Oldest first', maker: 'By maker' },
+          'In each category'
+        ),
+        heading: 'Sorting'
+      }
+    );
+    return rows;
+  };
 }

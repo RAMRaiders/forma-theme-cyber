@@ -11,6 +11,7 @@ import type {
 import { FormaError } from '@ramraiders/forma-sdk';
 
 import { CATEGORIES, InfoStore, group } from './data/catalog.js';
+import { DEFAULT_PREFS, type Prefs, applyPrefs, loadPrefs, savePrefs } from './data/prefs.js';
 import { type Move, moveGrid, moveList } from './logic/nav.js';
 import { LazyList } from './logic/pager.js';
 import { el } from './ui/dom.js';
@@ -21,7 +22,13 @@ import { Menu } from './ui/menu.js';
 import { loader } from './ui/loader.js';
 import { NetworkScreen } from './ui/network.js';
 import { Page } from './ui/page.js';
-import { musicScreen, netplayScreen, nowPlaying, retroAchievementsScreen } from './ui/screens.js';
+import {
+  interfaceScreen,
+  musicScreen,
+  netplayScreen,
+  nowPlaying,
+  retroAchievementsScreen
+} from './ui/screens.js';
 import { Switcher } from './ui/switcher.js';
 import { SystemView } from './ui/system.js';
 
@@ -65,7 +72,10 @@ export class App {
   readonly #network: NetworkScreen;
   /** Music, RetroAchievements, Netplay: settings pages from the system menu. */
   readonly #settings: Page;
-  #settingsKind: 'music' | 'ra' | 'netplay' | null = null;
+  #settingsKind: 'music' | 'ra' | 'netplay' | 'interface' | null = null;
+  /** Cyber's look and order (Interface). */
+  #prefs: Prefs = { ...DEFAULT_PREFS };
+  #lastMusic: MusicStatus | null = null;
   /** What plays, in the header, when something does. */
   readonly #nowPlaying = el('div', { class: 'now-playing', hidden: '' });
   readonly #backdrop = el('div', { class: 'backdrop', 'aria-hidden': 'true' });
@@ -135,6 +145,8 @@ export class App {
       if (error) this.#notify(`The game could not run: ${error}`);
     });
 
+    this.#prefs = await loadPrefs(this.forma);
+    this.#applyPrefs();
     await this.#loadViews();
     const boot = await this.forma.nav.defaultView();
     for (const note of boot.notes) this.#notify(note);
@@ -210,7 +222,7 @@ export class App {
       this.#page = null;
       const systems = await this.forma.library.systems();
       const infos = await this.infos.all(systems.filter((s) => s.gameCount > 0).map((s) => s.name));
-      this.#groups = group(systems, infos);
+      this.#groups = group(systems, infos, this.#prefs.systemsSort);
       const level = this.#level;
       if (this.#stack.length === 1) {
         this.#mode = 'home';
@@ -251,8 +263,27 @@ export class App {
     };
   }
 
+  /** The look on the page, and the settings the views follow. */
+  #applyPrefs(): void {
+    applyPrefs(this.#prefs);
+    this.#games.previews = this.#prefs.previews;
+    this.#systemView.rotateFacts = this.#prefs.rotateFacts;
+    if (this.#lastMusic) this.#showNowPlaying(this.#lastMusic);
+  }
+
+  async #changePrefs(update: Partial<Prefs>): Promise<void> {
+    const resort =
+      update.systemsSort !== undefined && update.systemsSort !== this.#prefs.systemsSort;
+    this.#prefs = { ...this.#prefs, ...update };
+    this.#applyPrefs();
+    await savePrefs(this.forma, this.#prefs);
+    // A new order shows at once, behind the page.
+    if (resort && this.#mode !== 'browse') await this.#load();
+  }
+
   #showNowPlaying(status: MusicStatus): void {
-    const playing = status.state !== 'stopped' && status.source !== null;
+    this.#lastMusic = status;
+    const playing = this.#prefs.nowPlaying && status.state !== 'stopped' && status.source !== null;
     this.#nowPlaying.hidden = !playing;
     if (!playing) return;
     this.#nowPlaying.classList.toggle('paused', status.state === 'paused');
@@ -473,6 +504,7 @@ export class App {
     this.#confirming = null;
     this.#menu.show('Forma', [
       { id: 'views', label: 'Views…', description: 'Organise the library another way' },
+      { id: 'interface', label: 'Interface…', description: 'Theme, look and sorting' },
       { id: 'music', label: 'Music…', description: 'Folders, playlists and web radios' },
       {
         id: 'ra',
@@ -514,15 +546,25 @@ export class App {
       this.#network.show();
       return this.#renderChrome();
     }
-    if (id === 'music' || id === 'ra' || id === 'netplay') {
+    if (id === 'music' || id === 'ra' || id === 'netplay' || id === 'interface') {
       m.close();
       this.#settingsKind = id;
       const [title, build] =
-        id === 'music'
-          ? ['Music', musicScreen(this.forma, this.#settings)]
-          : id === 'ra'
-            ? ['RetroAchievements', retroAchievementsScreen(this.forma, this.#settings)]
-            : ['Netplay', netplayScreen(this.forma, this.#settings)];
+        id === 'interface'
+          ? [
+              'Interface',
+              interfaceScreen(
+                this.forma,
+                this.#settings,
+                () => this.#prefs,
+                (update) => this.#changePrefs(update)
+              )
+            ]
+          : id === 'music'
+            ? ['Music', musicScreen(this.forma, this.#settings)]
+            : id === 'ra'
+              ? ['RetroAchievements', retroAchievementsScreen(this.forma, this.#settings)]
+              : ['Netplay', netplayScreen(this.forma, this.#settings)];
       void this.#settings.show(title, build);
       return this.#renderChrome();
     }

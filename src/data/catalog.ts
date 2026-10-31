@@ -106,10 +106,25 @@ function cyberSystem(summary: SystemSummary, category: CategoryId): CyberSystem 
   };
 }
 
-/** Categories that have games, each with its systems, biggest libraries first. */
+export type SystemsSort = 'games' | 'name' | 'year' | 'maker';
+
+const SORTS: Record<SystemsSort, (a: CyberSystem, b: CyberSystem) => number> = {
+  games: (a, b) => b.summary.gameCount - a.summary.gameCount || compareName(a, b),
+  name: compareName,
+  // Oldest first; a system without a year goes last.
+  year: (a, b) =>
+    (a.summary.releaseYear ?? 9999) - (b.summary.releaseYear ?? 9999) || compareName(a, b),
+  maker: (a, b) =>
+    (a.summary.manufacturer ?? '\uffff').localeCompare(b.summary.manufacturer ?? '\uffff') ||
+    (a.summary.releaseYear ?? 9999) - (b.summary.releaseYear ?? 9999) ||
+    compareName(a, b)
+};
+
+/** Categories that have games, each with its systems in `sort` order (biggest libraries first). */
 export function group(
   systems: SystemSummary[],
-  infos: ReadonlyMap<string, SystemInfo>
+  infos: ReadonlyMap<string, SystemInfo>,
+  sort: SystemsSort = 'games'
 ): { category: Category; systems: CyberSystem[] }[] {
   const by = new Map<CategoryId, CyberSystem[]>();
   for (const s of systems) {
@@ -122,9 +137,7 @@ export function group(
   }
   return CATEGORIES.filter((c) => by.has(c.id)).map((category) => ({
     category,
-    systems: by
-      .get(category.id)!
-      .sort((a, b) => b.summary.gameCount - a.summary.gameCount || compareName(a, b))
+    systems: by.get(category.id)!.sort(SORTS[sort])
   }));
 }
 

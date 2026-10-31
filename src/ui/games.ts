@@ -30,6 +30,9 @@ export class GamesView {
   #lastMove = 0;
 
   /** `imageUrl` picks the art for the detail panel, at the size the panel shows it. */
+  /** Preview videos after a short pause on a game; Interface → Video previews. */
+  previews = true;
+
   constructor(private readonly imageUrl: (game: Game) => string | null) {
     this.#list.append(this.#spacer);
     this.root.append(this.#list, this.#detail);
@@ -156,7 +159,7 @@ export class GamesView {
       el('p', { class: 'description' }, game.description ?? '')
     );
 
-    const video = game.media.video;
+    const video = this.previews ? game.media.video : undefined;
     if (video) {
       this.#videoTimer = setTimeout(() => {
         const player = el('video', {

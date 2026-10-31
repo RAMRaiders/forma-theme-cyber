@@ -32,6 +32,8 @@ export class SystemView {
   #fact = 0;
   #factTimer: ReturnType<typeof setInterval> | undefined;
   #boardTimer: ReturnType<typeof setTimeout> | undefined;
+  /** Curiosities move on by themselves; Interface → Rotate curiosities. */
+  rotateFacts = true;
   /** Which selection a pending info load belongs to: a quick scroll must not show a stale one. */
   #ticket = 0;
 
@@ -154,7 +156,9 @@ export class SystemView {
     this.#panel.replaceChildren(...parts.filter((p) => p !== null));
 
     clearInterval(this.#factTimer);
-    if (facts.length > 1) this.#factTimer = setInterval(() => this.nextFact(), FACT_MS);
+    if (facts.length > 1 && this.rotateFacts) {
+      this.#factTimer = setInterval(() => this.nextFact(), FACT_MS);
+    }
   }
 }
 

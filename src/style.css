@@ -18,19 +18,20 @@
   --safe: 2.5rem;
   --mono: 'JetBrains Mono', 'DejaVu Sans Mono', Menlo, Consolas, monospace;
   font-family: 'Inter', 'DejaVu Sans', system-ui, sans-serif;
-  font-size: min(calc(100vh / 45), calc(100vw / 64));
+  --scale: 1;
+  font-size: calc(min(calc(100vh / 45), calc(100vw / 64)) * var(--scale));
 }
 
 @media (max-height: 800px) {
   :root {
-    font-size: min(calc(100vh / 36), calc(100vw / 52));
+    font-size: calc(min(calc(100vh / 36), calc(100vw / 52)) * var(--scale));
     --safe: 1.6rem;
   }
 }
 
 @media (max-height: 560px) {
   :root {
-    font-size: max(12px, min(calc(100vh / 30), calc(100vw / 42)));
+    font-size: max(12px, calc(min(calc(100vh / 30), calc(100vw / 42)) * var(--scale)));
     --safe: 0.8rem;
   }
 }
@@ -969,6 +970,34 @@ kbd {
 
 .launch .loader {
   height: auto;
+}
+
+/* ---- Interface choices (data attributes set from Cyber's settings) ------------------- */
+
+:root[data-text-size='small'] {
+  --scale: 0.88;
+}
+
+:root[data-text-size='large'] {
+  --scale: 1.15;
+}
+
+:root[data-board='dim'] .circuit {
+  opacity: 0.18;
+}
+
+:root[data-board='off'] .backdrop .circuit {
+  display: none;
+}
+
+:root[data-motion='off'] .circuit .pulse,
+:root[data-motion='off'] .loader-pulse {
+  display: none;
+}
+
+:root[data-motion='off'] .loader-core,
+:root[data-motion='off'] .loader-bar span {
+  animation: none;
 }
 
 /* ---- Small screens (handhelds, 4:3) -------------------------------------- */
