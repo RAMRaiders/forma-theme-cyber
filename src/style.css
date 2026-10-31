@@ -56,31 +56,60 @@ body,
   grid-template-rows: auto 1fr auto;
 }
 
+/* The header is a breadcrumb trail, for show: Categories ▸ Consoles ▸ PlayStation. The step you
+   are on is lit; the ones before it dim, and give way first when the screen is narrow. */
 header {
   display: flex;
   align-items: baseline;
-  gap: 1.5rem;
+  gap: 0;
+  min-width: 0;
   padding: calc(var(--safe) * 0.5) var(--safe) 0.6rem;
 }
 
 h1 {
+  flex: none;
   margin: 0;
   font-family: var(--mono);
   font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: var(--muted);
+}
+
+h1.current {
   color: var(--neon);
   text-shadow: 0 0 0.6rem rgb(34 228 255 / 55%);
 }
 
+.trail {
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
+  white-space: nowrap;
+}
+
 .trail .crumb {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--mono);
+  font-size: 1.15rem;
   color: var(--muted);
 }
 
-.trail .crumb + .crumb::before {
-  content: '›';
-  margin: 0 0.5rem;
+.trail .crumb.current {
+  flex: none;
+  max-width: 60vw;
+  font-weight: 700;
+  color: var(--neon);
+  text-shadow: 0 0 0.5rem rgb(34 228 255 / 45%);
+}
+
+.trail .crumb::before {
+  content: '▸';
+  margin: 0 0.7rem;
+  color: var(--accent);
 }
 
 main {

@@ -72,7 +72,8 @@ async function start(permissions: string[] = [], slow: Record<string, number> = 
 describe('the default theme', () => {
   it('opens on the categories, with the systems and games in each', async () => {
     const { text } = await start();
-    expect(text('h1')).toEqual(['Systems']);
+    expect(text('h1')).toEqual(['Categories']);
+    expect(text('h1.current')).toEqual(['Categories']);
     expect(text('.tile h2')).toEqual(['Consoles']);
     expect(text('.tile.selected .count')).toEqual(['5 systems · 9 games']);
     expect(text('.hint')).toEqual(['AOpen', 'SelectViews', 'StartMenu']);
@@ -108,6 +109,9 @@ describe('the default theme', () => {
 
     await press('confirm');
     expect(text('.trail .crumb')).toEqual(['Consoles', 'Nintendo Entertainment System']);
+    // Breadcrumbs: the step you are on is the lit one.
+    expect(text('.trail .crumb.current')).toEqual(['Nintendo Entertainment System']);
+    expect(text('h1.current')).toEqual([]);
     await vi.waitFor(() => expect(text('.row')).toContain('★ Super Mario Bros.'));
     expect(text('.row.selected')).toEqual(['Homebrew Demo']);
     await press('down');

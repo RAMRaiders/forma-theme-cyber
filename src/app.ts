@@ -326,12 +326,18 @@ export class App {
 
   #renderChrome(): void {
     const view = this.#views.find((v) => v.id === this.#view);
-    this.#title.textContent = view?.name ?? this.#view;
+    // Breadcrumbs, for show: where you are, from the top (Categories, in Cyber's own view).
+    this.#title.textContent = this.#view === CYBER_VIEW ? 'Categories' : (view?.name ?? this.#view);
     const crumbs =
       this.#view === CYBER_VIEW
         ? this.#cyberTrail()
         : (this.#page?.trail ?? []).map((c) => c.label);
-    this.#trail.replaceChildren(...crumbs.map((c) => el('span', { class: 'crumb' }, c)));
+    this.#title.classList.toggle('current', crumbs.length === 0);
+    this.#trail.replaceChildren(
+      ...crumbs.map((c, i) =>
+        el('span', { class: i === crumbs.length - 1 ? 'crumb current' : 'crumb' }, c)
+      )
+    );
     const games = this.#mode === 'browse' && this.#page?.listing.kind === 'games';
     const hints: [string, string][] = this.#settings.open
       ? this.#settings.hints()
