@@ -13,15 +13,17 @@ const system = (name: string, hardware: string | null, gameCount: number): Syste
 });
 
 describe('catalog', () => {
-  it("groups by Batocera's type, with Cyber's own category winning", () => {
+  it("groups by Batocera's type, refined per system, with a system's info winning", () => {
     const groups = group(
       [
         system('snes', 'console', 2068),
         system('nes', 'console', 1277),
         system('neogeo', 'console', 169),
         system('gba', 'portable', 1561),
+        system('sonic3-air', 'port', 3),
         system('openbor', 'port', 147),
         system('pygame', 'library', 2),
+        system('easyrpg', 'port', 5),
         system('empty', 'console', 0),
         system('imageviewer', 'system', 1)
       ],
@@ -31,7 +33,8 @@ describe('catalog', () => {
       ['consoles', ['snes', 'nes']],
       ['handhelds', ['gba']],
       ['arcade', ['neogeo']],
-      ['ports', ['openbor', 'pygame']]
+      ['ports', ['sonic3-air']],
+      ['engines', ['openbor', 'easyrpg', 'pygame']]
     ]);
     expect(groups[0]!.systems[0]!.photo).toBe('./systems/snes/photo.webp');
   });

@@ -1,6 +1,6 @@
 {
   "name": "OpenBOR",
-  "category": "ports",
+  "category": "engines",
   "description": "OpenBOR is an open-source engine for side-scrolling beat 'em ups, developed from Senile Team's Beats of Rage (2003). Games are distributed as data modules called PAKs, and the community has made hundreds of them. It is mainly used for fan games in the style of Streets of Rage and Final Fight.",
   "specs": {
     "maker": "Senile Team (Beats of Rage) · OpenBOR community",

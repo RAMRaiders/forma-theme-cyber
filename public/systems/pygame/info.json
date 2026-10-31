@@ -1,6 +1,6 @@
 {
   "name": "Pygame",
-  "category": "ports",
+  "category": "engines",
   "description": "Pygame is a Python library for writing games, built on top of SDL. Pete Shinners started it in 2000 to replace the stalled PySDL project, and it became a standard first step for people learning game programming. Batocera's pygame system runs Python games written with it.",
   "specs": {
     "maker": "Pete Shinners and the pygame community",

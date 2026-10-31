@@ -2,7 +2,14 @@ import type { SystemSummary } from '@ramraiders/forma-sdk';
 
 /** Cyber's top level. Batocera's `hardware` type decides, unless a system's info says otherwise. */
 export type CategoryId =
-  'consoles' | 'handhelds' | 'computers' | 'arcade' | 'virtual' | 'educational' | 'ports';
+  | 'consoles'
+  | 'handhelds'
+  | 'computers'
+  | 'arcade'
+  | 'virtual'
+  | 'educational'
+  | 'ports'
+  | 'engines';
 
 export interface Category {
   id: CategoryId;
@@ -18,7 +25,8 @@ export const CATEGORIES: readonly Category[] = [
   { id: 'arcade', label: 'Arcade', tagline: 'Insert coin' },
   { id: 'virtual', label: 'Virtual & homebrew', tagline: 'Consoles that never needed a factory' },
   { id: 'educational', label: 'Educational', tagline: 'Learning machines' },
-  { id: 'ports', label: 'Ports & engines', tagline: 'Games rebuilt from source' }
+  { id: 'ports', label: 'Recompiled & ports', tagline: 'Classics rebuilt to run natively' },
+  { id: 'engines', label: 'Engines', tagline: 'Runtimes that play whole libraries' }
 ];
 
 const BY_HARDWARE: Record<string, CategoryId> = {
@@ -27,9 +35,30 @@ const BY_HARDWARE: Record<string, CategoryId> = {
   computer: 'computers',
   arcade: 'arcade',
   port: 'ports',
-  library: 'ports',
+  library: 'engines',
   virtual: 'virtual',
   educational: 'educational'
+};
+
+/**
+ * Systems Batocera types as `port` (or not at all) that Cyber files elsewhere, so they land right
+ * even without an info.json. Batocera's `port` covers both one game rebuilt natively (a
+ * decompilation, recompilation or source port: Cyber's "Recompiled & ports") and runtimes that
+ * play whole libraries made with them (Cyber's "Engines").
+ */
+const BY_SYSTEM: Record<string, CategoryId> = {
+  scummvm: 'engines',
+  openbor: 'engines',
+  solarus: 'engines',
+  pygame: 'engines',
+  easyrpg: 'engines',
+  lutro: 'engines',
+  flash: 'engines',
+  pico8: 'virtual',
+  tic80: 'virtual',
+  wasm4: 'virtual',
+  lowresnx: 'virtual',
+  uzebox: 'virtual'
 };
 
 /** Batocera folders that are tools, not games. */
@@ -61,7 +90,9 @@ export interface CyberSystem {
 
 function categoryOf(system: SystemSummary, info?: SystemInfo): CategoryId | null {
   if (HIDDEN.has(system.name)) return null;
-  return info?.category ?? BY_HARDWARE[system.hardware ?? ''] ?? 'consoles';
+  return (
+    info?.category ?? BY_SYSTEM[system.name] ?? BY_HARDWARE[system.hardware ?? ''] ?? 'consoles'
+  );
 }
 
 const art = (system: string, file: string) => `./systems/${encodeURIComponent(system)}/${file}`;

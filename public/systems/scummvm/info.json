@@ -1,6 +1,6 @@
 {
   "name": "ScummVM",
-  "category": "ports",
+  "category": "engines",
   "description": "ScummVM runs classic point-and-click adventures by reimplementing their game engines instead of emulating the original computers. Started in 2001 to play LucasArts' SCUMM games, it now supports dozens of engines from Sierra, Revolution, Westwood and others. You supply the original game data files.",
   "specs": {
     "maker": "ScummVM team (founded by Ludvig Strigeus and Vincent Hamm)",

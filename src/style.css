@@ -210,6 +210,8 @@ main {
   align-items: flex-end;
   gap: 0.4rem;
   min-height: 0;
+  /* Sized by the tile, never by the photos' own height: rows then share the screen evenly. */
+  contain: size;
   padding: 0.8rem 0.8rem 0;
   background:
     repeating-linear-gradient(90deg, rgb(34 228 255 / 6%) 0 1px, transparent 1px 1.5rem),

@@ -1,6 +1,6 @@
 {
   "name": "Solarus",
-  "category": "ports",
+  "category": "engines",
   "description": "Solarus is a free, open-source engine for 2D action-RPGs in the style of The Legend of Zelda: A Link to the Past. It was created by Christopho and his team, initially to remake the French fan game Zelda: Mystery of Solarus. Games are written as Lua scripts and data, and run as \"quests\".",
   "specs": {
     "maker": "Christopho and the Solarus team",
