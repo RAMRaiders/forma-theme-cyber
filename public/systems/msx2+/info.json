@@ -1,0 +1,40 @@
+{
+  "name": "MSX2+",
+  "category": "computers",
+  "description": "A 1988 revision of MSX, sold only in Japan by Panasonic, Sony and Sanyo. Its Yamaha V9958 video chip added hardware horizontal scrolling and YJK modes with 19,268 colours. FM sound through MSX-MUSIC became common on its machines.",
+  "specs": {
+    "maker": "Panasonic, Sony, Sanyo",
+    "released": "1988 JP",
+    "cpu": "Zilog Z80A @ 3.58 MHz",
+    "memory": "64 KB+ RAM · 128 KB VRAM",
+    "graphics": "Yamaha V9958: up to 19,268 colours (YJK), hardware scrolling",
+    "sound": "AY-3-8910 PSG + YM2413 FM (MSX-MUSIC)",
+    "media": "ROM cartridges, 3.5\" floppy disk"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Zilog Z80A"
+    },
+    {
+      "role": "Video",
+      "part": "Yamaha V9958"
+    },
+    {
+      "role": "FM sound",
+      "part": "Yamaha YM2413"
+    },
+    {
+      "role": "PSG",
+      "part": "GI AY-3-8910"
+    }
+  ],
+  "curiosities": [
+    "No MSX2+ machine was officially sold outside Japan.",
+    "Its YJK colour mode stores colour in a way similar to video signals, which lets it show 19,268 colours.",
+    "Its V9958 can scroll the screen horizontally in hardware, which the MSX2 could not."
+  ],
+  "unverified": [
+    "Its YJK colour mode stores colour in a way similar to video signals, which lets it show 19,268 colours."
+  ]
+}

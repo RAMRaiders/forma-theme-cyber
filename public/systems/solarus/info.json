@@ -1,0 +1,19 @@
+{
+  "name": "Solarus",
+  "category": "ports",
+  "description": "Solarus is a free, open-source engine for 2D action-RPGs in the style of The Legend of Zelda: A Link to the Past. It was created by Christopho and his team, initially to remake the French fan game Zelda: Mystery of Solarus. Games are written as Lua scripts and data, and run as \"quests\".",
+  "specs": {
+    "maker": "Christopho and the Solarus team",
+    "engine": "2D action-RPG engine",
+    "language": "C++, Lua (game scripts)",
+    "license": "GPL-3.0"
+  },
+  "chips": [],
+  "curiosities": [
+    "Mystery of Solarus DX, its first full game, is a remake of a 2002 RPG Maker fan game.",
+    "Ocean's Heart, made with Solarus by Max Mraz, was the first Solarus game sold on Steam.",
+    "On 1 April 2011 the team released Mystery of Solarus XD, a parody spin-off.",
+    "It comes with a Quest Editor for building maps, sprites and dialogs."
+  ],
+  "unverified": []
+}

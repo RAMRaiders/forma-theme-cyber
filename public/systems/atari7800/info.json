@@ -1,0 +1,39 @@
+{
+  "name": "Atari 7800 ProSystem",
+  "category": "consoles",
+  "description": "A console designed for Atari by General Computer Corporation, test-marketed in 1984 and shelved after the Tramiel takeover before a wide release in 1986. Its MARIA graphics chip could move many sprites, and it played nearly the whole 2600 library.",
+  "specs": {
+    "maker": "Atari",
+    "released": "1986 NA · 1987 EU",
+    "cpu": "Atari SALLY (6502C) @ 1.79 MHz",
+    "memory": "4 KB RAM",
+    "graphics": "MARIA",
+    "sound": "TIA (POKEY optional on cartridge)",
+    "media": "Cartridge"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "SALLY 6502C"
+    },
+    {
+      "role": "Graphics",
+      "part": "MARIA"
+    },
+    {
+      "role": "Sound",
+      "part": "TIA"
+    },
+    {
+      "role": "RAM/IO/Timer",
+      "part": "MOS 6532 RIOT"
+    }
+  ],
+  "curiosities": [
+    "It was the first Atari console to play almost all games for its predecessor without an adapter.",
+    "Some cartridges, such as Ballblazer, carried their own POKEY sound chip.",
+    "The CPU slows to about 1.19 MHz when it accesses TIA or RIOT.",
+    "NTSC 7800 cartridges carry a digital signature checked by the BIOS at boot."
+  ],
+  "unverified": ["The CPU slows to about 1.19 MHz when it accesses TIA or RIOT."]
+}

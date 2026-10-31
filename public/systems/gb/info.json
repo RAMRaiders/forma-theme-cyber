@@ -1,0 +1,32 @@
+{
+  "name": "Game Boy",
+  "category": "handhelds",
+  "description": "Nintendo's monochrome handheld, released in 1989 and designed by Gunpei Yokoi's team. Its low power use, sturdy build and bundled Tetris outweighed weaker screens on rival colour handhelds. It went on to host Pokémon and made portable gaming a mass market.",
+  "specs": {
+    "maker": "Nintendo",
+    "released": "1989 JP · 1989 NA · 1990 EU",
+    "cpu": "Sharp LR35902 (SM83 core) @ 4.19 MHz",
+    "memory": "8 KB RAM · 8 KB VRAM",
+    "graphics": "160 × 144 reflective LCD, 4 shades",
+    "sound": "4 channels (2 pulse, wave, noise), stereo through headphones",
+    "media": "ROM cartridges",
+    "unitsSold": "About 118.69 million (Game Boy and Game Boy Color combined)"
+  },
+  "chips": [
+    {
+      "role": "SoC",
+      "part": "Sharp LR35902"
+    },
+    {
+      "role": "CPU core",
+      "part": "Sharp SM83"
+    }
+  ],
+  "curiosities": [
+    "A Game Boy burned in a bombing during the 1991 Gulf War still worked and was displayed at Nintendo's New York store.",
+    "Its four AA batteries gave around 30 hours of play.",
+    "Pokémon Red and Green launched on it in Japan in 1996, seven years after the console's release.",
+    "Its link cable let two units play head-to-head, first shown off with Tetris."
+  ],
+  "unverified": ["Its four AA batteries gave around 30 hours of play."]
+}

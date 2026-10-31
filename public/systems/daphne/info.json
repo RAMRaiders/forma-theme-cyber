@@ -1,0 +1,37 @@
+{
+  "name": "Daphne (Laserdisc Arcade)",
+  "category": "arcade",
+  "description": "Laserdisc arcade games of the early 1980s, such as Dragon's Lair, Space Ace and Cliff Hanger, played full-motion animation or video from a laserdisc while the player chose moves at key moments. Daphne, the emulator created by Matt Ownby around 1999, replays these games from captured disc video, and its fork Hypseus Singe continues the work.",
+  "specs": {
+    "maker": "Various (Cinematronics, Sega, Stern and others)",
+    "released": "1983 onward (laserdisc era)",
+    "cpu": "Zilog Z80 @ 4 MHz (Dragon's Lair)",
+    "graphics": "Laserdisc video with overlays on some games",
+    "sound": "General Instrument AY-3-8910 + laserdisc audio (Dragon's Lair)",
+    "media": "Laserdisc"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Zilog Z80"
+    },
+    {
+      "role": "Sound",
+      "part": "GI AY-3-8910"
+    },
+    {
+      "role": "Player",
+      "part": "Pioneer LD-V1000"
+    }
+  ],
+  "curiosities": [
+    "The emulator is named after Princess Daphne, the heroine of Dragon's Lair, and is styled as 'First Ever Multiple Arcade Laserdisc Emulator'.",
+    "Dragon's Lair's animation was produced by former Disney animator Don Bluth's studio.",
+    "Dragon's Lair cost 50 cents per play, double the usual arcade price of the time.",
+    "Arcade laserdisc players wore out quickly under constant seeking, so many machines broke down in operators' hands."
+  ],
+  "unverified": [
+    "Dragon's Lair cost 50 cents per play, double the usual arcade price of the time.",
+    "Arcade laserdisc players wore out quickly under constant seeking, so many machines broke down in operators' hands."
+  ]
+}

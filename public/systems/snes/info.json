@@ -1,0 +1,44 @@
+{
+  "name": "Super Nintendo Entertainment System",
+  "category": "consoles",
+  "description": "Nintendo's 16-bit successor to the NES, sold in Japan as the Super Famicom. Its layered backgrounds, Mode 7 rotation and scaling, and Sony-designed sample-based sound made it home to Super Mario World, A Link to the Past, Super Metroid and a deep run of Japanese RPGs.",
+  "specs": {
+    "maker": "Nintendo",
+    "released": "1990 JP · 1991 NA · 1992 EU",
+    "cpu": "Ricoh 5A22 (65C816) @ 3.58 MHz",
+    "memory": "128 KB RAM / 64 KB VRAM",
+    "graphics": "S-PPU1 / S-PPU2, up to 256 of 32,768 colours, Mode 7",
+    "sound": "Sony SPC700 + S-DSP, 8 ADPCM channels, 64 KB audio RAM",
+    "media": "Cartridge",
+    "unitsSold": "~49.1 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Ricoh 5A22"
+    },
+    {
+      "role": "PPU",
+      "part": "S-PPU1 / S-PPU2"
+    },
+    {
+      "role": "Sound CPU",
+      "part": "Sony SPC700"
+    },
+    {
+      "role": "DSP",
+      "part": "Sony S-DSP"
+    },
+    {
+      "role": "Lockout",
+      "part": "CIC"
+    }
+  ],
+  "curiosities": [
+    "The sound chip was designed by Ken Kutaragi of Sony, who later led development of the PlayStation.",
+    "A Sony-built CD-ROM add-on, the 'Nintendo PlayStation', was announced in 1991 and then abandoned, leading Sony to make its own console.",
+    "Star Fox carried a Super FX coprocessor in its cartridge to draw real-time 3D polygons.",
+    "The North American model has a boxy grey-and-purple shell, while the Japanese and European versions share the rounded Super Famicom design."
+  ],
+  "unverified": []
+}

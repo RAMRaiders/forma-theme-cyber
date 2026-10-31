@@ -1,0 +1,41 @@
+{
+  "name": "Sega NAOMI 2",
+  "category": "arcade",
+  "description": "The 2000 successor to NAOMI, adding a hardware transform-and-lighting coprocessor and a second PowerVR graphics chip. It ran Virtua Fighter 4 and the Initial D Arcade Stage series and remains backward compatible with NAOMI games.",
+  "specs": {
+    "maker": "Sega",
+    "released": "2000",
+    "cpu": "Hitachi SH-4 @ 200 MHz",
+    "graphics": "2× PowerVR2 (CLX2) + Elan T&L coprocessor",
+    "sound": "Yamaha AICA (ARM7)",
+    "media": "ROM boards; GD-ROM via DIMM board"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Hitachi SH-4"
+    },
+    {
+      "role": "GPU",
+      "part": "PowerVR2 CLX2"
+    },
+    {
+      "role": "GPU",
+      "part": "PowerVR2 CLX2"
+    },
+    {
+      "role": "T&L",
+      "part": "VideoLogic Elan"
+    },
+    {
+      "role": "Sound",
+      "part": "Yamaha AICA"
+    }
+  ],
+  "curiosities": [
+    "Its Elan chip moved geometry transform and lighting off the CPU, a feature the original NAOMI lacked.",
+    "Virtua Fighter 4 debuted on NAOMI 2 in 2001 before its PlayStation 2 port.",
+    "Initial D Arcade Stage (2002) ran on the board and spawned a long-running arcade series."
+  ],
+  "unverified": []
+}

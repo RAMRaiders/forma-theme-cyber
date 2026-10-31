@@ -1,0 +1,39 @@
+{
+  "name": "MSX",
+  "category": "computers",
+  "description": "MSX is a standardised home computer design announced in 1983 by ASCII Corporation and Microsoft Japan, led by Kazuhiko Nishi. Many manufacturers built compatible machines, and it was popular in Japan, South Korea, the Netherlands, Spain and Brazil. Konami's cartridges made it an important games platform.",
+  "specs": {
+    "maker": "Several (Sony, Panasonic, Yamaha, Philips and others)",
+    "released": "1983",
+    "cpu": "Zilog Z80A @ 3.58 MHz",
+    "memory": "8–64 KB RAM · 16 KB VRAM",
+    "graphics": "TMS9918A: 256 × 192, 16 colours, 32 sprites",
+    "sound": "General Instrument AY-3-8910, 3 channels",
+    "media": "ROM cartridges, cassette, 3.5\" floppy disk"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Zilog Z80A"
+    },
+    {
+      "role": "Video",
+      "part": "TI TMS9918A"
+    },
+    {
+      "role": "Sound",
+      "part": "GI AY-3-8910"
+    },
+    {
+      "role": "I/O",
+      "part": "Intel 8255 PPI"
+    }
+  ],
+  "curiosities": [
+    "The meaning of the name MSX has never been settled; explanations include \"Machines with Software eXchangeability\".",
+    "The Soviet Union installed Yamaha MSX computers in school classrooms.",
+    "In the Arab world, Sakhr sold MSX machines with Arabic-language support.",
+    "Its video chip is the same Texas Instruments family used in the ColecoVision and SG-1000."
+  ],
+  "unverified": []
+}

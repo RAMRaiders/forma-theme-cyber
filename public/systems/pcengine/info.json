@@ -1,0 +1,35 @@
+{
+  "name": "PC Engine / TurboGrafx-16",
+  "category": "consoles",
+  "description": "A compact console co-developed by NEC and Hudson Soft, with an 8-bit CPU paired with 16-bit graphics hardware. It briefly outsold the Famicom in Japan, was sold in North America as the TurboGrafx-16, and became famous for shooters and arcade ports on credit-card-sized HuCards.",
+  "specs": {
+    "maker": "NEC Home Electronics / Hudson Soft",
+    "released": "1987 JP · 1989 NA",
+    "cpu": "Hudson HuC6280 @ 7.16 MHz",
+    "memory": "8 KB RAM / 64 KB VRAM",
+    "graphics": "HuC6270 VDC + HuC6260 VCE, 512-colour palette",
+    "sound": "6-channel wavetable (inside HuC6280)",
+    "media": "HuCard / TurboChip"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Hudson HuC6280"
+    },
+    {
+      "role": "VDC",
+      "part": "Hudson HuC6270"
+    },
+    {
+      "role": "VCE",
+      "part": "Hudson HuC6260"
+    }
+  ],
+  "curiosities": [
+    "HuCards are about the size of a credit card, and the Japanese PC Engine itself is only around 14 cm square.",
+    "The American TurboChips have their pin order reversed relative to Japanese HuCards, which acts as a crude region lock.",
+    "NEC's CD-ROM² add-on of 1988 was the first CD-ROM drive for a home video game console.",
+    "The HuC6280 is a modified 65C02 that includes the sound generator and a timer on the same die."
+  ],
+  "unverified": []
+}

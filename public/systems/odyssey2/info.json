@@ -1,0 +1,31 @@
+{
+  "name": "Magnavox Odyssey²",
+  "category": "consoles",
+  "description": "Magnavox's second-generation console, sold in Europe by parent company Philips as the Videopac G7000. Released in 1978, it stood out with a full membrane keyboard built into the console, used for educational titles, menus and simple programming.",
+  "specs": {
+    "maker": "Magnavox / Philips",
+    "released": "1978 NA · 1978 EU · 1982 JP",
+    "cpu": "Intel 8048 @ 5.37 MHz (NTSC) / 5.91 MHz (PAL)",
+    "memory": "64 B internal + 128 B external RAM, 128 B A/V RAM",
+    "graphics": "Intel 8244 (NTSC) / 8245 (PAL), 160×200, 16 colours",
+    "sound": "Intel 8244/8245, mono",
+    "media": "Cartridge",
+    "unitsSold": "~2 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Intel 8048"
+    },
+    {
+      "role": "Video/Audio",
+      "part": "Intel 8244"
+    }
+  ],
+  "curiosities": [
+    "European sales were halted after about 7,500 units because of a faulty power plug, and resumed in 1979.",
+    "The Voice add-on provided speech synthesis, but unlike Mattel's Intellivoice no game required it.",
+    "The Master Strategy Series, such as Quest for the Rings!, combined a video game with a physical board game."
+  ],
+  "unverified": ["1982 JP"]
+}

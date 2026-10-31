@@ -1,0 +1,35 @@
+{
+  "name": "Super Game Boy",
+  "category": "consoles",
+  "description": "A Super NES / Super Famicom cartridge adapter from 1994 that plays Game Boy games on a television. It contains its own Game Boy processor and adds colour palettes and decorative borders, with some games offering enhanced graphics and sound.",
+  "specs": {
+    "maker": "Nintendo",
+    "released": "1994 JP · 1994 NA · 1994 EU",
+    "cpu": "Game Boy CPU (Sharp LR35902 core) @ ~4.295 MHz (NTSC)",
+    "memory": "8 KB RAM / 8 KB VRAM (Game Boy side)",
+    "graphics": "Game Boy LCD image, 160×144, recoloured by the SNES with borders",
+    "sound": "Game Boy APU, mixed through the SNES",
+    "media": "Game Boy cartridge in adapter"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "SGB-CPU 01"
+    },
+    {
+      "role": "Interface",
+      "part": "ICD2"
+    },
+    {
+      "role": "Host CPU",
+      "part": "Ricoh 5A22"
+    }
+  ],
+  "curiosities": [
+    "Because its clock is derived from the SNES, games run about 2.4% faster than on a real Game Boy on NTSC systems.",
+    "The Japan-only Super Game Boy 2 (1998) fixed the speed and added a link cable port.",
+    "Space Invaders contains a full SNES version of the game that is copied into the console's RAM and run when played on a Super Game Boy.",
+    "Built-in menus let players pick from 32 colour palettes or paint their own border."
+  ],
+  "unverified": ["SGB-CPU 01", "ICD2"]
+}

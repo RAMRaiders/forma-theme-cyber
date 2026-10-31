@@ -1,0 +1,46 @@
+{
+  "name": "Sharp X68000",
+  "category": "computers",
+  "description": "A Japanese 16-bit home computer launched by Sharp in 1987. Its sprite hardware, FM sound and high-resolution graphics made it close to the arcade boards of its time, and it received faithful ports of many arcade games. It never sold outside Japan.",
+  "specs": {
+    "maker": "Sharp",
+    "released": "1987 JP",
+    "cpu": "Motorola 68000 (Hitachi HD68HC000) @ 10 MHz",
+    "memory": "1 MB RAM (expandable to 12 MB)",
+    "graphics": "Up to 768 × 512; 65,536 colours at lower resolutions; hardware sprites",
+    "sound": "Yamaha YM2151 FM (8 channels) + OKI MSM6258 ADPCM",
+    "media": "5.25\" floppy disk (1.2 MB)"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Hitachi HD68HC000"
+    },
+    {
+      "role": "FM sound",
+      "part": "Yamaha YM2151"
+    },
+    {
+      "role": "ADPCM",
+      "part": "OKI MSM6258"
+    },
+    {
+      "role": "DMA",
+      "part": "Hitachi HD63450"
+    },
+    {
+      "role": "Sprites",
+      "part": "Sharp CYNTHIA"
+    }
+  ],
+  "curiosities": [
+    "Its twin-tower case, with a fold-out carry handle, earned it the nickname \"Manhattan\".",
+    "Its YM2151 sound chip is the same one used in many arcade boards of the era.",
+    "It ran Human68k, a disk operating system modelled on MS-DOS.",
+    "Its last direct successor, the 1993 X68030, moved to a Motorola 68EC030 processor."
+  ],
+  "unverified": [
+    "Sharp CYNTHIA",
+    "Up to 768 × 512; 65,536 colours at lower resolutions; hardware sprites"
+  ]
+}

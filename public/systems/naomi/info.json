@@ -1,0 +1,35 @@
+{
+  "name": "Sega NAOMI",
+  "category": "arcade",
+  "description": "Sega's 1998 arcade board, sharing its architecture with the Dreamcast but with more memory. Launched at around a third of the price of Model 3, it became a long-lived workhorse for games such as The House of the Dead 2, Crazy Taxi, Marvel vs. Capcom 2 and Ikaruga.",
+  "specs": {
+    "maker": "Sega",
+    "released": "1998",
+    "cpu": "Hitachi SH-4 @ 200 MHz",
+    "memory": "32 MB RAM / 16 MB VRAM / 8 MB sound RAM",
+    "graphics": "PowerVR2 (CLX2) @ 100 MHz",
+    "sound": "Yamaha AICA (ARM7), 64 channels",
+    "media": "ROM boards; GD-ROM via DIMM board"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Hitachi SH-4"
+    },
+    {
+      "role": "GPU",
+      "part": "PowerVR2 CLX2"
+    },
+    {
+      "role": "Sound",
+      "part": "Yamaha AICA"
+    }
+  ],
+  "curiosities": [
+    "NAOMI is a backronym for 'New Arcade Operation Machine Idea'.",
+    "Sega's R&D head reportedly chose the name in honour of model Naomi Campbell.",
+    "GD-ROM games are copied into RAM on a DIMM board at boot rather than read from disc during play.",
+    "Several NAOMI boards can be linked in one cabinet to drive multiple screens."
+  ],
+  "unverified": ["Sega's R&D head reportedly chose the name in honour of model Naomi Campbell."]
+}

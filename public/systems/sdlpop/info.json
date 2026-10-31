@@ -1,0 +1,25 @@
+{
+  "name": "SDLPoP",
+  "category": "ports",
+  "description": "SDLPoP is an open-source port of Prince of Persia built from a disassembly of the original DOS version. Written by David Nagy (NagyD), it runs on modern systems with SDL2 and adds replays, mod support, gamepad control and optional bug fixes. The original game was created by Jordan Mechner for the Apple II in 1989.",
+  "specs": {
+    "maker": "David Nagy (NagyD) and contributors",
+    "engine": "Reimplementation from DOS disassembly",
+    "language": "C",
+    "released": "1989 (Apple II original)",
+    "license": "GPL-3.0"
+  },
+  "chips": [
+    {
+      "role": "CPU (original)",
+      "part": "MOS 6502"
+    }
+  ],
+  "curiosities": [
+    "Jordan Mechner made the prince's lifelike animation by rotoscoping video of his younger brother running and jumping.",
+    "The game gives you 60 minutes of in-game time to rescue the princess.",
+    "Mechner's original Apple II source code was recovered from old floppy disks in 2012.",
+    "SDLPoP's fixes for original bugs can be switched off to play exactly like the DOS version."
+  ],
+  "unverified": []
+}

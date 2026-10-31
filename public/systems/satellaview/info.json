@@ -1,0 +1,35 @@
+{
+  "name": "Satellaview",
+  "category": "consoles",
+  "description": "A Super Famicom add-on that downloaded games over satellite from broadcaster St.GIGA, sold in Japan from 1995. It delivered episodic and live-scheduled games, including new Zelda and Mario content, until broadcasts ended in 2000.",
+  "specs": {
+    "maker": "Nintendo / St.GIGA",
+    "released": "1995 JP",
+    "cpu": "Ricoh 5A22 @ 3.58 MHz (host Super Famicom)",
+    "memory": "512 KB RAM in add-on + 1 MB ROM; 8 Mbit memory packs",
+    "graphics": "S-PPU1 / S-PPU2 (host Super Famicom)",
+    "sound": "Sony SPC700 + S-DSP (host Super Famicom)",
+    "media": "Satellite broadcast, BS-X cartridge and 8 Mbit memory packs"
+  },
+  "chips": [
+    {
+      "role": "Host CPU",
+      "part": "Ricoh 5A22"
+    },
+    {
+      "role": "PPU",
+      "part": "S-PPU1 / S-PPU2"
+    },
+    {
+      "role": "Sound CPU",
+      "part": "Sony SPC700"
+    }
+  ],
+  "curiosities": [
+    "'SoundLink' games streamed live voice acting from radio personalities and could only be played at their broadcast times.",
+    "Much of the broadcast-only content was never preserved and is considered lost.",
+    "Nintendo bought a 19.5% stake in St.GIGA in 1994 ahead of the service.",
+    "Active users peaked at about 116,000 in March 1997."
+  ],
+  "unverified": []
+}

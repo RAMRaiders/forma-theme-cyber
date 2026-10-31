@@ -1,0 +1,39 @@
+{
+  "name": "Atari 5200 SuperSystem",
+  "category": "consoles",
+  "description": "Atari's 1982 follow-up to the 2600, built from the same chipset as its Atari 400/800 home computers. It offered much better graphics and sound, but its fragile, non-centering analog controllers and lack of 2600 compatibility at launch hurt it.",
+  "specs": {
+    "maker": "Atari",
+    "released": "1982 NA",
+    "cpu": "MOS 6502C @ 1.79 MHz",
+    "memory": "16 KB RAM",
+    "graphics": "ANTIC + GTIA",
+    "sound": "POKEY, 4 channels",
+    "media": "Cartridge"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "MOS 6502C"
+    },
+    {
+      "role": "Display list",
+      "part": "ANTIC"
+    },
+    {
+      "role": "Video",
+      "part": "GTIA"
+    },
+    {
+      "role": "Sound/IO",
+      "part": "POKEY"
+    }
+  ],
+  "curiosities": [
+    "Despite sharing hardware with the Atari 400/800, it cannot run their cartridges directly.",
+    "The original model had four controller ports; a later revision cut it to two.",
+    "Its analog joysticks do not spring back to centre.",
+    "Its controllers included a numeric keypad and Start, Pause and Reset keys."
+  ],
+  "unverified": []
+}

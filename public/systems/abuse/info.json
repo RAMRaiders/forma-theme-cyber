@@ -1,0 +1,19 @@
+{
+  "name": "Abuse",
+  "category": "ports",
+  "description": "Abuse is a 1996 side-scrolling run-and-gun game by Crack dot Com, in which you move with the keyboard and aim with the mouse. Its developers later released the source code, and community ports such as Abuse-SDL keep it running on modern systems. Batocera runs it through one of these SDL ports.",
+  "specs": {
+    "maker": "Crack dot Com (original game)",
+    "engine": "Abuse-SDL source port",
+    "language": "C++",
+    "released": "1996 (original) · 2001 (SDL port)"
+  },
+  "chips": [],
+  "curiosities": [
+    "Its keyboard-to-move, mouse-to-aim controls predated the scheme that later became standard in PC shooters.",
+    "Producer Dave Taylor had previously worked on Doom at id Software.",
+    "It was reportedly made by three people in about six months.",
+    "The shareware game data, apart from sound effects, was released into the public domain."
+  ],
+  "unverified": ["It was reportedly made by three people in about six months."]
+}

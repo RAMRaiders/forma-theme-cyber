@@ -1,0 +1,32 @@
+{
+  "name": "GamePark GP32",
+  "category": "handhelds",
+  "description": "A South Korean handheld from GamePark, released in 2001. It used an ARM9 processor, a 320 × 240 colour screen and standard SmartMedia cards instead of proprietary cartridges. Few commercial games came out, but it became a favourite of homebrew developers and emulator authors.",
+  "specs": {
+    "maker": "GamePark",
+    "released": "2001 KR · 2004 EU (BLU model)",
+    "cpu": "Samsung S3C2400X01 (ARM920T) @ up to 133 MHz",
+    "memory": "8 MB SDRAM",
+    "graphics": "3.5\" TFT, 320 × 240, 16-bit colour",
+    "sound": "Software-mixed 16-bit stereo",
+    "media": "SmartMedia cards",
+    "unitsSold": "About 30,000–32,000"
+  },
+  "chips": [
+    {
+      "role": "SoC",
+      "part": "Samsung S3C2400X01"
+    },
+    {
+      "role": "CPU core",
+      "part": "ARM920T"
+    }
+  ],
+  "curiosities": [
+    "GamePark gave away its development tools, and the community wrote far more software for it than was ever sold commercially.",
+    "It shipped in three screen versions: no light (NLU), frontlit (FLU) and backlit (BLU).",
+    "Many units could be overclocked well beyond the stock 133 MHz to run emulators faster.",
+    "Some of GamePark's staff left to form GamePark Holdings, which made its successor, the GP2X."
+  ],
+  "unverified": []
+}

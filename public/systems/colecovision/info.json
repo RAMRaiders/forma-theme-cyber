@@ -1,0 +1,36 @@
+{
+  "name": "ColecoVision",
+  "category": "consoles",
+  "description": "Coleco's 1982 console brought near arcade-quality graphics home and launched with a strong Donkey Kong port. It used off-the-shelf chips also found in MSX computers and the Sega SG-1000, and its expansion modules even let it play Atari 2600 games.",
+  "specs": {
+    "maker": "Coleco",
+    "released": "1982 NA · 1983 EU",
+    "cpu": "Zilog Z80A @ 3.58 MHz",
+    "memory": "1 KB RAM / 16 KB VRAM",
+    "graphics": "TI TMS9928A",
+    "sound": "TI SN76489A",
+    "media": "Cartridge",
+    "unitsSold": "~2 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Zilog Z80A"
+    },
+    {
+      "role": "Video",
+      "part": "TI TMS9928A"
+    },
+    {
+      "role": "Sound",
+      "part": "TI SN76489A"
+    }
+  ],
+  "curiosities": [
+    "Donkey Kong was bundled with the console.",
+    "Expansion Module #1 let it play Atari 2600 cartridges, prompting a lawsuit from Atari.",
+    "Expansion Module #3 turned it into the Coleco Adam computer.",
+    "Its controllers had a 12-button keypad that took game-specific overlays."
+  ],
+  "unverified": []
+}

@@ -1,0 +1,26 @@
+{
+  "name": "Watara Supervision",
+  "category": "handhelds",
+  "description": "A budget monochrome handheld released in 1992 by Hong Kong's Watara, sold worldwide under many brand names. It had a larger screen than the Game Boy and cheaper games, but a library of simple titles kept it from gaining ground. An official link let it play on a TV.",
+  "specs": {
+    "maker": "Watara",
+    "released": "1992",
+    "cpu": "65SC02 @ 4 MHz",
+    "graphics": "160 × 160 LCD, 4 shades, tilting screen",
+    "sound": "2 tone + 1 noise channel, plus DMA audio",
+    "media": "ROM cartridges"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "65SC02"
+    }
+  ],
+  "curiosities": [
+    "It was sold as the QuickShot Supervision in the UK and the Hartung Supervision in Germany, among about ten other names.",
+    "Its hinged screen tilts to two viewing angles.",
+    "Its games cost about US$9 to $15, well below Game Boy prices.",
+    "Its first homebrew game, Assembloids, was released in 2020."
+  ],
+  "unverified": []
+}

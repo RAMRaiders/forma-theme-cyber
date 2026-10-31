@@ -1,14 +1,17 @@
 import type { Action, Browse, Game, InputEvent, Forma, ViewInfo } from '@ramraiders/forma-sdk';
 import { FormaError } from '@ramraiders/forma-sdk';
 
+import { CATEGORIES, InfoStore, group } from './data/catalog.js';
 import { type Move, moveGrid, moveList } from './logic/nav.js';
 import { LazyList } from './logic/pager.js';
 import { el } from './ui/dom.js';
 import { type Card, GridView } from './ui/grid.js';
 import { GamesView } from './ui/games.js';
+import { HomeView, type Tile } from './ui/home.js';
 import { Menu } from './ui/menu.js';
 import { NetworkScreen } from './ui/network.js';
 import { Switcher } from './ui/switcher.js';
+import { SystemView } from './ui/system.js';
 
 /** One level of the path, and where the selection was, so going back returns to it. */
 interface Level {
@@ -17,6 +20,8 @@ interface Level {
 }
 
 const PAGE = 100;
+/** Forma's systems view: Cyber shows it as categories, then systems, then that system's games. */
+const CYBER_VIEW = 'systems';
 /** Image widths asked for: what a card and the detail panel show at 1080p. */
 const CARD_WIDTH = 480;
 const DETAIL_WIDTH = 960;
@@ -44,6 +49,12 @@ export class App {
   readonly #switcher = new Switcher();
   readonly #menu = new Menu();
   readonly #network: NetworkScreen;
+  readonly #backdrop = el('div', { class: 'backdrop', 'aria-hidden': 'true' });
+  readonly #homeView = new HomeView();
+  readonly #systemView: SystemView;
+  /** Which screen the current level is: Cyber's own two, or Forma's views as they come. */
+  #mode: 'home' | 'systems' | 'browse' = 'browse';
+  #groups: Tile[] = [];
   /** A power action waiting for its second press, and until when. */
   #confirming: { id: string; until: number } | null = null;
 
@@ -59,14 +70,18 @@ export class App {
 
   constructor(
     private readonly forma: Forma,
-    root: HTMLElement
+    root: HTMLElement,
+    /** Each system's info.json; tests pass their own. */
+    private readonly infos = new InfoStore()
   ) {
+    this.#systemView = new SystemView(infos, (svg) => (this.#backdrop.innerHTML = svg));
     this.#network = new NetworkScreen(
       forma,
       (message) => this.#notify(message),
       () => this.#renderChrome()
     );
     root.replaceChildren(
+      this.#backdrop,
       el('header', {}, this.#title, this.#trail),
       this.#main,
       this.#hints,
@@ -114,7 +129,14 @@ export class App {
 
   /** Loads the current level and shows it, keeping the remembered selection. */
   async #load(): Promise<void> {
-    const { path, index } = this.#level;
+    if (this.#view === CYBER_VIEW && this.#stack.length <= 2) return this.#loadCyber();
+    this.#mode = 'browse';
+    this.#systemView.hide();
+    // A system's games keep its board behind them; other views have none.
+    if (this.#view !== CYBER_VIEW) this.#backdrop.replaceChildren();
+    const index = this.#level.index;
+    // Cyber's category is its own level, not part of Forma's path.
+    const path = this.#view === CYBER_VIEW ? this.#level.path.slice(1) : this.#level.path;
     try {
       const first = await this.forma.nav.browse(this.#view, path, { offset: 0, limit: PAGE });
       this.#page = first;
@@ -144,6 +166,55 @@ export class App {
     } catch (error) {
       this.#notify(FormaError.from(error).message);
     }
+  }
+
+  /** Categories (home), or one category's systems. */
+  async #loadCyber(): Promise<void> {
+    try {
+      this.#list = null;
+      this.#page = null;
+      const systems = await this.forma.library.systems();
+      const infos = await this.infos.all(systems.filter((s) => s.gameCount > 0).map((s) => s.name));
+      this.#groups = group(systems, infos);
+      const level = this.#level;
+      if (this.#stack.length === 1) {
+        this.#mode = 'home';
+        this.#systemView.hide();
+        this.#backdrop.replaceChildren();
+        level.index = Math.min(level.index, Math.max(0, this.#groups.length - 1));
+        this.#main.replaceChildren(this.#homeView.root);
+        this.#homeView.show(this.#groups, level.index);
+      } else {
+        const tile = this.#groups.find((g) => g.category.id === level.path[0]);
+        if (!tile) {
+          // The category emptied (a library change): back home.
+          this.#stack = [this.#stack[0]!];
+          return this.#loadCyber();
+        }
+        this.#mode = 'systems';
+        level.index = Math.min(level.index, Math.max(0, tile.systems.length - 1));
+        this.#main.replaceChildren(this.#systemView.root);
+        this.#systemView.show(tile.systems, level.index);
+      }
+      this.#renderChrome();
+    } catch (error) {
+      this.#notify(FormaError.from(error).message);
+    }
+  }
+
+  /** Breadcrumbs in Cyber's view: the category, then the system. */
+  #cyberTrail(): string[] {
+    const [category, system] = this.#level.path;
+    const tile = this.#groups.find((g) => g.category.id === category);
+    const name = tile?.systems.find((s) => s.summary.name === system)?.summary;
+    return [
+      ...(tile
+        ? [tile.category.label]
+        : category
+          ? [CATEGORIES.find((c) => c.id === category)?.label ?? category]
+          : []),
+      ...(name ? [name.fullname || name.name] : [])
+    ];
   }
 
   /** Groups come a page at a time too; a grid shows them all, so fetch the rest. */
@@ -179,10 +250,12 @@ export class App {
   #renderChrome(): void {
     const view = this.#views.find((v) => v.id === this.#view);
     this.#title.textContent = view?.name ?? this.#view;
-    this.#trail.replaceChildren(
-      ...(this.#page?.trail ?? []).map((c) => el('span', { class: 'crumb' }, c.label))
-    );
-    const games = this.#page?.listing.kind === 'games';
+    const crumbs =
+      this.#view === CYBER_VIEW
+        ? this.#cyberTrail()
+        : (this.#page?.trail ?? []).map((c) => c.label);
+    this.#trail.replaceChildren(...crumbs.map((c) => el('span', { class: 'crumb' }, c)));
+    const games = this.#mode === 'browse' && this.#page?.listing.kind === 'games';
     const hints: [string, string][] = this.#network.open
       ? this.#network.hints()
       : this.#menu.open
@@ -197,8 +270,9 @@ export class App {
               ['B', 'Close']
             ]
           : [
-              ['A', games ? 'Play' : 'Open'],
+              ['A', games ? 'Play' : this.#mode === 'systems' ? 'Games' : 'Open'],
               ...(games ? [['Y', 'Favourite'] as [string, string]] : []),
+              ...(this.#mode === 'systems' ? [['Y', 'Next fact'] as [string, string]] : []),
               ...(this.#stack.length > 1 ? [['B', 'Back'] as [string, string]] : []),
               ['Select', 'Views'],
               ['Start', 'Menu']
@@ -226,6 +300,7 @@ export class App {
       case 'back':
         return void this.#back();
       case 'north':
+        if (this.#mode === 'systems') return this.#systemView.nextFact();
         return void this.#toggleFavorite();
       case 'select':
         this.#switcher.show(this.#views, this.#view, this.#home);
@@ -239,6 +314,14 @@ export class App {
 
   #move(move: Move, repeat: boolean): void {
     const level = this.#level;
+    if (this.#mode === 'home') {
+      level.index = moveGrid(level.index, this.#groups.length, this.#homeView.columns(), move);
+      return this.#homeView.select(level.index);
+    }
+    if (this.#mode === 'systems') {
+      level.index = moveList(level.index, this.#systemView.count, move, 5, repeat);
+      return this.#systemView.select(level.index);
+    }
     if (this.#list) {
       level.index = moveList(level.index, this.#list.total, move, this.#games.pageSize(), repeat);
       this.#games.select(level.index);
@@ -249,6 +332,18 @@ export class App {
   }
 
   async #confirm(): Promise<void> {
+    if (this.#mode === 'home') {
+      const tile = this.#groups[this.#level.index];
+      if (!tile) return;
+      this.#stack.push({ path: [tile.category.id], index: 0 });
+      return this.#load();
+    }
+    if (this.#mode === 'systems') {
+      const system = this.#systemView.selected;
+      if (!system) return;
+      this.#stack.push({ path: [...this.#level.path, system.summary.name], index: 0 });
+      return this.#load();
+    }
     if (this.#list) {
       const game = this.#games.selected;
       if (!game) return;

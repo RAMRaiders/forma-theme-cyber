@@ -1,0 +1,36 @@
+{
+  "name": "Famicom Disk System",
+  "category": "consoles",
+  "description": "A 1986 add-on for Nintendo's Famicom in Japan that loaded games from rewritable floppy disks. It offered cheaper games, saving and an extra sound channel, and it was the first home for The Legend of Zelda and Metroid.",
+  "specs": {
+    "maker": "Nintendo",
+    "released": "1986 JP",
+    "cpu": "Ricoh 2A03 @ 1.79 MHz (Famicom)",
+    "memory": "32 KB RAM + 8 KB CHR RAM (RAM Adapter)",
+    "graphics": "Ricoh 2C02 PPU (Famicom)",
+    "sound": "2A03 + 2C33 wavetable channel",
+    "media": "Disk Card (Quick Disk, 2 sides)",
+    "unitsSold": "~4.4 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Ricoh RP2A03"
+    },
+    {
+      "role": "PPU",
+      "part": "Ricoh RP2C02"
+    },
+    {
+      "role": "Disk/Sound",
+      "part": "Ricoh RP2C33"
+    }
+  ],
+  "curiosities": [
+    "Stores had Disk Writer kiosks that rewrote a disk with a new game for ¥500.",
+    "Its disks are a modified version of Mitsumi's Quick Disk format.",
+    "The Legend of Zelda first came out on the Disk System, with saves to the disk itself.",
+    "The RAM Adapter connects to the Famicom's cartridge slot."
+  ],
+  "unverified": []
+}

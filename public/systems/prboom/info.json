@@ -1,0 +1,25 @@
+{
+  "name": "PrBoom",
+  "category": "ports",
+  "description": "PrBoom is a Doom source port that keeps close to the original game's behaviour while running on modern systems. It merged PrBoom for Windows and LxDoom for Linux, both based on TeamTNT's Boom and the MBF port. Batocera runs it as a libretro core that needs the original Doom WAD files.",
+  "specs": {
+    "maker": "PrBoom developers",
+    "engine": "Doom engine source port",
+    "language": "C",
+    "released": "1993 (Doom) · late 1990s (PrBoom)",
+    "license": "GPL-2.0-or-later"
+  },
+  "chips": [
+    {
+      "role": "CPU (original)",
+      "part": "Intel 80386"
+    }
+  ],
+  "curiosities": [
+    "id Software released the Doom source code on 23 December 1997, and relicensed it under the GPL in 1999.",
+    "The first released source was the Linux version, because the DOS version used a proprietary sound library.",
+    "The first source port, DOSDoom, appeared within a day of the source release.",
+    "Its fork PrBoom+ focuses on playing back demo recordings exactly as the original game would."
+  ],
+  "unverified": ["1993 (Doom) · late 1990s (PrBoom)"]
+}

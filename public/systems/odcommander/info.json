@@ -1,0 +1,18 @@
+{
+  "name": "OD Commander",
+  "category": "ports",
+  "description": "OD Commander is a two-pane file manager designed for gamepad control, included in Batocera so files can be managed without a keyboard. It is a fork of DinguxCommander, which was written for handheld Linux devices running Dingux and OpenDingux. Batocera lists it as a system you launch like a game.",
+  "specs": {
+    "engine": "SDL file manager",
+    "language": "C++"
+  },
+  "chips": [],
+  "curiosities": [
+    "It descends from DinguxCommander, a file manager for Linux handhelds such as the Dingoo A320.",
+    "It uses a two-pane layout in the style of Norton Commander.",
+    "In Batocera it has been available on all platforms since version 34."
+  ],
+  "unverified": [
+    "It descends from DinguxCommander, a file manager for Linux handhelds such as the Dingoo A320."
+  ]
+}

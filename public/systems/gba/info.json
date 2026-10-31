@@ -1,0 +1,36 @@
+{
+  "name": "Game Boy Advance",
+  "category": "handhelds",
+  "description": "Nintendo's 32-bit handheld, launched in 2001 as the successor to the Game Boy Color. Its ARM processor and colour screen gave it roughly Super Nintendo-class 2D graphics, and it played Game Boy and Game Boy Color cartridges. Later models fixed the original's unlit screen.",
+  "specs": {
+    "maker": "Nintendo",
+    "released": "2001 JP · 2001 NA · 2001 EU",
+    "cpu": "ARM7TDMI @ 16.78 MHz",
+    "memory": "32 KB + 256 KB RAM · 96 KB VRAM",
+    "graphics": "240 × 160 TFT LCD, 32,768 colours, tile and bitmap modes",
+    "sound": "2 PCM channels plus the 4 Game Boy channels",
+    "media": "ROM cartridges",
+    "unitsSold": "About 81.51 million"
+  },
+  "chips": [
+    {
+      "role": "SoC",
+      "part": "Nintendo CPU AGB"
+    },
+    {
+      "role": "CPU core",
+      "part": "ARM7TDMI"
+    },
+    {
+      "role": "Compat. core",
+      "part": "Sharp SM83"
+    }
+  ],
+  "curiosities": [
+    "To run older Game Boy games it switches to a built-in Sharp SM83 core, the same type of processor as the original Game Boy.",
+    "The original model had no screen light; the 2003 Game Boy Advance SP added a frontlight and a built-in rechargeable battery.",
+    "The Game Boy Player attachment let the GameCube play Game Boy Advance cartridges on a TV.",
+    "The e-Reader accessory scanned dot-code strips printed on cards to unlock levels and mini-games."
+  ],
+  "unverified": []
+}

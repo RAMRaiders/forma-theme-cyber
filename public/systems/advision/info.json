@@ -1,0 +1,31 @@
+{
+  "name": "Entex Adventure Vision",
+  "category": "consoles",
+  "description": "A self-contained tabletop console from Entex, released in 1982, with its screen built into the unit. Instead of a CRT it used a single column of 40 red LEDs reflected off a spinning mirror to draw the image. It lasted about a year and only four games were made.",
+  "specs": {
+    "maker": "Entex Industries",
+    "released": "1982 NA",
+    "cpu": "Intel 8048 @ 733 kHz",
+    "memory": "64 bytes internal + 1 KB",
+    "graphics": "40 red LEDs + spinning mirror, 150×40 monochrome",
+    "sound": "National Semiconductor COP411L",
+    "media": "Cartridge"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Intel 8048"
+    },
+    {
+      "role": "Sound",
+      "part": "NS COP411L"
+    }
+  ],
+  "curiosities": [
+    "All four games were arcade ports: Defender, Super Cobra, Turtles and Space Force.",
+    "It launched at $79.95.",
+    "Because of its moving mirror, many surviving units no longer work.",
+    "Nintendo's Virtual Boy later used a similar red-LED-and-mirror display technique."
+  ],
+  "unverified": []
+}

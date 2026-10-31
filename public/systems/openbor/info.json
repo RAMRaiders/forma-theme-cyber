@@ -1,0 +1,20 @@
+{
+  "name": "OpenBOR",
+  "category": "ports",
+  "description": "OpenBOR is an open-source engine for side-scrolling beat 'em ups, developed from Senile Team's Beats of Rage (2003). Games are distributed as data modules called PAKs, and the community has made hundreds of them. It is mainly used for fan games in the style of Streets of Rage and Final Fight.",
+  "specs": {
+    "maker": "Senile Team (Beats of Rage) · OpenBOR community",
+    "engine": "2D beat 'em up engine",
+    "language": "C",
+    "released": "2003 (Beats of Rage)",
+    "license": "BSD-3-Clause"
+  },
+  "chips": [],
+  "curiosities": [
+    "Beats of Rage was a Streets of Rage tribute that used character sprites from SNK's The King of Fighters.",
+    "Senile Team gave the source code and permission to continue development to a developer known as kirby2000, which led to OpenBOR.",
+    "Beats of Rage had been downloaded more than a million times by 2006.",
+    "The engine has been ported to the Dreamcast, PlayStation 2, PSP and Wii."
+  ],
+  "unverified": ["BSD-3-Clause"]
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Sega Dreamcast",
+  "category": "consoles",
+  "description": "Sega's last home console, launched in Japan in 1998 and in the West in 1999. It shipped with a built-in modem for online play and debuted influential games such as Shenmue and Jet Set Radio. Sega stopped making it in 2001 and left the hardware business.",
+  "specs": {
+    "maker": "Sega",
+    "released": "1998 JP · 1999 NA · 1999 EU",
+    "cpu": "Hitachi SH-4 @ 200 MHz",
+    "memory": "16 MB RAM / 8 MB VRAM / 2 MB sound RAM",
+    "graphics": "NEC PowerVR2 (CLX2) @ 100 MHz",
+    "sound": "Yamaha AICA (ARM7 core)",
+    "media": "GD-ROM (~1 GB)",
+    "unitsSold": "9.13 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Hitachi SH-4"
+    },
+    {
+      "role": "GPU",
+      "part": "NEC PowerVR2 CLX2"
+    },
+    {
+      "role": "Sound",
+      "part": "Yamaha AICA"
+    }
+  ],
+  "curiosities": [
+    "The North American launch date was 9/9/99.",
+    "Its VMU memory card has its own small screen and can run minigames on its own.",
+    "Games could use Microsoft's Windows CE as an alternative to Sega's own libraries.",
+    "GD-ROM discs hold about 1 GB, more than a standard CD."
+  ],
+  "unverified": []
+}

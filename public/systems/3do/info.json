@@ -1,0 +1,38 @@
+{
+  "name": "3DO Interactive Multiplayer",
+  "category": "consoles",
+  "description": "A CD-based console standard from Trip Hawkins' The 3DO Company, licensed to manufacturers such as Panasonic, Sanyo and GoldStar rather than built in-house. Launched in 1993, it was one of the first 32-bit CD consoles and showcased full-motion video and early 3D, but its high price kept it niche.",
+  "specs": {
+    "maker": "The 3DO Company (Panasonic, Sanyo, GoldStar)",
+    "released": "1993 NA · 1994 JP · 1994 EU",
+    "cpu": "ARM60 @ 12.5 MHz",
+    "memory": "2 MB DRAM / 1 MB VRAM",
+    "graphics": "Custom cel engines (MADAM / CLIO)",
+    "sound": "DSP in CLIO custom chip",
+    "media": "CD-ROM (double speed)",
+    "unitsSold": "~2 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "ARM60"
+    },
+    {
+      "role": "GPU",
+      "part": "MADAM"
+    },
+    {
+      "role": "DSP",
+      "part": "CLIO"
+    }
+  ],
+  "curiosities": [
+    "The Panasonic FZ-1 launched in the US at $699.",
+    "The core hardware was designed by Dave Needle and RJ Mical, who had earlier worked on the Amiga and Atari Lynx.",
+    "3DO's planned successor, the M2, was sold to Matsushita (Panasonic) and never released as a home console.",
+    "Each licensed manufacturer had to make a profit on the hardware itself, since 3DO only earned royalties on software."
+  ],
+  "unverified": [
+    "Each licensed manufacturer had to make a profit on the hardware itself, since 3DO only earned royalties on software."
+  ]
+}

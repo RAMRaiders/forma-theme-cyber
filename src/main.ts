@@ -12,6 +12,18 @@ try {
     startPerfOverlay((stats) => void forma.settings.set('perf', stats));
   }
   await new App(forma, root).start();
+  if (import.meta.env.DEV) replayKeys();
 } catch (error) {
   root.textContent = `Could not connect to Forma: ${String(error)}`;
+}
+
+/**
+ * Development only (stripped from builds): `?keys=Enter,ArrowDown` presses those keys after
+ * start-up, so a headless browser can screenshot any screen.
+ */
+function replayKeys(): void {
+  const keys = new URLSearchParams(location.search).get('keys')?.split(',') ?? [];
+  keys.forEach((key, i) =>
+    setTimeout(() => window.dispatchEvent(new KeyboardEvent('keydown', { key })), 300 * (i + 1))
+  );
 }

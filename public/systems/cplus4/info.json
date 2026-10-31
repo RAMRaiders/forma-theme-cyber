@@ -1,0 +1,31 @@
+{
+  "name": "Commodore Plus/4",
+  "category": "computers",
+  "description": "A 1984 Commodore home computer aimed at home office use, with four productivity programs built into ROM. Its TED chip handled video and sound with a 121-colour palette, but it had no sprites and could not run C64 software. It sold poorly and was soon discontinued.",
+  "specs": {
+    "maker": "Commodore",
+    "released": "1984",
+    "cpu": "MOS 7501 @ up to 1.76 MHz",
+    "memory": "64 KB RAM",
+    "graphics": "TED: 320 × 200, 121 colours, no sprites",
+    "sound": "TED: 2 voices",
+    "media": "ROM cartridges, cassette, floppy disk"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "MOS 7501"
+    },
+    {
+      "role": "Video / sound",
+      "part": "MOS 7360 TED"
+    }
+  ],
+  "curiosities": [
+    "Its name comes from the four built-in applications: word processor, spreadsheet, database and graphing.",
+    "It is not compatible with Commodore 64 software, despite coming out two years later.",
+    "Its datasette and joystick ports use different connectors from the C64's, so C64 peripherals needed adapters.",
+    "It shares the TED chip with the cheaper Commodore 16 and 116."
+  ],
+  "unverified": []
+}

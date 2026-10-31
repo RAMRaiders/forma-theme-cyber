@@ -1,0 +1,34 @@
+{
+  "name": "Neo Geo Pocket",
+  "category": "handhelds",
+  "description": "SNK's first handheld, released in Japan in October 1998 with a monochrome screen. It was soon overshadowed by the Neo Geo Pocket Color, released only months later, so it had a short life and a small library. Its clicky microswitch stick was praised for fighting games.",
+  "specs": {
+    "maker": "SNK",
+    "cpu": "Toshiba TLCS-900H @ 6.144 MHz + Zilog Z80 @ 3.072 MHz (sound)",
+    "memory": "12 KB RAM + 4 KB sound RAM",
+    "sound": "T6W28 PSG (SN76489-type) plus DAC",
+    "media": "ROM cartridges",
+    "released": "1998 JP",
+    "graphics": "160 × 152 monochrome LCD, 8 shades"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Toshiba TLCS-900H"
+    },
+    {
+      "role": "Sound CPU",
+      "part": "Zilog Z80"
+    },
+    {
+      "role": "Sound",
+      "part": "Toshiba T6W28"
+    }
+  ],
+  "curiosities": [
+    "It was replaced by the Neo Geo Pocket Color only about five months after launch.",
+    "Most later Neo Geo Pocket Color games still run on the monochrome model.",
+    "It has a built-in clock, calendar and horoscope features in its system menu."
+  ],
+  "unverified": []
+}

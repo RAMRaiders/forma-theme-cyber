@@ -1,0 +1,35 @@
+{
+  "name": "Sega Game Gear",
+  "category": "handhelds",
+  "description": "Sega's colour handheld, launched in Japan in 1990 and in the West in 1991. It is essentially a portable Master System with a backlit colour screen, which made it the main colour rival to the monochrome Game Boy. The backlight also drained six AA batteries in a few hours.",
+  "specs": {
+    "maker": "Sega",
+    "released": "1990 JP · 1991 NA · 1991 EU",
+    "cpu": "Zilog Z80 @ 3.58 MHz",
+    "memory": "8 KB RAM · 16 KB VRAM",
+    "graphics": "3.2\" backlit colour LCD, 160 × 144, 32 colours on screen from 4,096",
+    "sound": "SN76489-type PSG, stereo through headphones",
+    "media": "ROM cartridges",
+    "unitsSold": "About 10.62 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Zilog Z80"
+    },
+    {
+      "role": "Video",
+      "part": "Sega VDP (SMS-based)"
+    },
+    {
+      "role": "Sound",
+      "part": "SN76489 PSG"
+    }
+  ],
+  "curiosities": [
+    "A plug-in Master Gear Converter let it play Master System cartridges, because the hardware is so similar.",
+    "An optional TV Tuner accessory turned it into a portable colour television.",
+    "Its stereo sound is only available through the headphone jack; the built-in speaker is mono."
+  ],
+  "unverified": []
+}

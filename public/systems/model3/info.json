@@ -1,0 +1,43 @@
+{
+  "name": "Sega Model 3",
+  "category": "arcade",
+  "description": "Sega's 1996 high-end 3D arcade board, built around a PowerPC CPU and Real3D graphics derived from Lockheed Martin simulation technology. At launch it was considered the most powerful arcade board available, running Virtua Fighter 3, Scud Race, Sega Rally 2 and Daytona USA 2.",
+  "specs": {
+    "maker": "Sega",
+    "released": "1996",
+    "cpu": "PowerPC 603e @ 66 MHz (Step 1.0), 100 MHz (1.5), 166 MHz (2.x)",
+    "memory": "8 MB RAM",
+    "graphics": "2× Real3D Pro-1000, over 1 million polygons/s",
+    "sound": "Motorola 68EC000 + 2× Yamaha SCSP",
+    "media": "ROM boards"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "PowerPC 603e"
+    },
+    {
+      "role": "GPU",
+      "part": "Real3D Pro-1000"
+    },
+    {
+      "role": "GPU",
+      "part": "Real3D Pro-1000"
+    },
+    {
+      "role": "Sound CPU",
+      "part": "Motorola 68EC000"
+    },
+    {
+      "role": "Sound",
+      "part": "Yamaha SCSP"
+    }
+  ],
+  "curiosities": [
+    "It was unveiled at the 1996 AOU show with Virtua Fighter 3.",
+    "The board was released in 'steps' (1.0, 1.5, 2.0, 2.1), each raising the CPU clock.",
+    "By 2000, Sega had sold more than 200,000 Model 2 and Model 3 arcade systems combined.",
+    "Its games are emulated by Supermodel, a dedicated Model 3 emulator."
+  ],
+  "unverified": []
+}

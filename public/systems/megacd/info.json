@@ -1,0 +1,36 @@
+{
+  "name": "Sega Mega-CD",
+  "category": "consoles",
+  "description": "A CD-ROM add-on for the Mega Drive, released as the Sega CD in North America. It added a second, faster 68000, scaling and rotation hardware and CD audio, and became known for full-motion video games like Night Trap as well as Sonic CD.",
+  "specs": {
+    "maker": "Sega",
+    "released": "1991 JP · 1992 NA · 1993 EU",
+    "cpu": "Motorola 68000 @ 12.5 MHz",
+    "memory": "512 KB program RAM + 256 KB word RAM + 64 KB PCM RAM",
+    "graphics": "Custom ASIC: scaling and rotation",
+    "sound": "Ricoh RF5C164 PCM + CD audio",
+    "media": "CD-ROM",
+    "unitsSold": "2.24 million"
+  },
+  "chips": [
+    {
+      "role": "Sub CPU",
+      "part": "Motorola 68000"
+    },
+    {
+      "role": "PCM",
+      "part": "Ricoh RF5C164"
+    },
+    {
+      "role": "Graphics",
+      "part": "Sega custom ASIC"
+    }
+  ],
+  "curiosities": [
+    "Night Trap was among the games cited in the 1993 US congressional hearings on video game violence.",
+    "Sonic CD lets players time travel between past, present and future versions of each zone.",
+    "It could also play audio CDs and CD+G discs.",
+    "Front-loading and top-loading models were made, as well as all-in-one units such as JVC's Wondermega."
+  ],
+  "unverified": []
+}

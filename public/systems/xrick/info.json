@@ -1,0 +1,19 @@
+{
+  "name": "xrick",
+  "category": "ports",
+  "description": "xrick is a clone of Rick Dangerous, Core Design's 1989 platform game about an Indiana Jones-style adventurer. Written by BigOrno between 1998 and 2002, it reproduces the original game in portable C code using SDL. The original graphics, maps and sounds still belong to the Rick Dangerous rights holders.",
+  "specs": {
+    "maker": "BigOrno",
+    "engine": "Rick Dangerous reimplementation",
+    "language": "C",
+    "released": "1989 (Rick Dangerous) · 2002 (xrick 021212)"
+  },
+  "chips": [],
+  "curiosities": [
+    "Rick Dangerous was designed by Simon Phipps at Core Design, the studio that later created Tomb Raider.",
+    "Its author said he could not formally release the whole game under a free licence because he could not reach Core Design about the original assets.",
+    "xrick has been ported to many devices, including the Rockbox firmware for music players.",
+    "Rick Dangerous is known for traps that kill the player without warning, so levels are learned by trial and error."
+  ],
+  "unverified": []
+}

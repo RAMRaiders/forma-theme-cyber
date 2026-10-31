@@ -1,0 +1,31 @@
+{
+  "name": "Game & Watch",
+  "category": "handhelds",
+  "description": "Nintendo's line of single-game LCD handhelds, launched in 1980 and sold until 1991. Each unit plays one game on a pre-printed segment LCD and doubles as a clock and alarm. The line established Nintendo in portable gaming and set up the Game Boy that followed.",
+  "specs": {
+    "maker": "Nintendo",
+    "released": "1980",
+    "cpu": "Sharp SM5xx-family 4-bit microcontroller (varies by model)",
+    "graphics": "Segmented LCD with fixed, pre-printed graphics",
+    "sound": "Piezo buzzer",
+    "media": "None, one built-in game per unit",
+    "unitsSold": "About 43.4 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Sharp SM5A"
+    },
+    {
+      "role": "CPU (later models)",
+      "part": "Sharp SM510"
+    }
+  ],
+  "curiosities": [
+    "Gunpei Yokoi reportedly got the idea after watching a bored commuter play with an LCD calculator on a bullet train.",
+    "The Donkey Kong Game & Watch (1982) introduced the cross-shaped directional pad that Nintendo later patented and put on the NES controller.",
+    "Several models, such as Donkey Kong and Oil Panic, used a clamshell with two screens, the format the Nintendo DS later revived.",
+    "Nintendo released new Game & Watch units for Super Mario Bros. in 2020 and The Legend of Zelda in 2021 as anniversary products."
+  ],
+  "unverified": []
+}

@@ -1,0 +1,31 @@
+{
+  "name": "Epoch Cassette Vision",
+  "category": "consoles",
+  "description": "A Japanese console released by Epoch in 1981, with simple graphics and controls built into the console. Unusually, the processor sat in each cartridge rather than in the console. It was a hit before the Famicom arrived, selling about 400,000 units.",
+  "specs": {
+    "maker": "Epoch",
+    "released": "1981 JP",
+    "cpu": "NEC µPD777 (in cartridge)",
+    "graphics": "75×60, 8 colours",
+    "sound": "Mono",
+    "media": "Cartridge",
+    "unitsSold": "~400,000"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "NEC µPD777C"
+    },
+    {
+      "role": "CPU (alt)",
+      "part": "NEC µPD778"
+    }
+  ],
+  "curiosities": [
+    "It launched at ¥13,500, with games at ¥4,000.",
+    "The controls are knobs and buttons on the console itself, not separate controllers.",
+    "Only eleven games were released commercially.",
+    "A cheaper Cassette Vision Jr. followed in 1983 at ¥5,000."
+  ],
+  "unverified": []
+}

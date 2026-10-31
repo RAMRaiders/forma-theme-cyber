@@ -1,0 +1,30 @@
+{
+  "name": "Game Boy (2 Players)",
+  "category": "handhelds",
+  "description": "Two-player Game Boy link play, recreated in emulation by running two Game Boy instances connected by a virtual link cable. It covers games that originally needed two consoles, two cartridges and a cable. The hardware is the same as the Game Boy.",
+  "specs": {
+    "maker": "Nintendo",
+    "released": "1989 JP · 1989 NA · 1990 EU",
+    "cpu": "Sharp LR35902 (SM83 core) @ 4.19 MHz",
+    "memory": "8 KB RAM · 8 KB VRAM",
+    "graphics": "160 × 144 reflective LCD, 4 shades",
+    "sound": "4 channels (2 pulse, wave, noise), stereo through headphones",
+    "media": "ROM cartridges"
+  },
+  "chips": [
+    {
+      "role": "SoC",
+      "part": "Sharp LR35902"
+    },
+    {
+      "role": "CPU core",
+      "part": "Sharp SM83"
+    }
+  ],
+  "curiosities": [
+    "On real hardware, link play needed two consoles, two copies of the game and a Game Link Cable.",
+    "Pokémon trading and battles between the Red and Blue versions used the link cable.",
+    "The Four Player Adapter (DMG-07) let up to four Game Boys link for games such as F-1 Race."
+  ],
+  "unverified": []
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Sega Master System",
+  "category": "consoles",
+  "description": "Sega's 8-bit console, released in Japan as the Mark III in 1985 and redesigned as the Master System for the West. It lost badly to the NES in Japan and North America but did well in Europe and especially Brazil, where Tectoy kept making it for decades.",
+  "specs": {
+    "maker": "Sega",
+    "released": "1985 JP (Mark III) · 1986 NA · 1987 EU",
+    "cpu": "Zilog Z80A @ 3.58 MHz",
+    "memory": "8 KB RAM / 16 KB VRAM",
+    "graphics": "Sega 315-5124 VDP (TMS9918-derived)",
+    "sound": "SN76489 PSG in VDP; YM2413 FM on JP model",
+    "media": "Cartridge / Sega Card",
+    "unitsSold": "10–13 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Zilog Z80A"
+    },
+    {
+      "role": "VDP",
+      "part": "Sega 315-5124"
+    },
+    {
+      "role": "FM (JP)",
+      "part": "Yamaha YM2413"
+    }
+  ],
+  "curiosities": [
+    "It had a slot for credit-card-sized Sega Card games as well as cartridges.",
+    "The SegaScope 3-D Glasses used LCD shutters to create a stereoscopic image.",
+    "Later models had games such as Alex Kidd in Miracle World built in.",
+    "The Japanese Master System included a built-in FM sound chip."
+  ],
+  "unverified": []
+}

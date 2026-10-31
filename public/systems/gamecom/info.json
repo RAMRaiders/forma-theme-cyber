@@ -1,0 +1,27 @@
+{
+  "name": "Tiger Game.com",
+  "category": "handhelds",
+  "description": "Tiger Electronics' cartridge handheld, released in the United States in September 1997. It had a touchscreen, a stylus, and organizer apps, and with a modem cartridge it could send email and browse a text-only web. It sold poorly against the Game Boy but was ahead of its time on features.",
+  "specs": {
+    "maker": "Tiger Electronics",
+    "released": "1997 NA · 1997 UK",
+    "cpu": "Sharp SM8521 @ 10 MHz",
+    "graphics": "200 × 160 touchscreen LCD, 4 shades of grey",
+    "sound": "4 channels: 2 waveform, noise, 8-bit PCM",
+    "media": "ROM cartridges (two slots on the original model)",
+    "unitsSold": "Fewer than 300,000"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Sharp SM8521"
+    }
+  ],
+  "curiosities": [
+    "It was the first video game console with a touchscreen.",
+    "It was the first handheld that could connect to the internet, using a separate cartridge and a dial-up modem.",
+    "The original model had two cartridge slots; the 1999 Pocket Pro cut it to one and ran on two AA batteries instead of four.",
+    "Its library of about 20 games included handheld versions of Resident Evil 2 and Duke Nukem 3D."
+  ],
+  "unverified": []
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Sega 32X",
+  "category": "consoles",
+  "description": "A mushroom-shaped add-on that plugged into the Mega Drive / Genesis cartridge slot, adding two 32-bit SH-2 processors and a new video layer. Released at the end of 1994 as a stopgap before the Saturn, it was abandoned within about a year.",
+  "specs": {
+    "maker": "Sega",
+    "released": "1994 NA · 1994 JP · 1994 EU",
+    "cpu": "2× Hitachi SH-2 @ 23 MHz (plus host Motorola 68000)",
+    "memory": "256 KB RAM / 256 KB VRAM",
+    "graphics": "32X VDP framebuffer overlaid on Mega Drive video, up to 32,768 colours",
+    "sound": "2-channel PWM (plus Mega Drive sound)",
+    "media": "Cartridge (32X CD with Mega-CD)",
+    "unitsSold": "~665,000"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Hitachi SH-2 (master)"
+    },
+    {
+      "role": "CPU",
+      "part": "Hitachi SH-2 (slave)"
+    },
+    {
+      "role": "Host CPU",
+      "part": "Motorola 68000"
+    },
+    {
+      "role": "Video",
+      "part": "32X VDP"
+    }
+  ],
+  "curiosities": [
+    "The 32X was code-named Project Mars.",
+    "It needed its own power adapter, so a full Mega Drive + Mega-CD + 32X setup used three power supplies.",
+    "A single-unit Mega Drive with built-in 32X, code-named Neptune, was announced but never released."
+  ],
+  "unverified": []
+}

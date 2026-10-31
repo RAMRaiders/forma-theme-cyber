@@ -1,0 +1,42 @@
+{
+  "name": "MSX turbo R",
+  "category": "computers",
+  "description": "The final MSX standard, introduced in 1990 and built only by Panasonic as the FS-A1ST and FS-A1GT. It added the 16-bit-capable R800 processor alongside a Z80 for compatibility, plus PCM audio. It marked the end of the MSX line.",
+  "specs": {
+    "maker": "Panasonic",
+    "released": "1990 JP (FS-A1ST) · 1991 JP (FS-A1GT)",
+    "cpu": "ASCII R800 @ 7.16 MHz + Zilog Z80 @ 3.58 MHz",
+    "memory": "256 KB (ST) · 512 KB (GT) RAM · 128 KB VRAM",
+    "graphics": "Yamaha V9958, as MSX2+",
+    "sound": "PSG + YM2413 FM + 8-bit PCM",
+    "media": "ROM cartridges, 3.5\" floppy disk"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "ASCII R800"
+    },
+    {
+      "role": "Compat. CPU",
+      "part": "Zilog Z80"
+    },
+    {
+      "role": "Video",
+      "part": "Yamaha V9958"
+    },
+    {
+      "role": "FM sound",
+      "part": "Yamaha YM2413"
+    },
+    {
+      "role": "MSX engine",
+      "part": "Toshiba T9769"
+    }
+  ],
+  "curiosities": [
+    "Only Panasonic ever made turbo R machines, and only two models were released.",
+    "The R800 processor runs Z80 code and adds a hardware multiplier.",
+    "The FS-A1GT added a built-in MIDI interface."
+  ],
+  "unverified": ["Toshiba T9769"]
+}

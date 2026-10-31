@@ -1,0 +1,16 @@
+{
+  "name": "Ports",
+  "category": "ports",
+  "description": "Ports is Batocera's collection of native PC game ports and open-source game engines that run directly on Linux. It covers games whose source code was released or rebuilt by fans, such as Doom, Quake and Cave Story engines. Most need the original game data files.",
+  "specs": {
+    "maker": "Various (open-source communities)",
+    "engine": "Native Linux builds and libretro cores"
+  },
+  "chips": [],
+  "curiosities": [
+    "Many classic PC games became portable after their developers released the engine source code, starting with id Software's Doom in 1997.",
+    "Some ports, such as the NXEngine version of Cave Story, are full rewrites based on reverse engineering of the original game.",
+    "Ports can add widescreen, higher resolutions and controller support that the original games lacked."
+  ],
+  "unverified": []
+}

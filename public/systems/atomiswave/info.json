@@ -1,0 +1,35 @@
+{
+  "name": "Sammy Atomiswave",
+  "category": "arcade",
+  "description": "A low-cost arcade board from Sammy based on Sega Dreamcast and NAOMI technology, using swappable game cartridges. Introduced in 2003, it hosted fighting games such as The King of Fighters XI and Metal Slug 6 after SNK retired the Neo Geo MVS.",
+  "specs": {
+    "maker": "Sammy",
+    "released": "2003",
+    "cpu": "Hitachi SH-4 @ 200 MHz",
+    "memory": "16 MB RAM / 8 MB VRAM / 2 MB sound RAM",
+    "graphics": "PowerVR2 (CLX2) @ 100 MHz",
+    "sound": "Yamaha AICA (ARM7) @ 45 MHz",
+    "media": "ROM cartridge"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Hitachi SH-4"
+    },
+    {
+      "role": "GPU",
+      "part": "PowerVR2 CLX2"
+    },
+    {
+      "role": "Sound",
+      "part": "Yamaha AICA"
+    }
+  ],
+  "curiosities": [
+    "SNK Playmore made five games for it, ending with Metal Slug 6, before moving to Taito Type X2.",
+    "Its AW-Net online service ended in 2006 after the Sega–Sammy merger.",
+    "Fans have converted many Atomiswave games to run on the Dreamcast.",
+    "About 28 games were released for the platform."
+  ],
+  "unverified": []
+}

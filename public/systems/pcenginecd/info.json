@@ -1,0 +1,38 @@
+{
+  "name": "PC Engine CD-ROM²",
+  "category": "consoles",
+  "description": "NEC's CD-ROM add-on for the PC Engine, released in Japan in 1988 and in North America as the TurboGrafx-CD. It was the first CD-ROM system for a home console, and its Red Book audio, voice acting and anime cutscenes defined games like Ys Book I & II.",
+  "specs": {
+    "maker": "NEC Home Electronics / Hudson Soft",
+    "released": "1988 JP · 1989 NA",
+    "cpu": "Hudson HuC6280 @ 7.16 MHz (host console)",
+    "memory": "64 KB RAM (System Card), 256 KB with Super System Card; +2 MB with Arcade Card",
+    "graphics": "HuC6270 VDC + HuC6260 VCE (host console)",
+    "sound": "HuC6280 wavetable + OKI MSM5205 ADPCM + CD audio",
+    "media": "CD-ROM with System Card HuCard"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Hudson HuC6280"
+    },
+    {
+      "role": "VDC",
+      "part": "Hudson HuC6270"
+    },
+    {
+      "role": "VCE",
+      "part": "Hudson HuC6260"
+    },
+    {
+      "role": "ADPCM",
+      "part": "OKI MSM5205"
+    }
+  ],
+  "curiosities": [
+    "The drive needs a 'System Card' HuCard in the console's slot, and later games required upgraded Super System or Arcade cards.",
+    "The 1994 Arcade Card added extra RAM so that Neo Geo fighting games such as Art of Fighting and Fatal Fury Special could be ported.",
+    "Ys Book I & II used CD audio and voiced, animated cutscenes years before most consoles had a CD drive."
+  ],
+  "unverified": []
+}

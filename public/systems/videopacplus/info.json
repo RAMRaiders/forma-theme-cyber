@@ -1,0 +1,38 @@
+{
+  "name": "Philips Videopac+ G7400",
+  "category": "consoles",
+  "description": "Philips' 1983 European successor to the Videopac G7000 (Odyssey²), adding a second video chipset for higher-resolution backgrounds while keeping compatibility with older cartridges. A North American version, the Odyssey³, was shown but never released.",
+  "specs": {
+    "maker": "Philips",
+    "released": "1983 EU",
+    "cpu": "Intel 8048 @ 5.91 MHz",
+    "memory": "6 KB RAM",
+    "graphics": "Intel 8245 + Thomson EF9340/EF9341, 320×238, 16 colours",
+    "sound": "Intel 8245, 1 channel",
+    "media": "Cartridge"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Intel 8048"
+    },
+    {
+      "role": "Video/Audio",
+      "part": "Intel 8245"
+    },
+    {
+      "role": "Video",
+      "part": "Thomson EF9340"
+    },
+    {
+      "role": "Video",
+      "part": "Thomson EF9341"
+    }
+  ],
+  "curiosities": [
+    "The Odyssey³ was shown at the 1983 Winter CES as the 'Odyssey Command Center' with a planned $199 price, then cancelled.",
+    "Thomson-Brandt sold a licensed French version called the Jopac (JO 7400).",
+    "Most G7000 cartridges run on it, and some later cartridges show enhanced backgrounds when played on the G7400."
+  ],
+  "unverified": []
+}

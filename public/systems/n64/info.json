@@ -1,0 +1,36 @@
+{
+  "name": "Nintendo 64",
+  "category": "consoles",
+  "description": "Nintendo's 1996 console, built with Silicon Graphics, which brought 3D worlds to the living room with Super Mario 64 and The Legend of Zelda: Ocarina of Time. It stuck with cartridges while rivals used CDs, and its controller introduced an analog stick that set a template for 3D games.",
+  "specs": {
+    "maker": "Nintendo",
+    "released": "1996 JP · 1996 NA · 1997 EU",
+    "cpu": "NEC VR4300 @ 93.75 MHz",
+    "memory": "4 MB RDRAM (8 MB with Expansion Pak)",
+    "graphics": "SGI Reality Coprocessor (RSP + RDP) @ 62.5 MHz",
+    "sound": "Software via RCP's RSP",
+    "media": "Cartridge (64DD disk drive in JP)",
+    "unitsSold": "32.93 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "NEC VR4300"
+    },
+    {
+      "role": "RCP",
+      "part": "Reality Coprocessor"
+    },
+    {
+      "role": "Memory",
+      "part": "Rambus RDRAM"
+    }
+  ],
+  "curiosities": [
+    "Its RAM is unified, shared by the CPU and graphics.",
+    "Consoles shipped with a Jumper Pak filling the memory slot that the Expansion Pak later used.",
+    "The Rumble Pak, introduced with Star Fox 64, made force feedback common on controllers.",
+    "The 64DD disk drive was released only in Japan and sold poorly."
+  ],
+  "unverified": []
+}

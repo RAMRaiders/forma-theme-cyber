@@ -1,0 +1,39 @@
+{
+  "name": "Mattel Intellivision",
+  "category": "consoles",
+  "description": "Mattel Electronics' console, test-marketed in 1979 and released nationally in 1980 as the main rival to the Atari 2600. Its sports games and more detailed graphics set it apart, and it was among the first consoles with a 16-bit processor.",
+  "specs": {
+    "maker": "Mattel Electronics",
+    "released": "1979 (test) · 1980 NA",
+    "cpu": "General Instrument CP1610 @ ~894 kHz",
+    "graphics": "GI AY-3-8900 STIC",
+    "sound": "GI AY-3-8914",
+    "media": "Cartridge",
+    "unitsSold": "~3 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "GI CP1610"
+    },
+    {
+      "role": "Video",
+      "part": "GI AY-3-8900 STIC"
+    },
+    {
+      "role": "Sound",
+      "part": "GI AY-3-8914"
+    },
+    {
+      "role": "Graphics ROM",
+      "part": "GI RO-3-9502 GROM"
+    }
+  ],
+  "curiosities": [
+    "Its controllers combined a 12-key keypad with a 16-direction disc and took plastic overlays for each game.",
+    "The Intellivoice add-on gave some games synthesised speech.",
+    "PlayCable let subscribers download games over cable TV.",
+    "The FTC investigated Mattel because a promised Keyboard Component was delayed for years."
+  ],
+  "unverified": []
+}

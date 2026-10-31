@@ -1,0 +1,44 @@
+{
+  "name": "Sony PlayStation",
+  "category": "consoles",
+  "description": "Sony's first home console, a CD-ROM machine built around fast 3D polygon hardware. Launched in Japan in 1994, it brought cheap disc media and a broad third-party library to the mainstream and became the first console to pass 100 million units.",
+  "specs": {
+    "maker": "Sony Computer Entertainment",
+    "released": "1994 JP · 1995 NA · 1995 EU",
+    "cpu": "MIPS R3000A-based CPU @ 33.87 MHz with GTE geometry coprocessor",
+    "memory": "2 MB RAM / 1 MB VRAM / 512 KB sound RAM",
+    "graphics": "Sony custom GPU, up to 640×480, 24-bit colour",
+    "sound": "Sony SPU, 24 ADPCM channels",
+    "media": "CD-ROM",
+    "unitsSold": "~102.5 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "MIPS R3000A"
+    },
+    {
+      "role": "Geometry",
+      "part": "GTE coprocessor"
+    },
+    {
+      "role": "GPU",
+      "part": "Sony CXD8514Q"
+    },
+    {
+      "role": "Sound",
+      "part": "Sony SPU CXD2922"
+    },
+    {
+      "role": "CD",
+      "part": "CD-ROM controller"
+    }
+  ],
+  "curiosities": [
+    "The PlayStation grew out of a failed partnership to build a CD-ROM add-on for the Super Nintendo.",
+    "PlayStation game discs have a black-tinted underside to make them easy to tell apart from audio CDs and copies.",
+    "Ridge Racer loads entirely into RAM, so players could swap in a music CD while racing.",
+    "Sony sold a black hobbyist version called Net Yaroze that let individuals write PlayStation games on a PC."
+  ],
+  "unverified": ["Sony CXD8514Q", "Sony SPU CXD2922"]
+}

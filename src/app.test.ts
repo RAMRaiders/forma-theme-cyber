@@ -9,12 +9,26 @@ import { mockBackend } from '@ramraiders/forma-sdk/mock';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { App } from './app.js';
+import { InfoStore } from './data/catalog.js';
 
 beforeEach(() => {
   // jsdom implements neither.
   Element.prototype.scrollIntoView = vi.fn();
   document.body.innerHTML = '<div id="app"></div>';
 });
+
+/** Cyber's own data for the NES, as public/systems/nes/info.json would give it. */
+const infos = new InfoStore((url) =>
+  url === './systems/nes/info.json'
+    ? Promise.resolve({
+        name: 'Nintendo Entertainment System',
+        description: 'An 8-bit console.',
+        specs: { maker: 'Nintendo', cpu: 'Ricoh 2A03' },
+        chips: [{ role: 'CPU', part: 'Ricoh 2A03' }],
+        curiosities: ['First fact.', 'Second fact.']
+      })
+    : Promise.reject(new Error('404'))
+);
 
 async function start(permissions: string[] = []) {
   const backend = mockBackend({ playMs: 50, permissions });
@@ -26,7 +40,7 @@ async function start(permissions: string[] = []) {
   };
   const forma = await connect({ backend, keyboard: false });
   const root = document.querySelector<HTMLElement>('#app')!;
-  await new App(forma, root).start();
+  await new App(forma, root, infos).start();
 
   const press = async (action: InputEvent['action'], repeat = false) => {
     send({ action, button: null, gamepad: 0, pressed: true, repeat });
@@ -40,47 +54,64 @@ async function start(permissions: string[] = []) {
 }
 
 describe('the default theme', () => {
-  it('opens on the boot view as a grid of systems', async () => {
+  it('opens on the categories, with the systems and games in each', async () => {
     const { text } = await start();
     expect(text('h1')).toEqual(['Systems']);
-    expect(text('.card .label')).toEqual([
-      'Nintendo Entertainment System',
-      'Super Famicom',
-      'Mega Drive',
-      'PlayStation',
-      'Homebrew'
-    ]);
-    expect(text('.card.selected .label')).toEqual(['Nintendo Entertainment System']);
+    expect(text('.tile h2')).toEqual(['Consoles']);
+    expect(text('.tile.selected .count')).toEqual(['5 systems · 9 games']);
     expect(text('.hint')).toEqual(['AOpen', 'SelectViews', 'StartMenu']);
   });
 
-  it('opens a system into its games, shows details, and goes back to where it was', async () => {
-    const { press, text } = await start();
-    await press('right');
-    expect(text('.card.selected .label')).toEqual(['Super Famicom']);
-    await press('left');
+  it('goes category → system → games, and back to where it was', async () => {
+    const { press, text, root } = await start();
     await press('confirm');
+    expect(text('.trail .crumb')).toEqual(['Consoles']);
+    // Biggest libraries first.
+    expect(text('.system-list .name')).toEqual([
+      'Nintendo Entertainment System',
+      'Mega Drive',
+      'Super Famicom',
+      'Homebrew',
+      'PlayStation'
+    ]);
+    // The system's own page: Cyber's info, its specs, a curiosity, and its board behind.
+    await vi.waitFor(() =>
+      expect(text('.system-panel .description')).toEqual(['An 8-bit console.'])
+    );
+    expect(text('.system-panel dd')).toEqual(['Ricoh 2A03']);
+    expect(text('.system-panel .fact p')).toEqual(['First fact.']);
+    await press('north');
+    expect(text('.system-panel .fact p')).toEqual(['Second fact.']);
+    expect(root.querySelector('.backdrop .circuit text.part')?.textContent).toBe('Ricoh 2A03');
+    expect(text('.hint')).toContain('AGames');
 
-    expect(text('.trail .crumb')).toEqual(['Nintendo Entertainment System']);
+    // A system without info.json still shows, from Forma's data.
+    await press('down');
+    expect(text('.system-panel .name')).toEqual(['Mega Drive']);
+    await press('up');
+
+    await press('confirm');
+    expect(text('.trail .crumb')).toEqual(['Consoles', 'Nintendo Entertainment System']);
     await vi.waitFor(() => expect(text('.row')).toContain('★ Super Mario Bros.'));
     expect(text('.row.selected')).toEqual(['Homebrew Demo']);
     await press('down');
     expect(text('.row.selected')).toEqual(['★ Super Mario Bros.']);
-    // Quick presses count as a held direction: the panel settles once movement pauses.
     await vi.waitFor(() => expect(text('.detail h2')).toEqual(['★ Super Mario Bros.']));
     expect(text('.detail .facts')[0]).toContain('1985');
     expect(text('.hint')).toContain('YFavourite');
-
-    await press('up');
-    await press('up'); // a fresh press at the top wraps to the bottom
-    expect(text('.row.selected')).toEqual(['The Legend of Zelda']);
+    // The system's board stays behind its games.
+    expect(root.querySelector('.backdrop .circuit')).not.toBeNull();
 
     await press('back');
-    expect(text('.card.selected .label')).toEqual(['Nintendo Entertainment System']);
+    expect(text('.system-list li.selected .name')).toEqual(['Nintendo Entertainment System']);
+    await press('back');
+    expect(text('.tile.selected h2')).toEqual(['Consoles']);
+    expect(root.querySelector('.backdrop .circuit')).toBeNull();
   });
 
   it('toggles a favourite in place', async () => {
     const { press, text } = await start();
+    await press('confirm');
     await press('confirm');
     await vi.waitFor(() => expect(text('.row.selected')).toEqual(['Homebrew Demo']));
     await press('north');
@@ -89,8 +120,10 @@ describe('the default theme', () => {
   });
 
   it('launches a game, covers the screen while it runs, and comes back', async () => {
-    const { press, root } = await start();
+    const { press, root, text } = await start();
     await press('confirm');
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.row.selected')).toEqual(['Homebrew Demo']));
     await press('confirm');
     const playing = root.querySelector<HTMLElement>('.playing')!;
     await vi.waitFor(() => expect(playing.hidden).toBe(false));

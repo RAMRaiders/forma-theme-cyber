@@ -1,0 +1,27 @@
+{
+  "name": "Pokémon Mini",
+  "category": "handhelds",
+  "description": "A tiny Nintendo handheld released in 2001 that played only Pokémon-themed mini-games. It packed a rumble motor, shock sensor, infrared port and real-time clock into a body the size of a matchbox. Only ten games were made, and in the US it was sold mainly through the Pokémon Center store in New York.",
+  "specs": {
+    "maker": "Nintendo",
+    "released": "2001 NA · 2001 JP · 2002 EU",
+    "cpu": "Epson S1C88-based @ 4 MHz",
+    "memory": "4 KB RAM",
+    "graphics": "96 × 64 monochrome LCD",
+    "sound": "Single-channel piezo",
+    "media": "ROM cartridges"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Epson S1C88 (custom)"
+    }
+  ],
+  "curiosities": [
+    "Its shock sensor detects when the console is shaken or tapped, and some games use it as a control.",
+    "A built-in rumble motor gave it force feedback in a handheld years before that became common.",
+    "Its infrared port let two units play together without a cable.",
+    "It came in three colours named after Pokémon: Wooper Blue, Chikorita Green and Smoochum Purple."
+  ],
+  "unverified": ["Epson S1C88-based @ 4 MHz"]
+}

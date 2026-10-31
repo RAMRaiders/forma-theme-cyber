@@ -1,0 +1,20 @@
+{
+  "name": "Mr. Boom",
+  "category": "ports",
+  "description": "Mr. Boom is a Bomberman-style action game for up to eight players, originally made for MS-DOS by Remdy Software in the late 1990s. Its original author later converted the x86 assembly to C and released it as an open-source libretro core and SDL2 game. It adds AI bots, team modes and network play.",
+  "specs": {
+    "maker": "Remdy Software",
+    "engine": "libretro core / SDL2",
+    "language": "C (converted from x86 assembly)",
+    "released": "Late 1990s (DOS)",
+    "license": "MIT"
+  },
+  "chips": [],
+  "curiosities": [
+    "The original DOS assembly code was converted to C with a tool called asm2c rather than rewritten by hand.",
+    "It supports up to eight players at once, more than most Bomberman games.",
+    "Players can ride kangaroos, push bombs and trigger them with remote controls.",
+    "Its team modes include grouping players by colour or pitting humans against bots."
+  ],
+  "unverified": ["Late 1990s (DOS)"]
+}

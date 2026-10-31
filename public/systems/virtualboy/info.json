@@ -1,0 +1,36 @@
+{
+  "name": "Virtual Boy",
+  "category": "consoles",
+  "description": "Gunpei Yokoi's 1995 tabletop stereoscopic console, which showed red monochrome 3D images through a pair of oscillating mirrors. Uncomfortable and expensive, it was discontinued within about a year with 22 games released.",
+  "specs": {
+    "maker": "Nintendo",
+    "released": "1995 JP · 1995 NA",
+    "cpu": "NEC V810 @ 20 MHz",
+    "memory": "64 KB WRAM / 128 KB VRAM",
+    "graphics": "Two Reflection Technology scanning red LED displays, 384×224 per eye",
+    "sound": "VSU, 6 channels (wavetable + noise)",
+    "media": "Cartridge",
+    "unitsSold": "~770,000"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "NEC V810"
+    },
+    {
+      "role": "Video",
+      "part": "VIP"
+    },
+    {
+      "role": "Sound",
+      "part": "VSU"
+    }
+  ],
+  "curiosities": [
+    "It was never released in Europe.",
+    "Only 22 games were released worldwide.",
+    "The display used red LEDs, which were the cheapest and least power-hungry option at the time.",
+    "Its image is produced by a single column of LEDs per eye swept across the view by a vibrating mirror."
+  ],
+  "unverified": ["64 KB WRAM / 128 KB VRAM"]
+}

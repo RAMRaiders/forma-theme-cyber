@@ -1,0 +1,36 @@
+{
+  "name": "Atari 2600",
+  "category": "consoles",
+  "description": "Atari's Video Computer System, launched in 1977, popularised interchangeable game cartridges and brought arcade hits into living rooms. With almost no RAM and no frame buffer, programmers had to draw each scanline in step with the TV beam. It stayed on sale until 1992.",
+  "specs": {
+    "maker": "Atari",
+    "released": "1977 NA · 1978 EU",
+    "cpu": "MOS 6507 @ 1.19 MHz",
+    "memory": "128 bytes RAM",
+    "graphics": "TIA (Television Interface Adaptor)",
+    "sound": "TIA, 2 channels",
+    "media": "Cartridge",
+    "unitsSold": "~30 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "MOS 6507"
+    },
+    {
+      "role": "Video/Sound",
+      "part": "TIA"
+    },
+    {
+      "role": "RAM/IO/Timer",
+      "part": "MOS 6532 RIOT"
+    }
+  ],
+  "curiosities": [
+    "It was sold as the Atari VCS until it was renamed the 2600 in 1982.",
+    "The 128 bytes of RAM live inside the 6532 RIOT chip, which also handles input and timers.",
+    "Early cartridges held only 2 KB or 4 KB; larger games used bank switching.",
+    "In 2014 excavators recovered E.T. cartridges from the 1983 landfill in Alamogordo, New Mexico."
+  ],
+  "unverified": []
+}

@@ -1,0 +1,26 @@
+{
+  "name": "Hartung Game Master",
+  "category": "handhelds",
+  "description": "A low-cost monochrome handheld sold from 1990, mainly in Germany by Hartung and in other European countries under several brand names. It was built to compete with the Game Boy on price, with a small LCD and a library of about 18 games. It made little impact outside its niche.",
+  "specs": {
+    "maker": "Hartung",
+    "released": "1990 DE",
+    "cpu": "NEC μPD7810",
+    "graphics": "Monochrome LCD, 61 × 64",
+    "sound": "1-bit DAC, built-in speaker",
+    "media": "ROM cartridges (40-pin)"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "NEC uPD7810"
+    }
+  ],
+  "curiosities": [
+    "It was also sold as the Systema 2000, Super Game and Game Tronic, among other names.",
+    "Its cartridges look like Watara Supervision carts, but the two systems are not compatible.",
+    "The Game Plus variant sold in France looked more like a Game Boy and could not play Game Master cartridges.",
+    "About 18 games were released for it."
+  ],
+  "unverified": []
+}

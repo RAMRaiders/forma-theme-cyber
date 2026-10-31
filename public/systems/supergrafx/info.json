@@ -1,0 +1,42 @@
+{
+  "name": "PC Engine SuperGrafx",
+  "category": "consoles",
+  "description": "NEC's 1989 upgraded PC Engine with a second video processor, four times the work RAM and double the VRAM. It ran every standard HuCard but received only a handful of its own games, making it one of the rarest Japanese consoles.",
+  "specs": {
+    "maker": "NEC Home Electronics / Hudson Soft",
+    "released": "1989 JP",
+    "cpu": "Hudson HuC6280 @ 7.16 MHz",
+    "memory": "32 KB RAM / 128 KB VRAM",
+    "graphics": "2× HuC6270 VDC + HuC6202 priority controller + HuC6260 VCE",
+    "sound": "6-channel wavetable (inside HuC6280)",
+    "media": "HuCard"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Hudson HuC6280"
+    },
+    {
+      "role": "VDC 1",
+      "part": "Hudson HuC6270"
+    },
+    {
+      "role": "VDC 2",
+      "part": "Hudson HuC6270"
+    },
+    {
+      "role": "VPC",
+      "part": "Hudson HuC6202"
+    },
+    {
+      "role": "VCE",
+      "part": "Hudson HuC6260"
+    }
+  ],
+  "curiosities": [
+    "Only five games were released that required the SuperGrafx, including a celebrated port of Capcom's Daimakaimura (Ghouls 'n Ghosts).",
+    "It was sold only in Japan.",
+    "Its second video processor lets it draw two independent background layers and twice as many sprites as a standard PC Engine."
+  ],
+  "unverified": []
+}

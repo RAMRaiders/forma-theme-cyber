@@ -1,0 +1,20 @@
+{
+  "name": "ScummVM",
+  "category": "ports",
+  "description": "ScummVM runs classic point-and-click adventures by reimplementing their game engines instead of emulating the original computers. Started in 2001 to play LucasArts' SCUMM games, it now supports dozens of engines from Sierra, Revolution, Westwood and others. You supply the original game data files.",
+  "specs": {
+    "maker": "ScummVM team (founded by Ludvig Strigeus and Vincent Hamm)",
+    "engine": "Reimplementation of adventure-game interpreters",
+    "language": "C++",
+    "released": "2001",
+    "license": "GPL-3.0-or-later"
+  },
+  "chips": [],
+  "curiosities": [
+    "SCUMM stands for Script Creation Utility for Maniac Mansion; ScummVM adds \"Virtual Machine\".",
+    "Revolution Software released Beneath a Steel Sky and Lure of the Temptress as freeware for use with ScummVM.",
+    "The ResidualVM project, which handled 3D adventures such as Grim Fandango, was merged into ScummVM.",
+    "The project has taken part in Google Summer of Code almost every year since 2007."
+  ],
+  "unverified": []
+}

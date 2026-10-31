@@ -1,0 +1,31 @@
+{
+  "name": "Mega Duck",
+  "category": "handhelds",
+  "description": "A Game Boy-like handheld from Hong Kong's Welback Holdings, sold from 1993 in parts of Europe and as the Cougar Boy in Brazil. Its hardware is almost identical to the Game Boy, but it uses its own 36-pin cartridges. About two dozen games were released, mostly by Sachen and Commin.",
+  "specs": {
+    "maker": "Welback Holdings",
+    "released": "1993",
+    "cpu": "Sharp SM83 (Game Boy-type) @ 4.19 MHz",
+    "memory": "16 KB RAM",
+    "graphics": "2.7\" LCD, 160 × 144, 4 shades",
+    "sound": "4 channels (2 pulse, wave, noise), stereo through headphones",
+    "media": "ROM cartridges (36-pin)"
+  },
+  "chips": [
+    {
+      "role": "CPU core",
+      "part": "Sharp SM83"
+    },
+    {
+      "role": "RAM",
+      "part": "Goldstar GM76C88"
+    }
+  ],
+  "curiosities": [
+    "Because its hardware is so close to the Game Boy's, some of its games were later re-released on unlicensed Game Boy multicarts.",
+    "It was also sold as the Cougar Boy in Brazil and the Super QuiQue in Spain.",
+    "A laptop-style educational version, the Super Junior Computer, used the same game hardware.",
+    "About 24 cartridges are known to exist for it."
+  ],
+  "unverified": []
+}

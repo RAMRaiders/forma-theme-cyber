@@ -1,0 +1,39 @@
+{
+  "name": "Bally Astrocade",
+  "category": "consoles",
+  "description": "A console designed by Midway's Dave Nutting Associates and sold by Bally from 1977–78, originally as the Bally Home Library Computer and later the Bally Professional Arcade. Its graphics and sound were advanced for the time, and a BASIC cartridge let owners write their own programs.",
+  "specs": {
+    "maker": "Bally / Midway",
+    "released": "1977 (mail order) · 1978 retail",
+    "cpu": "Zilog Z80 @ 1.789 MHz",
+    "memory": "4 KB",
+    "graphics": "Custom display chips, 160×102, 256-colour palette",
+    "sound": "Custom I/O + sound chip, 3 square-wave voices + noise",
+    "media": "Cartridge (Videocade)"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Zilog Z80"
+    },
+    {
+      "role": "Video",
+      "part": "Bally Data Chip"
+    },
+    {
+      "role": "Video",
+      "part": "Bally Address Chip"
+    },
+    {
+      "role": "I/O + Sound",
+      "part": "0066-117XX"
+    }
+  ],
+  "curiosities": [
+    "It shipped with four built-in programs: Gun Fight, Checkmate, a calculator and a drawing program called Scribbling.",
+    "Its Astro BASIC cartridge was derived from Palo Alto Tiny BASIC.",
+    "The controller's trigger-grip joystick also turns like a paddle knob.",
+    "The ZGRASS expansion was designed to turn it into a full computer with a keyboard and CP/M support."
+  ],
+  "unverified": ["Bally Data Chip", "Bally Address Chip"]
+}

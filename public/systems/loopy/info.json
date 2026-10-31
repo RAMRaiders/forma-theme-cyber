@@ -1,0 +1,26 @@
+{
+  "name": "Casio Loopy",
+  "category": "consoles",
+  "description": "A 1995 console from Casio released only in Japan and aimed at girls. It had a built-in colour thermal printer that turned game screens into stickers, making it a sticker-making toy as much as a games machine.",
+  "specs": {
+    "maker": "Casio",
+    "released": "1995 JP",
+    "cpu": "Hitachi SH7021 (SuperH) @ 16 MHz",
+    "memory": "1 MB",
+    "sound": "4-channel 12-bit PCM",
+    "media": "Cartridge"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Hitachi SH7021"
+    }
+  ],
+  "curiosities": [
+    "Its printer used special sticker paper to print in colour.",
+    "Only eleven titles were released.",
+    "The Magical Shop accessory captured images from a VCR so users could add text and print them as stickers.",
+    "It was never sold outside Japan."
+  ],
+  "unverified": ["1 MB"]
+}

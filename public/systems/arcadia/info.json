@@ -1,0 +1,31 @@
+{
+  "name": "Emerson Arcadia 2001",
+  "category": "consoles",
+  "description": "A compact cartridge console released by Emerson Radio in 1982, built around Signetics chips. It sold poorly in the US but was licensed and cloned widely, with over 30 variants sold around the world, including Bandai's Japanese version.",
+  "specs": {
+    "maker": "Emerson Radio",
+    "released": "1982 NA",
+    "cpu": "Signetics 2650",
+    "memory": "1 KB",
+    "graphics": "Signetics 2637 UVI",
+    "sound": "Signetics 2637 UVI (beeper + noise)",
+    "media": "Cartridge"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Signetics 2650"
+    },
+    {
+      "role": "Video/Sound",
+      "part": "Signetics 2637 UVI"
+    }
+  ],
+  "curiosities": [
+    "It ran on a 12-volt supply, so it could be powered from a car or boat.",
+    "It launched in the US at $99.",
+    "It reached stores shortly before the ColecoVision.",
+    "Emerson reportedly built versions of Pac-Man, Galaxian and Defender for it but never shipped them, reportedly because of legal pressure from Atari."
+  ],
+  "unverified": []
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Atari Jaguar",
+  "category": "consoles",
+  "description": "Atari's last home console, released in 1993 and marketed as the first 64-bit system. Its two custom chips, Tom and Jerry, were powerful but hard to program, and few games used them well, so the system sold poorly against Sony and Sega.",
+  "specs": {
+    "maker": "Atari",
+    "released": "1993 NA · 1994 EU · 1994 JP",
+    "cpu": "Motorola 68000 @ 13.295 MHz",
+    "memory": "2 MB DRAM (64-bit bus)",
+    "graphics": "Tom: RISC GPU, Object Processor, blitter @ 26.59 MHz",
+    "sound": "Jerry: RISC DSP @ 26.59 MHz",
+    "media": "Cartridge (CD add-on)"
+  },
+  "chips": [
+    {
+      "role": "GPU",
+      "part": "Tom"
+    },
+    {
+      "role": "DSP/Sound",
+      "part": "Jerry"
+    },
+    {
+      "role": "CPU",
+      "part": "Motorola 68000"
+    }
+  ],
+  "curiosities": [
+    "IBM manufactured the console for Atari.",
+    "Its marketing slogan was \"Do the Math\".",
+    "After Atari's exit, the case and cartridge molds were reused for dental imaging equipment.",
+    "Its controller has a 12-button numeric keypad that took game overlays."
+  ],
+  "unverified": []
+}

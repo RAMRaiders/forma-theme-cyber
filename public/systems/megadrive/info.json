@@ -1,0 +1,40 @@
+{
+  "name": "Sega Mega Drive / Genesis",
+  "category": "consoles",
+  "description": "Sega's 16-bit console, released in Japan in 1988 and sold as the Genesis in North America. Sonic the Hedgehog and its fast arcade-style games took on Nintendo directly, and the console was especially popular in North America, Europe and Brazil.",
+  "specs": {
+    "maker": "Sega",
+    "released": "1988 JP · 1989 NA · 1990 EU",
+    "cpu": "Motorola 68000 @ 7.67 MHz + Zilog Z80 @ 3.58 MHz",
+    "memory": "64 KB RAM / 64 KB VRAM / 8 KB Z80 RAM",
+    "graphics": "Sega 315-5313 VDP (Yamaha YM7101)",
+    "sound": "Yamaha YM2612 FM + SN76489 PSG",
+    "media": "Cartridge",
+    "unitsSold": "~30.75 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Motorola 68000"
+    },
+    {
+      "role": "Sound CPU",
+      "part": "Zilog Z80"
+    },
+    {
+      "role": "VDP",
+      "part": "Sega 315-5313"
+    },
+    {
+      "role": "FM",
+      "part": "Yamaha YM2612"
+    }
+  ],
+  "curiosities": [
+    "The Z80 also lets it play Master System games through the Power Base Converter.",
+    "Tectoy has kept making versions of it in Brazil for decades.",
+    "The Genesis name was used in North America because Sega could not secure the Mega Drive trademark there.",
+    "The 32X and Mega-CD add-ons could be connected at the same time."
+  ],
+  "unverified": []
+}

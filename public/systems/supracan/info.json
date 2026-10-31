@@ -1,0 +1,35 @@
+{
+  "name": "Super A'Can",
+  "category": "consoles",
+  "description": "A 16-bit cartridge console from Taiwan's Funtech, released in October 1995 in Taiwan. Built around a Motorola 68000 and custom UMC chips, it was discontinued within months and became a famously rare commercial failure.",
+  "specs": {
+    "maker": "Funtech Entertainment",
+    "released": "1995 TW",
+    "cpu": "Motorola 68000 @ 10.74 MHz",
+    "memory": "64 KB work RAM / 128 KB VRAM",
+    "graphics": "UMC UM6618, 320×240, 256 of 32,768 colours",
+    "sound": "UMC UM6619, 16-channel PCM",
+    "media": "Cartridge"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Motorola 68000"
+    },
+    {
+      "role": "Video",
+      "part": "UMC UM6618"
+    },
+    {
+      "role": "Sound",
+      "part": "UMC UM6619"
+    }
+  ],
+  "curiosities": [
+    "Only twelve games were released.",
+    "Funtech reportedly lost more than US$6 million on the console.",
+    "Remaining stock was sold off to the United States as scrap parts after production and development equipment was destroyed.",
+    "It was discontinued in April 1996, about six months after launch."
+  ],
+  "unverified": ["Funtech reportedly lost more than US$6 million on the console."]
+}

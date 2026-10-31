@@ -1,0 +1,38 @@
+{
+  "name": "MSX2",
+  "category": "computers",
+  "description": "The 1985 update to the MSX standard, built around Yamaha's V9938 video chip. It added higher resolutions, up to 256 colours and more video memory while staying compatible with MSX1 software. It is the platform where Konami's Metal Gear first appeared.",
+  "specs": {
+    "maker": "Several (Sony, Panasonic, Yamaha, Philips and others)",
+    "released": "1985",
+    "cpu": "Zilog Z80A @ 3.58 MHz",
+    "memory": "64 KB+ RAM · 64–128 KB VRAM",
+    "graphics": "Yamaha V9938: up to 512 × 212, 256 colours",
+    "sound": "AY-3-8910 PSG (FM via optional MSX-MUSIC)",
+    "media": "ROM cartridges, 3.5\" floppy disk"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Zilog Z80A"
+    },
+    {
+      "role": "Video",
+      "part": "Yamaha V9938"
+    },
+    {
+      "role": "Sound",
+      "part": "GI AY-3-8910"
+    },
+    {
+      "role": "Clock",
+      "part": "Ricoh RP5C01"
+    }
+  ],
+  "curiosities": [
+    "Hideo Kojima's Metal Gear debuted on the MSX2 in 1987.",
+    "MSX2 machines must include a battery-backed real-time clock.",
+    "Konami's SCC sound chip, built into some game cartridges, added five wavetable channels to the system."
+  ],
+  "unverified": []
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Epoch Game Pocket Computer",
+  "category": "handhelds",
+  "description": "A Japanese cartridge handheld made by toy company Epoch in 1984, five years before the Game Boy. It had a monochrome dot-matrix LCD rather than fixed LCD graphics, so it could run different games. High price and a tiny library made it a commercial failure.",
+  "specs": {
+    "maker": "Epoch",
+    "released": "1984 JP",
+    "cpu": "NEC μPD78C06 @ 6 MHz",
+    "memory": "2 KB RAM",
+    "graphics": "Monochrome LCD, 75 × 64",
+    "sound": "1 channel",
+    "media": "ROM cartridges (8–16 KB)"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "NEC uPD78C06"
+    }
+  ],
+  "curiosities": [
+    "Only five cartridge games were released, plus two programs built into the console.",
+    "It launched at ¥12,800, close to the price of a Famicom.",
+    "Its built-in software included a puzzle game and a simple paint program.",
+    "It ran on four AA batteries for an estimated 60 to 70 hours."
+  ],
+  "unverified": []
+}

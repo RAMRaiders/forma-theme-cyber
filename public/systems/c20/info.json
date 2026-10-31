@@ -1,0 +1,36 @@
+{
+  "name": "Commodore VIC-20",
+  "category": "computers",
+  "description": "Commodore's first colour home computer, sold in Japan as the VIC-1001 in 1980 and worldwide from 1981. It was cheap, sold in toy and department stores, and advertised by William Shatner. It was the first computer to sell a million units.",
+  "specs": {
+    "maker": "Commodore",
+    "released": "1980 JP · 1981 NA · 1981 EU",
+    "cpu": "MOS 6502 @ 1.02 MHz (NTSC) / 1.11 MHz (PAL)",
+    "memory": "5 KB RAM (3.5 KB free for BASIC)",
+    "graphics": "VIC chip: 22 × 23 text, 16 colours",
+    "sound": "VIC chip: 3 tone voices + noise",
+    "media": "ROM cartridges, cassette (Datasette), floppy disk",
+    "unitsSold": "About 2.5 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "MOS 6502"
+    },
+    {
+      "role": "Video / sound",
+      "part": "MOS 6560/6561 VIC"
+    },
+    {
+      "role": "I/O",
+      "part": "MOS 6522 VIA"
+    }
+  ],
+  "curiosities": [
+    "William Shatner starred in its TV advertising.",
+    "It was sold as the VC-20 in Germany, marketed as a \"Volkscomputer\".",
+    "It was the first computer of any kind to sell one million units.",
+    "Its text screen was only 22 characters wide."
+  ],
+  "unverified": []
+}

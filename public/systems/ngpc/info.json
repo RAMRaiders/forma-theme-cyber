@@ -1,0 +1,35 @@
+{
+  "name": "Neo Geo Pocket Color",
+  "category": "handhelds",
+  "description": "SNK's colour handheld, launched in Japan in 1999 and briefly in North America and Europe. It is known for its clicky microswitch joystick, long battery life and strong fighting and puzzle games. SNK's financial trouble and its sale to Aruze ended Western sales in 2000.",
+  "specs": {
+    "maker": "SNK",
+    "cpu": "Toshiba TLCS-900H @ 6.144 MHz + Zilog Z80 @ 3.072 MHz (sound)",
+    "memory": "12 KB RAM + 4 KB sound RAM",
+    "sound": "T6W28 PSG (SN76489-type) plus DAC",
+    "media": "ROM cartridges",
+    "released": "1999 JP · 1999 NA · 1999 EU",
+    "graphics": "160 × 152 colour LCD, 146 colours on screen from 4,096"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Toshiba TLCS-900H"
+    },
+    {
+      "role": "Sound CPU",
+      "part": "Zilog Z80"
+    },
+    {
+      "role": "Sound",
+      "part": "Toshiba T6W28"
+    }
+  ],
+  "curiosities": [
+    "SNK vs. Capcom: The Match of the Millennium and Card Fighters' Clash were made with Capcom for the system.",
+    "A link cable connected it to the Dreamcast to share data with games such as The King of Fighters: Dream Match 1999.",
+    "Two AA batteries ran it for around 40 hours.",
+    "SNK withdrew it from North America and Europe in 2000, after Aruze bought the company."
+  ],
+  "unverified": ["Two AA batteries ran it for around 40 hours."]
+}

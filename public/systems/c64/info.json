@@ -1,0 +1,40 @@
+{
+  "name": "Commodore 64",
+  "category": "computers",
+  "description": "Commodore's 8-bit home computer, released in 1982, named for its 64 KB of RAM. Its sprites, smooth scrolling and SID sound chip made it a strong games machine, and its price made it the best-selling single computer model. It stayed in production until 1994.",
+  "specs": {
+    "maker": "Commodore",
+    "released": "1982",
+    "cpu": "MOS 6510 @ 1.02 MHz (NTSC) / 0.985 MHz (PAL)",
+    "memory": "64 KB RAM",
+    "graphics": "VIC-II: 320 × 200, 16 colours, 8 hardware sprites",
+    "sound": "SID 6581: 3 voices, filter",
+    "media": "ROM cartridges, cassette (Datasette), 5.25\" floppy disk",
+    "unitsSold": "12.5–17 million (estimates vary)"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "MOS 6510"
+    },
+    {
+      "role": "Video",
+      "part": "MOS 6567/6569 VIC-II"
+    },
+    {
+      "role": "Sound",
+      "part": "MOS 6581 SID"
+    },
+    {
+      "role": "I/O",
+      "part": "MOS 6526 CIA"
+    }
+  ],
+  "curiosities": [
+    "Guinness World Records lists it as the best-selling single computer model.",
+    "SID designer Bob Yannes later co-founded the synthesizer maker Ensoniq.",
+    "It launched in 1982 at US$595.",
+    "Its 1541 disk drive has its own 6502 processor and can run code independently of the computer."
+  ],
+  "unverified": []
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Neo Geo CD",
+  "category": "consoles",
+  "description": "SNK's 1994 CD-ROM version of the Neo Geo, created to bring arcade-identical games home on cheap discs instead of very expensive AES cartridges. It used the same core hardware as the arcade board, but its single-speed drive brought long load times.",
+  "specs": {
+    "maker": "SNK",
+    "released": "1994 JP · 1994 EU · 1996 NA",
+    "cpu": "Motorola 68000 @ 12 MHz + Zilog Z80 @ 4 MHz",
+    "memory": "7 MB total (2 MB program, 4 MB sprite, 1 MB sound samples)",
+    "graphics": "SNK custom sprite hardware, 4,096 of 65,536 colours",
+    "sound": "Yamaha YM2610",
+    "media": "CD-ROM (1×; 2× on the CDZ)",
+    "unitsSold": "~570,000"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Motorola 68000"
+    },
+    {
+      "role": "Sound CPU",
+      "part": "Zilog Z80"
+    },
+    {
+      "role": "Sound",
+      "part": "Yamaha YM2610"
+    }
+  ],
+  "curiosities": [
+    "The Japan-only front-loading model was made in only about 25,000 units.",
+    "The Japan-only CDZ of 1995 added a double-speed drive to cut loading times.",
+    "Some games took 30 to 60 seconds to load.",
+    "Eight games were released only on the Neo Geo CD."
+  ],
+  "unverified": []
+}

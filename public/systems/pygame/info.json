@@ -1,0 +1,22 @@
+{
+  "name": "Pygame",
+  "category": "ports",
+  "description": "Pygame is a Python library for writing games, built on top of SDL. Pete Shinners started it in 2000 to replace the stalled PySDL project, and it became a standard first step for people learning game programming. Batocera's pygame system runs Python games written with it.",
+  "specs": {
+    "maker": "Pete Shinners and the pygame community",
+    "engine": "Python game library on SDL",
+    "language": "Python, C",
+    "released": "2000",
+    "license": "LGPL"
+  },
+  "chips": [],
+  "curiosities": [
+    "Development stalled from 2009 until late 2016, and Pygame 2.0 came out on its 20th anniversary, 28 October 2020.",
+    "The rhythm game Frets on Fire was written with Pygame.",
+    "A group of former core developers forked the project as pygame-ce (Community Edition) in 2023.",
+    "Pygame 2 moved from SDL 1.2 to SDL2."
+  ],
+  "unverified": [
+    "A group of former core developers forked the project as pygame-ce (Community Edition) in 2023."
+  ]
+}

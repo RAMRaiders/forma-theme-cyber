@@ -1,0 +1,30 @@
+{
+  "name": "APF M-1000",
+  "category": "consoles",
+  "description": "A late-1970s cartridge console from New York electronics maker APF, built to compete with the Atari 2600. Its controllers combined a joystick with a numeric keypad, and the Imagination Machine add-on turned it into a home computer with BASIC and a cassette drive.",
+  "specs": {
+    "maker": "APF Electronics",
+    "released": "1978 NA",
+    "cpu": "Motorola 6800 @ 0.89 MHz",
+    "memory": "1 KB",
+    "graphics": "Motorola MC6847 VDG",
+    "media": "Cartridge"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Motorola 6800"
+    },
+    {
+      "role": "Video",
+      "part": "MC6847 VDG"
+    }
+  ],
+  "curiosities": [
+    "The CPU clock is a 3.579 MHz oscillator divided by four.",
+    "Each controller has a 4-way joystick and a 13-button keypad.",
+    "Docking the console into the Imagination Machine unit added a keyboard, more RAM and a cassette drive.",
+    "The console has a built-in game, Rocket Patrol."
+  ],
+  "unverified": ["1978 NA", "The console has a built-in game, Rocket Patrol.", "1 KB"]
+}

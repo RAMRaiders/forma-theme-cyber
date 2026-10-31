@@ -1,0 +1,45 @@
+{
+  "name": "FinalBurn Neo",
+  "category": "arcade",
+  "description": "An arcade emulator that recreates a large collection of classic arcade boards rather than a single machine, from Capcom CPS-1/2/3 and Neo Geo to Sega System 16, Toaplan and Cave. It continues the FinalBurn and FinalBurn Alpha lineage and is widely used for online play.",
+  "specs": {
+    "maker": "FinalBurn Neo team",
+    "released": "2019 (FinalBurn lineage from 2000)",
+    "cpu": "Mostly Motorola 68000 and Zilog Z80 based boards",
+    "sound": "Mostly Yamaha FM and OKI ADPCM chips",
+    "media": "ROM sets"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Motorola 68000"
+    },
+    {
+      "role": "Sound CPU",
+      "part": "Zilog Z80"
+    },
+    {
+      "role": "FM",
+      "part": "Yamaha YM2151"
+    },
+    {
+      "role": "FM",
+      "part": "Yamaha YM2610"
+    },
+    {
+      "role": "ADPCM",
+      "part": "OKI MSM6295"
+    },
+    {
+      "role": "CPU",
+      "part": "Hitachi SH-2"
+    }
+  ],
+  "curiosities": [
+    "FinalBurn Neo was forked from FinalBurn Alpha in 2019.",
+    "It is the emulator used by the Fightcade online play service.",
+    "Besides arcade boards it also emulates several home systems, such as the Mega Drive and PC Engine.",
+    "Its licence forbids commercial use."
+  ],
+  "unverified": []
+}

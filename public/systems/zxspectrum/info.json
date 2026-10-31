@@ -1,0 +1,36 @@
+{
+  "name": "ZX Spectrum",
+  "category": "computers",
+  "description": "Sinclair Research's 8-bit home computer, launched in the UK in April 1982. Its low price and colour graphics made it the UK's best-selling computer of its era and the start of a large British games industry. Its colour-per-8×8-block limit caused the well-known \"attribute clash\".",
+  "specs": {
+    "maker": "Sinclair Research",
+    "released": "1982",
+    "cpu": "Zilog Z80A @ 3.5 MHz",
+    "memory": "16 KB or 48 KB RAM (128 KB on later models)",
+    "graphics": "256 × 192, 15 colours, 2 colours per 8 × 8 block",
+    "sound": "1-bit beeper (AY-3-8912 on 128K models)",
+    "media": "Cassette tape",
+    "unitsSold": "More than 5 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Zilog Z80A"
+    },
+    {
+      "role": "ULA",
+      "part": "Ferranti ULA"
+    },
+    {
+      "role": "Sound (128K)",
+      "part": "GI AY-3-8912"
+    }
+  ],
+  "curiosities": [
+    "Its rubber keys each carried BASIC keywords, which were entered with a single keypress.",
+    "Its case was designed by Rick Dickinson and its hardware by Richard Altwasser.",
+    "Unofficial clones were built in large numbers in the Soviet Union and Eastern Europe.",
+    "In the US it was sold in modified form as the Timex Sinclair 2068."
+  ],
+  "unverified": []
+}

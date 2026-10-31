@@ -1,0 +1,30 @@
+{
+  "name": "WonderSwan",
+  "category": "handhelds",
+  "description": "Bandai's Japan-only handheld, released in March 1999. Gunpei Yokoi's company Koto Laboratory helped design it, and it ran for around 30 hours on a single AA battery. It could be held horizontally or vertically, and it competed with Nintendo in Japan on price.",
+  "specs": {
+    "maker": "Bandai",
+    "cpu": "NEC V30MZ @ 3.072 MHz",
+    "media": "ROM cartridges",
+    "sound": "4-channel wavetable",
+    "released": "1999 JP",
+    "memory": "16 KB RAM (shared with video)",
+    "graphics": "224 × 144 monochrome LCD, 8 shades",
+    "unitsSold": "About 3.5 million (WonderSwan family)"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "NEC V30MZ"
+    }
+  ],
+  "curiosities": [
+    "Gunpei Yokoi, creator of the Game Boy, worked on it but died in 1997, two years before its release.",
+    "Many games are designed to be played with the console held vertically.",
+    "Gunpey, a puzzle game named after Yokoi, was one of its launch titles."
+  ],
+  "unverified": [
+    "About 3.5 million (WonderSwan family)",
+    "Gunpey, a puzzle game named after Yokoi, was one of its launch titles."
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "name": "Vectrex",
+  "category": "consoles",
+  "description": "A 1982 home console with its own built-in 9-inch vector CRT, drawing sharp lines instead of pixels like arcade games such as Asteroids. It used plastic screen overlays to add colour and shipped with the game Mine Storm built in.",
+  "specs": {
+    "maker": "General Consumer Electronics (later Milton Bradley)",
+    "released": "1982 NA · 1983 EU · 1983 JP",
+    "cpu": "Motorola 68A09 @ 1.5 MHz",
+    "memory": "1 KB RAM",
+    "graphics": "Built-in monochrome vector CRT",
+    "sound": "General Instrument AY-3-8912",
+    "media": "Cartridge"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Motorola MC68A09"
+    },
+    {
+      "role": "Sound",
+      "part": "GI AY-3-8912"
+    },
+    {
+      "role": "I/O",
+      "part": "MOS 6522 VIA"
+    },
+    {
+      "role": "DAC",
+      "part": "MC1408"
+    }
+  ],
+  "curiosities": [
+    "Every Vectrex has the game Mine Storm built into its ROM.",
+    "Optional accessories included a light pen and the 3D Imager, a spinning-disc headset that produced colour 3D.",
+    "Milton Bradley bought GCE in 1983, and the console was discontinued after the 1983–84 market crash.",
+    "The rights holder later allowed non-commercial distribution of the Vectrex games, helping a homebrew scene that is still active."
+  ],
+  "unverified": ["MOS 6522 VIA", "MC1408"]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "Uzebox",
+  "category": "virtual",
+  "description": "An open-source retro-style game console designed by Alec Bourque, built from just two main chips: an AVR microcontroller and an RGB-to-NTSC encoder. The microcontroller generates video and sound entirely in software, and a community has written dozens of homebrew games for it.",
+  "specs": {
+    "maker": "Alec Bourque (open-source)",
+    "released": "2008",
+    "cpu": "Atmel ATmega644 @ 28.6 MHz (overclocked)",
+    "memory": "4 KB RAM / 64 KB flash",
+    "graphics": "Software-generated video, 256 colours",
+    "sound": "Software wavetable mixer",
+    "media": "Flash program memory / SD card"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Atmel ATmega644"
+    },
+    {
+      "role": "Video encoder",
+      "part": "Analog Devices AD725"
+    }
+  ],
+  "curiosities": [
+    "There is no video or sound chip: the microcontroller generates the TV signal cycle-by-cycle in software.",
+    "The ATmega644 is rated for 20 MHz but runs at about 28.6 MHz, eight times the NTSC colour-burst frequency.",
+    "SparkFun sold a kit version called the Uzebox AVCore.",
+    "Its hardware schematics and software kernel are published as open source."
+  ],
+  "unverified": ["2008"]
+}

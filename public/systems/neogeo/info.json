@@ -1,0 +1,39 @@
+{
+  "name": "Neo Geo MVS / AES",
+  "category": "arcade",
+  "description": "SNK's 1990 arcade platform, whose MVS cabinets could hold up to six swappable game cartridges, paired with an AES home console running the same hardware. It hosted The King of Fighters, Metal Slug, Samurai Shodown and Fatal Fury, and new official games kept appearing until 2004.",
+  "specs": {
+    "maker": "SNK",
+    "released": "1990",
+    "cpu": "Motorola 68000 @ 12 MHz + Zilog Z80 @ 4 MHz",
+    "memory": "64 KB work RAM / 68 KB VRAM",
+    "graphics": "SNK custom sprite chips, 380 sprites, 4,096 of 65,536 colours",
+    "sound": "Yamaha YM2610 (FM, SSG, ADPCM)",
+    "media": "Cartridge (MVS and AES)"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Motorola 68000"
+    },
+    {
+      "role": "Sound CPU",
+      "part": "Zilog Z80"
+    },
+    {
+      "role": "Sound",
+      "part": "Yamaha YM2610"
+    },
+    {
+      "role": "Video",
+      "part": "SNK LSPC2-A2"
+    }
+  ],
+  "curiosities": [
+    "The AES home console was first offered only for rental in Japan because of its high price.",
+    "Memory cards could carry save data between the home console and an arcade cabinet.",
+    "Many game boxes advertised '100 MEGA' or 'MAX 330 MEGA' to highlight their cartridge sizes in megabits.",
+    "The last official MVS release, Samurai Shodown V Special, came out in 2004."
+  ],
+  "unverified": ["SNK LSPC2-A2"]
+}

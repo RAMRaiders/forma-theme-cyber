@@ -1,0 +1,47 @@
+{
+  "name": "Amiga 1200",
+  "category": "computers",
+  "description": "Commodore's last mass-market Amiga, released in October 1992. It brought the AGA chipset and a 32-bit 68EC020 to the familiar wedge-shaped home computer, with 256-colour screens and an internal IDE hard-drive port. Commodore went bankrupt in 1994, cutting its life short.",
+  "specs": {
+    "maker": "Commodore",
+    "released": "1992",
+    "cpu": "Motorola 68EC020 @ 14.18 MHz (PAL) / 14.32 MHz (NTSC)",
+    "memory": "2 MB Chip RAM",
+    "graphics": "AGA: 256 colours from 16.8 million, HAM8 mode up to 262,144",
+    "sound": "Paula: 4 × 8-bit PCM channels, stereo",
+    "media": "3.5\" floppy (880 KB), 2.5\" IDE hard drive"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Motorola 68EC020"
+    },
+    {
+      "role": "Video DMA",
+      "part": "Alice"
+    },
+    {
+      "role": "Display",
+      "part": "Lisa"
+    },
+    {
+      "role": "Sound / IO",
+      "part": "Paula"
+    },
+    {
+      "role": "IDE / PCMCIA",
+      "part": "Gayle"
+    },
+    {
+      "role": "I/O",
+      "part": "MOS 8520 CIA"
+    }
+  ],
+  "curiosities": [
+    "The Amiga CD32 console was built on essentially the same AGA hardware.",
+    "It has a PCMCIA Type II slot on its side, used for RAM cards and network adapters.",
+    "After Commodore's 1994 bankruptcy, the German company Escom bought the Amiga rights and put the A1200 back into production.",
+    "Its HAM8 mode can show up to 262,144 colours on screen at once."
+  ],
+  "unverified": []
+}

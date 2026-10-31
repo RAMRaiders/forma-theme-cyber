@@ -1,0 +1,48 @@
+{
+  "name": "Sega Saturn",
+  "category": "consoles",
+  "description": "Sega's 32-bit CD-ROM console, built around two Hitachi SH-2 processors and a pair of custom video chips. Strong in Japan and loved for 2D arcade ports, it struggled in the West against the PlayStation after a rushed surprise launch.",
+  "specs": {
+    "maker": "Sega",
+    "released": "1994 JP · 1995 NA · 1995 EU",
+    "cpu": "2× Hitachi SH-2 @ 28.6 MHz",
+    "memory": "2 MB RAM / 1.5 MB VRAM / 512 KB sound RAM",
+    "graphics": "VDP1 (sprites, polygons) + VDP2 (backgrounds)",
+    "sound": "Yamaha YMF292 SCSP + Motorola 68EC000, 32 channels",
+    "media": "CD-ROM",
+    "unitsSold": "~9.26 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Hitachi SH-2 (master)"
+    },
+    {
+      "role": "CPU",
+      "part": "Hitachi SH-2 (slave)"
+    },
+    {
+      "role": "Sprites",
+      "part": "Sega VDP1"
+    },
+    {
+      "role": "Backgrounds",
+      "part": "Sega VDP2"
+    },
+    {
+      "role": "Sound",
+      "part": "Yamaha YMF292 SCSP"
+    },
+    {
+      "role": "Sound CPU",
+      "part": "Motorola 68EC000"
+    }
+  ],
+  "curiosities": [
+    "Sega announced at the first E3 in May 1995 that the Saturn was already on sale in the US, months ahead of the planned date.",
+    "The Saturn draws 3D scenes with quadrilaterals rather than the triangles used by most 3D hardware.",
+    "Its CD copy protection was only fully bypassed in 2016, more than 20 years after launch.",
+    "A cartridge slot accepted RAM expansion carts that some Capcom and SNK fighting games required."
+  ],
+  "unverified": []
+}

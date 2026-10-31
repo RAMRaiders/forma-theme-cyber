@@ -1,0 +1,36 @@
+{
+  "name": "Nintendo GameCube",
+  "category": "consoles",
+  "description": "Nintendo's 2001 console, its first to use optical discs, small 8 cm discs designed to resist piracy. Its compact, powerful hardware ran games such as Super Smash Bros. Melee, Metroid Prime and The Wind Waker.",
+  "specs": {
+    "maker": "Nintendo",
+    "released": "2001 JP · 2001 NA · 2002 EU",
+    "cpu": "IBM PowerPC Gekko @ 486 MHz",
+    "memory": "24 MB 1T-SRAM + 16 MB A-RAM; 3 MB embedded",
+    "graphics": "ATI/ArtX Flipper @ 162 MHz",
+    "sound": "Macronix DSP in Flipper",
+    "media": "8 cm miniDVD-based disc (1.5 GB)",
+    "unitsSold": "21.74 million"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "IBM Gekko"
+    },
+    {
+      "role": "GPU",
+      "part": "ArtX Flipper"
+    },
+    {
+      "role": "Memory",
+      "part": "MoSys 1T-SRAM"
+    }
+  ],
+  "curiosities": [
+    "The Game Boy Player attachment plugs into the bottom to play Game Boy Advance games on a TV.",
+    "Panasonic sold the Q, a version that also plays DVDs, only in Japan.",
+    "Its graphics chip was designed by ArtX, a company founded by former SGI engineers and bought by ATI.",
+    "The Wii, its successor, was built on an evolution of the same hardware and plays GameCube discs."
+  ],
+  "unverified": []
+}

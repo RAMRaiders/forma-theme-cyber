@@ -1,0 +1,29 @@
+{
+  "name": "Game Boy Color (2 Players)",
+  "category": "handhelds",
+  "description": "Two-player Game Boy Color link play, recreated in emulation by running two Game Boy Color instances connected by a virtual link cable. It covers trading and versus modes that originally needed two consoles and a cable. The hardware is the same as the Game Boy Color.",
+  "specs": {
+    "maker": "Nintendo",
+    "released": "1998 JP · 1998 NA · 1998 EU",
+    "cpu": "Sharp LR35902-type (SM83 core) @ 4.19 / 8.38 MHz",
+    "memory": "32 KB RAM · 16 KB VRAM",
+    "graphics": "160 × 144 colour LCD, up to 56 colours from 32,768",
+    "sound": "4 channels (2 pulse, wave, noise)",
+    "media": "ROM cartridges"
+  },
+  "chips": [
+    {
+      "role": "SoC",
+      "part": "Nintendo CPU CGB"
+    },
+    {
+      "role": "CPU core",
+      "part": "Sharp SM83"
+    }
+  ],
+  "curiosities": [
+    "Pokémon Gold, Silver and Crystal used the link cable for trading and battles, including trades with the older Red and Blue.",
+    "Some Game Boy Color games could also exchange data through the console's infrared port instead of the cable."
+  ],
+  "unverified": []
+}

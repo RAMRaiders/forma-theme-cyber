@@ -1,0 +1,30 @@
+{
+  "name": "Interton VC 4000",
+  "category": "consoles",
+  "description": "A programmable cartridge console sold from 1978 by Interton, a German hearing-aid maker. It belongs to the '1292 Advanced Programmable Video System' family of Signetics-based consoles sold under many brands across Europe and Australia.",
+  "specs": {
+    "maker": "Interton",
+    "released": "1978 EU",
+    "cpu": "Signetics 2650A @ 0.887 MHz",
+    "memory": "37 bytes of data RAM",
+    "graphics": "Signetics 2636 PVI",
+    "media": "Cartridge"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Signetics 2650A"
+    },
+    {
+      "role": "Video",
+      "part": "Signetics 2636 PVI"
+    }
+  ],
+  "curiosities": [
+    "Interton's main business was hearing aids.",
+    "Its software runs on the many other consoles in the 1292 APVS family, though different cartridge slots make some physically incompatible.",
+    "It uses the same Signetics 2650 CPU as the Emerson Arcadia 2001.",
+    "About 40 titles were made for it, three of which went unreleased."
+  ],
+  "unverified": []
+}

@@ -1,0 +1,40 @@
+{
+  "name": "Nintendo Entertainment System",
+  "category": "consoles",
+  "description": "Nintendo's 8-bit cartridge console, launched in Japan as the Family Computer (Famicom) and redesigned as a toaster-like 'entertainment system' for the West. Arriving after the 1983 North American market crash, it rebuilt home video gaming there and introduced Super Mario Bros., The Legend of Zelda and Metroid.",
+  "specs": {
+    "maker": "Nintendo",
+    "released": "1983 JP · 1985 NA · 1986 EU",
+    "cpu": "Ricoh 2A03 (6502 core) @ 1.79 MHz",
+    "memory": "2 KB RAM / 2 KB VRAM",
+    "graphics": "Ricoh 2C02 PPU, 256×240, 64 sprites (8 per line)",
+    "sound": "5-channel APU inside the 2A03 (2 pulse, triangle, noise, DPCM)",
+    "media": "Cartridge (Famicom Disk System in Japan)",
+    "unitsSold": "~61.9 million"
+  },
+  "chips": [
+    {
+      "role": "CPU/APU",
+      "part": "Ricoh 2A03"
+    },
+    {
+      "role": "PPU",
+      "part": "Ricoh 2C02"
+    },
+    {
+      "role": "Lockout",
+      "part": "10NES (F411)"
+    },
+    {
+      "role": "Mapper",
+      "part": "Nintendo MMC3"
+    }
+  ],
+  "curiosities": [
+    "The Western NES contains a 10NES lockout chip that blocks unlicensed cartridges, the cause of the infamous blinking power light.",
+    "R.O.B. the robot was bundled at the US launch partly so retailers would stock the NES as a toy rather than a video game.",
+    "The Japanese Famicom's second controller has a built-in microphone, used in The Legend of Zelda to defeat Pols Voice enemies.",
+    "Games used mapper chips such as Nintendo's MMC3 inside the cartridge to bank-switch far more memory than the console could address on its own."
+  ],
+  "unverified": []
+}

@@ -1,0 +1,34 @@
+{
+  "name": "Sega SG-1000",
+  "category": "consoles",
+  "description": "Sega's first home video game console, a Z80-based cartridge system released in Japan in July 1983. It led directly to the Mark III and the Master System, starting Sega's line of home hardware.",
+  "specs": {
+    "maker": "Sega",
+    "released": "1983 JP",
+    "cpu": "Zilog Z80 @ 3.58 MHz",
+    "memory": "1 KB RAM / 16 KB VRAM",
+    "graphics": "Texas Instruments TMS9918A, 256×192, 15 colours",
+    "sound": "Texas Instruments SN76489 (3 tone + 1 noise)",
+    "media": "Cartridge, Sega Card"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Zilog Z80"
+    },
+    {
+      "role": "Video",
+      "part": "TI TMS9918A"
+    },
+    {
+      "role": "Sound",
+      "part": "TI SN76489"
+    }
+  ],
+  "curiosities": [
+    "It went on sale in Japan on 15 July 1983, the same day as Nintendo's Famicom.",
+    "Sega sold a home-computer sibling, the SC-3000, that ran the same cartridges.",
+    "Its video chip is the same TMS9918 family used in the ColecoVision and MSX computers."
+  ],
+  "unverified": []
+}

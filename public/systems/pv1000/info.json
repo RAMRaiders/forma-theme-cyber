@@ -1,0 +1,30 @@
+{
+  "name": "Casio PV-1000",
+  "category": "consoles",
+  "description": "Casio's only cartridge console before the Loopy, released in Japan in October 1983 for 14,800 yen. Facing the Famicom and SG-1000, it disappeared within about a year after only 13 games.",
+  "specs": {
+    "maker": "Casio",
+    "released": "1983 JP",
+    "cpu": "Zilog Z80 @ 3.58 MHz",
+    "memory": "2 KB RAM (shared with video)",
+    "graphics": "NEC D65010G031, 8 colours",
+    "sound": "NEC D65010G031, 3 square-wave voices",
+    "media": "Cartridge"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Zilog Z80"
+    },
+    {
+      "role": "Video/Audio",
+      "part": "NEC D65010G031"
+    }
+  ],
+  "curiosities": [
+    "Only 13 games were released, including Konami ports such as Tutankham, Super Cobra and Pooyan.",
+    "Two cartridge numbers, GPA-108 and GPA-113, were never released.",
+    "Its successor on the console side was the Casio Loopy of 1995."
+  ],
+  "unverified": ["disappeared within about a year"]
+}

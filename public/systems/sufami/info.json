@@ -1,0 +1,35 @@
+{
+  "name": "Sufami Turbo",
+  "category": "consoles",
+  "description": "A Bandai add-on for the Super Famicom, released in Japan in 1996, that sits on top of the console and holds two small cartridges. It aimed to make cheaper, faster-to-produce games, and linked carts could share data such as characters between titles.",
+  "specs": {
+    "maker": "Bandai",
+    "released": "1996 JP",
+    "cpu": "Ricoh 5A22 @ 3.58 MHz (host Super Famicom)",
+    "memory": "128 KB RAM / 64 KB VRAM (host Super Famicom)",
+    "graphics": "S-PPU1 / S-PPU2 (host Super Famicom)",
+    "sound": "Sony SPC700 + S-DSP (host Super Famicom)",
+    "media": "Sufami Turbo mini-cartridges (two slots)"
+  },
+  "chips": [
+    {
+      "role": "Host CPU",
+      "part": "Ricoh 5A22"
+    },
+    {
+      "role": "PPU",
+      "part": "S-PPU1 / S-PPU2"
+    },
+    {
+      "role": "Sound CPU",
+      "part": "Sony SPC700"
+    }
+  ],
+  "curiosities": [
+    "Only 13 games were released for it.",
+    "Nintendo approved the device on condition that Bandai handled all hardware manufacturing itself.",
+    "The game in slot A is the one played, while a cartridge in slot B can supply extra data to it.",
+    "Its games launched at 3,980 yen, cheaper than typical Super Famicom cartridges."
+  ],
+  "unverified": []
+}

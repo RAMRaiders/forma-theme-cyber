@@ -1,0 +1,32 @@
+{
+  "name": "Game Boy Color",
+  "category": "handhelds",
+  "description": "Nintendo's colour Game Boy, released in 1998. It kept the original's resolution but added a colour screen, a double-speed CPU mode, more memory and an infrared port, while still playing older Game Boy games. It carried Pokémon Gold and Silver and filled the gap until the Game Boy Advance.",
+  "specs": {
+    "maker": "Nintendo",
+    "released": "1998 JP · 1998 NA · 1998 EU",
+    "cpu": "Sharp LR35902-type (SM83 core) @ 4.19 / 8.38 MHz",
+    "memory": "32 KB RAM · 16 KB VRAM",
+    "graphics": "160 × 144 colour LCD, up to 56 colours from 32,768",
+    "sound": "4 channels (2 pulse, wave, noise)",
+    "media": "ROM cartridges",
+    "unitsSold": "About 118.69 million (Game Boy and Game Boy Color combined)"
+  },
+  "chips": [
+    {
+      "role": "SoC",
+      "part": "Nintendo CPU CGB"
+    },
+    {
+      "role": "CPU core",
+      "part": "Sharp SM83"
+    }
+  ],
+  "curiosities": [
+    "It automatically colourises original Game Boy games, and holding button combinations at boot picks a different palette.",
+    "Black cartridges work on both the Game Boy and Game Boy Color; clear cartridges run only on the Color.",
+    "Its built-in infrared port let some games exchange data between consoles without a cable.",
+    "Like the original Game Boy, its screen had no backlight."
+  ],
+  "unverified": []
+}

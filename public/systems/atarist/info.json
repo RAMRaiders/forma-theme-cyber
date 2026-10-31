@@ -1,0 +1,47 @@
+{
+  "name": "Atari ST",
+  "category": "computers",
+  "description": "Atari Corporation's 16-bit home computer, launched in 1985 shortly after Jack Tramiel took over Atari. It paired a Motorola 68000 with a GEM desktop at a low price. Built-in MIDI ports made it a long-running fixture in music studios.",
+  "specs": {
+    "maker": "Atari Corporation",
+    "released": "1985",
+    "cpu": "Motorola 68000 @ 8 MHz",
+    "memory": "512 KB – 1 MB (520ST / 1040ST)",
+    "graphics": "320 × 200 (16 colours from 512), 640 × 200 (4), 640 × 400 mono",
+    "sound": "Yamaha YM2149, 3 channels",
+    "media": "3.5\" floppy disk"
+  },
+  "chips": [
+    {
+      "role": "CPU",
+      "part": "Motorola MC68000"
+    },
+    {
+      "role": "Video",
+      "part": "Atari Shifter"
+    },
+    {
+      "role": "Glue logic",
+      "part": "Atari GLUE"
+    },
+    {
+      "role": "Memory",
+      "part": "Atari MMU"
+    },
+    {
+      "role": "Sound",
+      "part": "Yamaha YM2149"
+    },
+    {
+      "role": "MIDI / keyboard",
+      "part": "Motorola MC6850"
+    }
+  ],
+  "curiosities": [
+    "It was nicknamed the \"Jackintosh\" after Jack Tramiel and its Mac-like desktop.",
+    "Built-in MIDI ports made it a common studio computer, and Steinberg's Cubase first appeared on it.",
+    "Its desktop was GEM, licensed from Digital Research.",
+    "The 1989 STE update added a blitter, a 4,096-colour palette and stereo DMA sound."
+  ],
+  "unverified": []
+}
