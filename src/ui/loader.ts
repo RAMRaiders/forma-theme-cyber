@@ -5,7 +5,7 @@ import { el } from './dom.js';
  * and a scan bar under the label. Pure CSS on a small fixed-size SVG (style.css, `.loader`), so
  * it stays in its box and costs little on a Raspberry Pi. Still under reduced motion.
  */
-export const LOADER_SVG =
+const LOADER_SVG =
   '<svg class="loader-chip" viewBox="0 0 120 120" aria-hidden="true">' +
   // Traces: out of each side, two per side, lit one after another.
   [

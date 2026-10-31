@@ -26,6 +26,8 @@ export class GamesView {
   #source: LazyList<Game> | null = null;
   #selected = 0;
   #videoTimer: ReturnType<typeof setTimeout> | undefined;
+  /** The preview being fetched or shown: cancelled, and its blob freed, when the game changes. */
+  #preview: { abort: AbortController; url?: string } | null = null;
   #detailTimer: ReturnType<typeof setTimeout> | undefined;
   #lastMove = 0;
 
@@ -122,8 +124,15 @@ export class GamesView {
     this.#showDetail();
   }
 
-  #showDetail(): void {
+  #stopPreview(): void {
     clearTimeout(this.#videoTimer);
+    this.#preview?.abort.abort();
+    if (this.#preview?.url) URL.revokeObjectURL(this.#preview.url);
+    this.#preview = null;
+  }
+
+  #showDetail(): void {
+    this.#stopPreview();
     const game = this.selected;
     this.#detail.dataset.pending = String(!game);
     if (!game) {
@@ -162,23 +171,36 @@ export class GamesView {
     const video = this.previews ? game.media.video : undefined;
     if (video) {
       this.#videoTimer = setTimeout(() => {
-        const player = el('video', {
-          src: video,
-          muted: '',
-          autoplay: '',
-          loop: '',
-          playsinline: ''
-        });
-        player.muted = true;
-        // The screenshot stays until the video really plays: a box without a decoder for it
-        // (a Pi 5 has no H.264 hardware) would otherwise show an empty frame.
-        player.hidden = true;
-        player.addEventListener('playing', () => {
-          player.hidden = false;
-          art.replaceChildren(player);
-        });
-        player.addEventListener('error', () => player.remove());
-        art.append(player);
+        const preview: { abort: AbortController; url?: string } = { abort: new AbortController() };
+        this.#preview = preview;
+        // From a blob: WebKitGTK's media player (GStreamer) loads only http(s) and blob URLs, so
+        // a video straight from forma:// fails as an unsupported format.
+        fetch(video, { signal: preview.abort.signal })
+          .then((response) =>
+            response.ok ? response.blob() : Promise.reject(new Error(`HTTP ${response.status}`))
+          )
+          .then((blob) => {
+            if (this.#preview !== preview) return;
+            preview.url = URL.createObjectURL(blob);
+            const player = el('video', {
+              src: preview.url,
+              muted: '',
+              autoplay: '',
+              loop: '',
+              playsinline: ''
+            });
+            player.muted = true;
+            // The screenshot stays until the video really plays: a box without a decoder for it
+            // (a Pi 5 has no H.264 hardware) would otherwise show an empty frame.
+            player.hidden = true;
+            player.addEventListener('playing', () => {
+              player.hidden = false;
+              art.replaceChildren(player);
+            });
+            player.addEventListener('error', () => player.remove());
+            art.append(player);
+          })
+          .catch(() => {});
       }, VIDEO_DELAY_MS);
     }
   }
