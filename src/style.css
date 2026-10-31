@@ -586,10 +586,6 @@ kbd {
   display: none;
 }
 
-.overlay.playing p {
-  font-size: 1.6rem;
-}
-
 .switcher .panel {
   width: min(40rem, 90vw);
   max-height: 80vh;
@@ -739,6 +735,148 @@ kbd {
   pointer-events: none;
 }
 
+/* ---- Loading ----------------------------------------------------------------- */
+
+/* A chip whose traces light up in turn, under it the label and a scan bar. Only opacity, stroke
+   offsets and transforms animate, inside the loader's own box. */
+.loader {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 1rem;
+  height: 100%;
+  overflow: hidden;
+  text-align: center;
+}
+
+.loader-chip {
+  width: 7rem;
+  height: 7rem;
+}
+
+.loader-trace {
+  fill: none;
+  stroke: var(--trace);
+  stroke-width: 3;
+}
+
+.loader-pulse {
+  fill: none;
+  stroke: var(--trace-glow);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 12 60;
+  stroke-dashoffset: 72;
+  animation: loader-pulse 1.2s linear infinite;
+}
+
+@keyframes loader-pulse {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.loader-body {
+  fill: #0b0f14;
+  stroke: #2b3a47;
+  stroke-width: 2;
+}
+
+.loader-core {
+  fill: var(--neon);
+  animation: loader-core 0.9s ease-in-out infinite alternate;
+}
+
+@keyframes loader-core {
+  from {
+    opacity: 0.2;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.loader-label {
+  margin: 0;
+  font-family: var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--neon);
+}
+
+.loader-detail {
+  margin: -0.4rem 0 0;
+  color: var(--muted);
+}
+
+.loader-bar {
+  width: min(16rem, 60vw);
+  height: 0.2rem;
+  border-radius: 1rem;
+  background: rgb(34 228 255 / 15%);
+  overflow: hidden;
+}
+
+.loader-bar span {
+  display: block;
+  width: 30%;
+  height: 100%;
+  background: var(--neon);
+  animation: loader-bar 1.4s ease-in-out infinite;
+}
+
+@keyframes loader-bar {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(340%);
+  }
+}
+
+/* Start-up: over everything until the first screen is drawn, then faded out. */
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  background: var(--bg);
+  transition: opacity 300ms ease;
+}
+
+.boot.done {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* While a game starts: its art and the loader, until the emulator's window covers Forma. */
+.overlay.playing {
+  background: var(--bg);
+}
+
+.launch {
+  display: grid;
+  justify-items: center;
+  gap: 1.5rem;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: hidden;
+}
+
+.launch-art {
+  max-width: min(40rem, 80vw);
+  max-height: 45vh;
+  object-fit: contain;
+  border-radius: var(--radius);
+  box-shadow: 0 0 1.5rem rgb(34 228 255 / 25%);
+}
+
+.launch .loader {
+  height: auto;
+}
+
 /* ---- Small screens (handhelds, 4:3) -------------------------------------- */
 
 /* A narrow screen: the list gives way to the system, and secondary details go. */
@@ -807,8 +945,18 @@ kbd {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .circuit .pulse {
+  .circuit .pulse,
+  .loader-pulse {
     animation: none;
     display: none;
+  }
+
+  .loader-core,
+  .loader-bar span {
+    animation: none;
+  }
+
+  .boot {
+    transition: none;
   }
 }

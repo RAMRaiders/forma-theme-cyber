@@ -1,4 +1,12 @@
-import type { Action, Browse, Game, InputEvent, Forma, ViewInfo } from '@ramraiders/forma-sdk';
+import type {
+  Action,
+  Browse,
+  Forma,
+  Game,
+  GameStart,
+  InputEvent,
+  ViewInfo
+} from '@ramraiders/forma-sdk';
 import { FormaError } from '@ramraiders/forma-sdk';
 
 import { CATEGORIES, InfoStore, group } from './data/catalog.js';
@@ -9,6 +17,7 @@ import { type Card, GridView } from './ui/grid.js';
 import { GamesView } from './ui/games.js';
 import { HomeView, type Tile } from './ui/home.js';
 import { Menu } from './ui/menu.js';
+import { loader } from './ui/loader.js';
 import { NetworkScreen } from './ui/network.js';
 import { Switcher } from './ui/switcher.js';
 import { SystemView } from './ui/system.js';
@@ -20,6 +29,8 @@ interface Level {
 }
 
 const PAGE = 100;
+/** A screen that loads faster than this never shows the loader: no flash on quick moves. */
+const LOADER_DELAY_MS = 150;
 /** Forma's systems view: Cyber shows it as categories, then systems, then that system's games. */
 const CYBER_VIEW = 'systems';
 /** Image widths asked for: what a card and the detail panel show at 1080p. */
@@ -97,10 +108,7 @@ export class App {
     this.forma.input.on((e) => this.#onInput(e));
     this.forma.events.on('library:changed', () => this.#reloadSoon());
     this.forma.events.on('views:changed', () => void this.#loadViews());
-    this.forma.events.on('game:start', ({ name }) => {
-      this.#playing.replaceChildren(el('p', {}, `Starting ${name}…`));
-      this.#playing.hidden = false;
-    });
+    this.forma.events.on('game:start', (game) => this.#showLaunch(game));
     this.forma.events.on('game:end', ({ error }) => {
       this.#playing.hidden = true;
       if (error) this.#notify(`The game could not run: ${error}`);
@@ -137,6 +145,7 @@ export class App {
     const index = this.#level.index;
     // Cyber's category is its own level, not part of Forma's path.
     const path = this.#view === CYBER_VIEW ? this.#level.path.slice(1) : this.#level.path;
+    const loading = this.#loading('Loading games…');
     try {
       const first = await this.forma.nav.browse(this.#view, path, { offset: 0, limit: PAGE });
       this.#page = first;
@@ -165,11 +174,16 @@ export class App {
       this.#renderChrome();
     } catch (error) {
       this.#notify(FormaError.from(error).message);
+    } finally {
+      loading();
     }
   }
 
   /** Categories (home), or one category's systems. */
   async #loadCyber(): Promise<void> {
+    const loading = this.#loading(
+      this.#stack.length === 1 ? 'Reading the library…' : 'Powering up…'
+    );
     try {
       this.#list = null;
       this.#page = null;
@@ -199,7 +213,37 @@ export class App {
       this.#renderChrome();
     } catch (error) {
       this.#notify(FormaError.from(error).message);
+    } finally {
+      loading();
     }
+  }
+
+  /**
+   * Shows the loader in place of the screen if loading takes long enough to notice. Returns what
+   * ends it: the screen that replaces it, or nothing (on an error, the loader just goes).
+   */
+  #loading(label: string): () => void {
+    const timer = setTimeout(() => this.#main.replaceChildren(loader(label)), LOADER_DELAY_MS);
+    return () => {
+      clearTimeout(timer);
+      this.#main.querySelector(':scope > .loader')?.remove();
+    };
+  }
+
+  /** While the emulator starts: the game's art, its name and system, and the loader. */
+  #showLaunch({ gameId, system, name }: GameStart): void {
+    const art = el('img', {
+      class: 'launch-art',
+      src: this.forma.library.mediaUrl(gameId, 'image', DETAIL_WIDTH),
+      alt: ''
+    });
+    art.addEventListener('error', () => art.remove());
+    const known = this.#groups.flatMap((g) => g.systems).find((s) => s.summary.name === system);
+    const systemName = known ? known.summary.fullname || system : system;
+    this.#playing.replaceChildren(
+      el('div', { class: 'launch' }, art, loader(`Starting ${name}`, systemName))
+    );
+    this.#playing.hidden = false;
   }
 
   /** Breadcrumbs in Cyber's view: the category, then the system. */

@@ -30,8 +30,15 @@ const infos = new InfoStore((url) =>
     : Promise.reject(new Error('404'))
 );
 
-async function start(permissions: string[] = []) {
+async function start(permissions: string[] = [], slow: Record<string, number> = {}) {
   const backend = mockBackend({ playMs: 50, permissions });
+  // Commands answered late, as on a slow box.
+  const invoke = backend.invoke.bind(backend);
+  backend.invoke = async <T>(command: string, args?: Record<string, unknown>) => {
+    const delay = slow[command];
+    if (delay) await new Promise((r) => setTimeout(r, delay));
+    return invoke<T>(command, args);
+  };
   let send: (e: InputEvent) => void = () => {};
   const listen = backend.listen.bind(backend);
   backend.listen = <T>(event: string, handler: (p: T) => void) => {
@@ -109,6 +116,17 @@ describe('the default theme', () => {
     expect(root.querySelector('.backdrop .circuit')).toBeNull();
   });
 
+  it('shows the loader while a slow screen loads, never on a quick one', async () => {
+    const { press, text, root } = await start([], { nav_browse: 400 });
+    await press('confirm');
+    // Systems come from the catalogue already at hand: no loader.
+    expect(root.querySelector('main .loader')).toBeNull();
+    await press('confirm');
+    await vi.waitFor(() => expect(text('main .loader-label')).toEqual(['Loading games…']));
+    await vi.waitFor(() => expect(text('.row.selected')).toEqual(['Homebrew Demo']));
+    expect(root.querySelector('main .loader')).toBeNull();
+  });
+
   it('toggles a favourite in place', async () => {
     const { press, text } = await start();
     await press('confirm');
@@ -127,7 +145,9 @@ describe('the default theme', () => {
     await press('confirm');
     const playing = root.querySelector<HTMLElement>('.playing')!;
     await vi.waitFor(() => expect(playing.hidden).toBe(false));
-    expect(playing.textContent).toBe('Starting Homebrew Demo…');
+    expect(text('.launch .loader-label')).toEqual(['Starting Homebrew Demo']);
+    expect(text('.launch .loader-detail')).toEqual(['Nintendo Entertainment System']);
+    expect(root.querySelector('.launch .loader-chip')).not.toBeNull();
     await vi.waitFor(() => expect(playing.hidden).toBe(true));
   });
 
