@@ -1,0 +1,34 @@
+# Cyber
+
+Forma's default theme: systems grouped by kind (consoles, handhelds, computers, arcade, virtual
+consoles, educational, ports), a page per system with its circuit board, logo, console photo,
+story and curiosities, then its games. Built for TVs and handhelds alike.
+
+A Forma theme like any other: it talks to Forma only through
+[`@ramraiders/forma-sdk`](https://github.com/RAMRaiders/Forma/blob/main/docs/sdk.md), and Forma
+bundles a pinned build of it. New themes start from the separate template project, not from here.
+
+## Setup
+
+The SDK comes from GitHub Packages. Give npm a token that can read packages, in your **user**
+`~/.npmrc` (never in this repo):
+
+```ini
+//npm.pkg.github.com/:_authToken=<token with read:packages>
+```
+
+With the GitHub CLI: `gh auth refresh -s read:packages`, then use `gh auth token`.
+
+```sh
+npm install
+npm run dev      # in a browser, on the SDK's mock library
+npm run verify   # format, lint, typecheck, tests, build, unused code
+```
+
+## Building for Forma
+
+`npm run build` writes the theme to `dist/` (`theme.json`, `index.html`, assets). The manual
+**Build** workflow does the same in CI and uploads `dist/` as the `forma-theme-cyber` artifact.
+
+To try a build on a Batocera box, copy `dist/` to `/userdata/themes-forma/cyber/` and pick
+**Cyber** in Forma.

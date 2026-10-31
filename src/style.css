@@ -1,0 +1,388 @@
+/*
+ * Sized in rem against the screen height (100vh / 45: 16 px at 720p, 24 px at 1080p), so the
+ * same layout reads from a sofa at either resolution.
+ */
+:root {
+  color-scheme: dark;
+  --bg: #0e0f13;
+  --panel: #171922;
+  --card: #1f2230;
+  --fg: #e8e9ee;
+  --muted: #8a8d99;
+  --accent: #e94560;
+  --radius: 0.6rem;
+  font-family: system-ui, sans-serif;
+  font-size: calc(100vh / 45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+#app {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+header {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  padding: 1.2rem 2.5rem 0.6rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.trail .crumb {
+  color: var(--muted);
+}
+
+.trail .crumb + .crumb::before {
+  content: '›';
+  margin: 0 0.5rem;
+}
+
+main {
+  min-height: 0;
+  padding: 0 2.5rem;
+}
+
+/* ---- Groups and branches ---------------------------------------------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  /* Rows keep their content's height and the grid scrolls; left to stretch, a long list
+     squeezes every row to fit, since cards (overflow: hidden) have no minimum height. */
+  grid-auto-rows: max-content;
+  align-content: start;
+  gap: 1.2rem;
+  height: 100%;
+  overflow-y: auto;
+  padding: 0.6rem 0.3rem 2rem;
+  scrollbar-width: none;
+}
+
+.card {
+  border-radius: var(--radius);
+  background: var(--card);
+  overflow: hidden;
+  outline: 0.2rem solid transparent;
+  transition:
+    transform 120ms ease,
+    outline-color 120ms ease;
+}
+
+.card.selected {
+  outline-color: var(--accent);
+  transform: scale(1.04);
+}
+
+.card .art {
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-items: center;
+  background: #262a3a;
+}
+
+.card .art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card .initial {
+  font-size: 3rem;
+  color: var(--muted);
+}
+
+.card .label {
+  padding: 0.6rem 0.8rem 0;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card .count {
+  padding: 0.1rem 0.8rem 0.7rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.empty {
+  color: var(--muted);
+}
+
+/* ---- Games ------------------------------------------------------------- */
+
+.games {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 2rem;
+  height: 100%;
+}
+
+.list {
+  position: relative;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.list .spacer {
+  width: 1px;
+}
+
+.row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2.6rem;
+  line-height: 2.6rem;
+  padding: 0 1rem;
+  border-radius: var(--radius);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.row.selected {
+  background: var(--accent);
+}
+
+.detail {
+  overflow-y: auto;
+  padding-bottom: 2rem;
+  scrollbar-width: none;
+}
+
+.detail .art {
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius);
+  background: var(--panel);
+  overflow: hidden;
+}
+
+.detail .art img,
+.detail .art video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.detail h2 {
+  margin: 1rem 0 0.3rem;
+  font-size: 1.5rem;
+}
+
+.detail .facts,
+.detail .stats {
+  margin: 0.2rem 0;
+  color: var(--muted);
+}
+
+.detail .description {
+  line-height: 1.5;
+}
+
+/* ---- Chrome ------------------------------------------------------------ */
+
+.hints {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  padding: 0.8rem 2.5rem 1.2rem;
+  color: var(--muted);
+}
+
+kbd {
+  display: inline-block;
+  min-width: 1.6rem;
+  margin-right: 0.4rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.4rem;
+  background: var(--card);
+  color: var(--fg);
+  font: inherit;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgb(0 0 0 / 70%);
+}
+
+.overlay[hidden] {
+  display: none;
+}
+
+.overlay.playing p {
+  font-size: 1.6rem;
+}
+
+.switcher .panel {
+  width: min(40rem, 90vw);
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 1.5rem 2rem;
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+.switcher h2 {
+  margin-top: 0;
+}
+
+.switcher ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.switcher li {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.2rem 0.6rem;
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius);
+}
+
+.switcher li.selected {
+  background: var(--accent);
+}
+
+.switcher .description {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.switcher li.selected .description {
+  color: var(--fg);
+}
+
+.switcher .note {
+  margin: 0 0 1rem;
+  color: var(--muted);
+}
+
+/* ---- On-screen keyboard ------------------------------------------------ */
+
+.keyboard .panel {
+  width: min(56rem, 94vw);
+  max-height: none;
+}
+
+.keyboard .field {
+  display: flex;
+  align-items: center;
+  min-height: 2.8rem;
+  margin-bottom: 1.2rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  background: var(--card);
+  font-size: 1.4rem;
+  overflow: hidden;
+  white-space: pre;
+}
+
+.keyboard .caret {
+  width: 0.12rem;
+  height: 1.6rem;
+  margin-left: 0.1rem;
+  background: var(--accent);
+}
+
+.keyboard .keys {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.keyboard .row {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.keyboard .key {
+  flex: 0 0 4rem;
+  padding: 0.7rem 0;
+  border-radius: var(--radius);
+  background: var(--card);
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.keyboard .key.wide {
+  flex: 1 1 6rem;
+  font-size: 1rem;
+  line-height: 1.95rem;
+}
+
+.keyboard .key.space {
+  flex-grow: 3;
+}
+
+.keyboard .key.selected {
+  background: var(--accent);
+}
+
+.badge {
+  padding: 0 0.5rem;
+  border-radius: 0.4rem;
+  background: var(--card);
+  font-size: 0.8rem;
+}
+
+.toast {
+  position: fixed;
+  bottom: 4.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.7rem 1.4rem;
+  border-radius: var(--radius);
+  background: var(--panel);
+  box-shadow: 0 0.3rem 1rem rgb(0 0 0 / 50%);
+}
+
+.toast[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}
+
+.perf {
+  position: fixed;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 0.4rem;
+  background: rgb(0 0 0 / 75%);
+  color: #7cfc8a;
+  font:
+    0.8rem ui-monospace,
+    monospace;
+  pointer-events: none;
+}
