@@ -75,7 +75,7 @@ describe('the default theme', () => {
     expect(text('h1')).toEqual(['Categories']);
     expect(text('h1.current')).toEqual(['Categories']);
     expect(text('.tile h2')).toEqual(['Consoles']);
-    expect(text('.tile.selected .chip')).toEqual(['5 systems', '9 games']);
+    expect(text('.tile.selected .tag')).toEqual(['5 systems', '9 games']);
     expect(text('.hint')).toEqual(['AOpen', 'SelectViews', 'StartMenu']);
   });
 

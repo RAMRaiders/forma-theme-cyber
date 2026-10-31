@@ -89,10 +89,10 @@ function tile({ category, systems }: Tile): HTMLElement {
         { class: 'counts' },
         el(
           'span',
-          { class: 'chip' },
+          { class: 'tag' },
           `${systems.length} ${systems.length === 1 ? 'system' : 'systems'}`
         ),
-        el('span', { class: 'chip' }, `${games.toLocaleString('en')} games`)
+        el('span', { class: 'tag' }, `${games.toLocaleString('en')} games`)
       ),
       logos
     )
