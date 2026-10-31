@@ -173,36 +173,35 @@ main {
 
 .home {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
-  grid-auto-rows: max-content;
-  align-content: start;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  /* Rows share the screen's height; when they cannot all fit, they keep their content's
+     height and the grid scrolls rather than squeezing them. */
+  grid-auto-rows: minmax(min-content, 1fr);
   gap: 1.2rem;
   height: 100%;
   overflow-y: auto;
-  padding: 0.6rem 0.3rem 2rem;
+  /* Room for the selected tile's glow, which would otherwise be cut at the edges. */
+  padding: 0.6rem;
   scrollbar-width: none;
 }
 
 .tile {
   position: relative;
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: minmax(5rem, 1fr) auto;
+  min-height: 0;
   border: 1px solid #1d3346;
   border-radius: var(--radius);
   background: linear-gradient(160deg, #0b1830, #070b14);
   overflow: hidden;
-  transition:
-    transform 120ms ease,
-    box-shadow 120ms ease,
-    border-color 120ms ease;
 }
 
+/* No growing or sliding: the selection lights up where it is. */
 .tile.selected {
   border-color: var(--neon);
   box-shadow:
     0 0 0 0.12rem var(--neon),
-    0 0 1.6rem rgb(34 228 255 / 35%);
-  transform: scale(1.03);
+    0 0 0.5rem rgb(34 228 255 / 45%);
 }
 
 .tile .photos {
@@ -210,7 +209,7 @@ main {
   justify-content: center;
   align-items: flex-end;
   gap: 0.4rem;
-  height: 8rem;
+  min-height: 0;
   padding: 0.8rem 0.8rem 0;
   background:
     repeating-linear-gradient(90deg, rgb(34 228 255 / 6%) 0 1px, transparent 1px 1.5rem),
@@ -772,8 +771,8 @@ kbd {
     gap: 0.8rem;
   }
 
-  .tile .photos {
-    height: 5rem;
+  .tile {
+    grid-template-rows: minmax(3.5rem, 1fr) auto;
   }
 
   .tile .tagline {
@@ -809,9 +808,5 @@ kbd {
   .circuit .pulse {
     animation: none;
     display: none;
-  }
-
-  .tile {
-    transition: none;
   }
 }

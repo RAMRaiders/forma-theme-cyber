@@ -107,6 +107,7 @@ function compareName(a: CyberSystem, b: CyberSystem): number {
  */
 export class InfoStore {
   readonly #cache = new Map<string, Promise<SystemInfo | null>>();
+  readonly #loaded = new Map<string, SystemInfo | null>();
 
   constructor(private readonly fetchJson: (url: string) => Promise<unknown> = defaultFetch) {}
 
@@ -115,10 +116,19 @@ export class InfoStore {
     if (!pending) {
       pending = this.fetchJson(art(system, 'info.json'))
         .then((json) => (json && typeof json === 'object' ? (json as SystemInfo) : null))
-        .catch(() => null);
+        .catch(() => null)
+        .then((info) => {
+          this.#loaded.set(system, info);
+          return info;
+        });
       this.#cache.set(system, pending);
     }
     return pending;
+  }
+
+  /** A system's info if it has already loaded (`null`: it has none), else `undefined`. */
+  peek(system: string): SystemInfo | null | undefined {
+    return this.#loaded.get(system);
   }
 
   /** Infos for many systems at once, for grouping. */

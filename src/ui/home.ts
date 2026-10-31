@@ -27,7 +27,7 @@ export class HomeView {
     if (!t) return;
     t.classList.add('selected');
     t.setAttribute('aria-selected', 'true');
-    t.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    t.scrollIntoView({ block: 'nearest' });
   }
 
   /** Columns as laid out right now, for up/down movement. */

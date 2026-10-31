@@ -4,6 +4,8 @@ import { el } from './dom.js';
 
 /** A curiosity stays this long before the next one. */
 const FACT_MS = 10_000;
+/** The board follows the selection once it rests: holding a direction does not redraw it. */
+const BOARD_MS = 150;
 
 const SPECS: [keyof NonNullable<SystemInfo['specs']>, string][] = [
   ['released', 'Released'],
@@ -29,6 +31,7 @@ export class SystemView {
   #info: SystemInfo | null = null;
   #fact = 0;
   #factTimer: ReturnType<typeof setInterval> | undefined;
+  #boardTimer: ReturnType<typeof setTimeout> | undefined;
   /** Which selection a pending info load belongs to: a quick scroll must not show a stale one. */
   #ticket = 0;
 
@@ -53,10 +56,11 @@ export class SystemView {
     this.#rows = systems.map(row);
     this.#list.replaceChildren(...this.#rows);
     this.#selected = -1;
-    this.select(selected);
+    this.select(selected, true);
   }
 
-  select(index: number): void {
+  /** `now`: draw the board at once (entering the screen), not after the selection rests. */
+  select(index: number, now = false): void {
     this.#rows[this.#selected]?.classList.remove('selected');
     this.#selected = index;
     const r = this.#rows[index];
@@ -65,13 +69,17 @@ export class SystemView {
     r.classList.add('selected');
     r.scrollIntoView({ block: 'nearest' });
     const ticket = ++this.#ticket;
-    this.#info = null;
-    this.#render(system);
-    void this.infos.get(system.summary.name).then((info) => {
-      if (ticket !== this.#ticket) return;
+    const show = (info: SystemInfo | null) => {
       this.#info = info;
       this.#fact = 0;
       this.#render(system);
+      this.#drawBoard(system, now ? 0 : BOARD_MS);
+    };
+    // Loaded with the catalogue, so normally at hand: drawn once, never first without its info.
+    const known = this.infos.peek(system.summary.name);
+    if (known !== undefined) return show(known);
+    void this.infos.get(system.summary.name).then((info) => {
+      if (ticket === this.#ticket) show(info);
     });
   }
 
@@ -87,12 +95,20 @@ export class SystemView {
   /** Stops the curiosity timer when the screen goes away. */
   hide(): void {
     clearInterval(this.#factTimer);
+    clearTimeout(this.#boardTimer);
+  }
+
+  #drawBoard(system: CyberSystem, delay: number): void {
+    clearTimeout(this.#boardTimer);
+    const chips = this.#info?.chips ?? [];
+    const draw = () => this.backdrop(circuitSvg(system.summary.name, chips));
+    if (delay === 0) draw();
+    else this.#boardTimer = setTimeout(draw, delay);
   }
 
   #render(system: CyberSystem): void {
     const s = system.summary;
     const info = this.#info;
-    this.backdrop(circuitSvg(s.name, info?.chips ?? []));
 
     const logo = el('img', { class: 'logo', src: system.logo, alt: '' });
     const title = el('h2', { class: 'name' }, info?.name ?? s.fullname ?? s.name);
