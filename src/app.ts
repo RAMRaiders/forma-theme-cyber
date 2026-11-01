@@ -31,6 +31,7 @@ import { Menu } from './ui/menu.js';
 import { loader } from './ui/loader.js';
 import { NetworkScreen } from './ui/network.js';
 import { Page } from './ui/page.js';
+import { optionsScreen, systemSettingsScreen } from './ui/settings.js';
 import {
   interfaceScreen,
   musicScreen,
@@ -79,9 +80,9 @@ export class App {
   readonly #switcher = new Switcher();
   readonly #menu = new Menu();
   readonly #network: NetworkScreen;
-  /** Music, RetroAchievements, Netplay: settings pages from the system menu. */
+  /** Music, RetroAchievements, Netplay, options…: settings pages from the system menu. */
   readonly #settings: Page;
-  #settingsKind: 'music' | 'ra' | 'netplay' | 'interface' | null = null;
+  #settingsKind: string | null = null;
   /** Cyber's look and order (Interface). */
   #prefs: Prefs = { ...DEFAULT_PREFS };
   /** Screen margins for a TV's overscan, in percent per side (Forma's own setting). */
@@ -513,9 +514,46 @@ export class App {
     }
   }
 
+  /** The system and game the menu's options entries are for: what is selected now. */
+  #optionsTarget(): {
+    system: { name: string; fullname: string } | null;
+    game: { id: number; name: string } | null;
+  } {
+    if (this.#mode === 'systems') {
+      const s = this.#systemView.selected?.summary;
+      return { system: s ? { name: s.name, fullname: s.fullname } : null, game: null };
+    }
+    const game = this.#list ? this.#games.selected : null;
+    if (!game) return { system: null, game: null };
+    const s = this.#groups.flatMap((g) => g.systems).find((x) => x.summary.name === game.system);
+    return {
+      system: { name: game.system, fullname: s?.summary.fullname ?? game.system },
+      game: { id: game.id, name: game.name }
+    };
+  }
+
   #openMenu(): void {
     this.#confirming = null;
+    const { system, game } = this.#optionsTarget();
     this.#menu.show('Forma', [
+      ...(game
+        ? [
+            {
+              id: 'game-options',
+              label: `${game.name} options…`,
+              description: 'Emulator, core and options for this game only'
+            }
+          ]
+        : []),
+      ...(system
+        ? [
+            {
+              id: 'system-options',
+              label: `${system.fullname} options…`,
+              description: 'Emulator, core and options for its games'
+            }
+          ]
+        : []),
       { id: 'views', label: 'Views…', description: 'Organise the library another way' },
       { id: 'interface', label: 'Interface…', description: 'Theme, look and sorting' },
       { id: 'music', label: 'Music…', description: 'Folders, playlists and web radios' },
@@ -527,9 +565,19 @@ export class App {
       { id: 'netplay', label: 'Netplay…', description: 'Playing online with others' },
       { id: 'network', label: 'Network…', description: 'Wi-Fi and Ethernet' },
       {
+        id: 'game-settings',
+        label: 'Game settings…',
+        description: 'Emulator options for every game: ratio, shaders, decorations…'
+      },
+      {
+        id: 'system-settings',
+        label: 'System settings…',
+        description: 'Display, audio, language, region and storage'
+      },
+      {
         id: 'emulationstation',
         label: 'Switch to EmulationStation',
-        description: 'For system settings, scraping and updates; Forma returns at the next boot'
+        description: 'For scraping and updates; Forma returns at the next boot'
       },
       { id: 'restart', label: 'Restart', description: 'Press A twice' },
       { id: 'shutdown', label: 'Shut down', description: 'Press A twice' }
@@ -557,6 +605,37 @@ export class App {
     if (id === 'network') {
       m.close();
       this.#network.show();
+      return this.#renderChrome();
+    }
+    if (
+      id === 'game-options' ||
+      id === 'system-options' ||
+      id === 'game-settings' ||
+      id === 'system-settings'
+    ) {
+      m.close();
+      this.#settingsKind = id;
+      const { system, game } = this.#optionsTarget();
+      const [title, build] =
+        id === 'system-settings'
+          ? ['System settings', systemSettingsScreen(this.forma, this.#settings)]
+          : id === 'game-settings'
+            ? ['Game settings', optionsScreen(this.forma, this.#settings, { level: 'global' })]
+            : id === 'system-options' && system
+              ? [
+                  `${system.fullname} options`,
+                  optionsScreen(this.forma, this.#settings, {
+                    level: 'system',
+                    system: system.name
+                  })
+                ]
+              : game
+                ? [
+                    `${game.name} options`,
+                    optionsScreen(this.forma, this.#settings, { level: 'game', game: game.id })
+                  ]
+                : [null, null];
+      if (title && build) void this.#settings.show(title, build);
       return this.#renderChrome();
     }
     if (id === 'music' || id === 'ra' || id === 'netplay' || id === 'interface') {

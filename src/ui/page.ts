@@ -18,10 +18,19 @@ export interface Row {
   heading?: string;
 }
 
+/** A page left for a deeper one, to come back to where it was. */
+interface Level {
+  title: string;
+  build: () => Row[] | Promise<Row[]>;
+  note: string | null;
+  selected: number;
+}
+
 /**
  * A settings page over the screen: a title, a note, rows. A runs a row, left/right adjusts it,
  * B goes back. Rows come from `build`, called again after every change, so they always show
- * what Forma says now; the selection stays where it was.
+ * what Forma says now; the selection stays where it was. A row can open a deeper page (`push`);
+ * B then comes back to the row it was opened from.
  */
 export class Page {
   readonly keyboard = new Keyboard();
@@ -32,6 +41,7 @@ export class Page {
   #selected = 0;
   #busy: string | null = null;
   #note: string | null = null;
+  #parents: Level[] = [];
 
   constructor(
     private readonly notify: (message: string) => void,
@@ -44,16 +54,55 @@ export class Page {
   }
 
   async show(title: string, build: () => Row[] | Promise<Row[]>, note?: string): Promise<void> {
+    this.#parents = [];
+    return this.#open(title, build, note);
+  }
+
+  /** A deeper page, starting on row `at`; B comes back here. */
+  async push(
+    title: string,
+    build: () => Row[] | Promise<Row[]>,
+    note?: string,
+    at = 0
+  ): Promise<void> {
+    this.#parents.push({
+      title: this.#title,
+      build: this.#build,
+      note: this.#note,
+      selected: this.#selected
+    });
+    return this.#open(title, build, note, at);
+  }
+
+  /** Back to the page this one was opened from, or closed when there is none. */
+  async pop(): Promise<void> {
+    const parent = this.#parents.pop();
+    if (!parent) return this.close();
+    this.#title = parent.title;
+    this.#build = parent.build;
+    this.#note = parent.note;
+    this.#selected = parent.selected;
+    this.#rows = [];
+    await this.refresh();
+  }
+
+  async #open(
+    title: string,
+    build: () => Row[] | Promise<Row[]>,
+    note?: string,
+    at = 0
+  ): Promise<void> {
     this.#title = title;
     this.#build = build;
     this.#note = note ?? null;
-    this.#selected = 0;
+    this.#selected = at;
     this.#rows = [];
     this.root.hidden = false;
     await this.refresh();
   }
 
   close(): void {
+    this.#parents = [];
     this.root.hidden = true;
     this.changed();
   }
@@ -61,12 +110,16 @@ export class Page {
   /** Builds the rows again from what Forma says now. */
   async refresh(): Promise<void> {
     // The selection follows its row: playing something adds rows above it, and A again must not
-    // land on whatever moved into its place (Stop, say).
+    // land on whatever moved into its place (Stop, say). Rows can share a label (two `Video
+    // mode`s in different groups), so the one at the same place wins.
     const was = this.#rows[this.#selected]?.label;
+    const at = this.#selected;
     try {
       this.#rows = await this.#build();
-      const same = this.#rows.findIndex((r) => r.label === was);
-      if (same >= 0) this.#selected = same;
+      if (this.#rows[at]?.label !== was) {
+        const same = this.#rows.findIndex((r) => r.label === was);
+        if (same >= 0) this.#selected = same;
+      }
     } catch (error) {
       this.#rows = [];
       this.#note = FormaError.from(error).message;
@@ -123,7 +176,7 @@ export class Page {
     if (e.repeat) return;
     if (e.action === 'confirm') void row?.run?.();
     else if (e.action === 'north') void row?.alt?.run();
-    else if (e.action === 'back') this.close();
+    else if (e.action === 'back') void this.pop();
   }
 
   #render(): void {

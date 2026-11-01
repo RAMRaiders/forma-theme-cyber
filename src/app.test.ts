@@ -61,7 +61,7 @@ async function start(permissions: string[] = [], slow: Record<string, number> = 
   /** Start, down to the entry called `label`, A. */
   const openMenu = async (label: string) => {
     await press('start');
-    for (let i = 0; i < 12 && text('.switcher li.selected .name')[0] !== label; i++) {
+    for (let i = 0; i < 20 && text('.switcher li.selected .name')[0] !== label; i++) {
       await press('down');
     }
     expect(text('.switcher li.selected .name')).toEqual([label]);
@@ -208,11 +208,13 @@ describe('the default theme', () => {
       'RetroAchievements…',
       'Netplay…',
       'Network…',
+      'Game settings…',
+      'System settings…',
       'Switch to EmulationStation',
       'Restart',
       'Shut down'
     ]);
-    for (let i = 0; i < 7; i++) await press('down');
+    for (let i = 0; i < 9; i++) await press('down');
     await press('confirm');
     expect(text('.toast')).toEqual(['Press A again to restart']);
     await press('confirm');
@@ -428,5 +430,100 @@ describe('the default theme', () => {
         'Super Famicom'
       ])
     );
+  });
+
+  it('game settings: global options, a choice cycled, a page of its own and back', async () => {
+    const { press, text, openMenu } = await start(['settings.emulators']);
+    await openMenu('Game settings…');
+    const rows = () => text('.page > .panel li[role=option] .name');
+    const selected = () => text('.page li.selected .name')[0];
+    await vi.waitFor(() => expect(rows()).toContain('Game aspect ratio'));
+    expect(text('.page h2')).toEqual(['Game settings']);
+    expect(rows()).toContain('Game rendering & shaders…');
+    while (selected() !== 'Game aspect ratio') await press('down');
+    expect(text('.page li.selected .description')).toEqual(['Default']);
+    await press('right');
+    await vi.waitFor(() => expect(text('.page li.selected .description')).toEqual(['4/3']));
+    // Its own page: B comes back to the row it was opened from.
+    while (selected() !== 'Game rendering & shaders…') await press('down');
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.page h2')).toEqual(['Game rendering & shaders']));
+    expect(rows()).toEqual(['Shader set', 'Integer scaling (pixel perfect)']);
+    await press('back');
+    await vi.waitFor(() => expect(text('.page h2')).toEqual(['Game settings']));
+    expect(selected()).toBe('Game rendering & shaders…');
+  });
+
+  it("a system's options follow its core, and a game inherits them", async () => {
+    const { press, text, openMenu } = await start(['settings.emulators']);
+    const rows = () => text('.page > .panel li[role=option] .name');
+    await press('confirm');
+    await vi.waitFor(() =>
+      expect(text('.system-list .name')[0]).toBe('Nintendo Entertainment System')
+    );
+    await openMenu('Nintendo Entertainment System options…');
+    await vi.waitFor(() => expect(rows().slice(0, 2)).toEqual(['Emulator', 'Core']));
+    expect(text('.page .heading')).toContain('Advanced options');
+    expect(rows()).toContain('Palette');
+    while (text('.page li.selected .name')[0] !== 'Core') await press('down');
+    // Default (fceumm) → the first core in the list, then the next: nestopia, whose options
+    // have no palette.
+    await press('right');
+    await press('right');
+    await vi.waitFor(() => expect(text('.page li.selected .description')).toEqual(['nestopia']));
+    expect(rows()).not.toContain('Palette');
+    await press('back');
+
+    // A game of the NES: its core is the system's.
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.games .row').length).toBeGreaterThan(0));
+    await press('start');
+    expect(text('.switcher li.selected .name')[0]).toMatch(/ options…$/);
+    await press('confirm');
+    await vi.waitFor(() => expect(rows()).toContain('Core'));
+    const core = rows().indexOf('Core');
+    expect(text('.page > .panel li[role=option] .description')[core]).toBe(
+      'Default · nestopia (system)'
+    );
+  });
+
+  it('system settings: information, a long list picked from, and when it applies', async () => {
+    const { press, text, openMenu } = await start(['system.settings']);
+    await openMenu('System settings…');
+    const rows = () => text('.page > .panel li[role=option] .name');
+    const selected = () => text('.page li.selected .name')[0];
+    await vi.waitFor(() => expect(rows()).toContain('Time zone'));
+    expect(text('.page .heading')).toEqual([
+      'Display',
+      'Audio',
+      'Language & region',
+      'System',
+      'Storage'
+    ]);
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.page h2')).toEqual(['About this box']));
+    expect(rows()[0]).toBe('Batocera');
+    await press('back');
+    // 36 languages: a list to pick from, starting on the one in use.
+    while (selected() !== 'Language') await press('down');
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.page h2')).toEqual(['Language']));
+    expect(selected()).toBe('✓ English (US)');
+    await press('down');
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.page h2')).toEqual(['System settings']));
+    await vi.waitFor(() =>
+      expect(text('.page li.selected .description')).toEqual([
+        'English (UK) · after Forma restarts'
+      ])
+    );
+  });
+
+  it('turns Batocera labels into sentence case, keeping acronyms', async () => {
+    const { sentence } = await import('./ui/settings.js');
+    expect(sentence('GAME ASPECT RATIO')).toBe('Game aspect ratio');
+    expect(sentence('ENABLE AI TRANSLATION SERVICE')).toBe('Enable AI translation service');
+    expect(sentence('STRETCH BEZELS (4K & ULTRAWIDE)')).toBe('Stretch bezels (4K & ultrawide)');
+    expect(sentence('Already fine')).toBe('Already fine');
   });
 });

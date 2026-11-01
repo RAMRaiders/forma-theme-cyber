@@ -3,11 +3,13 @@
   "name": "Cyber",
   "version": "0.1.0",
   "entry": "index.html",
-  "sdk": "^1.1",
+  "sdk": "^1.2",
   "permissions": [
     "system.power",
     "system.network",
     "settings.batocera",
+    "settings.emulators",
+    "system.settings",
     "settings.system",
     "music.manage"
   ],
