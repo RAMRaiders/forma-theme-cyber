@@ -208,13 +208,14 @@ describe('the default theme', () => {
       'RetroAchievements…',
       'Netplay…',
       'Network…',
+      'Content downloader…',
       'Game settings…',
       'System settings…',
       'Switch to EmulationStation',
       'Restart',
       'Shut down'
     ]);
-    for (let i = 0; i < 9; i++) await press('down');
+    for (let i = 0; i < 10; i++) await press('down');
     await press('confirm');
     expect(text('.toast')).toEqual(['Press A again to restart']);
     await press('confirm');
@@ -525,5 +526,31 @@ describe('the default theme', () => {
     expect(sentence('ENABLE AI TRANSLATION SERVICE')).toBe('Enable AI translation service');
     expect(sentence('STRETCH BEZELS (4K & ULTRAWIDE)')).toBe('Stretch bezels (4K & ultrawide)');
     expect(sentence('Already fine')).toBe('Already fine');
+  });
+
+  it('content downloader: a category, an install with its progress, and removing it', async () => {
+    const { press, text, openMenu } = await start(['store.manage']);
+    await openMenu('Content downloader…');
+    const rows = () => text('.page > .panel li[role=option] .name');
+    const selected = () => text('.page li.selected .name')[0];
+    await vi.waitFor(() => expect(rows()).toContain('Refresh the list'));
+    // One package has a newer version; systems by their names in the library.
+    expect(rows()[0]).toBe('Update all (1)');
+    expect(rows()).toContain('Nintendo Entertainment System');
+    expect(rows().indexOf('Decorations')).toBeLessThan(rows().indexOf('Other'));
+    while (selected() !== 'Nintendo Entertainment System') await press('down');
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.page h2')).toEqual(['Nintendo Entertainment System']));
+    const before = text('.page li.selected .description')[0]!;
+    expect(before).not.toContain('Installed');
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.page .note')[0]).toMatch(/^Downloading .*%$/));
+    await vi.waitFor(() =>
+      expect(text('.page li.selected .description')[0]).toContain('Installed')
+    );
+    expect(text('.toast')[0]).toMatch(/ installed$/);
+    await press('north');
+    await vi.waitFor(() => expect(text('.toast')[0]).toMatch(/ removed$/));
+    expect(text('.page li.selected .description')[0]).toBe(before);
   });
 });

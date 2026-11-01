@@ -32,6 +32,7 @@ import { loader } from './ui/loader.js';
 import { NetworkScreen } from './ui/network.js';
 import { Page } from './ui/page.js';
 import { optionsScreen, systemSettingsScreen } from './ui/settings.js';
+import { storeScreen } from './ui/store.js';
 import {
   interfaceScreen,
   musicScreen,
@@ -565,6 +566,11 @@ export class App {
       { id: 'netplay', label: 'Netplay…', description: 'Playing online with others' },
       { id: 'network', label: 'Network…', description: 'Wi-Fi and Ethernet' },
       {
+        id: 'store',
+        label: 'Content downloader…',
+        description: 'Free games, ports, decorations and music from Batocera'
+      },
+      {
         id: 'game-settings',
         label: 'Game settings…',
         description: 'Emulator options for every game: ratio, shaders, decorations…'
@@ -605,6 +611,12 @@ export class App {
     if (id === 'network') {
       m.close();
       this.#network.show();
+      return this.#renderChrome();
+    }
+    if (id === 'store') {
+      m.close();
+      this.#settingsKind = id;
+      void this.#settings.show('Content downloader', storeScreen(this.forma, this.#settings));
       return this.#renderChrome();
     }
     if (

@@ -142,6 +142,13 @@ export class Page {
     }
   }
 
+  /** While `run` works: what it is doing now (a download's progress). */
+  progress(label: string): void {
+    if (this.#busy === null) return;
+    this.#busy = label;
+    this.#render();
+  }
+
   /** The on-screen keyboard; the page redraws after it, typed or cancelled. */
   async ask(ask: Ask): Promise<string | null> {
     const typed = await this.keyboard.ask(ask);
