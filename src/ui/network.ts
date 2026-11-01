@@ -77,8 +77,13 @@ export class NetworkScreen {
     if (this.keyboard.open) return this.keyboard.input(e);
     if (!e.pressed || this.#busy) return;
     if (e.action === 'up' || e.action === 'down') {
+      // Only the highlight moves: a rebuild would flicker on every press (see Page).
+      const items = this.root.querySelectorAll('li[role=option]');
+      items[this.#selected]?.classList.remove('selected');
       this.#selected = moveList(this.#selected, this.#rows.length, e.action, 5, e.repeat);
-      return this.#render();
+      items[this.#selected]?.classList.add('selected');
+      items[this.#selected]?.scrollIntoView({ block: 'nearest' });
+      return this.changed();
     }
     if (e.repeat) return;
     switch (e.action) {
@@ -304,6 +309,7 @@ export class NetworkScreen {
     if (this.#rows.length > 0) this.#selected = Math.min(this.#selected, this.#rows.length - 1);
     const title = this.#page === 'main' ? 'Network' : 'Ethernet';
     const note = this.#busy ?? this.#error ?? (this.#status ? null : 'Reading the network…');
+    const scrolled = this.root.querySelector('.panel')?.scrollTop ?? 0;
     this.root.replaceChildren(
       el(
         'div',
@@ -325,6 +331,8 @@ export class NetworkScreen {
       ),
       this.keyboard.root
     );
+    const panel = this.root.querySelector('.panel');
+    if (panel) panel.scrollTop = scrolled;
     this.root.querySelector('li.selected')?.scrollIntoView({ block: 'nearest' });
     this.changed();
   }

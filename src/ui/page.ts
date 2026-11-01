@@ -172,8 +172,7 @@ export class Page {
     if (this.keyboard.open) return this.keyboard.input(e);
     if (!e.pressed || this.#busy) return;
     if (e.action === 'up' || e.action === 'down') {
-      this.#selected = moveList(this.#selected, this.#rows.length, e.action, 6, e.repeat);
-      return this.#render();
+      return this.#move(moveList(this.#selected, this.#rows.length, e.action, 6, e.repeat));
     }
     const row = this.#rows[this.#selected];
     if ((e.action === 'left' || e.action === 'right') && row?.adjust) {
@@ -186,8 +185,23 @@ export class Page {
     else if (e.action === 'back') void this.pop();
   }
 
+  /**
+   * Moving only moves the highlight: rebuilding the page on every step started its panel scrolled
+   * to the top and jumped back to the selection, a flicker on every press.
+   */
+  #move(index: number): void {
+    const items = this.root.querySelectorAll('li[role=option]');
+    items[this.#selected]?.classList.remove('selected');
+    this.#selected = index;
+    items[index]?.classList.add('selected');
+    items[index]?.scrollIntoView({ block: 'nearest' });
+    this.changed();
+  }
+
   #render(): void {
     this.#selected = Math.min(this.#selected, Math.max(0, this.#rows.length - 1));
+    // A redraw (after a change) stays where the panel was scrolled to.
+    const scrolled = this.root.querySelector('.panel')?.scrollTop ?? 0;
     const note = this.#busy ?? this.#note;
     const items: HTMLElement[] = [];
     this.#rows.forEach((row, i) => {
@@ -218,6 +232,8 @@ export class Page {
       ),
       this.keyboard.root
     );
+    const panel = this.root.querySelector('.panel');
+    if (panel) panel.scrollTop = scrolled;
     this.root.querySelector('li.selected')?.scrollIntoView({ block: 'nearest' });
     this.changed();
   }
