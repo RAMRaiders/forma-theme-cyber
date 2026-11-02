@@ -316,7 +316,8 @@ main {
   position: absolute;
   bottom: 12%;
   object-fit: contain;
-  -webkit-box-reflect: below 0.2rem linear-gradient(transparent 70%, rgb(0 0 0 / 22%));
+  /* No -webkit-box-reflect: WebKitGTK drew the reflection in the wrong place while the selected
+     tile's picture grew, a ghost of it over the tile's text for a moment on every move. */
   filter: drop-shadow(0 0.6rem 0.8rem rgb(0 0 0 / 70%));
   transition: transform 200ms ease;
 }

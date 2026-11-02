@@ -53,8 +53,8 @@ const image = (src: string, cls: string) => {
 
 /**
  * A category as a little stage: its biggest system large in the middle on a halo of the
- * category's colour, the next two set back on either side, a reflection under each, the
- * category's own circuit board as texture, and its systems' logos along the bottom.
+ * category's colour, the next two set back on either side, the category's own circuit board
+ * as texture, and its systems' logos along the bottom.
  */
 function tile({ category, systems }: Tile): HTMLElement {
   const games = systems.reduce((n, s) => n + s.summary.gameCount, 0);
