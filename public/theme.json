@@ -1,18 +1,82 @@
 {
   "id": "cyber",
   "name": "Cyber",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "entry": "index.html",
-  "sdk": "^1.3",
-  "permissions": [
-    "system.power",
-    "system.network",
-    "settings.batocera",
-    "settings.emulators",
-    "system.settings",
-    "store.manage",
-    "settings.system",
-    "music.manage"
-  ],
-  "resolutions": ["1280x720", "1920x1080"]
+  "sdk": "^1.4",
+  "permissions": ["settings.system"],
+  "resolutions": ["1280x720", "1920x1080"],
+  "settings": [
+    {
+      "key": "textSize",
+      "label": "Text size",
+      "group": "Look",
+      "type": "choice",
+      "choices": [
+        { "value": "small", "label": "Small" },
+        { "value": "normal", "label": "Normal" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "normal"
+    },
+    {
+      "key": "board",
+      "label": "Circuit board",
+      "description": "The system’s board behind the screens",
+      "group": "Look",
+      "type": "choice",
+      "choices": [
+        { "value": "on", "label": "On" },
+        { "value": "dim", "label": "Dimmed" },
+        { "value": "off", "label": "Off" }
+      ],
+      "default": "on"
+    },
+    {
+      "key": "motion",
+      "label": "Animations",
+      "description": "Pulsing traces, loaders",
+      "group": "Look",
+      "type": "toggle",
+      "default": true
+    },
+    {
+      "key": "previews",
+      "label": "Video previews",
+      "description": "In a game list, after a moment on a game",
+      "group": "Look",
+      "type": "toggle",
+      "default": true
+    },
+    {
+      "key": "nowPlaying",
+      "label": "Now playing",
+      "description": "The song in the header",
+      "group": "Look",
+      "type": "toggle",
+      "default": true
+    },
+    {
+      "key": "rotateFacts",
+      "label": "Rotate curiosities",
+      "description": "On a system’s page, every 10 seconds",
+      "group": "Look",
+      "type": "toggle",
+      "default": true
+    },
+    {
+      "key": "systemsSort",
+      "label": "Systems",
+      "description": "In each category",
+      "group": "Sorting",
+      "type": "choice",
+      "choices": [
+        { "value": "games", "label": "Most games first" },
+        { "value": "name", "label": "By name" },
+        { "value": "year", "label": "Oldest first" },
+        { "value": "maker", "label": "By maker" }
+      ],
+      "default": "games"
+    }
+  ]
 }

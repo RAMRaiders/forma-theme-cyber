@@ -1,30 +1,21 @@
 import { connect } from '@ramraiders/forma-sdk';
 
 import { App } from './app.js';
-import { loader } from './ui/loader.js';
 import { startPerfOverlay } from './ui/perf.js';
 
 const root = document.querySelector<HTMLElement>('#app')!;
-// Over everything until the first screen is drawn, then faded out.
-const boot = document.createElement('div');
-boot.className = 'boot';
-boot.append(loader('Starting Forma'));
-document.body.append(boot);
 
+// Forma's own cover shows while Cyber starts, until the first screen is drawn.
 try {
-  const forma = await connect();
+  const forma = await connect({ deferReady: true });
   if (location.hash === '#perf') {
     // Saved as a theme setting too, for reading off a device remotely.
     startPerfOverlay((stats) => void forma.settings.set('perf', stats));
   }
   await new App(forma, root).start();
-  boot.classList.add('done');
-  boot.addEventListener('transitionend', () => boot.remove(), { once: true });
-  // In case transitions are off (reduced motion): never leave it over the screen.
-  setTimeout(() => boot.remove(), 1000);
+  await forma.ready();
   if (import.meta.env.DEV) replayKeys();
 } catch (error) {
-  boot.remove();
   root.textContent = `Could not connect to Forma: ${String(error)}`;
 }
 

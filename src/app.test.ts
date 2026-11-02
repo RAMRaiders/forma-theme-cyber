@@ -58,16 +58,7 @@ async function start(permissions: string[] = [], slow: Record<string, number> = 
   };
   const text = (selector: string) =>
     [...root.querySelectorAll(selector)].map((n) => n.textContent?.trim() ?? '');
-  /** Start, down to the entry called `label`, A. */
-  const openMenu = async (label: string) => {
-    await press('start');
-    for (let i = 0; i < 20 && text('.switcher li.selected .name')[0] !== label; i++) {
-      await press('down');
-    }
-    expect(text('.switcher li.selected .name')).toEqual([label]);
-    await press('confirm');
-  };
-  return { root, press, text, forma, openMenu };
+  return { root, press, text, forma, backend };
 }
 
 describe('the default theme', () => {
@@ -165,26 +156,17 @@ describe('the default theme', () => {
     await vi.waitFor(() => expect(playing.hidden).toBe(true));
   });
 
-  it('switches view and sets the home view from the switcher', async () => {
-    const { press, text, forma } = await start();
-    await press('select');
-    expect(text('.switcher li.selected .name')).toEqual(['Systems']);
-    await press('down');
-    await press('north');
-    await vi.waitFor(async () =>
-      expect((await forma.nav.defaultView()).id).toBe('manufacturer-system')
-    );
-    await press('confirm');
+  it('opens the view picked in Forma’s views list', async () => {
+    const { text, backend } = await start();
+    // As Forma's shell does when the user picks a view after Select.
+    await backend.invoke('shell_open_view', { view: 'manufacturer-system' });
     await vi.waitFor(() => expect(text('h1')).toEqual(['By manufacturer']));
     expect(text('.card .label')).toEqual(['Nintendo', 'Sega', 'Sony', 'Unknown']);
   });
 
   it('opens a menu view into its branches', async () => {
-    const { press, text } = await start();
-    await press('select');
-    for (let i = 0; i < 5; i++) await press('down');
-    expect(text('.switcher li.selected .name')).toEqual(['Home']);
-    await press('confirm');
+    const { press, text, backend } = await start();
+    await backend.invoke('shell_open_view', { view: 'home' });
     await vi.waitFor(() =>
       expect(text('.card .label')).toEqual([
         'Favourites',
@@ -198,233 +180,44 @@ describe('the default theme', () => {
     await vi.waitFor(() => expect(text('.row')).toEqual(['★ Super Mario Bros.']));
   });
 
-  it('opens a system menu on Start, and power actions need a second press', async () => {
+  it('leaves Start and Select to Forma, and shows they are there', async () => {
     const { press, text } = await start();
     await press('start');
-    expect(text('.switcher li .name')).toEqual([
-      'Views…',
-      'Interface…',
-      'Music…',
-      'RetroAchievements…',
-      'Netplay…',
-      'Network…',
-      'Content downloader…',
-      'Game settings…',
-      'System settings…',
-      'Switch to EmulationStation',
-      'Restart',
-      'Shut down'
-    ]);
-    const scrolled = vi.mocked(Element.prototype.scrollIntoView);
-    scrolled.mockClear();
-    for (let i = 0; i < 10; i++) await press('down');
-    // Each step brings the selection into view, so a long menu scrolls.
-    expect(scrolled.mock.contexts.at(-1)).toBe(document.querySelector('.switcher li.selected'));
-    await press('confirm');
-    expect(text('.toast')).toEqual(['Press A again to restart']);
-    await press('confirm');
-    // The mock grants no permission, as a theme without `system.power` would get.
-    await vi.waitFor(() => expect(text('.toast')[0]).toContain('system.power'));
-    await press('back');
-    // Closed: the normal hints are back.
-    expect(text('.hint')).toContain('StartMenu');
+    await press('select');
+    expect(text('.switcher, .page, .keyboard')).toEqual([]);
+    expect(text('.hint')).toEqual(['AOpen', 'SelectViews', 'StartMenu']);
   });
 
-  it('joins a Wi-Fi network with a password typed on the on-screen keyboard', async () => {
-    const { press, text, openMenu } = await start(['system.network']);
-    await openMenu('Network…');
-    const rows = () => text('.network > .panel li .name');
-    await vi.waitFor(() => expect(rows()).toContain('▮▮▯▯  Office 5G'));
-    expect(rows()[0]).toBe('Ethernet');
-    expect(rows()[1]).toBe('Wi-Fi: on');
-    expect(text('.network > .panel li .description')[0]).toBe('192.168.1.113 · automatic');
-
-    // Down to Office 5G (Ethernet, Wi-Fi, Home, Cafe Guest, Office 5G).
-    for (let i = 0; i < 4; i++) await press('down');
+  it('tells Forma’s menu the system and game selected, once the selection rests', async () => {
+    const { press, text, backend } = await start();
+    const context = async () =>
+      (await backend.invoke<{ context: Record<string, unknown> }>('shell_info')).context;
     await press('confirm');
-    expect(text('.keyboard h2')).toEqual(['Password for Office 5G']);
-    // A gamepad types the key under the cursor (row 2 starts at q); a keyboard types directly.
-    await press('confirm');
-    for (const key of 'uiet-place') {
-      window.dispatchEvent(new KeyboardEvent('keydown', { key }));
-    }
-    expect(text('.keyboard .field')).toEqual(['•••••••••••']);
-    await press('north');
-    expect(text('.keyboard .field')).toEqual(['quiet-place']);
-    await press('start');
-    // A cable is plugged in, so Wi-Fi is saved for later, as on Batocera.
     await vi.waitFor(() =>
-      expect(text('.toast')[0]).toBe(
-        'Office 5G is saved. The cable stays in use; unplug it to use Wi-Fi'
-      )
+      expect(text('.system-list .name')[0]).toBe('Nintendo Entertainment System')
     );
-    await vi.waitFor(() =>
-      expect(text('.network > .panel li .description')[1]).toBe(
-        'Office 5G is saved; the cable is in use'
-      )
+    await vi.waitFor(async () =>
+      expect(await context()).toMatchObject({
+        view: 'systems',
+        system: { name: 'nes', fullname: 'Nintendo Entertainment System' },
+        game: null
+      })
+    );
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.games .row').length).toBeGreaterThan(0));
+    await vi.waitFor(async () =>
+      expect(await context()).toMatchObject({ system: { name: 'nes' }, game: { id: 1 } })
     );
   });
 
-  it('sets a static Ethernet address, and refuses an 802.1X network up front', async () => {
-    const { press, text, forma, openMenu } = await start(['system.network']);
-    await openMenu('Network…');
-    await vi.waitFor(() => expect(text('.network > .panel li .name')).toContain('▮▮▯▯  Campus'));
-    for (let i = 0; i < 5; i++) await press('down');
-    await press('confirm');
-    expect(text('.toast')[0]).toContain('802.1X');
-    expect(text('.keyboard h2')).toEqual([]);
-
-    for (let i = 0; i < 5; i++) await press('up');
-    await press('confirm');
-    expect(text('.network h2')).toContain('Ethernet');
-    await press('down');
-    await press('confirm');
-    // The draft starts from the current address; change it with the keypad.
-    expect(text('.network > .panel li .name')).toEqual([
-      '○ Automatic (DHCP)',
-      '● Manual',
-      'Address',
-      'Netmask',
-      'Gateway',
-      'DNS server',
-      'Save'
-    ]);
-    await press('down');
-    await press('confirm');
-    expect(text('.keyboard h2')).toEqual(['Address']);
-    await press('back');
-    await press('back');
-    await press('back');
-    for (const key of '50') window.dispatchEvent(new KeyboardEvent('keydown', { key }));
-    await press('start');
-    expect(text('.network > .panel li .description')[2]).toBe('192.168.1.50');
-    for (let i = 0; i < 4; i++) await press('down');
-    // Saving waits for connman to restart before reading the status again.
-    vi.useFakeTimers({ toFake: ['setTimeout'] });
-    const saving = press('confirm');
-    await vi.advanceTimersByTimeAsync(5000);
-    await saving;
-    vi.useRealTimers();
-    await vi.waitFor(() => expect(text('.toast')[0]).toBe('Ethernet uses 192.168.1.50'));
-    const status = await forma.network.status();
-    expect(status.ethernet?.config).toMatchObject({ method: 'manual', address: '192.168.1.50' });
-  });
-
-  it('keeps the selection on Wi-Fi after turning it off, so A turns it back on', async () => {
-    const { press, text, openMenu } = await start(['system.network']);
-    await openMenu('Network…');
-    await vi.waitFor(() => expect(text('.network > .panel li .name')).toContain('Wi-Fi: on'));
-    await press('down');
-    await press('confirm');
-    await vi.waitFor(() =>
-      expect(text('.network > .panel li.selected .name')).toEqual(['Wi-Fi: off'])
-    );
-    vi.useFakeTimers({ toFake: ['setTimeout'] });
-    const turningOn = press('confirm');
-    await vi.advanceTimersByTimeAsync(5000);
-    await turningOn;
-    vi.useRealTimers();
-    await vi.waitFor(() =>
-      expect(text('.network > .panel li.selected .name')).toEqual(['Wi-Fi: on'])
-    );
-  });
-
-  it('music: picks a playlist, shows it playing, and adds a web radio', async () => {
-    const { press, text, openMenu } = await start(['music.manage']);
-    await openMenu('Music…');
-    const rows = () => text('.page > .panel li .name');
-    await vi.waitFor(() => expect(rows()).toContain('Chiptune'));
-    expect(rows()[0]).toBe('Nothing playing');
-    expect(text('.page li.heading')).toEqual(['Folders and playlists', 'Web radios']);
-
-    // Down to Chiptune: Nothing playing, Volume, Shuffle, Music, Chiptune.
-    for (let i = 0; i < 4; i++) await press('down');
-    expect(text('.page li.selected .name')).toEqual(['Chiptune']);
-    await press('confirm');
-    await vi.waitFor(() => expect(rows()[0]).toBe('Track 1'));
-    expect(text('.now-playing .title')).toEqual(['Track 1']);
-    // Rows were added above it (Pause, Next…): the selection stayed on Chiptune.
-    expect(text('.page li.selected .name')).toEqual(['Chiptune']);
-    expect(rows()).toContain('Pause');
-
-    // Add a radio through the keyboard: name, then address.
-    for (let i = 0; i < 20 && text('.page li.selected .name')[0] !== 'Add a web radio…'; i++) {
-      await press('down');
-    }
-    expect(text('.page li.selected .name')).toEqual(['Add a web radio…']);
-    await press('confirm');
-    for (const key of 'Lofi') window.dispatchEvent(new KeyboardEvent('keydown', { key }));
-    await press('start');
-    for (const key of 'lofi.example/live') {
-      window.dispatchEvent(new KeyboardEvent('keydown', { key }));
-    }
-    await press('start');
-    await vi.waitFor(() => expect(text('.toast')[0]).toBe('Lofi added'));
-    expect(rows()).toContain('Lofi');
-  });
-
-  it('RetroAchievements: signs in, and flips a switch', async () => {
-    const { press, text, openMenu } = await start(['settings.batocera', 'settings.system']);
-    await openMenu('RetroAchievements…');
-    const rows = () => text('.page > .panel li .name');
-    await vi.waitFor(() => expect(rows()[0]).toBe('Sign in…'));
-    await press('confirm');
-    expect(text('.keyboard h2')).toEqual(['RetroAchievements username']);
-    // Clear what is there (the fixture's user; B on an empty field would cancel), then type.
-    const filled = text('.keyboard .field')[0]!.length;
-    for (let i = 0; i < filled; i++) await press('back');
-    for (const key of 'mike') window.dispatchEvent(new KeyboardEvent('keydown', { key }));
-    await press('start');
-    expect(text('.keyboard h2')).toEqual(['Password for mike']);
-    for (const key of 'secret!') window.dispatchEvent(new KeyboardEvent('keydown', { key }));
-    await press('start');
-    await vi.waitFor(() => expect(text('.toast')[0]).toBe('Signed in as mike'));
-    expect(rows()[0]).toBe('Signed in as mike');
-
-    await press('down');
-    const before = text('.page li.selected .name')[0];
-    await press('right');
-    await vi.waitFor(() => expect(text('.page li.selected .name')[0]).not.toBe(before));
-  });
-
-  it('netplay: cycles the relay server and shows the custom one only when chosen', async () => {
-    const { press, text, openMenu } = await start(['settings.batocera']);
-    await openMenu('Netplay…');
-    const rows = () => text('.page > .panel li .name');
-    await vi.waitFor(() => expect(rows()).toContain('Relay server'));
-    expect(rows()).not.toContain('Custom server');
-    while (text('.page li.selected .name')[0] !== 'Relay server') await press('down');
-    // Back from the first choice wraps to the last: Custom server.
-    await press('left');
-    await vi.waitFor(() => expect(rows()).toContain('Custom server'));
-    expect(text('.page li.selected .description')).toEqual(['Custom server']);
-  });
-
-  it('interface: the theme in use, a bigger text size, and systems by name', async () => {
-    const { press, text, openMenu } = await start(['settings.system']);
-    await openMenu('Interface…');
-    const rows = () => text('.page > .panel li .name');
-    await vi.waitFor(() =>
-      expect(text('.page li.heading')).toEqual(['Theme', 'Screen', 'Look', 'Sorting'])
-    );
-
-    // Overscan: everything shrinks evenly into what the TV shows.
-    while (!text('.page li.selected .name')[0]!.startsWith('Screen margins')) await press('down');
-    await press('right');
-    await vi.waitFor(() => expect(text('.page li.selected .name')).toEqual(['Screen margins: 1%']));
-    expect(document.body.style.transform).toBe('scale(0.98)');
-    expect(text('.page li .description')[0]).toBe('In use');
-    expect(rows()).toContain('Start on: Categories');
-
-    while (!text('.page li.selected .name')[0]!.startsWith('Text size')) await press('down');
-    await press('right');
-    await vi.waitFor(() => expect(text('.page li.selected .name')).toEqual(['Text size: Large']));
+  it('follows its settings as Forma’s menu changes them', async () => {
+    const { press, text, backend } = await start(['settings.system']);
+    await backend.invoke('shell_set_theme_setting', { key: 'textSize', value: 'large' });
     expect(document.documentElement.dataset.textSize).toBe('large');
+    await backend.invoke('shell_set_theme_setting', { key: 'board', value: 42 });
+    expect(document.documentElement.dataset.board).toBe('on');
 
-    while (!text('.page li.selected .name')[0]!.startsWith('Systems')) await press('down');
-    await press('right');
-    await vi.waitFor(() => expect(text('.page li.selected .name')).toEqual(['Systems: By name']));
-    await press('back');
+    await backend.invoke('shell_set_theme_setting', { key: 'systemsSort', value: 'name' });
     await press('confirm');
     await vi.waitFor(() =>
       expect(text('.system-list .name')).toEqual([
@@ -437,124 +230,16 @@ describe('the default theme', () => {
     );
   });
 
-  it('game settings: global options, a choice cycled, a page of its own and back', async () => {
-    const { press, text, openMenu } = await start(['settings.emulators']);
-    await openMenu('Game settings…');
-    const rows = () => text('.page > .panel li[role=option] .name');
-    const selected = () => text('.page li.selected .name')[0];
-    await vi.waitFor(() => expect(rows()).toContain('Game aspect ratio'));
-    expect(text('.page h2')).toEqual(['Game settings']);
-    expect(rows()).toContain('Game rendering & shaders…');
-    while (selected() !== 'Game aspect ratio') await press('down');
-    expect(text('.page li.selected .description')).toEqual(['Default']);
-    await press('right');
-    await vi.waitFor(() => expect(text('.page li.selected .description')).toEqual(['4/3']));
-    // Its own page: B comes back to the row it was opened from.
-    while (selected() !== 'Game rendering & shaders…') await press('down');
-    await press('confirm');
-    await vi.waitFor(() => expect(text('.page h2')).toEqual(['Game rendering & shaders']));
-    expect(rows()).toEqual(['Shader set', 'Integer scaling (pixel perfect)']);
-    await press('back');
-    await vi.waitFor(() => expect(text('.page h2')).toEqual(['Game settings']));
-    expect(selected()).toBe('Game rendering & shaders…');
-  });
-
-  it("a system's options follow its core, and a game inherits them", async () => {
-    const { press, text, openMenu } = await start(['settings.emulators']);
-    const rows = () => text('.page > .panel li[role=option] .name');
-    await press('confirm');
-    await vi.waitFor(() =>
-      expect(text('.system-list .name')[0]).toBe('Nintendo Entertainment System')
-    );
-    await openMenu('Nintendo Entertainment System options…');
-    await vi.waitFor(() => expect(rows().slice(0, 2)).toEqual(['Emulator', 'Core']));
-    expect(text('.page .heading')).toContain('Advanced options');
-    expect(rows()).toContain('Palette');
-    while (text('.page li.selected .name')[0] !== 'Core') await press('down');
-    // Default (fceumm) → the first core in the list, then the next: nestopia, whose options
-    // have no palette.
-    await press('right');
-    await press('right');
-    await vi.waitFor(() => expect(text('.page li.selected .description')).toEqual(['nestopia']));
-    expect(rows()).not.toContain('Palette');
-    await press('back');
-
-    // A game of the NES: its core is the system's.
-    await press('confirm');
-    await vi.waitFor(() => expect(text('.games .row').length).toBeGreaterThan(0));
-    await press('start');
-    expect(text('.switcher li.selected .name')[0]).toMatch(/ options…$/);
-    await press('confirm');
-    await vi.waitFor(() => expect(rows()).toContain('Core'));
-    const core = rows().indexOf('Core');
-    expect(text('.page > .panel li[role=option] .description')[core]).toBe(
-      'Default · nestopia (system)'
-    );
-  });
-
-  it('system settings: information, a long list picked from, and when it applies', async () => {
-    const { press, text, openMenu } = await start(['system.settings']);
-    await openMenu('System settings…');
-    const rows = () => text('.page > .panel li[role=option] .name');
-    const selected = () => text('.page li.selected .name')[0];
-    await vi.waitFor(() => expect(rows()).toContain('Time zone'));
-    expect(text('.page .heading')).toEqual([
-      'Display',
-      'Audio',
-      'Language & region',
-      'System',
-      'Storage'
-    ]);
-    await press('confirm');
-    await vi.waitFor(() => expect(text('.page h2')).toEqual(['About this box']));
-    expect(rows()[0]).toBe('Batocera');
-    await press('back');
-    // 36 languages: a list to pick from, starting on the one in use.
-    while (selected() !== 'Language') await press('down');
-    await press('confirm');
-    await vi.waitFor(() => expect(text('.page h2')).toEqual(['Language']));
-    expect(selected()).toBe('✓ English (US)');
-    await press('down');
-    await press('confirm');
-    await vi.waitFor(() => expect(text('.page h2')).toEqual(['System settings']));
-    await vi.waitFor(() =>
-      expect(text('.page li.selected .description')).toEqual([
-        'English (UK) · after Forma restarts'
-      ])
-    );
-  });
-
-  it('turns Batocera labels into sentence case, keeping acronyms', async () => {
-    const { sentence } = await import('./ui/settings.js');
-    expect(sentence('GAME ASPECT RATIO')).toBe('Game aspect ratio');
-    expect(sentence('ENABLE AI TRANSLATION SERVICE')).toBe('Enable AI translation service');
-    expect(sentence('STRETCH BEZELS (4K & ULTRAWIDE)')).toBe('Stretch bezels (4K & ultrawide)');
-    expect(sentence('Already fine')).toBe('Already fine');
-  });
-
-  it('content downloader: a category, an install with its progress, and removing it', async () => {
-    const { press, text, openMenu } = await start(['store.manage']);
-    await openMenu('Content downloader…');
-    const rows = () => text('.page > .panel li[role=option] .name');
-    const selected = () => text('.page li.selected .name')[0];
-    await vi.waitFor(() => expect(rows()).toContain('Refresh the list'));
-    // One package has a newer version; systems by their names in the library.
-    expect(rows()[0]).toBe('Update all (1)');
-    expect(rows()).toContain('Nintendo Entertainment System');
-    expect(rows().indexOf('Decorations')).toBeLessThan(rows().indexOf('Other'));
-    while (selected() !== 'Nintendo Entertainment System') await press('down');
-    await press('confirm');
-    await vi.waitFor(() => expect(text('.page h2')).toEqual(['Nintendo Entertainment System']));
-    const before = text('.page li.selected .description')[0]!;
-    expect(before).not.toContain('Installed');
-    await press('confirm');
-    await vi.waitFor(() => expect(text('.page .note')[0]).toMatch(/^Downloading .*%$/));
-    await vi.waitFor(() =>
-      expect(text('.page li.selected .description')[0]).toContain('Installed')
-    );
-    expect(text('.toast')[0]).toMatch(/ installed$/);
-    await press('north');
-    await vi.waitFor(() => expect(text('.toast')[0]).toMatch(/ removed$/));
-    expect(text('.page li.selected .description')[0]).toBe(before);
+  it('reads its settings one by one, over the single object it used to keep', async () => {
+    const backend = mockBackend({ permissions: [] });
+    await backend.invoke('settings_set', {
+      key: 'interface',
+      value: { textSize: 'small', board: 'dim' }
+    });
+    await backend.invoke('settings_set', { key: 'board', value: 'off' });
+    const forma = await connect({ backend, keyboard: false });
+    await new App(forma, document.querySelector<HTMLElement>('#app')!, infos).start();
+    expect(document.documentElement.dataset.textSize).toBe('small');
+    expect(document.documentElement.dataset.board).toBe('off');
   });
 });

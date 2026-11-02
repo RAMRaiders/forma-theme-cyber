@@ -4,6 +4,10 @@ Forma's default theme: systems grouped by kind (consoles, handhelds, computers, 
 consoles, educational, ports), a page per system with its circuit board, logo, console photo,
 story and curiosities, then its games. Built for TVs and handhelds alike.
 
+Start and Select open Forma's own menu and views list, drawn by Forma over the theme; Cyber's
+look and sorting are settings declared in `public/theme.json`, which Forma's menu shows under
+Interface.
+
 A Forma theme like any other: it talks to Forma only through
 [`@ramraiders/forma-sdk`](https://github.com/RAMRaiders/Forma/blob/main/docs/sdk.md), and Forma
 bundles a pinned build of it. New themes start from the separate template project, not from here.

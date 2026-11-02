@@ -27,17 +27,22 @@ export const DEFAULT_PREFS: Prefs = {
   systemsSort: 'games'
 };
 
-const KEY = 'interface';
+/** Where Cyber kept its prefs before Forma's menu showed them: one object, read once more. */
+const LEGACY_KEY = 'interface';
 
 /**
  * A TV that cuts the picture's edges (overscan): Forma's own setting, shared by every theme and
- * its start-up screen, in percent of each side to keep clear (0–10).
+ * its start-up screen, in percent of each side to keep clear (0–10). Set in Forma's menu.
  */
 export const MARGINS_SETTING = 'display.margins';
 
+/** A stored margins value, made safe. */
+export function margins(value: unknown): number {
+  return typeof value === 'number' ? Math.min(10, Math.max(0, Math.round(value))) : 0;
+}
+
 export async function loadMargins(forma: Forma): Promise<number> {
-  const saved = await forma.settings.getSystem<number>(MARGINS_SETTING).catch(() => null);
-  return typeof saved === 'number' ? Math.min(10, Math.max(0, Math.round(saved))) : 0;
+  return margins(await forma.settings.getSystem<number>(MARGINS_SETTING).catch(() => null));
 }
 
 /** Everything (overlays too, being inside the body) shrinks evenly into the part the TV shows. */
@@ -45,22 +50,29 @@ export function applyMargins(margins: number, body: HTMLElement = document.body)
   body.style.transform = margins > 0 ? `scale(${1 - (2 * margins) / 100})` : '';
 }
 
-/** Saved prefs over the defaults; anything unknown or missing is the default. */
-export async function loadPrefs(forma: Forma): Promise<Prefs> {
-  const saved = await forma.settings.get<Partial<Prefs>>(KEY).catch(() => null);
-  const prefs = { ...DEFAULT_PREFS };
-  if (saved && typeof saved === 'object') {
-    for (const key of Object.keys(DEFAULT_PREFS) as (keyof Prefs)[]) {
-      const value = saved[key];
-      if (typeof value === typeof DEFAULT_PREFS[key])
-        (prefs as Record<string, unknown>)[key] = value;
-    }
-  }
-  return prefs;
+/** One setting as Forma's menu sets it, as a change to the prefs; `null` if it is not one. */
+export function prefUpdate(key: string, value: unknown): Partial<Prefs> | null {
+  if (!(key in DEFAULT_PREFS)) return null;
+  const k = key as keyof Prefs;
+  return typeof value === typeof DEFAULT_PREFS[k] ? { [k]: value } : null;
 }
 
-export async function savePrefs(forma: Forma, prefs: Prefs): Promise<void> {
-  await forma.settings.set(KEY, prefs);
+/**
+ * The prefs, each from its own setting (declared in theme.json, set in Forma's menu), over the
+ * old single object, over the defaults. Anything unknown or the wrong type is the default.
+ */
+export async function loadPrefs(forma: Forma): Promise<Prefs> {
+  const keys = Object.keys(DEFAULT_PREFS) as (keyof Prefs)[];
+  const [legacy, ...values] = await Promise.all([
+    forma.settings.get<Partial<Record<keyof Prefs, unknown>>>(LEGACY_KEY).catch(() => null),
+    ...keys.map((k) => forma.settings.get(k).catch(() => null))
+  ]);
+  let prefs: Prefs = { ...DEFAULT_PREFS };
+  keys.forEach((key, i) => {
+    const value = values[i] ?? (legacy && typeof legacy === 'object' ? legacy[key] : undefined);
+    prefs = { ...prefs, ...prefUpdate(key, value) };
+  });
+  return prefs;
 }
 
 /** The look, as attributes on the page root that style.css follows. */

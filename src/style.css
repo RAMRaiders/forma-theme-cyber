@@ -751,120 +751,6 @@ kbd {
   display: none;
 }
 
-.switcher .panel {
-  width: min(40rem, 90vw);
-  max-height: 80vh;
-  overflow-y: auto;
-  padding: 1.5rem 2rem;
-  border-radius: var(--radius);
-  background: var(--panel);
-}
-
-.switcher h2 {
-  margin-top: 0;
-}
-
-.switcher ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.switcher li {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 0.2rem 0.6rem;
-  padding: 0.7rem 1rem;
-  border-radius: var(--radius);
-}
-
-.switcher li.selected {
-  background: var(--accent);
-}
-
-.switcher .description {
-  grid-column: 1 / -1;
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
-.switcher li.selected .description {
-  color: var(--fg);
-}
-
-.switcher .note {
-  margin: 0 0 1rem;
-  color: var(--muted);
-}
-
-/* ---- On-screen keyboard ------------------------------------------------ */
-
-.keyboard .panel {
-  width: min(56rem, 94vw);
-  max-height: none;
-}
-
-.keyboard .field {
-  display: flex;
-  align-items: center;
-  min-height: 2.8rem;
-  margin-bottom: 1.2rem;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius);
-  background: var(--card);
-  font-size: 1.4rem;
-  overflow: hidden;
-  white-space: pre;
-}
-
-.keyboard .caret {
-  width: 0.12rem;
-  height: 1.6rem;
-  margin-left: 0.1rem;
-  background: var(--accent);
-}
-
-.keyboard .keys {
-  display: grid;
-  gap: 0.5rem;
-}
-
-.keyboard .row {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.keyboard .key {
-  flex: 0 0 4rem;
-  padding: 0.7rem 0;
-  border-radius: var(--radius);
-  background: var(--card);
-  font-size: 1.3rem;
-  text-align: center;
-}
-
-.keyboard .key.wide {
-  flex: 1 1 6rem;
-  font-size: 1rem;
-  line-height: 1.95rem;
-}
-
-.keyboard .key.space {
-  flex-grow: 3;
-}
-
-.keyboard .key.selected {
-  background: var(--accent);
-}
-
-.badge {
-  padding: 0 0.5rem;
-  border-radius: 0.4rem;
-  background: var(--card);
-  font-size: 0.8rem;
-}
-
 .toast {
   position: fixed;
   bottom: 4.5rem;
@@ -898,32 +784,6 @@ kbd {
     0.8rem ui-monospace,
     monospace;
   pointer-events: none;
-}
-
-/* ---- Settings pages (music, RetroAchievements, netplay) ------------------------ */
-
-.page li.heading {
-  display: block;
-  margin-top: 0.8rem;
-  padding: 0.3rem 1rem;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--neon);
-}
-
-.page li.info .name {
-  color: var(--neon);
-}
-
-.page .adjust {
-  font-size: 0.75rem;
-  color: var(--muted);
-}
-
-.page li.selected .adjust {
-  color: var(--fg);
 }
 
 /* ---- Now playing ----------------------------------------------------------------- */
@@ -1064,21 +924,6 @@ kbd {
   to {
     transform: translateX(340%);
   }
-}
-
-/* Start-up: over everything until the first screen is drawn, then faded out. */
-.boot {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: grid;
-  background: var(--bg);
-  transition: opacity 300ms ease;
-}
-
-.boot.done {
-  opacity: 0;
-  pointer-events: none;
 }
 
 /* While a game starts: its art and the loader, until the emulator's window covers Forma. */
@@ -1229,9 +1074,5 @@ kbd {
   .loader-core,
   .loader-bar span {
     animation: none;
-  }
-
-  .boot {
-    transition: none;
   }
 }

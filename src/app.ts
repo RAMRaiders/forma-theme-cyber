@@ -6,6 +6,7 @@ import type {
   GameStart,
   InputEvent,
   MusicStatus,
+  SettingsChanged,
   ViewInfo
 } from '@ramraiders/forma-sdk';
 import { FormaError } from '@ramraiders/forma-sdk';
@@ -19,7 +20,8 @@ import {
   applyPrefs,
   loadMargins,
   loadPrefs,
-  savePrefs
+  margins,
+  prefUpdate
 } from './data/prefs.js';
 import { type Move, moveGrid, moveList } from './logic/nav.js';
 import { LazyList } from './logic/pager.js';
@@ -27,20 +29,8 @@ import { el } from './ui/dom.js';
 import { type Card, GridView } from './ui/grid.js';
 import { GamesView } from './ui/games.js';
 import { HomeView, type Tile } from './ui/home.js';
-import { Menu } from './ui/menu.js';
 import { loader } from './ui/loader.js';
-import { NetworkScreen } from './ui/network.js';
-import { Page } from './ui/page.js';
-import { optionsScreen, systemSettingsScreen } from './ui/settings.js';
-import { storeScreen } from './ui/store.js';
-import {
-  interfaceScreen,
-  musicScreen,
-  netplayScreen,
-  nowPlaying,
-  retroAchievementsScreen
-} from './ui/screens.js';
-import { Switcher } from './ui/switcher.js';
+import { nowPlaying } from './ui/music.js';
 import { SystemView } from './ui/system.js';
 
 /** One level of the path, and where the selection was, so going back returns to it. */
@@ -50,6 +40,8 @@ interface Level {
 }
 
 const PAGE = 100;
+/** How long the selection rests before Forma's menu hears of it. */
+const CONTEXT_DELAY_MS = 120;
 /** A screen that loads faster than this never shows the loader: no flash on quick moves. */
 const LOADER_DELAY_MS = 150;
 /** Forma's systems view: Cyber shows it as categories, then systems, then that system's games. */
@@ -78,16 +70,8 @@ export class App {
     const kind = game.media.image ? 'image' : game.media.thumbnail ? 'thumbnail' : null;
     return kind ? this.forma.library.mediaUrl(game.id, kind, DETAIL_WIDTH) : null;
   });
-  readonly #switcher = new Switcher();
-  readonly #menu = new Menu();
-  readonly #network: NetworkScreen;
-  /** Music, RetroAchievements, Netplay, options…: settings pages from the system menu. */
-  readonly #settings: Page;
-  #settingsKind: string | null = null;
-  /** Cyber's look and order (Interface). */
+  /** Cyber's look and order: its settings, which Forma's menu shows (Start → Interface). */
   #prefs: Prefs = { ...DEFAULT_PREFS };
-  /** Screen margins for a TV's overscan, in percent per side (Forma's own setting). */
-  #margins = 0;
   #lastMusic: MusicStatus | null = null;
   /** What plays, in the header, when something does. */
   readonly #nowPlaying = el('div', { class: 'now-playing', hidden: '' });
@@ -97,17 +81,15 @@ export class App {
   /** Which screen the current level is: Cyber's own two, or Forma's views as they come. */
   #mode: 'home' | 'systems' | 'browse' = 'browse';
   #groups: Tile[] = [];
-  /** A power action waiting for its second press, and until when. */
-  #confirming: { id: string; until: number } | null = null;
 
   #views: ViewInfo[] = [];
   #view = 'systems';
-  #home: string | null = null;
   #stack: Level[] = [{ path: [], index: 0 }];
   #page: Browse | null = null;
   #cards: Card[] = [];
   #list: LazyList<Game> | null = null;
   #toastTimer: ReturnType<typeof setTimeout> | undefined;
+  #contextTimer: ReturnType<typeof setTimeout> | undefined;
   #reloadTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor(
@@ -117,24 +99,11 @@ export class App {
     private readonly infos = new InfoStore()
   ) {
     this.#systemView = new SystemView(infos, (svg) => (this.#backdrop.innerHTML = svg));
-    this.#network = new NetworkScreen(
-      forma,
-      (message) => this.#notify(message),
-      () => this.#renderChrome()
-    );
-    this.#settings = new Page(
-      (message) => this.#notify(message),
-      () => this.#renderChrome()
-    );
     root.replaceChildren(
       this.#backdrop,
       el('header', {}, this.#title, this.#trail, this.#nowPlaying),
       this.#main,
       this.#hints,
-      this.#switcher.root,
-      this.#menu.root,
-      this.#network.root,
-      this.#settings.root,
       this.#playing,
       this.#toast
     );
@@ -144,11 +113,12 @@ export class App {
     this.forma.input.on((e) => this.#onInput(e));
     this.forma.events.on('library:changed', () => this.#reloadSoon());
     this.forma.events.on('views:changed', () => void this.#loadViews());
+    // Forma's views list (Select) picked one.
+    this.forma.events.on('nav:open', ({ view }) => void this.#open(view));
+    // Forma's menu changed one of Cyber's settings, or the screen margins.
+    this.forma.events.on('settings:changed', (change) => void this.#settingChanged(change));
     this.forma.events.on('game:start', (game) => this.#showLaunch(game));
-    this.forma.events.on('music:changed', (status) => {
-      this.#showNowPlaying(status);
-      if (this.#settings.open && this.#settingsKind === 'music') void this.#settings.refresh();
-    });
+    this.forma.events.on('music:changed', (status) => this.#showNowPlaying(status));
     void this.forma.music
       .status()
       .then((status) => this.#showNowPlaying(status))
@@ -160,8 +130,7 @@ export class App {
 
     this.#prefs = await loadPrefs(this.forma);
     this.#applyPrefs();
-    this.#margins = await loadMargins(this.forma);
-    applyMargins(this.#margins);
+    applyMargins(await loadMargins(this.forma));
     await this.#loadViews();
     const boot = await this.forma.nav.defaultView();
     for (const note of boot.notes) this.#notify(note);
@@ -170,7 +139,6 @@ export class App {
 
   async #loadViews(): Promise<void> {
     this.#views = await this.forma.nav.views();
-    this.#home = (await this.forma.nav.defaultView()).id;
   }
 
   async #open(view: string): Promise<void> {
@@ -220,6 +188,7 @@ export class App {
         this.#grid.show(this.#cards, this.#level.index);
       }
       this.#renderChrome();
+      this.#tellForma();
     } catch (error) {
       this.#notify(FormaError.from(error).message);
     } finally {
@@ -259,6 +228,7 @@ export class App {
         this.#systemView.show(tile.systems, level.index);
       }
       this.#renderChrome();
+      this.#tellForma();
     } catch (error) {
       this.#notify(FormaError.from(error).message);
     } finally {
@@ -286,13 +256,18 @@ export class App {
     if (this.#lastMusic) this.#showNowPlaying(this.#lastMusic);
   }
 
-  async #changePrefs(update: Partial<Prefs>): Promise<void> {
+  async #settingChanged({ scope, key, value }: SettingsChanged): Promise<void> {
+    if (scope === 'system') {
+      if (key === MARGINS_SETTING) applyMargins(margins(value));
+      return;
+    }
+    const update = prefUpdate(key, value);
+    if (!update) return;
     const resort =
       update.systemsSort !== undefined && update.systemsSort !== this.#prefs.systemsSort;
     this.#prefs = { ...this.#prefs, ...update };
     this.#applyPrefs();
-    await savePrefs(this.forma, this.#prefs);
-    // A new order shows at once, behind the page.
+    // A new order shows at once, behind Forma's menu.
     if (resort && this.#mode !== 'browse') await this.#load();
   }
 
@@ -385,29 +360,15 @@ export class App {
       )
     );
     const games = this.#mode === 'browse' && this.#page?.listing.kind === 'games';
-    const hints: [string, string][] = this.#settings.open
-      ? this.#settings.hints()
-      : this.#network.open
-        ? this.#network.hints()
-        : this.#menu.open
-          ? [
-              ['A', 'Choose'],
-              ['B', 'Close']
-            ]
-          : this.#switcher.open
-            ? [
-                ['A', 'Show'],
-                ['Y', 'Make home view'],
-                ['B', 'Close']
-              ]
-            : [
-                ['A', games ? 'Play' : this.#mode === 'systems' ? 'Games' : 'Open'],
-                ...(games ? [['Y', 'Favourite'] as [string, string]] : []),
-                ...(this.#mode === 'systems' ? [['Y', 'Next fact'] as [string, string]] : []),
-                ...(this.#stack.length > 1 ? [['B', 'Back'] as [string, string]] : []),
-                ['Select', 'Views'],
-                ['Start', 'Menu']
-              ];
+    // Select and Start are Forma's own: its views list and its menu, over any theme.
+    const hints: [string, string][] = [
+      ['A', games ? 'Play' : this.#mode === 'systems' ? 'Games' : 'Open'],
+      ...(games ? [['Y', 'Favourite'] as [string, string]] : []),
+      ...(this.#mode === 'systems' ? [['Y', 'Next fact'] as [string, string]] : []),
+      ...(this.#stack.length > 1 ? [['B', 'Back'] as [string, string]] : []),
+      ['Select', 'Views'],
+      ['Start', 'Menu']
+    ];
     this.#hints.replaceChildren(
       ...hints.map(([button, label]) => el('span', { class: 'hint' }, el('kbd', {}, button), label))
     );
@@ -415,16 +376,6 @@ export class App {
 
   #onInput(e: InputEvent): void {
     if (!e.pressed || !this.#playing.hidden) return;
-    if (this.#settings.open) {
-      this.#settings.input(e);
-      return this.#renderChrome();
-    }
-    if (this.#network.open) {
-      this.#network.input(e);
-      return this.#renderChrome();
-    }
-    if (this.#menu.open) return this.#onMenuInput(e);
-    if (this.#switcher.open) return this.#onSwitcherInput(e);
 
     const move = MOVES[e.action];
     if (move) return this.#move(move, e.repeat);
@@ -437,12 +388,6 @@ export class App {
       case 'north':
         if (this.#mode === 'systems') return this.#systemView.nextFact();
         return void this.#toggleFavorite();
-      case 'select':
-        this.#switcher.show(this.#views, this.#view, this.#home);
-        return this.#renderChrome();
-      case 'start':
-        this.#openMenu();
-        return this.#renderChrome();
       default:
     }
   }
@@ -451,19 +396,30 @@ export class App {
     const level = this.#level;
     if (this.#mode === 'home') {
       level.index = moveGrid(level.index, this.#groups.length, this.#homeView.columns(), move);
-      return this.#homeView.select(level.index);
-    }
-    if (this.#mode === 'systems') {
+      this.#homeView.select(level.index);
+    } else if (this.#mode === 'systems') {
       level.index = moveList(level.index, this.#systemView.count, move, 5, repeat);
-      return this.#systemView.select(level.index);
-    }
-    if (this.#list) {
+      this.#systemView.select(level.index);
+    } else if (this.#list) {
       level.index = moveList(level.index, this.#list.total, move, this.#games.pageSize(), repeat);
       this.#games.select(level.index);
     } else {
       level.index = moveGrid(level.index, this.#cards.length, this.#grid.columns(), move);
       this.#grid.select(level.index);
     }
+    this.#tellForma();
+  }
+
+  /**
+   * Forma's menu offers options for the selected system and game: tell it which they are, once
+   * the selection rests (a held direction sends one call, not one per step).
+   */
+  #tellForma(): void {
+    clearTimeout(this.#contextTimer);
+    this.#contextTimer = setTimeout(() => {
+      const { system, game } = this.#optionsTarget();
+      this.forma.shell.setContext({ view: this.#view, system, game }).catch(() => {});
+    }, CONTEXT_DELAY_MS);
   }
 
   async #confirm(): Promise<void> {
@@ -531,194 +487,6 @@ export class App {
       system: { name: game.system, fullname: s?.summary.fullname ?? game.system },
       game: { id: game.id, name: game.name }
     };
-  }
-
-  #openMenu(): void {
-    this.#confirming = null;
-    const { system, game } = this.#optionsTarget();
-    this.#menu.show('Forma', [
-      ...(game
-        ? [
-            {
-              id: 'game-options',
-              label: `${game.name} options…`,
-              description: 'Emulator, core and options for this game only'
-            }
-          ]
-        : []),
-      ...(system
-        ? [
-            {
-              id: 'system-options',
-              label: `${system.fullname} options…`,
-              description: 'Emulator, core and options for its games'
-            }
-          ]
-        : []),
-      { id: 'views', label: 'Views…', description: 'Organise the library another way' },
-      { id: 'interface', label: 'Interface…', description: 'Theme, look and sorting' },
-      { id: 'music', label: 'Music…', description: 'Folders, playlists and web radios' },
-      {
-        id: 'ra',
-        label: 'RetroAchievements…',
-        description: 'Your account and how achievements work'
-      },
-      { id: 'netplay', label: 'Netplay…', description: 'Playing online with others' },
-      { id: 'network', label: 'Network…', description: 'Wi-Fi and Ethernet' },
-      {
-        id: 'store',
-        label: 'Content downloader…',
-        description: 'Free games, ports, decorations and music from Batocera'
-      },
-      {
-        id: 'game-settings',
-        label: 'Game settings…',
-        description: 'Emulator options for every game: ratio, shaders, decorations…'
-      },
-      {
-        id: 'system-settings',
-        label: 'System settings…',
-        description: 'Display, audio, language, region and storage'
-      },
-      {
-        id: 'emulationstation',
-        label: 'Switch to EmulationStation',
-        description: 'For scraping and updates; Forma returns at the next boot'
-      },
-      { id: 'restart', label: 'Restart', description: 'Press A twice' },
-      { id: 'shutdown', label: 'Shut down', description: 'Press A twice' }
-    ]);
-  }
-
-  #onMenuInput(e: InputEvent): void {
-    const m = this.#menu;
-    if (e.action === 'up' || e.action === 'down') {
-      this.#confirming = null;
-      return m.select(moveList(m.selected, m.count, e.action, 5, e.repeat));
-    }
-    if (e.repeat) return;
-    if (e.action === 'back' || e.action === 'start') {
-      m.close();
-      return this.#renderChrome();
-    }
-    if (e.action !== 'confirm' || !m.item) return;
-    const id = m.item.id;
-    if (id === 'views') {
-      m.close();
-      this.#switcher.show(this.#views, this.#view, this.#home);
-      return this.#renderChrome();
-    }
-    if (id === 'network') {
-      m.close();
-      this.#network.show();
-      return this.#renderChrome();
-    }
-    if (id === 'store') {
-      m.close();
-      this.#settingsKind = id;
-      void this.#settings.show('Content downloader', storeScreen(this.forma, this.#settings));
-      return this.#renderChrome();
-    }
-    if (
-      id === 'game-options' ||
-      id === 'system-options' ||
-      id === 'game-settings' ||
-      id === 'system-settings'
-    ) {
-      m.close();
-      this.#settingsKind = id;
-      const { system, game } = this.#optionsTarget();
-      const [title, build] =
-        id === 'system-settings'
-          ? ['System settings', systemSettingsScreen(this.forma, this.#settings)]
-          : id === 'game-settings'
-            ? ['Game settings', optionsScreen(this.forma, this.#settings, { level: 'global' })]
-            : id === 'system-options' && system
-              ? [
-                  `${system.fullname} options`,
-                  optionsScreen(this.forma, this.#settings, {
-                    level: 'system',
-                    system: system.name
-                  })
-                ]
-              : game
-                ? [
-                    `${game.name} options`,
-                    optionsScreen(this.forma, this.#settings, { level: 'game', game: game.id })
-                  ]
-                : [null, null];
-      if (title && build) void this.#settings.show(title, build);
-      return this.#renderChrome();
-    }
-    if (id === 'music' || id === 'ra' || id === 'netplay' || id === 'interface') {
-      m.close();
-      this.#settingsKind = id;
-      const [title, build] =
-        id === 'interface'
-          ? [
-              'Interface',
-              interfaceScreen(
-                this.forma,
-                this.#settings,
-                () => this.#prefs,
-                (update) => this.#changePrefs(update),
-                {
-                  get: () => this.#margins,
-                  set: async (value) => {
-                    this.#margins = value;
-                    applyMargins(value);
-                    await this.forma.settings.setSystem(MARGINS_SETTING, value);
-                  }
-                }
-              )
-            ]
-          : id === 'music'
-            ? ['Music', musicScreen(this.forma, this.#settings)]
-            : id === 'ra'
-              ? ['RetroAchievements', retroAchievementsScreen(this.forma, this.#settings)]
-              : ['Netplay', netplayScreen(this.forma, this.#settings)];
-      void this.#settings.show(title, build);
-      return this.#renderChrome();
-    }
-    // Power actions need a second press within three seconds: a stray A must not shut down.
-    const powerful = id === 'restart' || id === 'shutdown';
-    const now = Date.now();
-    if (powerful && (this.#confirming?.id !== id || now > this.#confirming.until)) {
-      this.#confirming = { id, until: now + 3000 };
-      this.#notify(`Press A again to ${id === 'restart' ? 'restart' : 'shut down'}`);
-      return;
-    }
-    this.#confirming = null;
-    const action =
-      id === 'restart'
-        ? this.forma.system.restart()
-        : id === 'shutdown'
-          ? this.forma.system.shutdown()
-          : this.forma.system.quit();
-    action.catch((error: unknown) => this.#notify(FormaError.from(error).message));
-  }
-
-  #onSwitcherInput(e: InputEvent): void {
-    const s = this.#switcher;
-    if (e.action === 'up' || e.action === 'down') {
-      return s.select(moveList(s.selected, s.count, e.action, 5, e.repeat));
-    }
-    if (e.repeat) return;
-    const view = s.view;
-    if (e.action === 'confirm' && view) {
-      s.close();
-      void this.#open(view.id);
-    } else if (e.action === 'north' && view) {
-      void this.forma.nav.setDefaultView(view.id).then(() => {
-        this.#home = view.id;
-        this.#notify(`Forma will open on “${view.name}”`);
-        s.show(this.#views, this.#view, this.#home);
-        s.select(this.#views.indexOf(view));
-      });
-    } else if (e.action === 'back' || e.action === 'select') {
-      s.close();
-    }
-    this.#renderChrome();
   }
 
   /** Library changes arrive in bursts (a scraper run); reload once they settle. */
