@@ -215,7 +215,11 @@ describe('the default theme', () => {
       'Restart',
       'Shut down'
     ]);
+    const scrolled = vi.mocked(Element.prototype.scrollIntoView);
+    scrolled.mockClear();
     for (let i = 0; i < 10; i++) await press('down');
+    // Each step brings the selection into view, so a long menu scrolls.
+    expect(scrolled.mock.contexts.at(-1)).toBe(document.querySelector('.switcher li.selected'));
     await press('confirm');
     expect(text('.toast')).toEqual(['Press A again to restart']);
     await press('confirm');

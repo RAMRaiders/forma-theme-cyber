@@ -51,6 +51,8 @@ export class Menu {
     this.#rows[this.selected]?.classList.remove('selected');
     this.selected = index;
     this.#rows[index]?.classList.add('selected');
+    // The menu is taller than a small screen: the selection scrolls into view.
+    this.#rows[index]?.scrollIntoView({ block: 'nearest' });
   }
 
   close(): void {
