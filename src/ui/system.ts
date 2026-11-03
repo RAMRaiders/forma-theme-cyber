@@ -71,13 +71,12 @@ export function systemRgb(maker: string | undefined | null, category: CategoryId
 }
 
 /** The parts of the stage that change together when the selection moves. */
-type Slot = 'year' | 'intro' | 'tally' | 'showcase' | 'fact';
+type Slot = 'intro' | 'tally' | 'showcase' | 'fact';
 
 /**
  * A category's systems: a rail of logos on the left, kept centred on the selection, and the
  * selected system on a stage: its console, lit and reflected on a neon floor (a photo in a frame,
- * or its logo, when there is no cut-out), its specs as callouts round it, its year writ large
- * behind, its story above and its curiosities on a strip below. Moving on, the last system slides
+ * or its logo, when there is no cut-out), its specs as callouts round it, its story above and its curiosities on a strip below. Moving on, the last system slides
  * away as the next comes in from the side it is moved toward, and the screen's colour (its
  * maker's) glides to the next. Nothing on it is boxed in: the circuit board shows through.
  */
@@ -266,7 +265,6 @@ export class SystemView {
     };
 
     const parts: [Slot, HTMLElement | null][] = [];
-    parts.push(['year', year ? el('div', { class: 'year', 'aria-hidden': 'true' }, year) : null]);
     parts.push([
       'intro',
       el(
@@ -283,12 +281,7 @@ export class SystemView {
         'div',
         { class: 'tally' },
         el('span', { class: 'count' }, s.gameCount.toLocaleString('en')),
-        el('span', { class: 'unit' }, s.gameCount === 1 ? 'game' : 'games'),
-        el(
-          'span',
-          { class: 'index' },
-          `${String(this.#selected + 1).padStart(2, '0')} / ${String(this.#systems.length).padStart(2, '0')}`
-        )
+        el('span', { class: 'unit' }, s.gameCount === 1 ? 'game' : 'games')
       )
     ]);
     parts.push([
