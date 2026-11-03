@@ -385,6 +385,11 @@ main {
   --cat-rgb: 167 123 255;
 }
 
+.tile-all {
+  --cat: #e6f7ff;
+  --cat-rgb: 230 247 255;
+}
+
 /* The category's own circuit board, faint, as texture. */
 .tile .texture {
   position: absolute;

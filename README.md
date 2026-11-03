@@ -1,7 +1,7 @@
 # Cyber
 
 Forma's default theme: systems grouped by kind (consoles, handhelds, computers, arcade, virtual
-consoles, educational, ports, engines), a page per system with its circuit board, logo, console
+consoles, educational, ports, engines) and an All games tile, a page per system with its circuit board, logo, console
 photo, story and curiosities, then its games. Under the categories, shortcuts: favourites, and
 magazines, collections and recommended games, which say they are coming in a later version.
 Built for TVs and handhelds alike.

@@ -11,7 +11,7 @@ import type {
 } from '@ramraiders/forma-sdk';
 import { FormaError } from '@ramraiders/forma-sdk';
 
-import { CATEGORIES, InfoStore, group } from './data/catalog.js';
+import { ALL_GAMES, CATEGORIES, InfoStore, allGames, group } from './data/catalog.js';
 import {
   DEFAULT_PREFS,
   MARGINS_SETTING,
@@ -65,7 +65,9 @@ const SHORTCUTS: Shortcut[] = [
 ];
 /** Forma's view each working shortcut opens. */
 const SHORTCUT_VIEWS: Record<string, { view: string; label: string }> = {
-  favorites: { view: 'favorites', label: 'Favourites' }
+  favorites: { view: 'favorites', label: 'Favourites' },
+  // The All games tile, after the categories.
+  all: { view: 'all', label: ALL_GAMES.label }
 };
 /** Image widths asked for: what a card and the detail panel show at 1080p. */
 const CARD_WIDTH = 480;
@@ -255,10 +257,12 @@ export class App {
         this.#systemView.hide();
         this.#backdrop.replaceChildren();
         this.#shortcuts = await this.#countShortcuts();
-        const count = this.#groups.length + this.#shortcuts.length;
+        // Every game, as one more tile after the categories.
+        const tiles = this.#groups.length ? [...this.#groups, allGames(this.#groups)] : [];
+        const count = tiles.length + this.#shortcuts.length;
         level.index = Math.min(level.index, Math.max(0, count - 1));
         this.#main.replaceChildren(this.#homeView.root);
-        this.#homeView.show(this.#groups, this.#shortcuts, level.index);
+        this.#homeView.show(tiles, this.#shortcuts, level.index);
       } else {
         const tile = this.#groups.find((g) => g.category.id === level.path[0]);
         if (!tile) {
@@ -495,6 +499,10 @@ export class App {
         const s = this.#shortcuts.find((x) => x.id === shortcut);
         if (!s || s.soon) return this.#notify(`${s?.label ?? 'This'} is coming in a later version`);
         this.#stack.push({ path: [`${SHORTCUT}${shortcut}`], index: 0 });
+        return this.#load();
+      }
+      if (this.#level.index === this.#groups.length) {
+        this.#stack.push({ path: [`${SHORTCUT}all`], index: 0 });
         return this.#load();
       }
       const tile = this.#groups[this.#level.index];

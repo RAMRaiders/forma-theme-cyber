@@ -12,7 +12,8 @@ export type CategoryId =
   | 'engines';
 
 export interface Category {
-  id: CategoryId;
+  /** A category, or `all`: the tile after them, for every game. */
+  id: CategoryId | 'all';
   label: string;
   tagline: string;
 }
@@ -126,7 +127,7 @@ export function group(
   infos: ReadonlyMap<string, SystemInfo>,
   sort: SystemsSort = 'games'
 ): { category: Category; systems: CyberSystem[] }[] {
-  const by = new Map<CategoryId, CyberSystem[]>();
+  const by = new Map<Category['id'], CyberSystem[]>();
   for (const s of systems) {
     if (s.gameCount === 0) continue;
     const id = categoryOf(s, infos.get(s.name));
@@ -139,6 +140,25 @@ export function group(
     category,
     systems: by.get(category.id)!.sort(SORTS[sort])
   }));
+}
+
+/** The tile after the categories: every system, the biggest first, for its picture and logos. */
+export const ALL_GAMES: Category = {
+  id: 'all',
+  label: 'All games',
+  tagline: 'Every game, A to Z'
+};
+
+export function allGames(groups: { systems: CyberSystem[] }[]): {
+  category: Category;
+  systems: CyberSystem[];
+} {
+  return {
+    category: ALL_GAMES,
+    systems: groups
+      .flatMap((g) => g.systems)
+      .sort((a, b) => b.summary.gameCount - a.summary.gameCount)
+  };
 }
 
 function compareName(a: CyberSystem, b: CyberSystem): number {

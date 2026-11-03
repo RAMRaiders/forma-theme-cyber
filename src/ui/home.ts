@@ -48,7 +48,7 @@ export class HomeView {
     this.#tiles = [...cards, ...buttons];
     this.categories = tiles.length;
     this.shortcuts = shortcuts.length;
-    // Columns for two rows on a 16:9 screen (seven categories: 4 + 3), so every tile gets a big
+    // Columns for two rows on a 16:9 screen (eight tiles: 4 + 4), so every tile gets a big
     // stage; a narrow screen overrides this in style.css and scrolls.
     const rows = Math.max(1, Math.round(Math.sqrt((tiles.length * 9) / 16)));
     this.root.style.setProperty('--cols', String(Math.max(1, Math.ceil(tiles.length / rows))));

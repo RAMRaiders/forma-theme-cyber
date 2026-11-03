@@ -66,7 +66,7 @@ describe('the default theme', () => {
     const { text } = await start();
     expect(text('h1')).toEqual(['Categories']);
     expect(text('h1.current')).toEqual(['Categories']);
-    expect(text('.tile h2')).toEqual(['Consoles']);
+    expect(text('.tile h2')).toEqual(['Consoles', 'All games']);
     expect(text('.tile.selected .tag')).toEqual(['5 systems', '9 games']);
     expect(text('.hint')).toEqual(['AOpen', 'StartMenu']);
   });
@@ -193,6 +193,19 @@ describe('the default theme', () => {
     expect(text('.crumb')).toEqual(['Favourites']);
     await press('back');
     await vi.waitFor(() => expect(text('.shortcut.selected h2')).toEqual(['Favourites']));
+  });
+
+  it('has an All games tile after the categories, listing every game A to Z', async () => {
+    const { press, text } = await start();
+    await vi.waitFor(() => expect(text('.categories .tile h2').at(-1)).toBe('All games'));
+    const tiles = text('.categories .tile h2').length;
+    for (let i = 1; i < tiles; i++) await press('right');
+    expect(text('.tile.selected h2')).toEqual(['All games']);
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.games .row').length).toBeGreaterThan(1));
+    const names = text('.games .row').map((n) => n.replace(/^★ /, ''));
+    expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)));
+    expect(text('.crumb')).toEqual(['All games']);
   });
 
   it('shows what is coming later, and says so rather than opening it', async () => {
