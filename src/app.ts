@@ -30,7 +30,7 @@ import { type Card, GridView } from './ui/grid.js';
 import { GamesView } from './ui/games.js';
 import { HomeView, type Shortcut, type Tile } from './ui/home.js';
 import { loader } from './ui/loader.js';
-import { nowPlaying } from './ui/music.js';
+import { SongCard, nowPlaying } from './ui/music.js';
 import { SystemView } from './ui/system.js';
 
 /** One level of the path, and where the selection was, so going back returns to it. */
@@ -98,6 +98,8 @@ export class App {
   #lastMusic: MusicStatus | null = null;
   /** What plays, in the header, when something does. */
   readonly #nowPlaying = el('div', { class: 'now-playing', hidden: '' });
+  /** The song that just started, Cyber's way (its theme.json says it draws it). */
+  readonly #song = new SongCard();
   readonly #backdrop = el('div', { class: 'backdrop', 'aria-hidden': 'true' });
   readonly #homeView = new HomeView();
   readonly #systemView: SystemView;
@@ -128,6 +130,7 @@ export class App {
       el('header', {}, this.#title, this.#trail, this.#nowPlaying),
       this.#main,
       this.#hints,
+      this.#song.root,
       this.#playing,
       this.#toast
     );
@@ -143,6 +146,10 @@ export class App {
     this.forma.events.on('settings:changed', (change) => void this.#settingChanged(change));
     this.forma.events.on('game:start', (game) => this.#showLaunch(game));
     this.forma.events.on('music:changed', (status) => this.#showNowPlaying(status));
+    // Forma says when a song starts and for how long; Cyber shows it, unless a game is up.
+    this.forma.events.on('music:song', (song) => {
+      if (this.#playing.hidden) this.#song.show(song);
+    });
     void this.forma.music
       .status()
       .then((status) => this.#showNowPlaying(status))
@@ -351,6 +358,7 @@ export class App {
 
   /** While the emulator starts: the game's art, its name and system, and the loader. */
   #showLaunch({ gameId, system, name }: GameStart): void {
+    this.#song.hide();
     const art = el('img', {
       class: 'launch-art',
       src: this.forma.library.mediaUrl(gameId, 'image', DETAIL_WIDTH),

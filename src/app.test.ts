@@ -208,6 +208,19 @@ describe('the default theme', () => {
     expect(text('.crumb')).toEqual(['All games']);
   });
 
+  it('draws each new song its own way, for the time Forma says, then sweeps it away', async () => {
+    const { text, root, backend } = await start(['settings.system']);
+    await backend.invoke('settings_set', { scope: 'system', key: 'music.songSeconds', value: 1 });
+    const sources = await backend.invoke<{ id: string; kind: string }[]>('music_sources');
+    await backend.invoke('music_play', { source: sources.find((s) => s.kind !== 'radio')!.id });
+    const card = root.querySelector<HTMLElement>('.song-card')!;
+    await vi.waitFor(() => expect(card.hidden).toBe(false));
+    expect(text('.song-card .title')).toEqual(['Track 1']);
+    expect(card.style.getPropertyValue('--seconds')).toBe('1s');
+    await vi.waitFor(() => expect(card.classList.contains('out')).toBe(true), { timeout: 2000 });
+    await vi.waitFor(() => expect(card.hidden).toBe(true), { timeout: 2000 });
+  });
+
   it('shows what is coming later, and says so rather than opening it', async () => {
     const { press, text } = await start();
     await vi.waitFor(() => expect(text('.shortcut').length).toBe(4));

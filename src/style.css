@@ -1116,6 +1116,284 @@ kbd {
   animation: none;
 }
 
+/* ---- The song that just started: sweeps in, plays its time out, sweeps away -------------- */
+
+.song-card {
+  --seconds: 8s;
+  --song: #ff2e88;
+  --song-rgb: 255 46 136;
+  position: fixed;
+  top: calc(var(--safe) + 4.2rem);
+  right: var(--safe);
+  z-index: 40;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.1rem;
+  width: min(30rem, 42vw);
+  padding: 1rem 1.3rem 1.25rem;
+  overflow: hidden;
+  border: 1px solid rgb(var(--song-rgb) / 55%);
+  border-radius: calc(var(--radius) * 2);
+  background:
+    radial-gradient(ellipse at 0% 50%, rgb(var(--song-rgb) / 22%), transparent 60%),
+    radial-gradient(ellipse at 100% 0%, rgb(34 228 255 / 16%), transparent 55%),
+    linear-gradient(160deg, #0d1426 0%, #05070d 100%);
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 40%),
+    0 0 1.6rem rgb(var(--song-rgb) / 35%),
+    0 1rem 2.4rem rgb(0 0 0 / 60%);
+  animation: song-in 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.song-card[hidden] {
+  display: none;
+}
+
+.song-card.out {
+  animation: song-out 500ms cubic-bezier(0.7, 0, 0.84, 0) both;
+}
+
+/* A scan of light crosses the card as it lands. */
+.song-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgb(255 255 255 / 22%) 48%,
+    rgb(var(--song-rgb) / 30%) 52%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  animation: song-scan 900ms 250ms ease-out both;
+  pointer-events: none;
+}
+
+@keyframes song-in {
+  0% {
+    transform: translateX(115%) skewX(-14deg);
+    opacity: 0;
+    filter: blur(6px);
+  }
+  60% {
+    transform: translateX(-3%) skewX(3deg);
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes song-out {
+  0% {
+    transform: none;
+    opacity: 1;
+  }
+  25% {
+    transform: translateX(-4%);
+  }
+  100% {
+    transform: translateX(120%) skewX(-14deg);
+    opacity: 0;
+    filter: blur(6px);
+  }
+}
+
+@keyframes song-scan {
+  to {
+    transform: translateX(120%);
+  }
+}
+
+/* A record, spinning, its label in the accent colours. */
+.song-card .disc {
+  position: relative;
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, transparent 0 18%, #ff2e88 19% 34%, transparent 35%),
+    repeating-radial-gradient(circle, #111 0 2px, #1d1d24 3px 4px);
+  box-shadow:
+    0 0 0 2px rgb(var(--song-rgb) / 60%),
+    0 0 1rem rgb(var(--song-rgb) / 45%);
+  animation: song-spin 1.8s linear infinite;
+}
+
+.song-card .disc::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0 20%,
+    rgb(255 255 255 / 18%) 25%,
+    transparent 32%
+  );
+}
+
+.song-card .disc .hole {
+  position: absolute;
+  inset: 45%;
+  border-radius: 50%;
+  background: #04060c;
+}
+
+@keyframes song-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.song-card .words {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.song-card .kicker {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--neon);
+  animation: song-flicker 900ms 300ms steps(1) both;
+}
+
+.song-card .title,
+.song-card .artist {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.song-card .title {
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 0 0.6rem rgb(var(--song-rgb) / 70%);
+  animation: song-rise 500ms 200ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.song-card .artist {
+  font-size: 0.9rem;
+  color: var(--muted);
+  animation: song-rise 500ms 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes song-rise {
+  from {
+    transform: translateY(0.6rem);
+    opacity: 0;
+  }
+}
+
+@keyframes song-flicker {
+  0%,
+  20%,
+  40% {
+    opacity: 0;
+  }
+  10%,
+  30%,
+  50%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/* An equaliser: five bars, each at its own pace. */
+.song-card .eq {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.22rem;
+  height: 2rem;
+}
+
+.song-card .eq i {
+  width: 0.3rem;
+  height: 100%;
+  border-radius: 0.15rem;
+  background: linear-gradient(to top, var(--song), var(--neon));
+  transform-origin: bottom;
+  animation: song-eq 900ms ease-in-out infinite alternate;
+}
+
+.song-card .eq i:nth-child(2) {
+  animation-duration: 640ms;
+  animation-delay: -200ms;
+}
+
+.song-card .eq i:nth-child(3) {
+  animation-duration: 1100ms;
+  animation-delay: -500ms;
+}
+
+.song-card .eq i:nth-child(4) {
+  animation-duration: 760ms;
+  animation-delay: -100ms;
+}
+
+.song-card .eq i:nth-child(5) {
+  animation-duration: 980ms;
+  animation-delay: -700ms;
+}
+
+@keyframes song-eq {
+  0% {
+    transform: scaleY(0.2);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0.45);
+  }
+}
+
+/* The time it has left on screen, draining. */
+.song-card .time {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 0.22rem;
+  background: rgb(255 255 255 / 6%);
+}
+
+.song-card .time span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(to right, var(--neon), var(--song));
+  box-shadow: 0 0 0.5rem var(--song);
+  transform-origin: left;
+  animation: song-time var(--seconds) linear both;
+}
+
+@keyframes song-time {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+:root[data-motion='off'] .song-card,
+:root[data-motion='off'] .song-card *,
+:root[data-motion='off'] .song-card::after {
+  animation: none !important;
+}
+
+:root[data-motion='off'] .song-card .time span {
+  transform: scaleX(1);
+}
+
 /* ---- Small screens (handhelds, 4:3) -------------------------------------- */
 
 /* A narrow screen: two columns of categories that scroll. */
