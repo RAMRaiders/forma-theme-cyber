@@ -23,6 +23,9 @@ const OUT = join(ROOT, 'public', 'systems');
 const UA = 'FormaCyberArt/1.0 (https://github.com/RAMRaiders/forma-theme-cyber)';
 /** Logos at this height: twice what a 1080p screen shows, enough for 4K. */
 const LOGO_H = 200;
+/** The small logo, for the rail, the tiles and the heading (up to 4.2rem high): drawn from a
+ * picture near its size, so WebKit never has to scale down, nor decode apart, a big one. */
+const LOGO_SMALL_H = 96;
 /** Pictures no larger than this either way. */
 const PICTURE_MAX = 900;
 
@@ -82,6 +85,7 @@ async function logo(system) {
     .trim({ threshold: 1 });
   const out = join(OUT, system.id, 'logo.webp');
   await image.clone().webp({ quality: 90, alphaQuality: 100 }).toFile(out);
+  await small(out);
   // A logo mostly too dark to read on Cyber's background (#04060c, contrast under 2.2:1) gets a
   // light halo there.
   const { data, info } = await image
@@ -100,6 +104,19 @@ async function logo(system) {
   }
   const dark = n > 0 && dim / n > 0.6;
   return { dark, credit };
+}
+
+/** logo-small.webp beside logo.webp. */
+async function small(logoFile) {
+  await sharp(logoFile)
+    .resize({
+      height: LOGO_SMALL_H,
+      width: LOGO_SMALL_H * 5,
+      fit: 'inside',
+      withoutEnlargement: true
+    })
+    .webp({ quality: 90, alphaQuality: 100 })
+    .toFile(logoFile.replace(/logo\.webp$/, 'logo-small.webp'));
 }
 
 async function carbonPicture(system) {

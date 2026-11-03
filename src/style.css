@@ -172,8 +172,15 @@ main {
   stroke-linecap: round;
   stroke-dasharray: 40 2000;
   stroke-dashoffset: 2040;
-  filter: drop-shadow(0 0 6px var(--trace-glow));
+  /* No glow filter: a filter over a moving pulse redraws the whole board every frame. */
+  opacity: 0.9;
   animation: pulse 5s linear infinite;
+}
+
+/* On the systems screen the board stays still: its moving pulses repainted the full screen
+   at every frame, and the Pi then drew the screen at 6 frames a second. */
+:root[data-screen='systems'] .circuit .pulse {
+  display: none;
 }
 
 @keyframes pulse {
@@ -735,6 +742,8 @@ main {
   mask-image: linear-gradient(transparent 30%, #000 80%);
   opacity: 0.8;
   pointer-events: none;
+  /* Its own layer: drawn once per system, not again whenever something over it changes. */
+  will-change: transform;
 }
 
 .system-panel .intro {
@@ -956,10 +965,19 @@ main {
   gap: 1.3rem;
   margin: 0;
   padding: 0.8rem 0;
-  /* A soft shade behind the callouts, wider than them, so the board's own labels never cross. */
-  border-radius: 2rem;
-  background: rgb(4 6 12 / 78%);
-  box-shadow: 0 0 2.5rem 2.2rem rgb(4 6 12 / 78%);
+  position: relative;
+}
+
+/* A soft shade behind the callouts, wider than them, so the board's own labels never cross.
+   Its soft edge is kept small: a wide blur took a Pi most of a frame to draw. */
+.system-panel .specs::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -1.4rem -1.8rem;
+  border-radius: 2.4rem;
+  background: rgb(4 6 12 / 80%);
+  box-shadow: 0 0 1.2rem 0.8rem rgb(4 6 12 / 80%);
 }
 
 .system-panel .specs-left {
@@ -976,9 +994,6 @@ main {
   position: relative;
   padding: 0.35rem 0;
   border-bottom: 1px solid var(--sys-45);
-  text-shadow:
-    0 0 0.3rem #000,
-    0 0 0.8rem #000;
 }
 
 .system-panel .spec::after {
@@ -998,7 +1013,6 @@ main {
   height: 0.4rem;
   border-radius: 50%;
   background: var(--sys);
-  box-shadow: 0 0 0.5rem var(--sys);
 }
 
 .system-panel .specs-left .spec::after {
@@ -1071,6 +1085,7 @@ main {
 }
 
 .system-panel .scrolling .scroll-inner {
+  will-change: transform;
   animation: read-through var(--scroll-s, 10s) ease-in-out 1.5s infinite alternate;
 }
 
@@ -1104,8 +1119,8 @@ main {
   width: 100%;
   height: 2px;
   background: var(--sys);
-  box-shadow: 0 0 0.5rem var(--sys);
   transform-origin: left;
+  will-change: transform;
   animation: fact-timer var(--fact-ms, 10s) linear both;
 }
 
@@ -1119,12 +1134,15 @@ main {
    are ready, the last one fading out as the next fades in. Opacity only: cheap on a Pi. */
 .system-panel .entering {
   animation: slot-in 240ms ease-out both;
+  /* Each on its own layer while it fades: drawn once, then only blended. */
+  will-change: opacity;
 }
 
 .system-panel .leaving {
   z-index: 0;
   pointer-events: none;
   animation: slot-out 220ms ease-in both;
+  will-change: opacity;
 }
 
 .system-panel .slot-showcase.entering {

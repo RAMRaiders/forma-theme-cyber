@@ -96,6 +96,8 @@ export interface CyberSystem {
   category: CategoryId;
   /** Theme-relative URLs, or `null` where there is none: the UI falls back. */
   logo: string | null;
+  /** The same logo, small (96 px high): for the rail, the tiles and headings. */
+  logoSmall: string | null;
   logoDark: boolean;
   photo: string | null;
   photoKind: 'cutout' | 'framed';
@@ -119,6 +121,7 @@ function cyberSystem(
     summary,
     category,
     logo: own?.logo ? art(summary.name, own.logo) : null,
+    logoSmall: own?.logo ? art(summary.name, own.logo.replace(/\.webp$/, '-small.webp')) : null,
     logoDark: own?.logoDark ?? false,
     photo: own?.picture ? art(summary.name, own.picture) : null,
     photoKind: own?.kind ?? 'cutout'

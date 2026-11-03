@@ -275,7 +275,7 @@ export class App {
       ]);
       this.#groups = group(systems, infos, this.#prefs.systemsSort, arts);
       // Every system's logo and picture, decoded in the background, ready for the rail.
-      preload(this.#groups.flatMap((g) => g.systems.flatMap((s) => [s.logo, s.photo])));
+      preload(this.#groups.flatMap((g) => g.systems.flatMap((s) => [s.logoSmall, s.photo])));
       const level = this.#level;
       if (this.#stack.length === 1) {
         this.#mode = 'home';
@@ -432,6 +432,8 @@ export class App {
   }
 
   #renderChrome(): void {
+    // Which screen, for styles outside the screen's own element (the backdrop).
+    document.documentElement.dataset.screen = this.#mode;
     const view = this.#views.find((v) => v.id === this.#view);
     // Breadcrumbs, for show: where you are, from the top (Categories, in Cyber's own view).
     this.#title.textContent = this.#view === CYBER_VIEW ? 'Categories' : (view?.name ?? this.#view);
@@ -486,7 +488,7 @@ export class App {
       this.#renderChrome();
     } else if (this.#mode === 'systems') {
       level.index = moveList(level.index, this.#systemView.count, move, 5, repeat);
-      this.#systemView.select(level.index);
+      this.#systemView.select(level.index, false, repeat);
     } else if (this.#list) {
       level.index = moveList(level.index, this.#list.total, move, this.#games.pageSize(), repeat);
       this.#games.select(level.index);

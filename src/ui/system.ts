@@ -18,6 +18,11 @@ const LEAVE_MS = 220;
  * rail alone, without the stage flickering through every system on the way.
  */
 const REST_MS = 60;
+/**
+ * Holding a direction: the stage waits this long after the last step, so only the rail moves
+ * while the list runs (a Pi takes about a frame and a half to draw a new stage).
+ */
+const HELD_REST_MS = 220;
 /** At most this long waiting for the next system's pictures (when not preloaded yet). */
 const DECODE_MS = 250;
 /** Text too long for its box scrolls through at this speed, in px per second. */
@@ -133,8 +138,11 @@ export class SystemView {
     this.select(selected, true);
   }
 
-  /** `now`: draw at once (entering the screen), not sliding in, nor the board after a rest. */
-  select(index: number, now = false): void {
+  /**
+   * `now`: draw at once (entering the screen), not fading in, nor the board after a rest.
+   * `held`: a repeat of a held direction; the stage follows once the list stops.
+   */
+  select(index: number, now = false, held = false): void {
     this.#rows[this.#selected]?.classList.remove('selected');
     this.#selected = index;
     const r = this.#rows[index];
@@ -159,7 +167,7 @@ export class SystemView {
       void this.infos.get(system.summary.name).then(show);
     };
     if (now) load();
-    else this.#restTimer = setTimeout(load, REST_MS);
+    else this.#restTimer = setTimeout(load, held ? HELD_REST_MS : REST_MS);
   }
 
   /** The pictures of the systems either side go first in the preload queue. */
@@ -167,7 +175,7 @@ export class SystemView {
     preload(
       [index + 1, index - 1, index + 2, index - 2].flatMap((n) => {
         const system = this.#systems[n];
-        return system ? [system.photo, system.logo] : [];
+        return system ? [system.photo, system.logoSmall] : [];
       }),
       true
     );
@@ -218,7 +226,16 @@ export class SystemView {
     for (const gone of this.#panel.querySelectorAll(`.leaving.slot-${slot}`)) gone.remove();
     if (next) {
       next.classList.add(`slot-${slot}`);
-      if (animate) next.classList.add('entering');
+      if (animate) {
+        next.classList.add('entering');
+        // Its fade done, it leaves its own layer (memory on a Pi).
+        const done = (e: Event) => {
+          if (e.target !== next) return;
+          next.classList.remove('entering');
+          next.removeEventListener('animationend', done);
+        };
+        next.addEventListener('animationend', done);
+      }
       if (old) old.after(next);
       else this.#panel.append(next);
       this.#slots.set(slot, next);
@@ -379,11 +396,13 @@ function settle(images: HTMLImageElement[]): Promise<void> {
 }
 
 /** A system's logo; a dark one gets a light halo; none (or a broken file) leaves nothing. */
-function logoImage(system: CyberSystem, cls: string): HTMLImageElement | null {
-  if (!system.logo) return null;
+/** `big`: the full-size logo (the stage's hero); else the small one. */
+function logoImage(system: CyberSystem, cls: string, big = false): HTMLImageElement | null {
+  const src = big ? system.logo : system.logoSmall;
+  if (!src) return null;
   const logo = el('img', {
     class: `${cls}${system.logoDark ? ' dark' : ''}`,
-    src: system.logo,
+    src,
     alt: ''
   });
   logo.addEventListener('error', () => logo.remove());
@@ -402,7 +421,7 @@ function stage(system: CyberSystem, name: string): HTMLElement {
     const art = el('div', { class: 'art', 'aria-hidden': 'true' });
     art.innerHTML = categoryArt(system.category);
     const nameplate = () => el('span', { class: 'hero-name' }, name);
-    const logo = logoImage(system, 'hero-logo');
+    const logo = logoImage(system, 'hero-logo', true);
     logo?.addEventListener('error', () => box.append(nameplate()));
     box.replaceChildren(art, logo ?? nameplate());
   };

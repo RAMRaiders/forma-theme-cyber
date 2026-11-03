@@ -107,7 +107,7 @@ function tile({ category, systems }: Tile): HTMLElement {
     'div',
     { class: 'logos', 'aria-hidden': 'true' },
     ...systems
-      .flatMap((s) => (s.logo ? [s.logo] : []))
+      .flatMap((s) => (s.logoSmall ? [s.logoSmall] : []))
       .slice(0, LOGOS)
       .map((logo) => image(logo, 'logo'))
   );

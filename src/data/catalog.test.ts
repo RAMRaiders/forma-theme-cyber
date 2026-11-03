@@ -46,6 +46,7 @@ describe('catalog', () => {
     expect(snes).toMatchObject({ photo: './systems/snes/photo.webp', photoKind: 'cutout' });
     expect(nes).toMatchObject({
       logo: './systems/nes/logo.webp',
+      logoSmall: './systems/nes/logo-small.webp',
       logoDark: true,
       photoKind: 'framed'
     });
