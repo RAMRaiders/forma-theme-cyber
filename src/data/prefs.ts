@@ -6,10 +6,10 @@ export interface Prefs {
   /** The circuit board behind the screens. */
   board: 'on' | 'dim' | 'off';
   /**
-   * A category's systems screen: in the category's neon (its circuit, glowing, as on its tile),
-   * a neon grid to the horizon, plain, or each system's own circuit board in its maker's colour.
+   * A category's systems screen: lit neon panels in each system's own colours on the dark, a
+   * neon grid to the horizon, or each system's own circuit board in its maker's colour.
    */
-  systemsLook: 'neon' | 'grid' | 'plain' | 'board';
+  systemsLook: 'neon' | 'grid' | 'board';
   /** Pulsing traces, loaders, settling tiles. Off also when the system asks for less motion. */
   motion: boolean;
   /** Game preview videos in the list. */
@@ -57,6 +57,8 @@ export function applyMargins(margins: number, body: HTMLElement = document.body)
 export function prefUpdate(key: string, value: unknown): Partial<Prefs> | null {
   if (!(key in DEFAULT_PREFS)) return null;
   const k = key as keyof Prefs;
+  // A look no longer offered (Plain, folded into Neon) is the default.
+  if (k === 'systemsLook' && !['neon', 'grid', 'board'].includes(value as string)) return null;
   return typeof value === typeof DEFAULT_PREFS[k] ? { [k]: value } : null;
 }
 

@@ -1559,75 +1559,42 @@ kbd {
 
 /* ---- Systems background (Look → Systems background) ---------------------------------- */
 
-/* The looks other than the circuit board: the screen in the category's colour, its stage and
-   rail as lit neon tiles, as the categories are. */
-:root[data-systems-look='neon'] .system-panel,
-:root[data-systems-look='plain'] .system-panel {
-  border: 1px solid rgb(var(--sys-rgb) / 32%);
-  border-radius: calc(var(--radius) * 3);
-  background:
-    radial-gradient(ellipse 58% 48% at 50% 64%, rgb(var(--sys-rgb) / 18%), transparent 70%),
-    radial-gradient(ellipse at 0% 0%, rgb(var(--sys-rgb) / 10%), transparent 55%),
-    linear-gradient(160deg, rgb(10 16 30 / 84%), rgb(4 6 12 / 92%));
-  box-shadow:
-    0 0 0 1px rgb(0 0 0 / 40%),
-    0 0 1.1rem rgb(var(--sys-rgb) / 24%),
-    inset 0 0 2.4rem rgb(var(--sys-rgb) / 7%);
+/* Neon: nothing behind but the dark; the stage and rail are lit neon panels in the system's
+   own colour, its accent glowing from the other corner. */
+:root[data-screen='systems'][data-systems-look='neon'] .backdrop {
+  background: var(--bg);
 }
 
-:root[data-systems-look='neon'] .system-rail,
-:root[data-systems-look='plain'] .system-rail {
-  border: 1px solid rgb(var(--sys-rgb) / 20%);
+:root[data-systems-look='neon'] .system-panel {
+  border: 1px solid rgb(var(--sys-rgb) / 45%);
   border-radius: calc(var(--radius) * 3);
-  background: linear-gradient(160deg, rgb(10 16 30 / 80%), rgb(4 6 12 / 90%));
+  background:
+    radial-gradient(ellipse 58% 48% at 50% 64%, rgb(var(--sys-rgb) / 22%), transparent 70%),
+    radial-gradient(ellipse at 100% 0%, rgb(var(--sys2-rgb) / 18%), transparent 55%),
+    radial-gradient(ellipse at 0% 100%, rgb(var(--sys-rgb) / 12%), transparent 55%),
+    linear-gradient(160deg, rgb(10 16 30 / 90%), rgb(4 6 12 / 96%));
+  box-shadow:
+    0 0 0 1px rgb(0 0 0 / 40%),
+    0 0 1.2rem rgb(var(--sys-rgb) / 30%),
+    inset 0 0 2.4rem rgb(var(--sys2-rgb) / 9%);
+}
+
+:root[data-systems-look='neon'] .system-rail {
+  border: 1px solid rgb(var(--sys-rgb) / 25%);
+  border-radius: calc(var(--radius) * 3);
+  background:
+    radial-gradient(ellipse at 50% 50%, rgb(var(--sys2-rgb) / 8%), transparent 70%),
+    linear-gradient(160deg, rgb(10 16 30 / 88%), rgb(4 6 12 / 94%));
 }
 
 /* In a card the floor grid only crowds it; the console stands on its halo, as on a tile. */
-:root[data-systems-look='neon'] .system-panel .floor,
-:root[data-systems-look='plain'] .system-panel .floor {
+:root[data-systems-look='neon'] .system-panel .floor {
   display: none;
 }
 
 /* The card is its own shade: the callouts need no dark blot behind them. */
-:root[data-systems-look='neon'] .system-panel .specs::before,
-:root[data-systems-look='plain'] .system-panel .specs::before {
+:root[data-systems-look='neon'] .system-panel .specs::before {
   display: none;
-}
-
-/* Neon: the category's own circuit behind, glowing in its colour, faint: the tile's texture,
-   over the whole screen. Drawn once per category, so moving never repaints it. */
-:root[data-screen='systems'][data-systems-look='neon'] .backdrop {
-  background:
-    radial-gradient(ellipse 70% 60% at 60% 55%, rgb(var(--sys-rgb) / 10%), transparent 70%),
-    radial-gradient(ellipse at 50% 40%, #071222 0%, var(--bg) 75%);
-}
-
-:root[data-screen='systems'][data-systems-look='neon'] .backdrop .circuit {
-  opacity: 0.6;
-  filter: drop-shadow(0 0 3px rgb(var(--sys-rgb) / 50%));
-}
-
-:root[data-screen='systems'][data-systems-look='neon'] .backdrop .circuit .trace,
-:root[data-screen='systems'][data-systems-look='neon'] .backdrop .circuit .via {
-  stroke: rgb(var(--sys-rgb) / 38%);
-}
-
-:root[data-screen='systems'][data-systems-look='neon'] .backdrop .circuit .chip,
-:root[data-screen='systems'][data-systems-look='neon'] .backdrop .circuit .pin,
-:root[data-screen='systems'][data-systems-look='neon'] .backdrop .circuit .part-small,
-:root[data-screen='systems'][data-systems-look='neon'] .backdrop .circuit .dot {
-  opacity: 0.3;
-}
-
-:root[data-screen='systems'][data-systems-look='neon'] .backdrop .circuit text {
-  display: none;
-}
-
-/* Plain: the dark, with only the category's glow. */
-:root[data-screen='systems'][data-systems-look='plain'] .backdrop {
-  background:
-    radial-gradient(ellipse 70% 60% at 60% 55%, rgb(var(--sys-rgb) / 12%), transparent 70%),
-    var(--bg);
 }
 
 /* Neon grid: a dark sky, a glowing horizon, and the floor's grid running to it; no cards. */

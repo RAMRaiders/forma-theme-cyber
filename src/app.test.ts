@@ -96,9 +96,8 @@ describe('the default theme', () => {
     expect(text('.system-panel > :not(.leaving) > .fact:not(.leaving) p')).toEqual([
       'Second fact.'
     ]);
-    // Neon, the default look: the category's own circuit behind, without the system's chips.
-    expect(root.querySelector('.backdrop .circuit')).not.toBeNull();
-    expect(root.querySelector('.backdrop .circuit text.part')).toBeNull();
+    // Neon, the default look: nothing behind but the dark.
+    expect(root.querySelector('.backdrop .circuit')).toBeNull();
     expect(text('.hint')).toContain('AGames');
 
     // A system without info.json still shows, from Forma's data.
@@ -122,8 +121,8 @@ describe('the default theme', () => {
     await vi.waitFor(() => expect(text('.detail h2')).toEqual(['★ Super Mario Bros.']));
     expect(text('.detail .facts')[0]).toContain('1985');
     expect(text('.hint')).toContain('YFavourite');
-    // The system's board stays behind its games.
-    expect(root.querySelector('.backdrop .circuit')).not.toBeNull();
+    // In the default look nothing is behind its games either.
+    expect(root.querySelector('.backdrop .circuit')).toBeNull();
 
     await press('back');
     expect(text('.system-list li.selected .name')).toEqual(['Nintendo Entertainment System']);

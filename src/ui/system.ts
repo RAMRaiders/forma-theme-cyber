@@ -79,6 +79,50 @@ export function systemRgb(maker: string | undefined | null, category: CategoryId
   return known?.[1] ?? CATEGORY_RGB[category];
 }
 
+/** A stable number for a name: the same system always gets the same shade. */
+function nameHash(name: string): number {
+  let h = 2166136261;
+  for (const c of name) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
+  return h >>> 0;
+}
+
+function rgbToHue(rgb: string): number {
+  const [r, g, b] = rgb.split(' ').map((v) => Number(v) / 255) as [number, number, number];
+  const max = Math.max(r, g, b);
+  const d = max - Math.min(r, g, b);
+  if (d === 0) return 0;
+  const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return (h * 60 + 360) % 360;
+}
+
+/** A neon colour (full saturation, bright) at a hue, as `r g b`. */
+function neon(hue: number): string {
+  const f = (n: number) => {
+    const k = (n + hue / 30) % 12;
+    return Math.round(255 * (0.62 - 0.38 * Math.max(-1, Math.min(k - 3, 9 - k, 1))));
+  };
+  return `${f(0)} ${f(8)} ${f(4)}`;
+}
+
+/**
+ * A system's own neon colours, `[main, accent]`: a known maker's systems in shades around the
+ * maker's colour, each its own; any other system its own hue. The accent sits a little round
+ * the colour wheel, for the second glow.
+ */
+export function systemColours(
+  name: string,
+  maker: string | undefined | null,
+  category: CategoryId
+): [string, string] {
+  const h = nameHash(name);
+  const known = maker ? MAKER_RGB.find(([re]) => re.test(maker.trim())) : undefined;
+  const hue = known
+    ? rgbToHue(known[1]) + ((h % 61) - 30)
+    : rgbToHue(CATEGORY_RGB[category]) + (h % 360);
+  const main = (hue + 360) % 360;
+  return [neon(main), neon((main + 40 + (h % 30)) % 360)];
+}
+
 /** The parts of the stage that change together when the selection moves. */
 type Slot = 'intro' | 'tally' | 'showcase' | 'fact';
 
@@ -110,7 +154,7 @@ export class SystemView {
   /** Curiosities move on by themselves; Interface → Rotate curiosities. */
   rotateFacts = true;
   /** What is behind the screen (Look → Systems background); `board`: each system's own. */
-  look: 'neon' | 'grid' | 'plain' | 'board' = 'neon';
+  look: 'neon' | 'grid' | 'board' = 'neon';
   /** The category whose backdrop is up, in the looks that have one per category. */
   #drawnFor: string | null = null;
   /** Which selection a pending info load belongs to: a quick scroll must not show a stale one. */
@@ -229,15 +273,12 @@ export class SystemView {
 
   #drawBoard(system: CyberSystem, delay: number): void {
     clearTimeout(this.#boardTimer);
-    // The other looks have one backdrop per category, drawn once: nothing behind changes as
-    // the selection moves.
+    // The other looks have nothing behind (only the dark), set once.
     if (this.look !== 'board') {
       const key = `${this.look}:${system.category}`;
       if (this.#drawnFor === key) return;
       this.#drawnFor = key;
-      return this.backdrop(
-        this.look === 'neon' ? circuitSvg(`category:${system.category}`, [], 0) : ''
-      );
+      return this.backdrop('');
     }
     this.#drawnFor = null;
     const chips = this.#info?.chips ?? [];
@@ -369,12 +410,16 @@ export class SystemView {
     parts.push(['fact', this.#factStrip()]);
     const apply = () => {
       if (ticket !== this.#ticket) return;
-      // The category's colour, as on its tile; the circuit-board look keeps the maker's. On the
-      // page root: the backdrop, outside this view, takes it too.
-      const rgb =
-        this.look === 'board' ? systemRgb(maker, system.category) : CATEGORY_RGB[system.category];
-      document.documentElement.style.setProperty('--sys', `rgb(${rgb})`);
-      document.documentElement.style.setProperty('--sys-rgb', rgb);
+      // The system's own colours; the circuit-board look keeps the maker's. On the page root:
+      // the backdrop, outside this view, takes them too.
+      const [rgb, accent] =
+        this.look === 'board'
+          ? [systemRgb(maker, system.category), systemRgb(maker, system.category)]
+          : systemColours(system.summary.name, maker, system.category);
+      const root = document.documentElement.style;
+      root.setProperty('--sys', `rgb(${rgb})`);
+      root.setProperty('--sys-rgb', rgb);
+      root.setProperty('--sys2-rgb', accent);
       this.#shown = this.#selected;
       this.#turnPage(parts, animate);
       this.#scrollOverflow();
