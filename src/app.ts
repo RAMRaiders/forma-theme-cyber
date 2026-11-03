@@ -50,11 +50,11 @@ const LOADER_DELAY_MS = 150;
 const CYBER_VIEW = 'systems';
 /** A shortcut's level: its path starts with this, then the Forma view it opens. */
 const SHORTCUT = '@';
-/** The buttons under the categories. Only favourites opens anything yet. */
+/** The buttons under the categories: favourites and collections open Forma's views. */
 const SHORTCUTS: Shortcut[] = [
   { id: 'favorites', label: 'Favourites', tagline: 'The games you starred' },
   { id: 'magazines', label: 'Magazines', tagline: 'Read the classics', soon: true },
-  { id: 'collections', label: 'Collections', tagline: 'Your own lists of games', soon: true },
+  { id: 'collections', label: 'Collections', tagline: 'Your own lists of games' },
   {
     id: 'recommended',
     label: 'Recommended',
@@ -65,6 +65,8 @@ const SHORTCUTS: Shortcut[] = [
 /** Forma's view each working shortcut opens. */
 const SHORTCUT_VIEWS: Record<string, { view: string; label: string }> = {
   favorites: { view: 'favorites', label: 'Favourites' },
+  // Forma's: a branch per collection, made from Start → Collections.
+  collections: { view: 'collections', label: 'Collections' },
   // The All games tile, after the categories.
   all: { view: 'all', label: ALL_GAMES.label }
 };
@@ -136,7 +138,11 @@ export class App {
   async start(): Promise<void> {
     this.forma.input.on((e) => this.#onInput(e));
     this.forma.events.on('library:changed', () => this.#reloadSoon());
-    this.forma.events.on('views:changed', () => void this.#loadViews());
+    // Views change with collections too: the shortcuts' counts follow.
+    this.forma.events.on('views:changed', () => {
+      void this.#loadViews();
+      this.#reloadSoon();
+    });
     // Forma's views list would only ever offer Cyber's one view: back to its top.
     this.forma.events.on('nav:open', () => void this.#open(CYBER_VIEW));
     // Forma's menu changed one of Cyber's settings, or the screen margins.
@@ -291,7 +297,12 @@ export class App {
         if (s.soon || !opens) return s;
         try {
           const page = await this.forma.nav.browse(opens.view, [], { offset: 0, limit: 1 });
+          if (page.listing.kind === 'branches') {
+            const n = page.listing.items.length;
+            return { ...s, count: `${n} ${n === 1 ? 'list' : 'lists'}` };
+          }
           const total = 'total' in page.listing ? page.listing.total : 0;
+          if (s.id === 'collections' && total === 0) return { ...s, count: 'None yet' };
           return { ...s, count: `${total.toLocaleString('en')} ${total === 1 ? 'game' : 'games'}` };
         } catch {
           return s;

@@ -195,6 +195,19 @@ describe('the default theme', () => {
     await vi.waitFor(() => expect(text('.shortcut.selected h2')).toEqual(['Favourites']));
   });
 
+  it('has a Collections shortcut: the lists, then a list’s games', async () => {
+    const { press, text } = await start();
+    await vi.waitFor(() => expect(text('.shortcut-collections .tag')).toEqual(['1 list']));
+    await toShortcut(press, text, 'Collections');
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.crumb')).toEqual(['Collections']));
+    await vi.waitFor(() => expect(text('.grid .card .label')).toEqual(['Couch co-op']));
+    expect(text('.grid .card .count')).toEqual(['2 games']);
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.games .row')).toHaveLength(2));
+    expect(text('.crumb')).toEqual(['Collections', 'Couch co-op']);
+  });
+
   it('has an All games tile after the categories, listing every game A to Z', async () => {
     const { press, text } = await start();
     await vi.waitFor(() => expect(text('.categories .tile h2').at(-1)).toBe('All games'));
@@ -224,7 +237,7 @@ describe('the default theme', () => {
   it('shows what is coming later, and says so rather than opening it', async () => {
     const { press, text } = await start();
     await vi.waitFor(() => expect(text('.shortcut').length).toBe(4));
-    expect(text('.shortcut.soon h2')).toEqual(['Magazines', 'Collections', 'Recommended']);
+    expect(text('.shortcut.soon h2')).toEqual(['Magazines', 'Recommended']);
     await toShortcut(press, text, 'Recommended');
     await press('confirm');
     expect(text('.toast')).toEqual(['Recommended is coming in a later version']);
