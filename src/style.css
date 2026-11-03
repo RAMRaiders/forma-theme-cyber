@@ -361,6 +361,9 @@ main {
   display: grid;
   /* The picture gives way first, so two rows of categories and the shortcuts fit a 16:9 TV. */
   grid-template-rows: minmax(3.5rem, 1fr) auto;
+  /* One column, the tile's own width: a long row of logos must not widen it (the stage would
+     then centre its picture in a column wider than the tile). */
+  grid-template-columns: minmax(0, 1fr);
   min-height: 0;
   border: 1px solid rgb(var(--cat-rgb) / 22%);
   border-radius: calc(var(--radius) * 2);
@@ -506,6 +509,7 @@ main {
 
 .tile .logos {
   display: flex;
+  min-width: 0;
   align-items: center;
   gap: 0.8rem;
   height: 1.1rem;
@@ -515,6 +519,7 @@ main {
 }
 
 .tile .logo {
+  flex: none;
   max-height: 100%;
   max-width: 5rem;
   object-fit: contain;
@@ -586,7 +591,7 @@ main {
   margin: 0;
   padding: 40vh 0.6rem;
   list-style: none;
-  transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 240ms ease-out;
   will-change: transform;
 }
 
@@ -596,16 +601,16 @@ main {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.2rem 0.7rem;
-  height: 2.9rem;
+  /* Every row the same height, selected or not: nothing in the rail shifts as it moves. */
+  height: 3.4rem;
   padding: 0 0.9rem;
   border: 1px solid transparent;
   border-radius: calc(var(--radius) * 1.6);
   opacity: 0.5;
   transition:
-    opacity 200ms,
-    height 200ms,
-    background-color 200ms,
-    border-color 200ms;
+    opacity 180ms,
+    background-color 180ms,
+    border-color 180ms;
 }
 
 .system-list li + li {
@@ -614,11 +619,9 @@ main {
 
 .system-list .logo {
   max-width: min(100%, 12rem);
-  max-height: 1.8rem;
+  max-height: 2rem;
   justify-self: start;
   object-fit: contain;
-  transform-origin: left center;
-  transition: transform 200ms;
 }
 
 /* A logo too dark for the background, lit from behind. */
@@ -627,7 +630,7 @@ main {
     drop-shadow(0 0 0.35rem rgb(255 255 255 / 45%));
 }
 
-/* With a logo, the name is for the selected one only, small, under it. */
+/* The rail shows logos only; the name stands in for a system without one. */
 .system-list .name {
   display: none;
   overflow: hidden;
@@ -662,7 +665,6 @@ main {
 }
 
 .system-list li.selected {
-  height: 4rem;
   border-color: var(--sys-70);
   background: linear-gradient(90deg, var(--sys-30), var(--sys-10));
   box-shadow:
@@ -683,16 +685,6 @@ main {
   box-shadow: 0 0 0.8rem var(--sys);
 }
 
-.system-list li.selected .logo {
-  transform: scale(1.15);
-}
-
-.system-list li.selected:not(.no-logo) .name {
-  display: block;
-  grid-row: 2;
-  grid-column: 1 / -1;
-}
-
 .system-list li.selected .count {
   color: var(--sys);
 }
@@ -702,8 +694,10 @@ main {
 .system-panel {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  /* Fixed rows and columns: a longer story, a bigger count or a two-line curiosity never moves
+     the console; what does not fit scrolls in its own box. */
+  grid-template-columns: minmax(0, 1fr) 10rem;
+  grid-template-rows: 10.4rem minmax(0, 1fr) 3.6rem;
   grid-template-areas:
     'intro tally'
     'showcase showcase'
@@ -745,12 +739,14 @@ main {
 .system-panel .intro {
   grid-area: intro;
   min-width: 0;
+  overflow: hidden;
 }
 
 .system-panel .heading {
   display: flex;
   align-items: center;
   gap: 1.1rem;
+  height: 4.2rem;
   min-width: 0;
 }
 
@@ -799,8 +795,8 @@ main {
   color: rgb(223 246 255 / 86%);
   font-size: 0.86rem;
   line-height: 1.45;
-  /* Four lines; a longer story scrolls through them. */
-  max-height: calc(4 * 1.45em);
+  /* Three lines; a longer story scrolls through them. */
+  max-height: calc(3 * 1.45em);
   text-shadow:
     0 0 0.3rem #000,
     0 0 1rem #000;
@@ -1043,7 +1039,7 @@ main {
   grid-area: fact;
   position: relative;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 1.2rem;
   padding: 0.7rem 1rem;
   overflow: hidden;
@@ -1151,7 +1147,6 @@ main {
 @keyframes showcase-in {
   from {
     opacity: 0;
-    transform: scale(0.985);
   }
 }
 
@@ -1164,12 +1159,7 @@ main {
 @keyframes callout-in {
   from {
     opacity: 0;
-    transform: translateX(var(--from, -0.4rem));
   }
-}
-
-.system-panel .specs-right .spec {
-  --from: 0.4rem;
 }
 
 :root[data-motion='off'] .systems,

@@ -15,8 +15,9 @@ const WHITE = '#e8fbff';
 /** A soft floor under each picture: the tile's halo meets it. */
 const FLOOR = `<ellipse cx="120" cy="134" rx="78" ry="6" fill="currentColor" opacity=".18"/>`;
 
-const svg = (body: string) =>
-  `<svg viewBox="0 0 240 150" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${FLOOR}${body}</svg>`;
+/** `dx`: moves a drawing whose middle is off the stage's middle (x 120) back onto it. */
+const svg = (body: string, dx = 0) =>
+  `<svg viewBox="0 0 240 150" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${FLOOR}<g transform="translate(${dx} 0)">${body}</g></svg>`;
 
 /** A pad: two grips, a d-pad, four buttons. At (x, y), `s` its scale. */
 const pad = (x: number, y: number, s: number) => `
@@ -29,16 +30,39 @@ const pad = (x: number, y: number, s: number) => `
     <circle cx="62" cy="29" r="3" fill="${PINK}" stroke="none"/>
   </g>`;
 
+/** A pixel invader, row by row, at (x, y) with pixels `px` across. */
+const INVADER = [
+  '..X.....X..',
+  '...X...X...',
+  '..XXXXXXX..',
+  '.XX.XXX.XX.',
+  'XXXXXXXXXXX',
+  'X.XXXXXXX.X',
+  'X.X.....X.X',
+  '...XX.XX...'
+];
+const invader = (x: number, y: number, px: number, colour: string) =>
+  INVADER.flatMap((line, row) =>
+    [...line].map((c, col) =>
+      c === 'X'
+        ? `<rect x="${x + col * px}" y="${y + row * px}" width="${px}" height="${px}" fill="${colour}" stroke="none"/>`
+        : ''
+    )
+  ).join('');
+
 const ART: Record<Category['id'], string> = {
   // A console, its disc lid lit, a pad wired to it.
-  consoles: svg(`
+  consoles: svg(
+    `
     <rect x="34" y="62" width="112" height="62" rx="8" fill="currentColor" fill-opacity=".1"/>
     <circle cx="90" cy="88" r="18"/>
     <circle cx="90" cy="88" r="6" fill="${PINK}" stroke="none"/>
     <path d="M44 112h20M120 112h14" stroke="${WHITE}"/>
     <circle cx="128" cy="76" r="3" fill="${CYAN}" stroke="none"/>
     <path d="M146 100c14 0 18 10 26 10" stroke-dasharray="2 5"/>
-    ${pad(150, 96, 0.82)}`),
+    ${pad(150, 96, 0.82)}`,
+    -9
+  ),
 
   // A handheld, upright, its screen glowing, a game on it.
   handhelds: svg(`
@@ -62,19 +86,32 @@ const ART: Record<Category['id'], string> = {
     <path d="M46 108h148l10 22H36z" fill="currentColor" fill-opacity=".12"/>
     <path d="M56 116h128M50 124h140" stroke="${WHITE}" stroke-width="2" stroke-dasharray="6 4"/>`),
 
-  // An arcade cabinet: marquee, screen, joystick and buttons.
-  arcade: svg(`
-    <path d="M84 10h72l-4 22v14l10 32v52H78V78l10-32V32z" fill="currentColor" fill-opacity=".1"/>
-    <rect x="88" y="14" width="64" height="14" rx="2" fill="${PINK}" fill-opacity=".55" stroke="${PINK}"/>
-    <rect x="94" y="36" width="52" height="38" rx="3" stroke="${WHITE}"/>
-    <path d="M104 64l8-14 8 8 10-14 8 20" stroke="${CYAN}" stroke-width="2.5"/>
-    <path d="M78 84h84"/>
-    <path d="M100 96v-10" stroke="${WHITE}"/>
-    <circle cx="100" cy="84" r="4" fill="${PINK}" stroke="none"/>
-    <circle cx="124" cy="92" r="4" fill="${CYAN}" stroke="none"/>
-    <circle cx="136" cy="92" r="4" fill="${CYAN}" stroke="none"/>
-    <circle cx="148" cy="92" r="4" fill="${CYAN}" stroke="none"/>
-    <rect x="110" y="108" width="20" height="10" rx="2" stroke-width="2.5"/>`),
+  // An arcade cabinet in three-quarter view: a lit marquee, a bezel with an invader on the
+  // screen, the control panel jutting out with a ball-top stick and buttons, a coin door.
+  arcade: svg(
+    `
+    <path d="M74 20l18-8v118l-18-4z" fill="currentColor" fill-opacity=".22"/>
+    <path d="M74 20l18-8M74 126l18 4M74 20v106"/>
+    <path d="M78 52l10-4M78 60l10-4" stroke="${PINK}" stroke-width="2"/>
+    <path d="M92 12h58v20l-6 6v38l12 16v38H92z" fill="currentColor" fill-opacity=".1"/>
+    <rect x="96" y="15" width="50" height="13" rx="2" fill="${PINK}" fill-opacity=".45" stroke="${PINK}"/>
+    <text x="121" y="24.5" fill="${WHITE}" stroke="none" text-anchor="middle" font-family="DejaVu Sans Mono, monospace" font-size="8" font-weight="700" letter-spacing="1">ARCADE</text>
+    <rect x="98" y="38" width="44" height="36" rx="3" stroke="${WHITE}"/>
+    <rect x="102" y="42" width="36" height="28" rx="1" fill="currentColor" fill-opacity=".25" stroke="none"/>
+    ${invader(107.5, 44.5, 2.3, CYAN)}
+    <path d="M116 68h8v-2h-2v-2h-4v2h-2z" fill="${PINK}" stroke="none"/>
+    <path d="M92 76h52l12 16H92z" fill="currentColor" fill-opacity=".2"/>
+    <path d="M104 86v-6" stroke="${WHITE}" stroke-width="2.5"/>
+    <circle cx="104" cy="78" r="3.6" fill="${PINK}" stroke="none"/>
+    <circle cx="122" cy="86" r="2.8" fill="${CYAN}" stroke="none"/>
+    <circle cx="130" cy="84" r="2.8" fill="${CYAN}" stroke="none"/>
+    <circle cx="138" cy="86" r="2.8" fill="${CYAN}" stroke="none"/>
+    <circle cx="146" cy="88" r="2.2" fill="${WHITE}" stroke="none"/>
+    <rect x="110" y="100" width="26" height="18" rx="2" stroke-width="2.5"/>
+    <path d="M117 105v6M129 105v6" stroke="${PINK}" stroke-width="2.5"/>
+    <path d="M96 124h56" stroke-width="2"/>`,
+    5
+  ),
 
   // A homebrew cartridge on its board, the code that made it floating up.
   virtual: svg(`
@@ -112,7 +149,8 @@ const ART: Record<Category['id'], string> = {
     <path d="M136 124h68"/>`),
 
   // A chip whose core is a gear, a second gear turning with it.
-  engines: svg(`
+  engines: svg(
+    `
     <rect x="76" y="34" width="88" height="88" rx="10" fill="currentColor" fill-opacity=".1"/>
     <path d="M90 34v-10M106 34v-10M122 34v-10M138 34v-10M154 34v-10M90 122v10M106 122v10M122 122v10M138 122v10M154 122v10M76 50H66M76 68H66M76 86H66M76 104H66M164 50h10M164 68h10M164 86h10M164 104h10" stroke-width="2.5"/>
     <circle cx="120" cy="78" r="22" stroke="${WHITE}"/>
@@ -120,7 +158,9 @@ const ART: Record<Category['id'], string> = {
     <path d="M114 68l16 10-16 10z" fill="${PINK}" stroke="${PINK}"/>
     <circle cx="174" cy="30" r="10" stroke="${CYAN}"/>
     <circle cx="174" cy="30" r="3" fill="${CYAN}" stroke="none"/>
-    <path d="M174 16v-4M174 44v4M160 30h-4M188 30h4" stroke="${CYAN}" stroke-width="4"/>`),
+    <path d="M174 16v-4M174 44v4M160 30h-4M188 30h4" stroke="${CYAN}" stroke-width="4"/>`,
+    -9
+  ),
 
   // The whole library: cartridges, discs and a floppy stacked on a shelf.
   all: svg(`
