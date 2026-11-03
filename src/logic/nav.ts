@@ -60,3 +60,45 @@ export function moveList(
       return Math.min(last, index + pageSize);
   }
 }
+
+/**
+ * Cyber's home: a grid of `count` categories in `columns` columns, then one row of `shortcuts`
+ * under it (favourites and the like), all in one index: the shortcuts follow the categories.
+ * Down from the categories' last row reaches the shortcut below; up from a shortcut, the
+ * category above it. Edges stop.
+ */
+export function moveHome(
+  index: number,
+  count: number,
+  columns: number,
+  shortcuts: number,
+  move: Move
+): number {
+  const cols = Math.max(1, columns);
+  const lastRow = Math.floor(Math.max(0, count - 1) / cols);
+  // Where a column of the one row lands on the other, which may have a different number.
+  const across = (at: number, from: number, to: number) =>
+    to <= 1 ? 0 : Math.min(to - 1, Math.round((at * (to - 1)) / Math.max(1, from - 1)));
+  if (index >= count) {
+    const at = index - count;
+    switch (move) {
+      case 'left':
+        return count + Math.max(0, at - 1);
+      case 'right':
+        return count + Math.min(shortcuts - 1, at + 1);
+      case 'up':
+      case 'pageUp': {
+        if (count === 0) return index;
+        const first = lastRow * cols;
+        return first + across(at, shortcuts, count - first);
+      }
+      default:
+        return index;
+    }
+  }
+  const onLastRow = Math.floor(index / cols) === lastRow;
+  if (shortcuts > 0 && onLastRow && (move === 'down' || move === 'pageDown')) {
+    return count + across(index - lastRow * cols, count - lastRow * cols, shortcuts);
+  }
+  return moveGrid(index, count, cols, move);
+}

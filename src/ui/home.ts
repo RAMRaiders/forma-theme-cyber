@@ -7,24 +7,61 @@ export interface Tile {
   systems: CyberSystem[];
 }
 
+/** A button under the categories: favourites, and what is coming later. */
+export interface Shortcut {
+  id: string;
+  label: string;
+  tagline: string;
+  /** e.g. "12 games"; none for one that is not there yet. */
+  count?: string;
+  /** Not there yet: shown, and says so, but opens nothing. */
+  soon?: boolean;
+}
+
+/** Categories drawn for Cyber rather than shown by their systems' photos. */
+const PICTURES: Partial<Record<string, string>> = { engines: './art/engines.svg' };
+
 /** Logos along the bottom of a tile. */
 const LOGOS = 4;
 
-/** Cyber's top level: one tile per category that has games. */
+/**
+ * Cyber's top level: one tile per category that has games, then a row of shortcuts under them.
+ * One index runs through both: the shortcuts follow the categories.
+ */
 export class HomeView {
-  readonly root = el('div', { class: 'home', role: 'listbox' });
+  readonly root = el('div', { class: 'home' });
+  readonly #categories = el('div', { class: 'categories', role: 'listbox' });
+  readonly #shortcuts = el('div', { class: 'shortcuts', role: 'listbox' });
   #tiles: HTMLElement[] = [];
   #selected = -1;
+  /** Categories shown; the shortcuts' indexes start here. */
+  categories = 0;
+  shortcuts = 0;
 
-  show(tiles: Tile[], selected: number): void {
-    this.#tiles = tiles.map(tile);
+  constructor() {
+    this.root.append(this.#categories, this.#shortcuts);
+  }
+
+  show(tiles: Tile[], shortcuts: Shortcut[], selected: number): void {
+    const cards = tiles.map(tile);
+    const buttons = shortcuts.map(shortcut);
+    this.#tiles = [...cards, ...buttons];
+    this.categories = tiles.length;
+    this.shortcuts = shortcuts.length;
     // Columns for two rows on a 16:9 screen (seven categories: 4 + 3), so every tile gets a big
     // stage; a narrow screen overrides this in style.css and scrolls.
     const rows = Math.max(1, Math.round(Math.sqrt((tiles.length * 9) / 16)));
     this.root.style.setProperty('--cols', String(Math.max(1, Math.ceil(tiles.length / rows))));
-    this.root.replaceChildren(...this.#tiles);
+    this.root.style.setProperty('--shortcuts', String(Math.max(1, shortcuts.length)));
+    this.#categories.replaceChildren(...cards);
+    this.#shortcuts.replaceChildren(...buttons);
     this.#selected = -1;
     this.select(selected);
+  }
+
+  /** The shortcut selected, if the selection is on one. */
+  get shortcut(): string | null {
+    return this.#tiles[this.#selected]?.dataset.shortcut ?? null;
   }
 
   select(index: number): void {
@@ -40,7 +77,7 @@ export class HomeView {
 
   /** Columns as laid out right now, for up/down movement. */
   columns(): number {
-    const template = getComputedStyle(this.root).gridTemplateColumns;
+    const template = getComputedStyle(this.#categories).gridTemplateColumns;
     return Math.max(1, template.split(' ').filter(Boolean).length);
   }
 }
@@ -61,13 +98,15 @@ function tile({ category, systems }: Tile): HTMLElement {
   const [hero, left, right] = systems;
   const texture = el('div', { class: 'texture', 'aria-hidden': 'true' });
   texture.innerHTML = circuitSvg(`category:${category.id}`, [], 0);
+  // A category with a picture of its own shows that instead of its systems' photos.
+  const own = PICTURES[category.id];
   const stage = el(
     'div',
     { class: 'stage', 'aria-hidden': 'true' },
     el('div', { class: 'halo' }),
-    left ? image(left.photo, 'side left') : '',
-    right ? image(right.photo, 'side right') : '',
-    hero ? image(hero.photo, 'hero') : ''
+    !own && left ? image(left.photo, 'side left') : '',
+    !own && right ? image(right.photo, 'side right') : '',
+    own ? image(own, 'hero drawn') : hero ? image(hero.photo, 'hero') : ''
   );
   const logos = el(
     'div',
@@ -97,4 +136,40 @@ function tile({ category, systems }: Tile): HTMLElement {
       logos
     )
   );
+}
+
+/** Each shortcut's picture: a line icon in Cyber's style. */
+const ICONS: Record<string, string> = {
+  favorites: '<path d="M12 3.2l2.6 5.5 6 .7-4.5 4.1 1.2 6L12 16.6 6.7 19.5l1.2-6L3.4 9.4l6-.7z"/>',
+  magazines:
+    '<path d="M5 3.5h10l4 4v13H5z"/><path d="M15 3.5v4h4"/><path d="M8 11h8M8 14h8M8 17h5"/>',
+  collections:
+    '<rect x="3.5" y="9" width="17" height="11.5" rx="1.5"/><path d="M5.5 6h13M7.5 3.5h9"/>',
+  recommended:
+    '<path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="M12 8.5l1.2 2.3 2.3 1.2-2.3 1.2L12 15.5l-1.2-2.3L8.5 12l2.3-1.2z"/>'
+};
+
+function shortcut(s: Shortcut): HTMLElement {
+  const icon = el('div', { class: 'icon', 'aria-hidden': 'true' });
+  icon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">${ICONS[s.id] ?? ''}</svg>`;
+  const button = el(
+    'div',
+    {
+      class: `shortcut shortcut-${s.id}${s.soon ? ' soon' : ''}`,
+      role: 'option',
+      'aria-selected': 'false'
+    },
+    icon,
+    el(
+      'div',
+      { class: 'text' },
+      el('h2', {}, s.label),
+      s.soon ? el('span', { class: 'tag' }, 'Coming soon') : '',
+      !s.soon && s.count ? el('span', { class: 'tag' }, s.count) : ''
+    )
+  );
+  // What it is, for a screen reader: there is no room for it on screen.
+  button.setAttribute('aria-label', `${s.label}: ${s.tagline}`);
+  button.dataset.shortcut = s.id;
+  return button;
 }

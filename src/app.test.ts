@@ -68,7 +68,7 @@ describe('the default theme', () => {
     expect(text('h1.current')).toEqual(['Categories']);
     expect(text('.tile h2')).toEqual(['Consoles']);
     expect(text('.tile.selected .tag')).toEqual(['5 systems', '9 games']);
-    expect(text('.hint')).toEqual(['AOpen', 'SelectViews', 'StartMenu']);
+    expect(text('.hint')).toEqual(['AOpen', 'StartMenu']);
   });
 
   it('goes category → system → games, and back to where it was', async () => {
@@ -156,36 +156,61 @@ describe('the default theme', () => {
     await vi.waitFor(() => expect(playing.hidden).toBe(true));
   });
 
-  it('opens the view picked in Forma’s views list', async () => {
-    const { text, backend } = await start();
-    // As Forma's shell does when the user picks a view after Select.
+  it('shows the library one way: any view Forma opens brings back the categories', async () => {
+    const { press, text, backend } = await start();
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.system-list .name').length).toBeGreaterThan(0));
     await backend.invoke('shell_open_view', { view: 'manufacturer-system' });
-    await vi.waitFor(() => expect(text('h1')).toEqual(['By manufacturer']));
-    expect(text('.card .label')).toEqual(['Nintendo', 'Sega', 'Sony', 'Unknown']);
+    await vi.waitFor(() => expect(text('h1')).toEqual(['Categories']));
+    await vi.waitFor(() => expect(text('.categories .tile').length).toBeGreaterThan(0));
   });
 
-  it('opens a menu view into its branches', async () => {
-    const { press, text, backend } = await start();
-    await backend.invoke('shell_open_view', { view: 'home' });
+  /** Down from the categories until a shortcut is selected, then right to `label`. */
+  const toShortcut = async (
+    press: (action: InputEvent['action']) => Promise<void>,
+    text: (selector: string) => string[],
+    label: string
+  ) => {
+    for (let i = 0; i < 20 && text('.shortcut.selected h2').length === 0; i++) await press('down');
+    for (let i = 0; i < 5 && text('.shortcut.selected h2')[0] !== label; i++) await press('right');
+    expect(text('.shortcut.selected h2')).toEqual([label]);
+  };
+
+  it('has shortcuts under the categories: favourites opens them', async () => {
+    const { press, text } = await start();
     await vi.waitFor(() =>
-      expect(text('.card .label')).toEqual([
+      expect(text('.shortcut h2')).toEqual([
         'Favourites',
-        'Recently played',
-        'Systems',
-        'Manufacturers',
-        'Genres'
+        'Magazines',
+        'Collections',
+        'Recommended'
       ])
     );
+    expect(text('.shortcut-favorites .tag')).toEqual(['1 game']);
+    await toShortcut(press, text, 'Favourites');
     await press('confirm');
     await vi.waitFor(() => expect(text('.row')).toEqual(['★ Super Mario Bros.']));
+    expect(text('.crumb')).toEqual(['Favourites']);
+    await press('back');
+    await vi.waitFor(() => expect(text('.shortcut.selected h2')).toEqual(['Favourites']));
   });
 
-  it('leaves Start and Select to Forma, and shows they are there', async () => {
+  it('shows what is coming later, and says so rather than opening it', async () => {
+    const { press, text } = await start();
+    await vi.waitFor(() => expect(text('.shortcut').length).toBe(4));
+    expect(text('.shortcut.soon h2')).toEqual(['Magazines', 'Collections', 'Recommended']);
+    await toShortcut(press, text, 'Recommended');
+    await press('confirm');
+    expect(text('.toast')).toEqual(['Recommended is coming in a later version']);
+    expect(text('.shortcut.selected h2')).toEqual(['Recommended']);
+  });
+
+  it('leaves Start and Select to Forma, and shows its menu is there', async () => {
     const { press, text } = await start();
     await press('start');
     await press('select');
     expect(text('.switcher, .page, .keyboard')).toEqual([]);
-    expect(text('.hint')).toEqual(['AOpen', 'SelectViews', 'StartMenu']);
+    expect(text('.hint')).toEqual(['AOpen', 'StartMenu']);
   });
 
   it('tells Forma’s menu the system and game selected, once the selection rests', async () => {

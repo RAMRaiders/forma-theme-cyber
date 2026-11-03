@@ -1,12 +1,15 @@
 # Cyber
 
 Forma's default theme: systems grouped by kind (consoles, handhelds, computers, arcade, virtual
-consoles, educational, ports), a page per system with its circuit board, logo, console photo,
-story and curiosities, then its games. Built for TVs and handhelds alike.
+consoles, educational, ports, engines), a page per system with its circuit board, logo, console
+photo, story and curiosities, then its games. Under the categories, shortcuts: favourites, and
+magazines, collections and recommended games, which say they are coming in a later version.
+Built for TVs and handhelds alike.
 
-Start and Select open Forma's own menu and views list, drawn by Forma over the theme; Cyber's
-look and sorting are settings declared in `public/theme.json`, which Forma's menu shows under
-Interface.
+Cyber shows the library this one way: its `theme.json` lists the one view it shows, so Forma
+offers no views list. Start opens Forma's own menu, drawn by Forma over the theme; Cyber's look
+and sorting are settings declared in `public/theme.json`, which Forma's menu shows under
+Interface. The Engines picture (`public/art/engines.svg`) is drawn for Cyber.
 
 A Forma theme like any other: it talks to Forma only through
 [`@ramraiders/forma-sdk`](https://github.com/RAMRaiders/Forma/blob/main/docs/sdk.md), and Forma

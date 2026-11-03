@@ -23,12 +23,12 @@ import {
   margins,
   prefUpdate
 } from './data/prefs.js';
-import { type Move, moveGrid, moveList } from './logic/nav.js';
+import { type Move, moveGrid, moveHome, moveList } from './logic/nav.js';
 import { LazyList } from './logic/pager.js';
 import { el } from './ui/dom.js';
 import { type Card, GridView } from './ui/grid.js';
 import { GamesView } from './ui/games.js';
-import { HomeView, type Tile } from './ui/home.js';
+import { HomeView, type Shortcut, type Tile } from './ui/home.js';
 import { loader } from './ui/loader.js';
 import { nowPlaying } from './ui/music.js';
 import { SystemView } from './ui/system.js';
@@ -44,8 +44,29 @@ const PAGE = 100;
 const CONTEXT_DELAY_MS = 120;
 /** A screen that loads faster than this never shows the loader: no flash on quick moves. */
 const LOADER_DELAY_MS = 150;
-/** Forma's systems view: Cyber shows it as categories, then systems, then that system's games. */
+/**
+ * Forma's systems view: Cyber shows it as categories, then systems, then that system's games.
+ * It is the one view Cyber shows (its theme.json says so): Forma offers no other.
+ */
 const CYBER_VIEW = 'systems';
+/** A shortcut's level: its path starts with this, then the Forma view it opens. */
+const SHORTCUT = '@';
+/** The buttons under the categories. Only favourites opens anything yet. */
+const SHORTCUTS: Shortcut[] = [
+  { id: 'favorites', label: 'Favourites', tagline: 'The games you starred' },
+  { id: 'magazines', label: 'Magazines', tagline: 'Read the classics', soon: true },
+  { id: 'collections', label: 'Collections', tagline: 'Your own lists of games', soon: true },
+  {
+    id: 'recommended',
+    label: 'Recommended',
+    tagline: 'Picked from what you play',
+    soon: true
+  }
+];
+/** Forma's view each working shortcut opens. */
+const SHORTCUT_VIEWS: Record<string, { view: string; label: string }> = {
+  favorites: { view: 'favorites', label: 'Favourites' }
+};
 /** Image widths asked for: what a card and the detail panel show at 1080p. */
 const CARD_WIDTH = 480;
 const DETAIL_WIDTH = 960;
@@ -81,6 +102,7 @@ export class App {
   /** Which screen the current level is: Cyber's own two, or Forma's views as they come. */
   #mode: 'home' | 'systems' | 'browse' = 'browse';
   #groups: Tile[] = [];
+  #shortcuts: Shortcut[] = SHORTCUTS;
 
   #views: ViewInfo[] = [];
   #view = 'systems';
@@ -113,8 +135,8 @@ export class App {
     this.forma.input.on((e) => this.#onInput(e));
     this.forma.events.on('library:changed', () => this.#reloadSoon());
     this.forma.events.on('views:changed', () => void this.#loadViews());
-    // Forma's views list (Select) picked one.
-    this.forma.events.on('nav:open', ({ view }) => void this.#open(view));
+    // Forma's views list would only ever offer Cyber's one view: back to its top.
+    this.forma.events.on('nav:open', () => void this.#open(CYBER_VIEW));
     // Forma's menu changed one of Cyber's settings, or the screen margins.
     this.forma.events.on('settings:changed', (change) => void this.#settingChanged(change));
     this.forma.events.on('game:start', (game) => this.#showLaunch(game));
@@ -134,7 +156,8 @@ export class App {
     await this.#loadViews();
     const boot = await this.forma.nav.defaultView();
     for (const note of boot.notes) this.#notify(note);
-    await this.#open(boot.id ?? 'systems');
+    // Cyber shows the library one way, whatever view Forma was set to open on.
+    await this.#open(CYBER_VIEW);
   }
 
   async #loadViews(): Promise<void> {
@@ -151,25 +174,44 @@ export class App {
     return this.#stack[this.#stack.length - 1]!;
   }
 
+  /**
+   * The Forma view and path the current level browses. Cyber's category is its own level, not
+   * part of Forma's path; a shortcut's level browses the view it opens.
+   */
+  #target(): { view: string; path: string[]; shortcut: string | null } {
+    const [first, ...rest] = this.#level.path;
+    if (this.#view === CYBER_VIEW && first?.startsWith(SHORTCUT)) {
+      const id = first.slice(SHORTCUT.length);
+      return { view: SHORTCUT_VIEWS[id]?.view ?? id, path: rest, shortcut: id };
+    }
+    return {
+      view: this.#view,
+      path: this.#view === CYBER_VIEW ? rest : this.#level.path,
+      shortcut: null
+    };
+  }
+
   /** Loads the current level and shows it, keeping the remembered selection. */
   async #load(): Promise<void> {
-    if (this.#view === CYBER_VIEW && this.#stack.length <= 2) return this.#loadCyber();
+    const target = this.#target();
+    if (this.#view === CYBER_VIEW && this.#stack.length <= 2 && !target.shortcut) {
+      return this.#loadCyber();
+    }
     this.#mode = 'browse';
     this.#systemView.hide();
     // A system's games keep its board behind them; other views have none.
-    if (this.#view !== CYBER_VIEW) this.#backdrop.replaceChildren();
+    if (this.#view !== CYBER_VIEW || target.shortcut) this.#backdrop.replaceChildren();
     const index = this.#level.index;
-    // Cyber's category is its own level, not part of Forma's path.
-    const path = this.#view === CYBER_VIEW ? this.#level.path.slice(1) : this.#level.path;
+    const { view, path } = target;
     const loading = this.#loading('Loading games…');
     try {
-      const first = await this.forma.nav.browse(this.#view, path, { offset: 0, limit: PAGE });
+      const first = await this.forma.nav.browse(view, path, { offset: 0, limit: PAGE });
       this.#page = first;
       const listing = first.listing;
       if (listing.kind === 'games') {
         const list = new LazyList<Game>(
           async (offset, limit) => {
-            const page = await this.forma.nav.browse(this.#view, path, { offset, limit });
+            const page = await this.forma.nav.browse(view, path, { offset, limit });
             return page.listing.kind === 'games' ? page.listing : { items: [], total: 0 };
           },
           PAGE,
@@ -212,9 +254,11 @@ export class App {
         this.#mode = 'home';
         this.#systemView.hide();
         this.#backdrop.replaceChildren();
-        level.index = Math.min(level.index, Math.max(0, this.#groups.length - 1));
+        this.#shortcuts = await this.#countShortcuts();
+        const count = this.#groups.length + this.#shortcuts.length;
+        level.index = Math.min(level.index, Math.max(0, count - 1));
         this.#main.replaceChildren(this.#homeView.root);
-        this.#homeView.show(this.#groups, level.index);
+        this.#homeView.show(this.#groups, this.#shortcuts, level.index);
       } else {
         const tile = this.#groups.find((g) => g.category.id === level.path[0]);
         if (!tile) {
@@ -234,6 +278,23 @@ export class App {
     } finally {
       loading();
     }
+  }
+
+  /** The shortcuts, with how many games the working ones hold. */
+  async #countShortcuts(): Promise<Shortcut[]> {
+    return Promise.all(
+      SHORTCUTS.map(async (s) => {
+        const opens = SHORTCUT_VIEWS[s.id];
+        if (s.soon || !opens) return s;
+        try {
+          const page = await this.forma.nav.browse(opens.view, [], { offset: 0, limit: 1 });
+          const total = 'total' in page.listing ? page.listing.total : 0;
+          return { ...s, count: `${total.toLocaleString('en')} ${total === 1 ? 'game' : 'games'}` };
+        } catch {
+          return s;
+        }
+      })
+    );
   }
 
   /**
@@ -303,6 +364,10 @@ export class App {
   /** Breadcrumbs in Cyber's view: the category, then the system. */
   #cyberTrail(): string[] {
     const [category, system] = this.#level.path;
+    if (category?.startsWith(SHORTCUT)) {
+      const id = category.slice(SHORTCUT.length);
+      return [SHORTCUT_VIEWS[id]?.label ?? id, ...(this.#page?.trail ?? []).map((c) => c.label)];
+    }
     const tile = this.#groups.find((g) => g.category.id === category);
     const name = tile?.systems.find((s) => s.summary.name === system)?.summary;
     return [
@@ -329,7 +394,7 @@ export class App {
     if (listing.kind !== 'groups') return [];
     const groups = [...listing.items];
     while (groups.length < listing.total) {
-      const next = await this.forma.nav.browse(this.#view, first.path, {
+      const next = await this.forma.nav.browse(this.#target().view, first.path, {
         offset: groups.length,
         limit: PAGE
       });
@@ -366,7 +431,6 @@ export class App {
       ...(games ? [['Y', 'Favourite'] as [string, string]] : []),
       ...(this.#mode === 'systems' ? [['Y', 'Next fact'] as [string, string]] : []),
       ...(this.#stack.length > 1 ? [['B', 'Back'] as [string, string]] : []),
-      ['Select', 'Views'],
       ['Start', 'Menu']
     ];
     this.#hints.replaceChildren(
@@ -395,8 +459,10 @@ export class App {
   #move(move: Move, repeat: boolean): void {
     const level = this.#level;
     if (this.#mode === 'home') {
-      level.index = moveGrid(level.index, this.#groups.length, this.#homeView.columns(), move);
-      this.#homeView.select(level.index);
+      const home = this.#homeView;
+      level.index = moveHome(level.index, home.categories, home.columns(), home.shortcuts, move);
+      home.select(level.index);
+      this.#renderChrome();
     } else if (this.#mode === 'systems') {
       level.index = moveList(level.index, this.#systemView.count, move, 5, repeat);
       this.#systemView.select(level.index);
@@ -424,6 +490,13 @@ export class App {
 
   async #confirm(): Promise<void> {
     if (this.#mode === 'home') {
+      const shortcut = this.#homeView.shortcut;
+      if (shortcut) {
+        const s = this.#shortcuts.find((x) => x.id === shortcut);
+        if (!s || s.soon) return this.#notify(`${s?.label ?? 'This'} is coming in a later version`);
+        this.#stack.push({ path: [`${SHORTCUT}${shortcut}`], index: 0 });
+        return this.#load();
+      }
       const tile = this.#groups[this.#level.index];
       if (!tile) return;
       this.#stack.push({ path: [tile.category.id], index: 0 });

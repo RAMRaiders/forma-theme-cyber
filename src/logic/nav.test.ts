@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { moveGrid, moveList } from './nav.js';
+import { moveGrid, moveHome, moveList } from './nav.js';
 
 describe('moveGrid', () => {
   // 10 items in 4 columns:
@@ -44,5 +44,31 @@ describe('moveList', () => {
     expect(moveList(5, 100, 'left', 10, false)).toBe(0);
     expect(moveList(50, 100, 'pageUp', 10, false)).toBe(40);
     expect(moveList(0, 0, 'down', 10, false)).toBe(0);
+  });
+});
+
+describe('Cyber’s home: categories, then a row of shortcuts', () => {
+  // Seven categories in four columns (4 + 3), then four shortcuts (7 to 10).
+  const move = (index: number, m: Parameters<typeof moveHome>[4]) => moveHome(index, 7, 4, 4, m);
+
+  it('moves in the categories as a grid, and down from the last row to the shortcuts', () => {
+    expect(move(1, 'down')).toBe(5);
+    expect(move(3, 'down')).toBe(6);
+    expect(move(4, 'down')).toBe(7);
+    expect(move(6, 'down')).toBe(10);
+  });
+
+  it('moves along the shortcuts, stopping at the ends, and up to the categories', () => {
+    expect(move(7, 'left')).toBe(7);
+    expect(move(7, 'right')).toBe(8);
+    expect(move(10, 'right')).toBe(10);
+    expect(move(10, 'down')).toBe(10);
+    expect(move(7, 'up')).toBe(4);
+    expect(move(10, 'up')).toBe(6);
+  });
+
+  it('works with no shortcuts, as a plain grid', () => {
+    expect(moveHome(6, 7, 4, 0, 'down')).toBe(6);
+    expect(moveHome(3, 7, 4, 0, 'down')).toBe(6);
   });
 });

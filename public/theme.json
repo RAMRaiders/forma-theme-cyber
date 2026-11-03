@@ -6,6 +6,7 @@
   "sdk": "^1.4",
   "permissions": ["settings.system"],
   "resolutions": ["1280x720", "1920x1080"],
+  "views": ["systems"],
   "settings": [
     {
       "key": "textSize",
