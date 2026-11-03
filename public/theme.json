@@ -51,14 +51,6 @@
       "default": true
     },
     {
-      "key": "nowPlaying",
-      "label": "Now playing",
-      "description": "The song in the header",
-      "group": "Look",
-      "type": "toggle",
-      "default": true
-    },
-    {
       "key": "rotateFacts",
       "label": "Rotate curiosities",
       "description": "On a system’s page, every 10 seconds",

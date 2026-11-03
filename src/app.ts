@@ -5,7 +5,6 @@ import type {
   Game,
   GameStart,
   InputEvent,
-  MusicStatus,
   SettingsChanged,
   ViewInfo
 } from '@ramraiders/forma-sdk';
@@ -30,7 +29,7 @@ import { type Card, GridView } from './ui/grid.js';
 import { GamesView } from './ui/games.js';
 import { HomeView, type Shortcut, type Tile } from './ui/home.js';
 import { loader } from './ui/loader.js';
-import { SongCard, nowPlaying } from './ui/music.js';
+import { SongCard } from './ui/music.js';
 import { SystemView } from './ui/system.js';
 
 /** One level of the path, and where the selection was, so going back returns to it. */
@@ -95,9 +94,7 @@ export class App {
   });
   /** Cyber's look and order: its settings, which Forma's menu shows (Start → Interface). */
   #prefs: Prefs = { ...DEFAULT_PREFS };
-  #lastMusic: MusicStatus | null = null;
   /** What plays, in the header, when something does. */
-  readonly #nowPlaying = el('div', { class: 'now-playing', hidden: '' });
   /** The song that just started, Cyber's way (its theme.json says it draws it). */
   readonly #song = new SongCard();
   readonly #backdrop = el('div', { class: 'backdrop', 'aria-hidden': 'true' });
@@ -127,7 +124,7 @@ export class App {
     this.#systemView = new SystemView(infos, (svg) => (this.#backdrop.innerHTML = svg));
     root.replaceChildren(
       this.#backdrop,
-      el('header', {}, this.#title, this.#trail, this.#nowPlaying),
+      el('header', {}, this.#title, this.#trail),
       this.#main,
       this.#hints,
       this.#song.root,
@@ -145,15 +142,10 @@ export class App {
     // Forma's menu changed one of Cyber's settings, or the screen margins.
     this.forma.events.on('settings:changed', (change) => void this.#settingChanged(change));
     this.forma.events.on('game:start', (game) => this.#showLaunch(game));
-    this.forma.events.on('music:changed', (status) => this.#showNowPlaying(status));
     // Forma says when a song starts and for how long; Cyber shows it, unless a game is up.
     this.forma.events.on('music:song', (song) => {
       if (this.#playing.hidden) this.#song.show(song);
     });
-    void this.forma.music
-      .status()
-      .then((status) => this.#showNowPlaying(status))
-      .catch(() => {});
     this.forma.events.on('game:end', ({ error }) => {
       this.#playing.hidden = true;
       if (error) this.#notify(`The game could not run: ${error}`);
@@ -325,7 +317,6 @@ export class App {
     applyPrefs(this.#prefs);
     this.#games.previews = this.#prefs.previews;
     this.#systemView.rotateFacts = this.#prefs.rotateFacts;
-    if (this.#lastMusic) this.#showNowPlaying(this.#lastMusic);
   }
 
   async #settingChanged({ scope, key, value }: SettingsChanged): Promise<void> {
@@ -341,19 +332,6 @@ export class App {
     this.#applyPrefs();
     // A new order shows at once, behind Forma's menu.
     if (resort && this.#mode !== 'browse') await this.#load();
-  }
-
-  #showNowPlaying(status: MusicStatus): void {
-    this.#lastMusic = status;
-    const playing = this.#prefs.nowPlaying && status.state !== 'stopped' && status.source !== null;
-    this.#nowPlaying.hidden = !playing;
-    if (!playing) return;
-    this.#nowPlaying.classList.toggle('paused', status.state === 'paused');
-    this.#nowPlaying.replaceChildren(
-      el('span', { class: 'note', 'aria-hidden': 'true' }, status.state === 'paused' ? '❚❚' : '♪'),
-      el('span', { class: 'title' }, nowPlaying(status)),
-      status.artist ? el('span', { class: 'artist' }, status.artist) : ''
-    );
   }
 
   /** While the emulator starts: the game's art, its name and system, and the loader. */

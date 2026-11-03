@@ -9,8 +9,6 @@ export interface Prefs {
   motion: boolean;
   /** Game preview videos in the list. */
   previews: boolean;
-  /** The now-playing pill in the header. */
-  nowPlaying: boolean;
   /** Curiosities move on by themselves on a system's page. */
   rotateFacts: boolean;
   /** A category's systems, in this order. */
@@ -22,7 +20,6 @@ export const DEFAULT_PREFS: Prefs = {
   board: 'on',
   motion: true,
   previews: true,
-  nowPlaying: true,
   rotateFacts: true,
   systemsSort: 'games'
 };

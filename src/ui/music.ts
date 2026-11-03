@@ -1,12 +1,6 @@
-import type { MusicSong, MusicStatus } from '@ramraiders/forma-sdk';
+import type { MusicSong } from '@ramraiders/forma-sdk';
 
 import { el } from './dom.js';
-
-/** What plays, in a few words: the track's title, else the source's name. */
-export function nowPlaying(status: MusicStatus): string {
-  if (status.state === 'stopped' || !status.source) return 'Nothing playing';
-  return status.title ?? status.source.name;
-}
 
 /** How long the card takes to leave: its exit animation (`song-out` in style.css). */
 const LEAVE_MS = 500;
