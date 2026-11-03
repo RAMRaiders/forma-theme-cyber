@@ -88,6 +88,10 @@ describe('the default theme', () => {
       expect(text('.system-panel .description')).toEqual(['An 8-bit console.'])
     );
     expect(text('.system-panel dd')).toEqual(['Ricoh 2A03']);
+    // The stage: its games as a readout, its place in the rail, a callout on the left.
+    expect(text('.system-panel .tally .count')).toEqual(['3']);
+    expect(text('.system-panel .tally .index')).toEqual(['01 / 05']);
+    expect(text('.system-panel .specs-left dt')).toEqual(['CPU']);
     expect(text('.system-panel .fact p')).toEqual(['First fact.']);
     await press('north');
     expect(text('.system-panel .fact p')).toEqual(['Second fact.']);

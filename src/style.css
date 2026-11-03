@@ -523,160 +523,484 @@ main {
   opacity: 1;
 }
 
-/* ---- A category's systems ------------------------------------------------ */
+/* ---- A category's systems: a rail of logos, and the selected one on a stage ------------ */
 
 .systems {
+  /* The maker's colour (set per system); everything on the stage is lit with it. */
+  --sys-rgb: 34 228 255;
+  --sys: rgb(var(--sys-rgb));
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2.1fr);
-  gap: 1.6rem;
+  grid-template-columns: 19rem minmax(0, 1fr);
+  gap: 1.4rem;
   height: 100%;
+  min-height: 0;
+}
+
+/* The rail: logos in a column that slides to keep the selected one in the middle. */
+.system-rail {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: calc(var(--radius) * 2);
+  background: var(--bg);
+  -webkit-mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
+  mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
 }
 
 .system-list {
   margin: 0;
-  padding: 0;
+  padding: 40vh 0.6rem;
   list-style: none;
-  overflow-y: auto;
-  scrollbar-width: none;
+  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
 }
 
 .system-list li {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.8rem;
-  padding: 0.55rem 0.9rem;
-  border-left: 0.2rem solid transparent;
-  background: rgb(4 6 12 / 55%);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.2rem 0.7rem;
+  height: 2.9rem;
+  padding: 0 0.9rem;
+  border: 1px solid transparent;
+  border-radius: calc(var(--radius) * 1.6);
+  opacity: 0.45;
+  transition:
+    opacity 140ms,
+    background-color 140ms,
+    border-color 140ms;
 }
 
 .system-list li + li {
-  margin-top: 0.2rem;
+  margin-top: 0.25rem;
 }
 
-.system-list li.selected {
-  border-left-color: var(--accent);
-  background: linear-gradient(90deg, rgb(255 46 136 / 30%), rgb(4 6 12 / 55%));
+.system-list .logo {
+  max-width: 100%;
+  max-height: 1.9rem;
+  justify-self: start;
+  object-fit: contain;
+  transform-origin: left center;
+  transition: transform 140ms;
 }
 
+/* With a logo, the name is for the selected one only, small, under it. */
 .system-list .name {
-  white-space: nowrap;
+  display: none;
   overflow: hidden;
+  font-size: 0.72rem;
+  color: rgb(var(--sys-rgb) / 90%);
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.system-list li.no-logo .name {
+  display: block;
+  grid-row: 1;
+  font-family: inherit;
+  font-size: 1rem;
+  letter-spacing: 0;
+  color: var(--fg);
 }
 
 .system-list .count {
+  grid-row: 1;
+  grid-column: 2;
   font-family: var(--mono);
+  font-size: 0.8rem;
   color: var(--muted);
 }
 
+.system-list li.selected {
+  height: 4rem;
+  border-color: rgb(var(--sys-rgb) / 70%);
+  background:
+    linear-gradient(90deg, rgb(var(--sys-rgb) / 26%), rgb(var(--sys-rgb) / 6%)), rgb(4 6 12 / 80%);
+  box-shadow:
+    0 0 1.4rem rgb(var(--sys-rgb) / 30%),
+    inset 0 0 0.8rem rgb(var(--sys-rgb) / 18%);
+  opacity: 1;
+}
+
+.system-list li.selected::before {
+  content: '';
+  position: absolute;
+  left: -0.6rem;
+  top: 20%;
+  bottom: 20%;
+  width: 0.22rem;
+  border-radius: 1rem;
+  background: var(--sys);
+  box-shadow: 0 0 0.8rem var(--sys);
+}
+
+.system-list li.selected .logo {
+  transform: scale(1.15);
+}
+
+.system-list li.selected:not(.no-logo) .name {
+  display: block;
+  grid-row: 2;
+  grid-column: 1 / -1;
+}
+
+.system-list li.selected .count {
+  color: var(--sys);
+}
+
+/* The stage. */
 .system-panel {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   grid-template-areas:
-    'heading media'
-    'byline media'
-    'description media'
-    'specs fact';
-  grid-auto-rows: max-content;
-  column-gap: 1.6rem;
-  align-content: start;
-  align-self: start;
-  max-height: 100%;
-  overflow-y: auto;
-  padding: 1.2rem 1.4rem;
-  border: 1px solid #1d3346;
-  border-radius: var(--radius);
-  background: var(--panel);
-  backdrop-filter: blur(2px);
-  scrollbar-width: none;
+    'intro tally'
+    'showcase showcase'
+    'fact fact';
+  gap: 0.6rem 2rem;
+  min-height: 0;
+  padding: 1.1rem 1.6rem 1rem;
+  overflow: hidden;
+  border: 1px solid rgb(var(--sys-rgb) / 28%);
+  border-radius: calc(var(--radius) * 2.4);
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 62%, rgb(var(--sys-rgb) / 22%), transparent 70%),
+    linear-gradient(180deg, rgb(6 10 20 / 94%), rgb(3 5 10 / 96%));
+  box-shadow:
+    0 0 2.4rem rgb(var(--sys-rgb) / 12%),
+    inset 0 1px 0 rgb(255 255 255 / 5%);
+  isolation: isolate;
+  transition:
+    border-color 220ms,
+    box-shadow 220ms;
+}
+
+/* The year, writ large and hollow behind everything. */
+.system-panel .year {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  font-family: var(--mono);
+  font-size: 19rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 2px rgb(var(--sys-rgb) / 13%);
+  pointer-events: none;
+}
+
+/* A neon grid floor running to the horizon, under the console. */
+.system-panel .floor {
+  position: absolute;
+  z-index: -1;
+  left: -20%;
+  right: -20%;
+  bottom: 3.6rem;
+  height: 42%;
+  background:
+    repeating-linear-gradient(90deg, rgb(var(--sys-rgb) / 55%) 0 2px, transparent 2px 4.2rem),
+    repeating-linear-gradient(0deg, rgb(var(--sys-rgb) / 55%) 0 2px, transparent 2px 4.2rem);
+  transform: perspective(26rem) rotateX(62deg);
+  transform-origin: 50% 100%;
+  -webkit-mask-image: linear-gradient(transparent 30%, #000 80%);
+  mask-image: linear-gradient(transparent 30%, #000 80%);
+  opacity: 0.8;
+}
+
+.system-panel .intro {
+  grid-area: intro;
+  min-width: 0;
 }
 
 .system-panel .heading {
-  grid-area: heading;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.1rem;
+  min-width: 0;
 }
 
 .system-panel .logo {
-  max-height: 3rem;
-  max-width: 45%;
+  max-height: 3.4rem;
+  max-width: 14rem;
   object-fit: contain;
+  filter: drop-shadow(0 0 0.5rem rgb(var(--sys-rgb) / 55%));
 }
 
 .system-panel .name {
   margin: 0;
   font-family: var(--mono);
-  font-size: 1.35rem;
-  color: var(--neon);
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow:
+    0 0 0.6rem rgb(var(--sys-rgb) / 80%),
+    0 0 1.6rem rgb(var(--sys-rgb) / 45%);
 }
 
 .system-panel .byline {
-  grid-area: byline;
-  margin: 0.4rem 0 0;
+  margin: 0.45rem 0 0;
   font-family: var(--mono);
   font-size: 0.85rem;
-  color: var(--accent);
+  letter-spacing: 0.06em;
+  color: var(--sys);
 }
 
-.system-panel .media {
-  grid-area: media;
+.system-panel .description {
+  display: -webkit-box;
+  max-width: 46rem;
+  margin: 0.6rem 0 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  color: rgb(223 246 255 / 82%);
+  line-height: 1.45;
+}
+
+/* How many games, as a big readout, and where this system is in the rail. */
+.system-panel .tally {
+  grid-area: tally;
+  display: grid;
+  justify-items: end;
+  align-content: start;
+  font-family: var(--mono);
+}
+
+.system-panel .tally .count {
+  font-size: 3.4rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 0 1.2rem rgb(var(--sys-rgb) / 70%);
+}
+
+.system-panel .tally .unit {
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--sys);
+}
+
+.system-panel .tally .index {
+  margin-top: 0.8rem;
+  padding: 0.15rem 0.6rem;
+  border: 1px solid rgb(var(--sys-rgb) / 40%);
+  border-radius: 1rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+/* The console between its callouts. */
+.system-panel .showcase {
+  grid-area: showcase;
+  display: grid;
+  grid-template-columns: minmax(0, 11.5rem) minmax(0, 1fr) minmax(0, 11.5rem);
+  align-items: center;
+  gap: 1rem;
+  min-height: 0;
+}
+
+.system-panel .console {
+  grid-column: 2;
   display: grid;
   place-items: center;
+  height: 100%;
   min-height: 0;
+  animation: console-in 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes console-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.2rem) scale(0.94);
+  }
 }
 
 .system-panel .photo {
   max-width: 100%;
-  max-height: 16rem;
+  width: 100%;
+  max-width: 34rem;
+  height: auto;
+  max-height: 100%;
+  filter: drop-shadow(0 0 1.6rem rgb(var(--sys-rgb) / 35%));
   object-fit: contain;
-  filter: drop-shadow(0 0.8rem 1.2rem rgb(0 0 0 / 70%));
+  /* Standing on the floor: a reflection under it, fading. */
+  -webkit-box-reflect: below 0.1rem linear-gradient(transparent 55%, rgb(0 0 0 / 38%));
 }
 
-.system-panel .description {
-  grid-area: description;
-  line-height: 1.5;
+.system-panel .art {
+  width: min(26rem, 100%);
+  color: var(--sys);
+}
+
+.system-panel .art svg {
+  display: block;
+  width: 100%;
+  filter: drop-shadow(0 0 0.5rem rgb(var(--sys-rgb) / 60%));
 }
 
 .system-panel .specs {
-  grid-area: specs;
   display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 0.25rem 0.9rem;
-  margin: 0.4rem 0 0;
-  font-size: 0.85rem;
+  gap: 1.3rem;
+  margin: 0;
+}
+
+.system-panel .specs-left {
+  grid-column: 1;
+  text-align: right;
+}
+
+.system-panel .specs-right {
+  grid-column: 3;
+}
+
+/* A callout: a label, a value, and a lead with a dot toward the console. */
+.system-panel .spec {
+  position: relative;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgb(var(--sys-rgb) / 45%);
+  animation: callout-in 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(120ms + var(--n, 0) * 70ms);
+}
+
+@keyframes callout-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--from, -0.8rem));
+  }
+}
+
+.system-panel .specs-right .spec {
+  --from: 0.8rem;
+}
+
+.system-panel .spec::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  width: 2.6rem;
+  height: 1px;
+  background: linear-gradient(90deg, rgb(var(--sys-rgb) / 70%), rgb(var(--sys-rgb) / 15%));
+}
+
+.system-panel .spec::before {
+  content: '';
+  position: absolute;
+  bottom: -0.2rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--sys);
+  box-shadow: 0 0 0.5rem var(--sys);
+}
+
+.system-panel .specs-left .spec::after {
+  left: 100%;
+}
+
+.system-panel .specs-left .spec::before {
+  left: calc(100% + 2.6rem);
+}
+
+.system-panel .specs-right .spec::after {
+  right: 100%;
+  transform: scaleX(-1);
+}
+
+.system-panel .specs-right .spec::before {
+  right: calc(100% + 2.6rem);
 }
 
 .system-panel dt {
   font-family: var(--mono);
-  color: var(--muted);
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
+  color: var(--sys);
 }
 
 .system-panel dd {
-  margin: 0;
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.3;
 }
 
+/* Curiosities, on a strip along the bottom, with the time left until the next. */
 .system-panel .fact {
   grid-area: fact;
-  align-self: start;
-  margin-top: 0.4rem;
-  padding: 0.8rem 1rem;
-  border-left: 0.2rem solid var(--neon);
-  background: rgb(34 228 255 / 8%);
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 1.2rem;
+  padding: 0.7rem 1rem;
+  overflow: hidden;
+  border: 1px solid rgb(var(--sys-rgb) / 25%);
+  border-radius: var(--radius);
+  background: linear-gradient(90deg, rgb(var(--sys-rgb) / 16%), transparent 45%), rgb(4 8 16 / 94%);
+}
+
+.system-panel .fact[hidden] {
+  display: none;
 }
 
 .system-panel .fact .label {
+  flex: none;
   font-family: var(--mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--neon);
+  color: var(--sys);
 }
 
 .system-panel .fact p {
-  margin: 0.4rem 0 0;
-  line-height: 1.45;
+  margin: 0;
+  line-height: 1.4;
+  animation: fact-in 300ms ease-out both;
+}
+
+@keyframes fact-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.4rem);
+  }
+}
+
+.system-panel .fact .timer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--sys);
+  box-shadow: 0 0 0.5rem var(--sys);
+  transform-origin: left;
+  animation: fact-timer var(--fact-ms, 10s) linear both;
+}
+
+@keyframes fact-timer {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+:root[data-motion='off'] .system-list,
+:root[data-motion='off'] .system-panel * {
+  transition: none !important;
+  animation: none !important;
+}
+
+:root[data-motion='off'] .system-panel .fact .timer {
+  display: none;
 }
 
 /* ---- Groups and branches ---------------------------------------------- */
@@ -1343,22 +1667,26 @@ kbd {
 /* A narrow screen: the list gives way to the system, and secondary details go. */
 @media (max-width: 960px), (max-aspect-ratio: 4/3) {
   .systems {
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr);
+    grid-template-columns: 11rem minmax(0, 1fr);
     gap: 1rem;
   }
 
-  .system-panel {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      'heading'
-      'byline'
-      'media'
-      'description'
-      'fact';
+  .system-panel .specs,
+  .system-panel .year,
+  .system-panel .tally .index {
+    display: none;
   }
 
-  .system-panel .specs {
-    display: none;
+  .system-panel .showcase {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .system-panel .console {
+    grid-column: 1;
+  }
+
+  .system-panel .tally .count {
+    font-size: 2.2rem;
   }
 
   .system-panel .photo {
