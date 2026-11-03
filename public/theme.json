@@ -1,7 +1,7 @@
 {
   "id": "cyber",
   "name": "Cyber",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "entry": "index.html",
   "sdk": "^1.5",
   "permissions": ["settings.system"],
