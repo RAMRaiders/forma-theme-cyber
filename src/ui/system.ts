@@ -109,6 +109,10 @@ export class SystemView {
   #restTimer: ReturnType<typeof setTimeout> | undefined;
   /** Curiosities move on by themselves; Interface → Rotate curiosities. */
   rotateFacts = true;
+  /** What is behind the screen (Look → Systems background); `board`: each system's own. */
+  look: 'neon' | 'grid' | 'plain' | 'board' = 'neon';
+  /** The category whose backdrop is up, in the looks that have one per category. */
+  #drawnFor: string | null = null;
   /** Which selection a pending info load belongs to: a quick scroll must not show a stale one. */
   #ticket = 0;
 
@@ -138,7 +142,17 @@ export class SystemView {
     this.#page = null;
     this.#selected = -1;
     this.#shown = -1;
+    this.#drawnFor = null;
     this.select(selected, true);
+  }
+
+  /** Look → Systems background changed: the screen as it is, in the new look, at once. */
+  refreshLook(): void {
+    this.#drawnFor = null;
+    if (this.#selected >= 0) {
+      this.#shown = -1;
+      this.select(this.#selected, true);
+    }
   }
 
   /**
@@ -196,6 +210,7 @@ export class SystemView {
 
   /** Stops the curiosity timer when the screen goes away. */
   hide(): void {
+    this.#drawnFor = null;
     clearInterval(this.#factTimer);
     clearTimeout(this.#boardTimer);
     clearTimeout(this.#restTimer);
@@ -214,6 +229,17 @@ export class SystemView {
 
   #drawBoard(system: CyberSystem, delay: number): void {
     clearTimeout(this.#boardTimer);
+    // The other looks have one backdrop per category, drawn once: nothing behind changes as
+    // the selection moves.
+    if (this.look !== 'board') {
+      const key = `${this.look}:${system.category}`;
+      if (this.#drawnFor === key) return;
+      this.#drawnFor = key;
+      return this.backdrop(
+        this.look === 'neon' ? circuitSvg(`category:${system.category}`, [], 0) : ''
+      );
+    }
+    this.#drawnFor = null;
     const chips = this.#info?.chips ?? [];
     const draw = () => this.backdrop(circuitSvg(system.summary.name, chips));
     if (delay === 0) draw();
@@ -343,7 +369,12 @@ export class SystemView {
     parts.push(['fact', this.#factStrip()]);
     const apply = () => {
       if (ticket !== this.#ticket) return;
-      this.root.style.setProperty('--sys', `rgb(${systemRgb(maker, system.category)})`);
+      // The category's colour, as on its tile; the circuit-board look keeps the maker's. On the
+      // page root: the backdrop, outside this view, takes it too.
+      const rgb =
+        this.look === 'board' ? systemRgb(maker, system.category) : CATEGORY_RGB[system.category];
+      document.documentElement.style.setProperty('--sys', `rgb(${rgb})`);
+      document.documentElement.style.setProperty('--sys-rgb', rgb);
       this.#shown = this.#selected;
       this.#turnPage(parts, animate);
       this.#scrollOverflow();

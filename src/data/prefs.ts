@@ -5,6 +5,11 @@ export interface Prefs {
   textSize: 'small' | 'normal' | 'large';
   /** The circuit board behind the screens. */
   board: 'on' | 'dim' | 'off';
+  /**
+   * A category's systems screen: in the category's neon (its circuit, glowing, as on its tile),
+   * a neon grid to the horizon, plain, or each system's own circuit board in its maker's colour.
+   */
+  systemsLook: 'neon' | 'grid' | 'plain' | 'board';
   /** Pulsing traces, loaders, settling tiles. Off also when the system asks for less motion. */
   motion: boolean;
   /** Game preview videos in the list. */
@@ -18,6 +23,7 @@ export interface Prefs {
 export const DEFAULT_PREFS: Prefs = {
   textSize: 'normal',
   board: 'on',
+  systemsLook: 'neon',
   motion: true,
   previews: true,
   rotateFacts: true,
@@ -76,5 +82,6 @@ export async function loadPrefs(forma: Forma): Promise<Prefs> {
 export function applyPrefs(prefs: Prefs, root: HTMLElement = document.documentElement): void {
   root.dataset.textSize = prefs.textSize;
   root.dataset.board = prefs.board;
+  root.dataset.systemsLook = prefs.systemsLook;
   root.dataset.motion = prefs.motion ? 'on' : 'off';
 }

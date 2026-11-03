@@ -96,7 +96,9 @@ describe('the default theme', () => {
     expect(text('.system-panel > :not(.leaving) > .fact:not(.leaving) p')).toEqual([
       'Second fact.'
     ]);
-    expect(root.querySelector('.backdrop .circuit text.part')?.textContent).toBe('Ricoh 2A03');
+    // Neon, the default look: the category's own circuit behind, without the system's chips.
+    expect(root.querySelector('.backdrop .circuit')).not.toBeNull();
+    expect(root.querySelector('.backdrop .circuit text.part')).toBeNull();
     expect(text('.hint')).toContain('AGames');
 
     // A system without info.json still shows, from Forma's data.

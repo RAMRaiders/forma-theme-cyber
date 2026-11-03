@@ -348,6 +348,10 @@ export class App {
     applyPrefs(this.#prefs);
     this.#games.previews = this.#prefs.previews;
     this.#systemView.rotateFacts = this.#prefs.rotateFacts;
+    if (this.#systemView.look !== this.#prefs.systemsLook) {
+      this.#systemView.look = this.#prefs.systemsLook;
+      if (this.#mode === 'systems') this.#systemView.refreshLook();
+    }
   }
 
   async #settingChanged({ scope, key, value }: SettingsChanged): Promise<void> {

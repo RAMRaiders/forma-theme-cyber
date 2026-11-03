@@ -1,7 +1,7 @@
 {
   "id": "cyber",
   "name": "Cyber",
-  "version": "0.7.8",
+  "version": "0.7.9",
   "entry": "index.html",
   "sdk": "^1.14",
   "permissions": ["settings.system"],
@@ -15,9 +15,18 @@
       "group": "Look",
       "type": "choice",
       "choices": [
-        { "value": "small", "label": "Small" },
-        { "value": "normal", "label": "Normal" },
-        { "value": "large", "label": "Large" }
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
       ],
       "default": "normal"
     },
@@ -28,11 +37,46 @@
       "group": "Look",
       "type": "choice",
       "choices": [
-        { "value": "on", "label": "On" },
-        { "value": "dim", "label": "Dimmed" },
-        { "value": "off", "label": "Off" }
+        {
+          "value": "on",
+          "label": "On"
+        },
+        {
+          "value": "dim",
+          "label": "Dimmed"
+        },
+        {
+          "value": "off",
+          "label": "Off"
+        }
       ],
       "default": "on"
+    },
+    {
+      "key": "systemsLook",
+      "label": "Systems background",
+      "description": "Behind a category’s systems",
+      "group": "Look",
+      "type": "choice",
+      "choices": [
+        {
+          "value": "neon",
+          "label": "Neon"
+        },
+        {
+          "value": "grid",
+          "label": "Neon grid"
+        },
+        {
+          "value": "plain",
+          "label": "Plain"
+        },
+        {
+          "value": "board",
+          "label": "Circuit board"
+        }
+      ],
+      "default": "neon"
     },
     {
       "key": "motion",
@@ -65,10 +109,22 @@
       "group": "Sorting",
       "type": "choice",
       "choices": [
-        { "value": "games", "label": "Most games first" },
-        { "value": "name", "label": "By name" },
-        { "value": "year", "label": "Oldest first" },
-        { "value": "maker", "label": "By maker" }
+        {
+          "value": "games",
+          "label": "Most games first"
+        },
+        {
+          "value": "name",
+          "label": "By name"
+        },
+        {
+          "value": "year",
+          "label": "Oldest first"
+        },
+        {
+          "value": "maker",
+          "label": "By maker"
+        }
       ],
       "default": "games"
     }
