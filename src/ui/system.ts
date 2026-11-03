@@ -17,7 +17,7 @@ const LEAVE_MS = 220;
  * The stage changes once the selection rests this long, so a quick run down the rail moves the
  * rail alone, without the stage flickering through every system on the way.
  */
-const REST_MS = 60;
+const REST_MS = 170;
 /**
  * Holding a direction: the stage waits this long after the last step, so only the rail moves
  * while the list runs (a Pi takes about a frame and a half to draw a new stage).
@@ -95,6 +95,8 @@ export class SystemView {
   readonly #list = el('ul', { class: 'system-list', role: 'listbox' });
   readonly #panel = el('section', { class: 'system-panel', 'aria-live': 'polite' });
   readonly #slots = new Map<Slot, HTMLElement>();
+  /** The stage showing: the slots' parent. */
+  #page: HTMLElement | null = null;
   #rows: HTMLElement[] = [];
   #systems: CyberSystem[] = [];
   #selected = -1;
@@ -133,6 +135,7 @@ export class SystemView {
     this.#list.replaceChildren(...this.#rows);
     this.#panel.replaceChildren(el('div', { class: 'floor', 'aria-hidden': 'true' }));
     this.#slots.clear();
+    this.#page = null;
     this.#selected = -1;
     this.#shown = -1;
     this.select(selected, true);
@@ -198,13 +201,14 @@ export class SystemView {
     clearTimeout(this.#restTimer);
   }
 
-  /** The rail slides so the selected logo sits in its middle (a transform: cheap on a Pi). */
+  /**
+   * The rail slides so the selected logo sits in its middle, under the selection bar, at the
+   * ends of the list too (a transform: the compositor's work, cheap on a Pi).
+   */
   #centre(row: HTMLElement): void {
     const rail = this.#rail.clientHeight;
     if (rail === 0) return;
-    const middle = row.offsetTop + row.offsetHeight / 2;
-    const max = Math.max(0, this.#list.scrollHeight - rail);
-    const y = Math.min(max, Math.max(0, middle - rail / 2));
+    const y = row.offsetTop + row.offsetHeight / 2 - rail / 2;
     this.#list.style.transform = `translateY(${-y}px)`;
   }
 
@@ -237,7 +241,7 @@ export class SystemView {
         next.addEventListener('animationend', done);
       }
       if (old) old.after(next);
-      else this.#panel.append(next);
+      else this.#page?.append(next);
       this.#slots.set(slot, next);
     } else this.#slots.delete(slot);
     if (!old) return;
@@ -250,6 +254,30 @@ export class SystemView {
       width: `${old.offsetWidth}px`,
       height: `${old.offsetHeight}px`
     });
+    old.classList.remove('entering');
+    old.classList.add('leaving');
+    setTimeout(() => old.remove(), LEAVE_MS);
+  }
+
+  /**
+   * Puts a new page on the stage with `parts`. With `animate` it fades in over the last, which
+   * fades out: one blend of two layers, each drawn once.
+   */
+  #turnPage(parts: [Slot, HTMLElement | null][], animate: boolean): void {
+    const old = this.#page;
+    for (const gone of this.#panel.querySelectorAll('.stage-page.leaving')) gone.remove();
+    const page = el('div', { class: animate ? 'stage-page entering' : 'stage-page' });
+    this.#slots.clear();
+    for (const [slot, part] of parts) {
+      if (!part) continue;
+      part.classList.add(`slot-${slot}`);
+      page.append(part);
+      this.#slots.set(slot, part);
+    }
+    this.#panel.append(page);
+    this.#page = page;
+    if (!old) return;
+    if (!animate) return old.remove();
     old.classList.remove('entering');
     old.classList.add('leaving');
     setTimeout(() => old.remove(), LEAVE_MS);
@@ -317,7 +345,7 @@ export class SystemView {
       if (ticket !== this.#ticket) return;
       this.root.style.setProperty('--sys', `rgb(${systemRgb(maker, system.category)})`);
       this.#shown = this.#selected;
-      for (const [slot, part] of parts) this.#swap(slot, part, animate);
+      this.#turnPage(parts, animate);
       this.#scrollOverflow();
       this.#scheduleFact();
     };

@@ -595,40 +595,60 @@ main {
   mask-image: linear-gradient(transparent, #000 16%, #000 84%, transparent);
 }
 
+/* The selection: a bar fixed in the rail's middle, the logos sliding under it. Moving is then
+   only the list's slide, which the Pi's compositor does by itself; no row is redrawn. */
+.system-rail::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  left: 0.6rem;
+  right: 0.6rem;
+  top: 50%;
+  height: 3.8rem;
+  translate: 0 -50%;
+  border: 1px solid var(--sys-70);
+  border-radius: calc(var(--radius) * 1.6);
+  background: linear-gradient(90deg, var(--sys-10), var(--sys-30), var(--sys-10));
+  box-shadow: 0 0 1.4rem var(--sys-30);
+}
+
+.system-rail::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 2.2rem;
+  width: 0.22rem;
+  translate: 0 -50%;
+  border-radius: 1rem;
+  background: var(--sys);
+}
+
 .system-list {
+  position: relative;
+  z-index: 1;
   margin: 0;
-  padding: 40vh 0.6rem;
+  padding: 0 0.6rem;
   list-style: none;
-  transition: transform 240ms ease-out;
+  transition: transform 180ms ease-out;
   will-change: transform;
 }
 
 .system-list li {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0.2rem 0.7rem;
-  /* Every row the same height, selected or not: nothing in the rail shifts as it moves. */
-  height: 3.4rem;
-  padding: 0 0.9rem;
-  border: 1px solid transparent;
-  border-radius: calc(var(--radius) * 1.6);
-  opacity: 0.5;
-  transition:
-    opacity 180ms,
-    background-color 180ms,
-    border-color 180ms;
+  place-items: center;
+  /* Every row the same height: the list's slide is all that moves. */
+  height: 3.8rem;
+  padding: 0 1.2rem;
+  opacity: 0.45;
 }
 
-.system-list li + li {
-  margin-top: 0.25rem;
-}
-
+/* Each logo centred in the same box, as large as it fits: wide ones fill the width, tall
+   ones the height. */
 .system-list .logo {
-  max-width: min(100%, 12rem);
-  max-height: 2rem;
-  justify-self: start;
+  width: 100%;
+  height: 2.5rem;
   object-fit: contain;
 }
 
@@ -656,7 +676,7 @@ main {
 
 .system-list li.no-logo .name {
   display: block;
-  grid-row: 1;
+  max-width: 100%;
   font-family: inherit;
   font-size: 1rem;
   letter-spacing: 0;
@@ -664,55 +684,18 @@ main {
 }
 
 .system-list .count {
-  grid-row: 1;
-  grid-column: 2;
-  font-family: var(--mono);
-  font-size: 0.8rem;
-  color: var(--muted);
-  text-shadow: 0 0 0.4rem #000;
+  display: none;
 }
 
 .system-list li.selected {
-  border-color: var(--sys-70);
-  background: linear-gradient(90deg, var(--sys-30), var(--sys-10));
-  box-shadow:
-    0 0 1.4rem var(--sys-30),
-    inset 0 0 0.8rem var(--sys-20);
   opacity: 1;
-}
-
-.system-list li.selected::before {
-  content: '';
-  position: absolute;
-  left: -0.6rem;
-  top: 20%;
-  bottom: 20%;
-  width: 0.22rem;
-  border-radius: 1rem;
-  background: var(--sys);
-  box-shadow: 0 0 0.8rem var(--sys);
-}
-
-.system-list li.selected .count {
-  color: var(--sys);
 }
 
 /* The stage: open, no box; a soft shade behind the middle keeps the words readable while the
    board shows round it. */
 .system-panel {
   position: relative;
-  display: grid;
-  /* Fixed rows and columns: a longer story, a bigger count or a two-line curiosity never moves
-     the console; what does not fit scrolls in its own box. */
-  grid-template-columns: minmax(0, 1fr) 10rem;
-  grid-template-rows: 10.4rem minmax(0, 1fr) 3.6rem;
-  grid-template-areas:
-    'intro tally'
-    'showcase showcase'
-    'fact fact';
-  gap: 0.6rem 2rem;
   min-height: 0;
-  padding: 1.1rem 1.6rem 1rem;
   overflow: hidden;
   isolation: isolate;
   background:
@@ -744,6 +727,25 @@ main {
   pointer-events: none;
   /* Its own layer: drawn once per system, not again whenever something over it changes. */
   will-change: transform;
+}
+
+/* One system's stage, a page over the floor. Always on its own layer: moving to the next
+   system draws the new page once and blends the two, nothing else is redrawn. */
+.system-panel .stage-page {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  /* Fixed rows and columns: a longer story, a bigger count or a two-line curiosity never moves
+     the console; what does not fit scrolls in its own box. */
+  grid-template-columns: minmax(0, 1fr) 10rem;
+  grid-template-rows: 10.4rem minmax(0, 1fr) 3.6rem;
+  grid-template-areas:
+    'intro tally'
+    'showcase showcase'
+    'fact fact';
+  gap: 0.6rem 2rem;
+  padding: 1.1rem 1.6rem 1rem;
+  will-change: opacity;
 }
 
 .system-panel .intro {
@@ -855,8 +857,9 @@ main {
 }
 
 .system-panel .photo {
-  width: 100%;
-  max-width: 34rem;
+  /* At most its own size: a picture stretched past it goes soft. */
+  width: auto;
+  max-width: min(100%, 30rem);
   height: auto;
   max-height: 100%;
   object-fit: contain;

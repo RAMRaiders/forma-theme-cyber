@@ -125,9 +125,11 @@ async function carbonPicture(system) {
     namesOf(system).flatMap((n) => [`${n}.png`, `${n}.jpg`])
   );
   if (!file) return null;
+  // Lossless: carbon's pictures are small (424 px across) and shown at their own size, where
+  // lossy compression showed.
   await sharp(join(carbon, 'consoles', file))
     .resize({ width: PICTURE_MAX, height: PICTURE_MAX, fit: 'inside', withoutEnlargement: true })
-    .webp({ quality: 88, alphaQuality: 100 })
+    .webp({ lossless: true })
     .toFile(join(OUT, system.id, 'photo.webp'));
   return { kind: 'cutout', source: `carbon:${file}` };
 }
