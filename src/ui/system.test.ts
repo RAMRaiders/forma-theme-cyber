@@ -16,13 +16,10 @@ describe('the colour a system lights its screen with', () => {
 });
 
 describe('systemColours', () => {
-  it('gives each system its own colours, the same each time', () => {
-    const snes = systemColours('snes', 'Nintendo', 'consoles');
-    expect(systemColours('snes', 'Nintendo', 'consoles')).toEqual(snes);
-    expect(systemColours('n64', 'Nintendo', 'consoles')[0]).not.toBe(snes[0]);
-    expect(snes[1]).not.toBe(snes[0]);
-    for (const c of [...snes, ...systemColours('wsc', 'Bandai', 'handhelds')]) {
-      expect(c).toMatch(/^\d{1,3} \d{1,3} \d{1,3}$/);
-    }
+  it('gives neighbours in a list clearly different colours', () => {
+    const hues = [0, 1, 2, 3, 4].map((i) => systemColours(i, 'consoles')[0]);
+    expect(new Set(hues).size).toBe(5);
+    expect(systemColours(2, 'consoles')).toEqual(systemColours(2, 'consoles'));
+    for (const c of systemColours(7, 'arcade')) expect(c).toMatch(/^\d{1,3} \d{1,3} \d{1,3}$/);
   });
 });

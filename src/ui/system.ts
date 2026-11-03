@@ -79,13 +79,6 @@ export function systemRgb(maker: string | undefined | null, category: CategoryId
   return known?.[1] ?? CATEGORY_RGB[category];
 }
 
-/** A stable number for a name: the same system always gets the same shade. */
-function nameHash(name: string): number {
-  let h = 2166136261;
-  for (const c of name) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
-  return h >>> 0;
-}
-
 function rgbToHue(rgb: string): number {
   const [r, g, b] = rgb.split(' ').map((v) => Number(v) / 255) as [number, number, number];
   const max = Math.max(r, g, b);
@@ -105,22 +98,14 @@ function neon(hue: number): string {
 }
 
 /**
- * A system's own neon colours, `[main, accent]`: a known maker's systems in shades around the
- * maker's colour, each its own; any other system its own hue. The accent sits a little round
- * the colour wheel, for the second glow.
+ * A system's own neon colours, `[main, accent]`, by its place in the list: each next one a
+ * golden angle (about 137°) round the colour wheel from the last, so neighbours are never
+ * alike and a whole category runs through the spectrum. The accent sits a little further
+ * round, for the second glow. The category's colour is the first.
  */
-export function systemColours(
-  name: string,
-  maker: string | undefined | null,
-  category: CategoryId
-): [string, string] {
-  const h = nameHash(name);
-  const known = maker ? MAKER_RGB.find(([re]) => re.test(maker.trim())) : undefined;
-  const hue = known
-    ? rgbToHue(known[1]) + ((h % 61) - 30)
-    : rgbToHue(CATEGORY_RGB[category]) + (h % 360);
-  const main = (hue + 360) % 360;
-  return [neon(main), neon((main + 40 + (h % 30)) % 360)];
+export function systemColours(index: number, category: CategoryId): [string, string] {
+  const main = (rgbToHue(CATEGORY_RGB[category]) + index * 137.508) % 360;
+  return [neon(main), neon((main + 50) % 360)];
 }
 
 /** The parts of the stage that change together when the selection moves. */
@@ -415,7 +400,7 @@ export class SystemView {
       const [rgb, accent] =
         this.look === 'board'
           ? [systemRgb(maker, system.category), systemRgb(maker, system.category)]
-          : systemColours(system.summary.name, maker, system.category);
+          : systemColours(this.#selected, system.category);
       const root = document.documentElement.style;
       root.setProperty('--sys', `rgb(${rgb})`);
       root.setProperty('--sys-rgb', rgb);
