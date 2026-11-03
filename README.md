@@ -39,3 +39,13 @@ npm run verify   # format, lint, typecheck, tests, build, unused code
 
 To try a build on a Batocera box, copy `dist/` to `/userdata/themes-forma/cyber/` and pick
 **Cyber** in Forma.
+
+## Releasing to Forma
+
+Forma's build downloads Cyber from this repository's releases. To ship a new Cyber, bump the
+version in `public/theme.json` and `package.json`, commit and push, then:
+
+```sh
+scripts/release.sh                        # builds, packs dist/ as cyber-<version>.tar.gz, releases v<version>
+../Forma/scripts/pin-cyber.sh <version>   # in Forma: records the version, commit and checksum
+```
