@@ -19,8 +19,8 @@ export interface Shortcut {
   soon?: boolean;
 }
 
-/** Logos along the bottom of a tile. */
-const LOGOS = 4;
+/** The selected tile's logos run past at this speed, in px per second, to show them all. */
+const MARQUEE_PX_S = 45;
 
 /**
  * Cyber's top level: one tile per category that has games, then a row of shortcuts under them.
@@ -71,6 +71,7 @@ export class HomeView {
     t.classList.add('selected');
     t.setAttribute('aria-selected', 'true');
     t.scrollIntoView({ block: 'nearest' });
+    marquee(t);
   }
 
   /** Columns as laid out right now, for up/down movement. */
@@ -80,8 +81,38 @@ export class HomeView {
   }
 }
 
+/**
+ * A selected tile's logos, when more than fit, run past in a loop: the row is doubled and slides
+ * one copy's width, so its end flows back into its start. Only a transform moves.
+ */
+function marquee(tile: HTMLElement): void {
+  const row = tile.querySelector<HTMLElement>('.logos');
+  const track = row?.querySelector<HTMLElement>('.logos-track');
+  if (!row || !track || track.dataset.looped) return;
+  // Measured once its logos are in (at start-up they may still be loading).
+  const loading = [...track.querySelectorAll('img')].filter((img) => !img.complete);
+  if (loading.length) {
+    const loaded = (img: HTMLImageElement) =>
+      new Promise((done) => {
+        img.addEventListener('load', done, { once: true });
+        img.addEventListener('error', done, { once: true });
+      });
+    void Promise.all(loading.map(loaded)).then(() => {
+      if (tile.classList.contains('selected')) marquee(tile);
+    });
+    return;
+  }
+  const width = track.scrollWidth;
+  if (width <= row.clientWidth + 1) return;
+  track.dataset.looped = '1';
+  track.append(...[...track.children].map((logo) => logo.cloneNode(true)));
+  track.style.setProperty('--marquee-w', `${width}px`);
+  track.style.setProperty('--marquee-s', `${(width / MARQUEE_PX_S).toFixed(1)}s`);
+}
+
 const image = (src: string, cls: string) => {
-  const img = el('img', { class: cls, src, alt: '', loading: 'lazy', decoding: 'async' });
+  // Not lazy: a logo coming into the row as it runs must already be there.
+  const img = el('img', { class: cls, src, alt: '', decoding: 'async' });
   img.addEventListener('error', () => img.remove());
   return img;
 };
@@ -103,13 +134,17 @@ function tile({ category, systems }: Tile): HTMLElement {
     el('div', { class: 'halo' }),
     art
   );
+  // Every system's logo: the first few show, and the selected tile runs through them all.
   const logos = el(
     'div',
     { class: 'logos', 'aria-hidden': 'true' },
-    ...systems
-      .flatMap((s) => (s.logoSmall ? [s.logoSmall] : []))
-      .slice(0, LOGOS)
-      .map((logo) => image(logo, 'logo'))
+    el(
+      'div',
+      { class: 'logos-track' },
+      ...systems
+        .flatMap((s) => (s.logoSmall ? [s.logoSmall] : []))
+        .map((logo) => image(logo, 'logo'))
+    )
   );
   return el(
     'div',

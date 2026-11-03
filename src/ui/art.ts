@@ -86,32 +86,21 @@ const ART: Record<Category['id'], string> = {
     <path d="M46 108h148l10 22H36z" fill="currentColor" fill-opacity=".12"/>
     <path d="M56 116h128M50 124h140" stroke="${WHITE}" stroke-width="2" stroke-dasharray="6 4"/>`),
 
-  // An arcade cabinet in three-quarter view: a lit marquee, a bezel with an invader on the
-  // screen, the control panel jutting out with a ball-top stick and buttons, a coin door.
-  arcade: svg(
-    `
-    <path d="M74 20l18-8v118l-18-4z" fill="currentColor" fill-opacity=".22"/>
-    <path d="M74 20l18-8M74 126l18 4M74 20v106"/>
-    <path d="M78 52l10-4M78 60l10-4" stroke="${PINK}" stroke-width="2"/>
-    <path d="M92 12h58v20l-6 6v38l12 16v38H92z" fill="currentColor" fill-opacity=".1"/>
-    <rect x="96" y="15" width="50" height="13" rx="2" fill="${PINK}" fill-opacity=".45" stroke="${PINK}"/>
-    <text x="121" y="24.5" fill="${WHITE}" stroke="none" text-anchor="middle" font-family="DejaVu Sans Mono, monospace" font-size="8" font-weight="700" letter-spacing="1">ARCADE</text>
-    <rect x="98" y="38" width="44" height="36" rx="3" stroke="${WHITE}"/>
-    <rect x="102" y="42" width="36" height="28" rx="1" fill="currentColor" fill-opacity=".25" stroke="none"/>
-    ${invader(107.5, 44.5, 2.3, CYAN)}
-    <path d="M116 68h8v-2h-2v-2h-4v2h-2z" fill="${PINK}" stroke="none"/>
-    <path d="M92 76h52l12 16H92z" fill="currentColor" fill-opacity=".2"/>
+  // An arcade cabinet, flat from the front: a lit marquee, an invader on the screen, the
+  // control panel with a stick and buttons, a coin door.
+  arcade: svg(`
+    <path d="M90 12h60v20l-4 6v40l10 10v40H84V88l10-10V38l-4-6z" fill="currentColor" fill-opacity=".1"/>
+    <rect x="95" y="16" width="50" height="12" rx="2" fill="${PINK}" fill-opacity=".5" stroke="${PINK}"/>
+    <rect x="100" y="40" width="40" height="32" rx="3" stroke="${WHITE}"/>
+    ${invader(109, 47, 2, CYAN)}
+    <path d="M84 88h72" />
     <path d="M104 86v-6" stroke="${WHITE}" stroke-width="2.5"/>
-    <circle cx="104" cy="78" r="3.6" fill="${PINK}" stroke="none"/>
-    <circle cx="122" cy="86" r="2.8" fill="${CYAN}" stroke="none"/>
-    <circle cx="130" cy="84" r="2.8" fill="${CYAN}" stroke="none"/>
-    <circle cx="138" cy="86" r="2.8" fill="${CYAN}" stroke="none"/>
-    <circle cx="146" cy="88" r="2.2" fill="${WHITE}" stroke="none"/>
-    <rect x="110" y="100" width="26" height="18" rx="2" stroke-width="2.5"/>
-    <path d="M117 105v6M129 105v6" stroke="${PINK}" stroke-width="2.5"/>
-    <path d="M96 124h56" stroke-width="2"/>`,
-    5
-  ),
+    <circle cx="104" cy="79" r="3.5" fill="${PINK}" stroke="none"/>
+    <circle cx="124" cy="83" r="3" fill="${CYAN}" stroke="none"/>
+    <circle cx="134" cy="83" r="3" fill="${CYAN}" stroke="none"/>
+    <circle cx="144" cy="83" r="3" fill="${CYAN}" stroke="none"/>
+    <rect x="108" y="100" width="24" height="16" rx="2" stroke-width="2.5"/>
+    <path d="M116 105v6M124 105v6" stroke="${PINK}" stroke-width="2.5"/>`),
 
   // A homebrew cartridge on its board, the code that made it floating up.
   virtual: svg(`
