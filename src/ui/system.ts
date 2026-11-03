@@ -2,20 +2,24 @@ import type { CategoryId, CyberSystem, InfoStore, SystemInfo } from '../data/cat
 import { categoryArt } from './art.js';
 import { circuitSvg } from './circuit.js';
 import { el } from './dom.js';
+import { preload, ready } from './preload.js';
 
 /** A curiosity stays this long before the next one. */
 const FACT_MS = 10_000;
-/** The board follows the selection once it rests: holding a direction does not redraw it. */
-const BOARD_MS = 150;
+/**
+ * The board follows the selection once it has rested a while: a new board is a full-screen
+ * drawing, costly on a Pi, so moving through the rail does not redraw it at every step.
+ */
+const BOARD_MS = 450;
 /** How long what was shown takes to fade, as the next system comes in. */
 const LEAVE_MS = 220;
 /**
  * The stage changes once the selection rests this long, so a quick run down the rail moves the
  * rail alone, without the stage flickering through every system on the way.
  */
-const REST_MS = 120;
-/** At most this long waiting for the next system's pictures before showing it anyway. */
-const DECODE_MS = 350;
+const REST_MS = 60;
+/** At most this long waiting for the next system's pictures (when not preloaded yet). */
+const DECODE_MS = 250;
 /** Text too long for its box scrolls through at this speed, in px per second. */
 const SCROLL_PX_S = 16;
 
@@ -96,8 +100,6 @@ export class SystemView {
   #factTimer: ReturnType<typeof setInterval> | undefined;
   #boardTimer: ReturnType<typeof setTimeout> | undefined;
   #restTimer: ReturnType<typeof setTimeout> | undefined;
-  /** Pictures already asked for, so neighbours are fetched once. */
-  readonly #preloaded = new Set<string>();
   /** Curiosities move on by themselves; Interface → Rotate curiosities. */
   rotateFacts = true;
   /** Which selection a pending info load belongs to: a quick scroll must not show a stale one. */
@@ -160,16 +162,15 @@ export class SystemView {
     else this.#restTimer = setTimeout(load, REST_MS);
   }
 
-  /** The pictures of the systems either side, fetched ahead so they are ready when reached. */
+  /** The pictures of the systems either side go first in the preload queue. */
   #preload(index: number): void {
-    for (const n of [index + 1, index - 1, index + 2, index - 2]) {
-      const system = this.#systems[n];
-      for (const url of [system?.photo, system?.logo]) {
-        if (!url || this.#preloaded.has(url)) continue;
-        this.#preloaded.add(url);
-        new Image().src = url;
-      }
-    }
+    preload(
+      [index + 1, index - 1, index + 2, index - 2].flatMap((n) => {
+        const system = this.#systems[n];
+        return system ? [system.photo, system.logo] : [];
+      }),
+      true
+    );
   }
 
   /** The next curiosity, now (Y), instead of waiting. */
@@ -364,6 +365,10 @@ function scroller<K extends 'p' | 'dd'>(tag: K, text: string, cls = ''): HTMLEle
 
 /** Waits for pictures to be decoded, so they show at once; not longer than `DECODE_MS`. */
 function settle(images: HTMLImageElement[]): Promise<void> {
+  // Preloaded at start-up: nothing to wait for.
+  if (images.every((img) => ready(img.src) || ready(img.getAttribute('src') ?? ''))) {
+    return Promise.resolve();
+  }
   const decoded = images.map((img) =>
     typeof img.decode === 'function' ? img.decode().catch(() => undefined) : Promise.resolve()
   );

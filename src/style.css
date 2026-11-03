@@ -130,7 +130,8 @@ main {
 .backdrop .board {
   position: absolute;
   inset: 0;
-  animation: board-in 600ms ease both;
+  animation: board-in 350ms ease-out both;
+  will-change: opacity;
 }
 
 .backdrop .board.fading {
@@ -551,7 +552,8 @@ main {
 
 /* ---- A category's systems: a rail of logos, and the selected one on an open stage -------- */
 
-/* The maker's colour, registered so it glides from one system's to the next. */
+/* The maker's colour, as a colour, so the tints below can mix it. It changes at once: animating
+   it repaints every glow on the screen each frame, too slow on a Pi. */
 @property --sys {
   syntax: '<color>';
   inherits: true;
@@ -565,7 +567,6 @@ main {
   gap: 1.4rem;
   height: 100%;
   min-height: 0;
-  transition: --sys 450ms ease;
 }
 
 /* How the stage tints things: the maker's colour at a strength. */
@@ -872,9 +873,8 @@ main {
     radial-gradient(closest-side, var(--sys-45), transparent);
 }
 
-.system-panel .cutout .photo {
-  filter: drop-shadow(0 0 1.4rem var(--sys-30));
-}
+/* No filter on the photo itself: a glow there is redrawn whenever the photo changes, slowly on
+   a Pi; the lit floor under it gives the glow instead. */
 
 /* A photo with its own background: in a neon frame, turned a little toward the middle, with
    scanlines over it like a monitor's. */
@@ -1145,18 +1145,6 @@ main {
 }
 
 @keyframes showcase-in {
-  from {
-    opacity: 0;
-  }
-}
-
-/* The callouts follow the console in, one after another. */
-.system-panel .entering .spec {
-  animation: callout-in 300ms ease-out both;
-  animation-delay: calc(80ms + var(--n, 0) * 40ms);
-}
-
-@keyframes callout-in {
   from {
     opacity: 0;
   }

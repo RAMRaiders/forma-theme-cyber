@@ -30,6 +30,7 @@ import { GamesView } from './ui/games.js';
 import { HomeView, type Shortcut, type Tile } from './ui/home.js';
 import { loader } from './ui/loader.js';
 import { SongCard } from './ui/music.js';
+import { preload } from './ui/preload.js';
 import { SystemView } from './ui/system.js';
 
 /** One level of the path, and where the selection was, so going back returns to it. */
@@ -49,7 +50,7 @@ const LOADER_DELAY_MS = 150;
  */
 const CYBER_VIEW = 'systems';
 /** How long one circuit board takes to give way to the next. */
-const BOARD_FADE_MS = 600;
+const BOARD_FADE_MS = 400;
 /** A shortcut's level: its path starts with this, then the Forma view it opens. */
 const SHORTCUT = '@';
 /** The buttons under the categories: all but magazines open Forma's views. */
@@ -273,6 +274,8 @@ export class App {
         this.infos.art()
       ]);
       this.#groups = group(systems, infos, this.#prefs.systemsSort, arts);
+      // Every system's logo and picture, decoded in the background, ready for the rail.
+      preload(this.#groups.flatMap((g) => g.systems.flatMap((s) => [s.logo, s.photo])));
       const level = this.#level;
       if (this.#stack.length === 1) {
         this.#mode = 'home';
