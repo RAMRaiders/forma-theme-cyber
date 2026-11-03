@@ -1,0 +1,101 @@
+{
+  "//": "Pictures from Wikimedia Commons for systems Batocera's carbon theme has none for. cut: a studio shot on a plain background, cut out like carbon's; otherwise shown framed.",
+  "pictures": {
+    "bk": {
+      "file": "Bk0010-01-sideview.jpg",
+      "cut": true
+    },
+    "cassettevision": {
+      "file": "Epoch-Cassette-Vision-Console.jpg",
+      "cut": true
+    },
+    "ctvboy": {
+      "file": "Compact_Vision_TV_Boy,_Gakken_01.png",
+      "cut": true
+    },
+    "dice": {
+      "file": "Signed_Pong_Cabinet.jpg",
+      "cut": false
+    },
+    "dragon64": {
+      "file": "Dragon_32.jpg",
+      "cut": true
+    },
+    "loopy": {
+      "file": "Casio-Loopy-Console-Set.jpg",
+      "cut": true
+    },
+    "mc10": {
+      "file": "TRS-80_MC-10_Microcomputer.jpg",
+      "cut": false
+    },
+    "mz2000": {
+      "file": "Sharp_MZ-2000.jpg",
+      "cut": false
+    },
+    "mz700": {
+      "file": "Sharp_MZ-700_(cropped).jpg",
+      "cut": true
+    },
+    "mz800": {
+      "file": "Sharp_MZ-821.jpg",
+      "cut": false
+    },
+    "mz80k": {
+      "file": "Sharp_MZ-80K_computer.jpg",
+      "cut": true
+    },
+    "pc60": {
+      "file": "NEC_PC-6001.jpg",
+      "cut": false
+    },
+    "pc80": {
+      "file": "Nec_PC_8000_series.jpg",
+      "cut": false
+    },
+    "pcw": {
+      "file": "Schneider-Joyce-PCW-8256--Museum-Enter-6094720_(cropped).jpg",
+      "cut": false
+    },
+    "segaai": {
+      "file": "Sega_AI_Computer_(Computer_History_Museum).jpg",
+      "cut": false
+    },
+    "sv8000": {
+      "file": "Bandaisupervisionconsole.jpg",
+      "cut": false
+    },
+    "trs80": {
+      "file": "Radioshack_TRS80-IMG_7206.jpg",
+      "cut": true
+    },
+    "tvc": {
+      "file": "Videoton_TV-Computer_(1986)_(37650450314).jpg",
+      "cut": false
+    }
+  },
+  "//logos": "Official logos from Wikimedia Commons for systems carbon has no logo for: the system's own, else its maker's.",
+  "logos": {
+    "ctvboy": "Gakken_Compact_Vision_TV_Boy_Logo.svg",
+    "halflife": "Half-Life_Logo_Orange.svg",
+    "mc10": "TRS-80_MC-10_badge.svg",
+    "trs80": "TRS-80_logo.svg",
+    "pcw": "Amstrad_logo_1980s.svg",
+    "pv2000": "Casio_logo.svg",
+    "rtcw": "RtCW-wordmark.svg",
+    "sv8000": "Bandai_Super_Vision_8000_logo.svg",
+    "segaai": "SEGA_logo.svg",
+    "systemsp": "SEGA_logo.svg",
+    "beena": "SEGA_logo.svg",
+    "mz700": "Logo_of_the_Sharp_Corporation.svg",
+    "mz2000": "Logo_of_the_Sharp_Corporation.svg",
+    "mz2500": "Logo_of_the_Sharp_Corporation.svg",
+    "mz800": "Logo_of_the_Sharp_Corporation.svg",
+    "mz80k": "Logo_of_the_Sharp_Corporation.svg",
+    "pc80": "NEC_logo.svg"
+  },
+  "//aliases": "Systems that are another's in carbon: an MSU-1 variant is its base system.",
+  "aliases": {
+    "sgb-msu1": "sgb"
+  }
+}

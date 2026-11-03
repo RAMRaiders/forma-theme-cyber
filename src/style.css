@@ -126,6 +126,27 @@ main {
   background: radial-gradient(ellipse at 70% 40%, #071a1d 0%, var(--bg) 70%);
 }
 
+/* Each board on its own layer: a new one fades in over the last. */
+.backdrop .board {
+  position: absolute;
+  inset: 0;
+  animation: board-in 600ms ease both;
+}
+
+.backdrop .board.fading {
+  animation: none;
+}
+
+@keyframes board-in {
+  from {
+    opacity: 0;
+  }
+}
+
+:root[data-motion='off'] .backdrop .board {
+  animation: none;
+}
+
 .backdrop:empty {
   background: var(--bg);
 }
@@ -523,35 +544,50 @@ main {
   opacity: 1;
 }
 
-/* ---- A category's systems: a rail of logos, and the selected one on a stage ------------ */
+/* ---- A category's systems: a rail of logos, and the selected one on an open stage -------- */
+
+/* The maker's colour, registered so it glides from one system's to the next. */
+@property --sys {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgb(34 228 255);
+}
 
 .systems {
-  /* The maker's colour (set per system); everything on the stage is lit with it. */
-  --sys-rgb: 34 228 255;
-  --sys: rgb(var(--sys-rgb));
+  --sys: rgb(34 228 255);
+  --dir: 1;
   display: grid;
   grid-template-columns: 19rem minmax(0, 1fr);
   gap: 1.4rem;
   height: 100%;
   min-height: 0;
+  transition: --sys 450ms ease;
 }
 
-/* The rail: logos in a column that slides to keep the selected one in the middle. */
+/* How the stage tints things: the maker's colour at a strength. */
+.systems {
+  --sys-10: color-mix(in srgb, var(--sys) 10%, transparent);
+  --sys-20: color-mix(in srgb, var(--sys) 20%, transparent);
+  --sys-30: color-mix(in srgb, var(--sys) 30%, transparent);
+  --sys-45: color-mix(in srgb, var(--sys) 45%, transparent);
+  --sys-70: color-mix(in srgb, var(--sys) 70%, transparent);
+}
+
+/* The rail: logos straight on the board, a shade behind them only toward the screen's edge. */
 .system-rail {
   position: relative;
   min-height: 0;
   overflow: hidden;
-  border-radius: calc(var(--radius) * 2);
-  background: var(--bg);
-  -webkit-mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
-  mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
+  background: linear-gradient(90deg, rgb(4 6 12 / 82%), rgb(4 6 12 / 45%) 70%, transparent);
+  -webkit-mask-image: linear-gradient(transparent, #000 16%, #000 84%, transparent);
+  mask-image: linear-gradient(transparent, #000 16%, #000 84%, transparent);
 }
 
 .system-list {
   margin: 0;
   padding: 40vh 0.6rem;
   list-style: none;
-  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform;
 }
 
@@ -565,11 +601,12 @@ main {
   padding: 0 0.9rem;
   border: 1px solid transparent;
   border-radius: calc(var(--radius) * 1.6);
-  opacity: 0.45;
+  opacity: 0.5;
   transition:
-    opacity 140ms,
-    background-color 140ms,
-    border-color 140ms;
+    opacity 200ms,
+    height 200ms,
+    background-color 200ms,
+    border-color 200ms;
 }
 
 .system-list li + li {
@@ -577,12 +614,18 @@ main {
 }
 
 .system-list .logo {
-  max-width: 100%;
-  max-height: 1.9rem;
+  max-width: min(100%, 12rem);
+  max-height: 1.8rem;
   justify-self: start;
   object-fit: contain;
   transform-origin: left center;
-  transition: transform 140ms;
+  transition: transform 200ms;
+}
+
+/* A logo too dark for the background, lit from behind. */
+.systems img.dark {
+  filter: drop-shadow(0 0 1px rgb(255 255 255 / 85%))
+    drop-shadow(0 0 0.35rem rgb(255 255 255 / 45%));
 }
 
 /* With a logo, the name is for the selected one only, small, under it. */
@@ -590,11 +633,15 @@ main {
   display: none;
   overflow: hidden;
   font-size: 0.72rem;
-  color: rgb(var(--sys-rgb) / 90%);
+  color: var(--sys);
   font-family: var(--mono);
   letter-spacing: 0.04em;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.system-list li.no-logo .logo {
+  display: none;
 }
 
 .system-list li.no-logo .name {
@@ -612,16 +659,16 @@ main {
   font-family: var(--mono);
   font-size: 0.8rem;
   color: var(--muted);
+  text-shadow: 0 0 0.4rem #000;
 }
 
 .system-list li.selected {
   height: 4rem;
-  border-color: rgb(var(--sys-rgb) / 70%);
-  background:
-    linear-gradient(90deg, rgb(var(--sys-rgb) / 26%), rgb(var(--sys-rgb) / 6%)), rgb(4 6 12 / 80%);
+  border-color: var(--sys-70);
+  background: linear-gradient(90deg, var(--sys-30), var(--sys-10));
   box-shadow:
-    0 0 1.4rem rgb(var(--sys-rgb) / 30%),
-    inset 0 0 0.8rem rgb(var(--sys-rgb) / 18%);
+    0 0 1.4rem var(--sys-30),
+    inset 0 0 0.8rem var(--sys-20);
   opacity: 1;
 }
 
@@ -651,7 +698,8 @@ main {
   color: var(--sys);
 }
 
-/* The stage. */
+/* The stage: open, no box; a soft shade behind the middle keeps the words readable while the
+   board shows round it. */
 .system-panel {
   position: relative;
   display: grid;
@@ -665,18 +713,15 @@ main {
   min-height: 0;
   padding: 1.1rem 1.6rem 1rem;
   overflow: hidden;
-  border: 1px solid rgb(var(--sys-rgb) / 28%);
-  border-radius: calc(var(--radius) * 2.4);
-  background:
-    radial-gradient(ellipse 60% 55% at 50% 62%, rgb(var(--sys-rgb) / 22%), transparent 70%),
-    linear-gradient(180deg, rgb(6 10 20 / 94%), rgb(3 5 10 / 96%));
-  box-shadow:
-    0 0 2.4rem rgb(var(--sys-rgb) / 12%),
-    inset 0 1px 0 rgb(255 255 255 / 5%);
   isolation: isolate;
-  transition:
-    border-color 220ms,
-    box-shadow 220ms;
+  background:
+    radial-gradient(ellipse 55% 45% at 50% 62%, var(--sys-20), transparent 70%),
+    radial-gradient(
+      ellipse 70% 60% at 45% 40%,
+      rgb(4 6 12 / 72%),
+      rgb(4 6 12 / 30%) 75%,
+      transparent
+    );
 }
 
 /* The year, writ large and hollow behind everything. */
@@ -685,14 +730,14 @@ main {
   z-index: -1;
   left: 50%;
   top: 46%;
-  transform: translate(-50%, -50%);
+  translate: -50% -50%;
   font-family: var(--mono);
   font-size: 19rem;
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.04em;
   color: transparent;
-  -webkit-text-stroke: 2px rgb(var(--sys-rgb) / 13%);
+  -webkit-text-stroke: 2px var(--sys-20);
   pointer-events: none;
 }
 
@@ -705,13 +750,14 @@ main {
   bottom: 3.6rem;
   height: 42%;
   background:
-    repeating-linear-gradient(90deg, rgb(var(--sys-rgb) / 55%) 0 2px, transparent 2px 4.2rem),
-    repeating-linear-gradient(0deg, rgb(var(--sys-rgb) / 55%) 0 2px, transparent 2px 4.2rem);
+    repeating-linear-gradient(90deg, var(--sys-45) 0 2px, transparent 2px 4.2rem),
+    repeating-linear-gradient(0deg, var(--sys-45) 0 2px, transparent 2px 4.2rem);
   transform: perspective(26rem) rotateX(62deg);
   transform-origin: 50% 100%;
   -webkit-mask-image: linear-gradient(transparent 30%, #000 80%);
   mask-image: linear-gradient(transparent 30%, #000 80%);
   opacity: 0.8;
+  pointer-events: none;
 }
 
 .system-panel .intro {
@@ -726,11 +772,19 @@ main {
   min-width: 0;
 }
 
-.system-panel .logo {
-  max-height: 3.4rem;
-  max-width: 14rem;
+.system-panel .heading .logo {
+  max-height: 4.2rem;
+  max-width: 20rem;
   object-fit: contain;
-  filter: drop-shadow(0 0 0.5rem rgb(var(--sys-rgb) / 55%));
+}
+
+/* With its official logo up, the name is a quiet label beside it. */
+.system-panel .heading:has(.logo) .name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--sys);
+  text-shadow: 0 0 0.5rem #000;
 }
 
 .system-panel .name {
@@ -743,8 +797,8 @@ main {
   text-transform: uppercase;
   color: #fff;
   text-shadow:
-    0 0 0.6rem rgb(var(--sys-rgb) / 80%),
-    0 0 1.6rem rgb(var(--sys-rgb) / 45%);
+    0 0 0.6rem var(--sys-70),
+    0 0 1.6rem var(--sys-45);
 }
 
 .system-panel .byline {
@@ -753,6 +807,7 @@ main {
   font-size: 0.85rem;
   letter-spacing: 0.06em;
   color: var(--sys);
+  text-shadow: 0 0 0.5rem #000;
 }
 
 .system-panel .description {
@@ -762,8 +817,11 @@ main {
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
-  color: rgb(223 246 255 / 82%);
+  color: rgb(223 246 255 / 86%);
   line-height: 1.45;
+  text-shadow:
+    0 0 0.3rem #000,
+    0 0 1rem #000;
 }
 
 /* How many games, as a big readout, and where this system is in the rail. */
@@ -780,7 +838,7 @@ main {
   font-weight: 800;
   line-height: 1;
   color: #fff;
-  text-shadow: 0 0 1.2rem rgb(var(--sys-rgb) / 70%);
+  text-shadow: 0 0 1.2rem var(--sys-70);
 }
 
 .system-panel .tally .unit {
@@ -793,8 +851,9 @@ main {
 .system-panel .tally .index {
   margin-top: 0.8rem;
   padding: 0.15rem 0.6rem;
-  border: 1px solid rgb(var(--sys-rgb) / 40%);
+  border: 1px solid var(--sys-45);
   border-radius: 1rem;
+  background: rgb(4 6 12 / 60%);
   font-size: 0.7rem;
   letter-spacing: 0.12em;
   color: var(--muted);
@@ -816,43 +875,107 @@ main {
   place-items: center;
   height: 100%;
   min-height: 0;
-  animation: console-in 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-
-@keyframes console-in {
-  from {
-    opacity: 0;
-    transform: translateY(1.2rem) scale(0.94);
-  }
 }
 
 .system-panel .photo {
-  max-width: 100%;
   width: 100%;
   max-width: 34rem;
   height: auto;
   max-height: 100%;
-  filter: drop-shadow(0 0 1.6rem rgb(var(--sys-rgb) / 35%));
   object-fit: contain;
-  /* Standing on the floor: a reflection under it, fading. */
+}
+
+/* A cut-out stands on the floor, reflected in it. */
+.system-panel .cutout .photo {
+  filter: drop-shadow(0 0 1.6rem var(--sys-30));
   -webkit-box-reflect: below 0.1rem linear-gradient(transparent 55%, rgb(0 0 0 / 38%));
 }
 
-.system-panel .art {
-  width: min(26rem, 100%);
-  color: var(--sys);
+/* A photo with its own background: in a neon frame, turned a little toward the middle, with
+   scanlines over it like a monitor's. */
+.system-panel .framed {
+  position: relative;
+  perspective: 50rem;
 }
 
-.system-panel .art svg {
-  display: block;
+.system-panel .framed .photo {
+  width: auto;
+  max-width: 92%;
+  max-height: 88%;
+  border: 1px solid var(--sys-70);
+  border-radius: calc(var(--radius) * 2);
+  box-shadow:
+    0 0 0 0.35rem rgb(4 6 12 / 70%),
+    0 0 0 calc(0.35rem + 1px) var(--sys-30),
+    0 0 2.4rem var(--sys-45);
+  transform: rotateY(-7deg) rotateX(2deg);
+  -webkit-box-reflect: below 0.7rem linear-gradient(transparent 70%, rgb(0 0 0 / 22%));
+}
+
+.system-panel .framed::after {
+  content: '';
+  position: absolute;
+  inset: 6% 4%;
+  background: repeating-linear-gradient(0deg, rgb(0 0 0 / 14%) 0 2px, transparent 2px 4px);
+  pointer-events: none;
+}
+
+/* Nothing to photograph (a port, an engine): its logo large, over Cyber's drawing. */
+.system-panel .hero {
+  position: relative;
+}
+
+.system-panel .hero .art {
+  position: absolute;
+  inset: 8% 15%;
+  display: grid;
+  place-items: center;
+  color: var(--sys);
+  opacity: 0.35;
+}
+
+.system-panel .hero .art svg {
   width: 100%;
-  filter: drop-shadow(0 0 0.5rem rgb(var(--sys-rgb) / 60%));
+  max-height: 100%;
+}
+
+.system-panel .hero-logo {
+  position: relative;
+  max-width: 80%;
+  max-height: 11rem;
+  object-fit: contain;
+  filter: drop-shadow(0 0 1.2rem var(--sys-45));
+}
+
+.system-panel .hero-logo.dark {
+  filter: drop-shadow(0 0 1px rgb(255 255 255 / 85%)) drop-shadow(0 0 1rem var(--sys-70));
+}
+
+.system-panel .hero-name {
+  position: relative;
+  max-width: 90%;
+  font-family: var(--mono);
+  font-size: 3.2rem;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow:
+    0 0 0.6rem var(--sys),
+    0 0 2rem var(--sys-70);
 }
 
 .system-panel .specs {
   display: grid;
   gap: 1.3rem;
   margin: 0;
+  padding: 0.8rem 0;
+  /* A soft shade behind the callouts, wider than them, so the board's own labels never cross. */
+  border-radius: 2rem;
+  background: rgb(4 6 12 / 78%);
+  box-shadow: 0 0 2.5rem 2.2rem rgb(4 6 12 / 78%);
 }
 
 .system-panel .specs-left {
@@ -864,24 +987,14 @@ main {
   grid-column: 3;
 }
 
-/* A callout: a label, a value, and a lead with a dot toward the console. */
+/* A callout: a label, a value, a rule and a lead with a dot toward the console. */
 .system-panel .spec {
   position: relative;
   padding: 0.35rem 0;
-  border-bottom: 1px solid rgb(var(--sys-rgb) / 45%);
-  animation: callout-in 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-  animation-delay: calc(120ms + var(--n, 0) * 70ms);
-}
-
-@keyframes callout-in {
-  from {
-    opacity: 0;
-    transform: translateX(var(--from, -0.8rem));
-  }
-}
-
-.system-panel .specs-right .spec {
-  --from: 0.8rem;
+  border-bottom: 1px solid var(--sys-45);
+  text-shadow:
+    0 0 0.3rem #000,
+    0 0 0.8rem #000;
 }
 
 .system-panel .spec::after {
@@ -890,7 +1003,7 @@ main {
   bottom: -1px;
   width: 2.6rem;
   height: 1px;
-  background: linear-gradient(90deg, rgb(var(--sys-rgb) / 70%), rgb(var(--sys-rgb) / 15%));
+  background: linear-gradient(90deg, var(--sys-70), var(--sys-10));
 }
 
 .system-panel .spec::before {
@@ -935,7 +1048,7 @@ main {
   line-height: 1.3;
 }
 
-/* Curiosities, on a strip along the bottom, with the time left until the next. */
+/* Curiosities, on a glassy strip along the bottom, with the time left until the next. */
 .system-panel .fact {
   grid-area: fact;
   position: relative;
@@ -944,13 +1057,9 @@ main {
   gap: 1.2rem;
   padding: 0.7rem 1rem;
   overflow: hidden;
-  border: 1px solid rgb(var(--sys-rgb) / 25%);
+  border: 1px solid var(--sys-30);
   border-radius: var(--radius);
-  background: linear-gradient(90deg, rgb(var(--sys-rgb) / 16%), transparent 45%), rgb(4 8 16 / 94%);
-}
-
-.system-panel .fact[hidden] {
-  display: none;
+  background: linear-gradient(90deg, var(--sys-20), rgb(4 8 16 / 72%) 45%, rgb(4 8 16 / 55%));
 }
 
 .system-panel .fact .label {
@@ -965,14 +1074,6 @@ main {
 .system-panel .fact p {
   margin: 0;
   line-height: 1.4;
-  animation: fact-in 300ms ease-out both;
-}
-
-@keyframes fact-in {
-  from {
-    opacity: 0;
-    transform: translateY(0.4rem);
-  }
 }
 
 .system-panel .fact .timer {
@@ -993,12 +1094,99 @@ main {
   }
 }
 
+/* Moving from system to system: what was shown slides away the way the rail moved and fades,
+   as the next comes in from the other side. Transforms and opacity only: cheap on a Pi. */
+.system-panel .entering {
+  animation: slot-in 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.system-panel .leaving {
+  z-index: 0;
+  pointer-events: none;
+  animation: slot-out 260ms ease-in both;
+}
+
+.system-panel .slot-showcase.entering {
+  animation-name: showcase-in;
+  animation-duration: 460ms;
+}
+
+.system-panel .slot-showcase.leaving {
+  animation-name: showcase-out;
+}
+
+.system-panel .slot-year.entering,
+.system-panel .slot-year.leaving {
+  animation-name: year-swap;
+  animation-duration: 500ms;
+}
+
+.system-panel .slot-year.leaving {
+  animation-direction: reverse;
+  animation-duration: 260ms;
+}
+
+@keyframes slot-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--dir) * 0.9rem));
+  }
+}
+
+@keyframes slot-out {
+  to {
+    opacity: 0;
+    transform: translateY(calc(var(--dir) * -0.9rem));
+  }
+}
+
+@keyframes showcase-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--dir) * 2.4rem)) scale(0.96);
+  }
+}
+
+@keyframes showcase-out {
+  to {
+    opacity: 0;
+    transform: translateY(calc(var(--dir) * -2.4rem)) scale(0.96);
+  }
+}
+
+@keyframes year-swap {
+  from {
+    opacity: 0;
+    scale: 1.08;
+  }
+}
+
+/* The callouts follow the console in, one after another. */
+.system-panel .entering .spec {
+  animation: callout-in 380ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(140ms + var(--n, 0) * 60ms);
+}
+
+@keyframes callout-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--from, -0.8rem));
+  }
+}
+
+.system-panel .specs-right .spec {
+  --from: 0.8rem;
+}
+
+:root[data-motion='off'] .systems,
 :root[data-motion='off'] .system-list,
+:root[data-motion='off'] .system-list *,
 :root[data-motion='off'] .system-panel * {
   transition: none !important;
   animation: none !important;
 }
 
+:root[data-motion='off'] .system-panel .leaving,
 :root[data-motion='off'] .system-panel .fact .timer {
   display: none;
 }

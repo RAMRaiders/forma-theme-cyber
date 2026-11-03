@@ -48,6 +48,8 @@ const LOADER_DELAY_MS = 150;
  * It is the one view Cyber shows (its theme.json says so): Forma offers no other.
  */
 const CYBER_VIEW = 'systems';
+/** How long one circuit board takes to give way to the next. */
+const BOARD_FADE_MS = 600;
 /** A shortcut's level: its path starts with this, then the Forma view it opens. */
 const SHORTCUT = '@';
 /** The buttons under the categories: all but magazines open Forma's views. */
@@ -120,7 +122,7 @@ export class App {
     /** Each system's info.json; tests pass their own. */
     private readonly infos = new InfoStore()
   ) {
-    this.#systemView = new SystemView(infos, (svg) => (this.#backdrop.innerHTML = svg));
+    this.#systemView = new SystemView(infos, (svg) => this.#showBoard(svg));
     root.replaceChildren(
       this.#backdrop,
       el('header', {}, this.#title, this.#trail),
@@ -130,6 +132,21 @@ export class App {
       this.#playing,
       this.#toast
     );
+  }
+
+  /**
+   * A new board behind the screen: it fades in over the last, which then goes, so moving from
+   * system to system the circuit changes smoothly rather than at a cut.
+   */
+  #showBoard(svg: string): void {
+    const layer = el('div', { class: 'board' });
+    layer.innerHTML = svg;
+    const before = [...this.#backdrop.children];
+    this.#backdrop.append(layer);
+    for (const old of before) {
+      old.classList.add('fading');
+      setTimeout(() => old.remove(), BOARD_FADE_MS);
+    }
   }
 
   async start(): Promise<void> {
@@ -251,8 +268,11 @@ export class App {
       this.#list = null;
       this.#page = null;
       const systems = await this.forma.library.systems();
-      const infos = await this.infos.all(systems.filter((s) => s.gameCount > 0).map((s) => s.name));
-      this.#groups = group(systems, infos, this.#prefs.systemsSort);
+      const [infos, arts] = await Promise.all([
+        this.infos.all(systems.filter((s) => s.gameCount > 0).map((s) => s.name)),
+        this.infos.art()
+      ]);
+      this.#groups = group(systems, infos, this.#prefs.systemsSort, arts);
       const level = this.#level;
       if (this.#stack.length === 1) {
         this.#mode = 'home';

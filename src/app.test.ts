@@ -85,22 +85,22 @@ describe('the default theme', () => {
     ]);
     // The system's own page: Cyber's info, its specs, a curiosity, and its board behind.
     await vi.waitFor(() =>
-      expect(text('.system-panel .description')).toEqual(['An 8-bit console.'])
+      expect(text('.system-panel > :not(.leaving) .description')).toEqual(['An 8-bit console.'])
     );
-    expect(text('.system-panel dd')).toEqual(['Ricoh 2A03']);
+    expect(text('.system-panel > :not(.leaving) dd')).toEqual(['Ricoh 2A03']);
     // The stage: its games as a readout, its place in the rail, a callout on the left.
-    expect(text('.system-panel .tally .count')).toEqual(['3']);
-    expect(text('.system-panel .tally .index')).toEqual(['01 / 05']);
-    expect(text('.system-panel .specs-left dt')).toEqual(['CPU']);
-    expect(text('.system-panel .fact p')).toEqual(['First fact.']);
+    expect(text('.system-panel > .tally:not(.leaving) .count')).toEqual(['3']);
+    expect(text('.system-panel > .tally:not(.leaving) .index')).toEqual(['01 / 05']);
+    expect(text('.system-panel > :not(.leaving) .specs-left dt')).toEqual(['CPU']);
+    expect(text('.system-panel > .fact:not(.leaving) p')).toEqual(['First fact.']);
     await press('north');
-    expect(text('.system-panel .fact p')).toEqual(['Second fact.']);
+    expect(text('.system-panel > .fact:not(.leaving) p')).toEqual(['Second fact.']);
     expect(root.querySelector('.backdrop .circuit text.part')?.textContent).toBe('Ricoh 2A03');
     expect(text('.hint')).toContain('AGames');
 
     // A system without info.json still shows, from Forma's data.
     await press('down');
-    expect(text('.system-panel .name')).toEqual(['Mega Drive']);
+    expect(text('.system-panel > :not(.leaving) .name')).toEqual(['Mega Drive']);
     await press('up');
 
     await press('confirm');

@@ -27,7 +27,12 @@ describe('catalog', () => {
         system('empty', 'console', 0),
         system('imageviewer', 'system', 1)
       ],
-      new Map([['neogeo', { category: 'arcade' as const }]])
+      new Map([['neogeo', { category: 'arcade' as const }]]),
+      'games',
+      {
+        snes: { logo: 'logo.webp', picture: 'photo.webp', kind: 'cutout' },
+        nes: { logo: 'logo.webp', logoDark: true, picture: 'photo.webp', kind: 'framed' }
+      }
     );
     expect(groups.map((g) => [g.category.id, g.systems.map((s) => s.summary.name)])).toEqual([
       ['consoles', ['snes', 'nes']],
@@ -36,7 +41,15 @@ describe('catalog', () => {
       ['ports', ['sonic3-air']],
       ['engines', ['openbor', 'easyrpg', 'pygame']]
     ]);
-    expect(groups[0]!.systems[0]!.photo).toBe('./systems/snes/photo.webp');
+    // Each system's art, from art.json; a system it does not list has none.
+    const [snes, nes] = groups[0]!.systems;
+    expect(snes).toMatchObject({ photo: './systems/snes/photo.webp', photoKind: 'cutout' });
+    expect(nes).toMatchObject({
+      logo: './systems/nes/logo.webp',
+      logoDark: true,
+      photoKind: 'framed'
+    });
+    expect(groups[1]!.systems[0]).toMatchObject({ logo: null, photo: null });
   });
 
   it('fetches each info once, and a missing one is just null', async () => {

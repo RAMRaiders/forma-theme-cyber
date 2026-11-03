@@ -7,6 +7,8 @@ import { el } from './dom.js';
 const FACT_MS = 10_000;
 /** The board follows the selection once it rests: holding a direction does not redraw it. */
 const BOARD_MS = 150;
+/** How long what was shown takes to go, as the next system comes in. */
+const LEAVE_MS = 260;
 
 type Spec = keyof NonNullable<SystemInfo['specs']>;
 
@@ -59,20 +61,28 @@ export function systemRgb(maker: string | undefined | null, category: CategoryId
   return known?.[1] ?? CATEGORY_RGB[category];
 }
 
+/** The parts of the stage that change together when the selection moves. */
+type Slot = 'year' | 'intro' | 'tally' | 'showcase' | 'fact';
+
 /**
  * A category's systems: a rail of logos on the left, kept centred on the selection, and the
- * selected system on a stage: its console, lit and reflected on a neon floor, its specs as
- * callouts round it, its year writ large behind, its story above and its curiosities on a strip
- * below. The whole screen takes the maker's colour. The system's circuit board stays behind.
+ * selected system on a stage: its console, lit and reflected on a neon floor (a photo in a frame,
+ * or its logo, when there is no cut-out), its specs as callouts round it, its year writ large
+ * behind, its story above and its curiosities on a strip below. Moving on, the last system slides
+ * away as the next comes in from the side it is moved toward, and the screen's colour (its
+ * maker's) glides to the next. Nothing on it is boxed in: the circuit board shows through.
  */
 export class SystemView {
   readonly root = el('div', { class: 'systems' });
   readonly #rail = el('div', { class: 'system-rail' });
   readonly #list = el('ul', { class: 'system-list', role: 'listbox' });
   readonly #panel = el('section', { class: 'system-panel', 'aria-live': 'polite' });
+  readonly #slots = new Map<Slot, HTMLElement>();
   #rows: HTMLElement[] = [];
   #systems: CyberSystem[] = [];
   #selected = -1;
+  /** Which system the stage shows. */
+  #shown = -1;
   #info: SystemInfo | null = null;
   #fact = 0;
   #factTimer: ReturnType<typeof setInterval> | undefined;
@@ -103,11 +113,14 @@ export class SystemView {
     this.#systems = systems;
     this.#rows = systems.map(row);
     this.#list.replaceChildren(...this.#rows);
+    this.#panel.replaceChildren(el('div', { class: 'floor', 'aria-hidden': 'true' }));
+    this.#slots.clear();
     this.#selected = -1;
+    this.#shown = -1;
     this.select(selected, true);
   }
 
-  /** `now`: draw the board at once (entering the screen), not after the selection rests. */
+  /** `now`: draw at once (entering the screen), not sliding in, nor the board after a rest. */
   select(index: number, now = false): void {
     this.#rows[this.#selected]?.classList.remove('selected');
     this.#selected = index;
@@ -120,7 +133,7 @@ export class SystemView {
     const show = (info: SystemInfo | null) => {
       this.#info = info;
       this.#fact = 0;
-      this.#render(system);
+      this.#render(system, !now);
       this.#drawBoard(system, now ? 0 : BOARD_MS);
     };
     // Loaded with the catalogue, so normally at hand: drawn once, never first without its info.
@@ -136,7 +149,8 @@ export class SystemView {
     const facts = this.#info?.curiosities ?? [];
     if (facts.length < 2) return;
     this.#fact = (this.#fact + 1) % facts.length;
-    this.#renderFact();
+    this.#swap('fact', this.#factStrip(), true);
+    this.#scheduleFact();
   }
 
   /** Stops the curiosity timer when the screen goes away. */
@@ -163,29 +177,50 @@ export class SystemView {
     else this.#boardTimer = setTimeout(draw, delay);
   }
 
-  #render(system: CyberSystem): void {
+  /**
+   * Puts `next` in a slot. With `animate`, what was there stays a moment where it was (lifted
+   * out of the layout) and fades away the way the rail moved, as `next` comes in.
+   */
+  #swap(slot: Slot, next: HTMLElement | null, animate: boolean): void {
+    const old = this.#slots.get(slot);
+    // Anything still leaving from a quick earlier move goes at once.
+    for (const gone of this.#panel.querySelectorAll(`.leaving.slot-${slot}`)) gone.remove();
+    if (next) {
+      next.classList.add(`slot-${slot}`);
+      if (animate) next.classList.add('entering');
+      if (old) old.after(next);
+      else this.#panel.append(next);
+      this.#slots.set(slot, next);
+    } else this.#slots.delete(slot);
+    if (!old) return;
+    if (!animate) return old.remove();
+    Object.assign(old.style, {
+      position: 'absolute',
+      margin: '0',
+      top: `${old.offsetTop}px`,
+      left: `${old.offsetLeft}px`,
+      width: `${old.offsetWidth}px`,
+      height: `${old.offsetHeight}px`
+    });
+    old.classList.remove('entering');
+    old.classList.add('leaving');
+    setTimeout(() => old.remove(), LEAVE_MS);
+  }
+
+  #render(system: CyberSystem, animate: boolean): void {
     const s = system.summary;
     const info = this.#info;
     const maker = info?.specs?.maker ?? s.manufacturer;
-    this.root.style.setProperty('--sys-rgb', systemRgb(maker, system.category));
+    this.root.style.setProperty('--sys', `rgb(${systemRgb(maker, system.category)})`);
+    // Down the rail, the old system leaves upward and the new one rises from below.
+    this.root.style.setProperty('--dir', String(this.#selected >= this.#shown ? 1 : -1));
+    animate &&= this.#shown !== this.#selected;
+    this.#shown = this.#selected;
 
-    const logo = el('img', { class: 'logo', src: system.logo, alt: '' });
-    logo.addEventListener('error', () => logo.remove());
     const title = el('h2', { class: 'name' }, info?.name ?? s.fullname ?? s.name);
-
-    // The console; without a photo, the category's own neon drawing stands in.
-    const stage = el('div', { class: 'console' });
-    const photo = el('img', { class: 'photo', src: system.photo, alt: '' });
-    photo.addEventListener('error', () => {
-      photo.remove();
-      const art = el('div', { class: 'art' });
-      art.innerHTML = categoryArt(system.category);
-      stage.append(art);
-    });
-    stage.append(photo);
-
     const year = s.releaseYear ? String(s.releaseYear) : null;
     const byline = [maker, info?.specs?.released ?? year].filter(Boolean).join(' · ');
+
     const callouts = (side: 'left' | 'right', specs: [Spec, string][]) => {
       const items = specs.flatMap(([key, label], n) => {
         const value = info?.specs?.[key];
@@ -203,16 +238,24 @@ export class SystemView {
       return items.length ? el('dl', { class: `specs specs-${side}` }, ...items) : null;
     };
 
-    const parts: (HTMLElement | null)[] = [
+    this.#swap(
+      'year',
       year ? el('div', { class: 'year', 'aria-hidden': 'true' }, year) : null,
-      el('div', { class: 'floor', 'aria-hidden': 'true' }),
+      animate
+    );
+    this.#swap(
+      'intro',
       el(
         'div',
         { class: 'intro' },
-        el('div', { class: 'heading' }, logo, title),
+        el('div', { class: 'heading' }, logoImage(system, 'logo'), title),
         byline ? el('p', { class: 'byline' }, byline) : null,
         info?.description ? el('p', { class: 'description' }, info.description) : null
       ),
+      animate
+    );
+    this.#swap(
+      'tally',
       el(
         'div',
         { class: 'tally' },
@@ -224,56 +267,102 @@ export class SystemView {
           `${String(this.#selected + 1).padStart(2, '0')} / ${String(this.#systems.length).padStart(2, '0')}`
         )
       ),
-      el('div', { class: 'showcase' }, callouts('left', LEFT), stage, callouts('right', RIGHT)),
-      el('aside', { class: 'fact' })
-    ];
-    this.#panel.replaceChildren(...parts.filter((p) => p !== null));
-    this.#renderFact();
+      animate
+    );
+    this.#swap(
+      'showcase',
+      el(
+        'div',
+        { class: 'showcase' },
+        callouts('left', LEFT),
+        stage(system, title.textContent ?? ''),
+        callouts('right', RIGHT)
+      ),
+      animate
+    );
+    this.#swap('fact', this.#factStrip(), animate);
+    this.#scheduleFact();
   }
 
-  #renderFact(): void {
-    const box = this.#panel.querySelector<HTMLElement>('.fact');
-    if (!box) return;
+  #factStrip(): HTMLElement | null {
     const facts = this.#info?.curiosities ?? [];
     const fact = facts[this.#fact % Math.max(1, facts.length)];
-    box.hidden = !fact;
-    box.replaceChildren(
-      ...(fact
-        ? [
-            el(
-              'span',
-              { class: 'label' },
-              `Did you know? ${(this.#fact % facts.length) + 1}/${facts.length}`
-            ),
-            el('p', {}, fact),
-            // How long until the next one, when they move on by themselves.
-            facts.length > 1 && this.rotateFacts
-              ? el('span', { class: 'timer', style: `--fact-ms: ${FACT_MS}ms` })
-              : null
-          ].filter((p) => p !== null)
-        : [])
+    if (!fact) return null;
+    return el(
+      'aside',
+      { class: 'fact' },
+      el(
+        'span',
+        { class: 'label' },
+        `Did you know? ${(this.#fact % facts.length) + 1}/${facts.length}`
+      ),
+      el('p', {}, fact),
+      // How long until the next one, when they move on by themselves.
+      facts.length > 1 && this.rotateFacts
+        ? el('span', { class: 'timer', style: `--fact-ms: ${FACT_MS}ms` })
+        : null
     );
+  }
+
+  #scheduleFact(): void {
     clearInterval(this.#factTimer);
+    const facts = this.#info?.curiosities ?? [];
     if (facts.length > 1 && this.rotateFacts) {
       this.#factTimer = setInterval(() => this.nextFact(), FACT_MS);
     }
   }
 }
 
+/** A system's logo; a dark one gets a light halo; none (or a broken file) leaves nothing. */
+function logoImage(system: CyberSystem, cls: string): HTMLImageElement | null {
+  if (!system.logo) return null;
+  const logo = el('img', {
+    class: `${cls}${system.logoDark ? ' dark' : ''}`,
+    src: system.logo,
+    alt: ''
+  });
+  logo.addEventListener('error', () => logo.remove());
+  return logo;
+}
+
+/**
+ * The middle of the stage: the console cut out, standing on the floor; else a photo of it in a
+ * neon frame; else, for what has no hardware to show (a port, an engine), its logo large over
+ * Cyber's drawing for its category; else its name, in lights.
+ */
+function stage(system: CyberSystem, name: string): HTMLElement {
+  const box = el('div', { class: 'console' });
+  const fallback = () => {
+    box.className = 'console hero';
+    const art = el('div', { class: 'art', 'aria-hidden': 'true' });
+    art.innerHTML = categoryArt(system.category);
+    const nameplate = () => el('span', { class: 'hero-name' }, name);
+    const logo = logoImage(system, 'hero-logo');
+    logo?.addEventListener('error', () => box.append(nameplate()));
+    box.replaceChildren(art, logo ?? nameplate());
+  };
+  if (!system.photo) {
+    fallback();
+    return box;
+  }
+  box.classList.add(system.photoKind);
+  const photo = el('img', { class: 'photo', src: system.photo, alt: '' });
+  photo.addEventListener('error', fallback);
+  box.append(photo);
+  return box;
+}
+
 function row(system: CyberSystem): HTMLElement {
   const s = system.summary;
-  const logo = el('img', { class: 'logo', src: system.logo, alt: '' });
+  const logo = logoImage(system, 'logo');
   const item = el(
     'li',
-    { role: 'option' },
+    { role: 'option', ...(logo ? {} : { class: 'no-logo' }) },
     logo,
     el('span', { class: 'name' }, s.fullname || s.name),
     el('span', { class: 'count' }, s.gameCount.toLocaleString('en'))
   );
-  // Without a logo the name shows in its place.
-  logo.addEventListener('error', () => {
-    logo.remove();
-    item.classList.add('no-logo');
-  });
+  // A logo that fails to load: the name shows in its place.
+  logo?.addEventListener('error', () => item.classList.add('no-logo'));
   return item;
 }

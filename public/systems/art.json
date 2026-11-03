@@ -1,0 +1,1120 @@
+{
+  "3do": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "abuse": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "adam": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "advision": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "amiga1200": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "amiga500": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "amigacd32": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "amigacdtv": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "amstradcpc": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "apfm1000": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "apple2": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "apple2gs": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "arcadia": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "archimedes": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "arduboy": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "astrocade": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "atari2600": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "atari5200": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "atari7800": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "atari800": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "atarist": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "atom": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "atomiswave": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "bbcmicro": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "beena": {
+    "logo": "logo.webp",
+    "picture": null
+  },
+  "bennugd": {
+    "logo": "logo.webp",
+    "picture": null
+  },
+  "bk": {
+    "logo": null,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "bstone": {
+    "logo": "logo.webp",
+    "picture": null
+  },
+  "c128": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "c20": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "c64": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "camplynx": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "cannonball": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "cassettevision": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "cavestory": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "cdi": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "cdogs": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "cgenie": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "cgenius": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "channelf": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "coco": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "colecovision": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "commanderx16": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "corsixth": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "cplus4": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "crvision": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "ctvboy": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "daphne": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "devilutionx": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "dice": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "framed"
+  },
+  "doom3": {
+    "logo": null,
+    "picture": null
+  },
+  "dos": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "dragon64": {
+    "logo": null,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "dreamcast": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "dxx-rebirth": {
+    "logo": "logo.webp",
+    "picture": null
+  },
+  "easyrpg": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "ecwolf": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "eduke32": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "electron": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "enterprise": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "etlegacy": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "fallout1-ce": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "fallout2-ce": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "fbneo": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "fds": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "flash": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "fm7": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "fmtowns": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "fury": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "gamate": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "gameandwatch": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "gamecom": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "gamecube": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "gamegear": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "gamepock": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "gb": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "gb2players": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "gba": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "gbc": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "gbc2players": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "gmaster": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "gp32": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "gx4000": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "gzdoom": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "halflife": {
+    "logo": "logo.webp",
+    "picture": null
+  },
+  "hcl": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "hurrican": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "imageviewer": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "intellivision": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "jaguar": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "jaguarcd": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "jazz2": {
+    "logo": null,
+    "picture": null
+  },
+  "laser310": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "lcdgames": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "library": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "loopy": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "lowresnx": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "lutro": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "lynx": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "macintosh": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "mame": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "mastersystem": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "mc10": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "framed"
+  },
+  "megacd": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "megadrive": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "megadrive-msu": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "megaduck": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "model3": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "moonlight": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "mrboom": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "msx1": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "msx2": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "msx2+": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "msxturbor": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "multivision": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "mz2000": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "framed"
+  },
+  "mz2500": {
+    "logo": "logo.webp",
+    "picture": null
+  },
+  "mz700": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "mz800": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "framed"
+  },
+  "mz80k": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "n64": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "n64dd": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "namco22": {
+    "logo": "logo.webp",
+    "picture": null
+  },
+  "naomi": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "naomi2": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "nds": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "neogeo": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "neogeocd": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "nes": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "ngp": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "ngpc": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "odcommander": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "odyssey2": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "openbor": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "openjazz": {
+    "logo": "logo.webp",
+    "picture": null
+  },
+  "oricatmos": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "pc60": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "framed"
+  },
+  "pc80": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "framed"
+  },
+  "pc88": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "pc98": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "pcengine": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "pcenginecd": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "pcfx": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "pcw": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "framed"
+  },
+  "pdp1": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "pet": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "pico": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "pico8": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "pokemini": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "ports": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "prboom": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "psp": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "psx": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "pv1000": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "pv2000": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": null
+  },
+  "pygame": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "quake": {
+    "logo": null,
+    "picture": null
+  },
+  "quake2": {
+    "logo": null,
+    "picture": null
+  },
+  "quake3": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "raze": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "recordings": {
+    "logo": "logo.webp",
+    "picture": null
+  },
+  "reminiscence": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "rott": {
+    "logo": null,
+    "picture": null
+  },
+  "rtcw": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": null
+  },
+  "rx78": {
+    "logo": null,
+    "picture": null
+  },
+  "samcoupe": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "satellaview": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "saturn": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "sc3000": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "scummvm": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "scv": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "sdlpop": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "sega32x": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "segaai": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "framed"
+  },
+  "sg1000": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "sgb": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "sgb-msu1": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "singe": {
+    "logo": "logo.webp",
+    "picture": null
+  },
+  "snes": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "snes-msu1": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "socrates": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "solarus": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "sonic-mania": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "sonic3-air": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "sonicretro": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "spectravideo": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "sufami": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "superbroswar": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "supergrafx": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "supervision": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "supracan": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "sv8000": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "framed"
+  },
+  "systemsp": {
+    "logo": "logo.webp",
+    "picture": null
+  },
+  "thextech": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "thomson": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "ti99": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "tic80": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "traider1": {
+    "logo": null,
+    "picture": null
+  },
+  "traider2": {
+    "logo": null,
+    "picture": null
+  },
+  "triforce": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "trs80": {
+    "logo": "logo.webp",
+    "logoDark": true,
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "tutor": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "tvc": {
+    "logo": null,
+    "picture": "photo.webp",
+    "kind": "framed"
+  },
+  "tvgames": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "tyrian": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "uzebox": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "vc4000": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "vectrex": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "vgmplay": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "videopacplus": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "vircon32": {
+    "logo": "logo.webp",
+    "picture": null
+  },
+  "virtualboy": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "vis": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "vsmile": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "wii": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "wswan": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "wswanc": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "x1": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "x68000": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "xegs": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "xrick": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "zc210": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "zx81": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  },
+  "zxspectrum": {
+    "logo": "logo.webp",
+    "picture": "photo.webp",
+    "kind": "cutout"
+  }
+}
