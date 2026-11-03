@@ -414,15 +414,7 @@ main {
   opacity: 0.25;
 }
 
-/* A category drawn for Cyber (Engines): its picture fills the stage, not a photo's size. */
-.tile .hero.drawn {
-  bottom: 6%;
-  width: 78%;
-  height: 92%;
-  filter: none;
-}
-
-/* The stage: the biggest system in front on a halo, the next two set back on either side. */
+/* The stage: the category's picture on a halo of its colour. */
 .tile .stage {
   position: relative;
   min-height: 0;
@@ -432,46 +424,28 @@ main {
 .tile .halo {
   position: absolute;
   left: 50%;
-  bottom: 8%;
-  width: 55%;
+  bottom: 4%;
+  width: 70%;
   aspect-ratio: 2 / 1;
   transform: translateX(-50%);
   border-radius: 50%;
   background: radial-gradient(ellipse, rgb(var(--cat-rgb) / 45%) 0%, transparent 70%);
-  opacity: 0.6;
-  transition: opacity 200ms ease;
+  opacity: 0.5;
 }
 
-.tile .hero,
-.tile .side {
+/* Cyber's picture of the category, in its colour, glowing. No transition on it: the Pi's
+   WebKit redraws a filtered picture slowly, and an animated one flickered on every move. */
+.tile .art {
   position: absolute;
-  bottom: 12%;
-  object-fit: contain;
-  /* No -webkit-box-reflect: WebKitGTK drew the reflection in the wrong place while the selected
-     tile's picture grew, a ghost of it over the tile's text for a moment on every move. */
-  filter: drop-shadow(0 0.6rem 0.8rem rgb(0 0 0 / 70%));
-  transition: transform 200ms ease;
+  inset: 4% 8% 2%;
+  color: var(--cat);
+  filter: drop-shadow(0 0 0.35rem rgb(var(--cat-rgb) / 55%));
+  opacity: 0.85;
 }
 
-.tile .hero {
-  left: 50%;
-  width: 62%;
-  height: 80%;
-  transform: translateX(-50%);
-}
-
-.tile .side {
-  width: 36%;
-  height: 52%;
-  opacity: 0.55;
-}
-
-.tile .side.left {
-  left: 4%;
-}
-
-.tile .side.right {
-  right: 4%;
+.tile .art svg {
+  width: 100%;
+  height: 100%;
 }
 
 .tile .text {
@@ -541,8 +515,8 @@ main {
   opacity: 1;
 }
 
-.tile.selected .hero {
-  transform: translateX(-50%) scale(1.06);
+.tile.selected .art {
+  opacity: 1;
 }
 
 .tile.selected .logos {
@@ -1069,7 +1043,6 @@ kbd {
   display: none;
 }
 
-:root[data-motion='off'] .tile .hero,
 :root[data-motion='off'] .tile .halo {
   transition: none;
 }

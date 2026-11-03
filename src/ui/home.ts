@@ -1,4 +1,5 @@
 import type { Category, CyberSystem } from '../data/catalog.js';
+import { categoryArt } from './art.js';
 import { circuitSvg } from './circuit.js';
 import { el } from './dom.js';
 
@@ -17,9 +18,6 @@ export interface Shortcut {
   /** Not there yet: shown, and says so, but opens nothing. */
   soon?: boolean;
 }
-
-/** Categories drawn for Cyber rather than shown by their systems' photos. */
-const PICTURES: Partial<Record<string, string>> = { engines: './art/engines.svg' };
 
 /** Logos along the bottom of a tile. */
 const LOGOS = 4;
@@ -89,24 +87,21 @@ const image = (src: string, cls: string) => {
 };
 
 /**
- * A category as a little stage: its biggest system large in the middle on a halo of the
- * category's colour, the next two set back on either side, the category's own circuit board
- * as texture, and its systems' logos along the bottom.
+ * A category as a little stage: Cyber's own picture of it, in neon on a halo of the
+ * category's colour, the category's own circuit board as texture, and its systems' logos along
+ * the bottom.
  */
 function tile({ category, systems }: Tile): HTMLElement {
   const games = systems.reduce((n, s) => n + s.summary.gameCount, 0);
-  const [hero, left, right] = systems;
   const texture = el('div', { class: 'texture', 'aria-hidden': 'true' });
   texture.innerHTML = circuitSvg(`category:${category.id}`, [], 0);
-  // A category with a picture of its own shows that instead of its systems' photos.
-  const own = PICTURES[category.id];
+  const art = el('div', { class: 'art' });
+  art.innerHTML = categoryArt(category.id);
   const stage = el(
     'div',
     { class: 'stage', 'aria-hidden': 'true' },
     el('div', { class: 'halo' }),
-    !own && left ? image(left.photo, 'side left') : '',
-    !own && right ? image(right.photo, 'side right') : '',
-    own ? image(own, 'hero drawn') : hero ? image(hero.photo, 'hero') : ''
+    art
   );
   const logos = el(
     'div',
