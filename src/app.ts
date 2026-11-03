@@ -50,23 +50,20 @@ const LOADER_DELAY_MS = 150;
 const CYBER_VIEW = 'systems';
 /** A shortcut's level: its path starts with this, then the Forma view it opens. */
 const SHORTCUT = '@';
-/** The buttons under the categories: favourites and collections open Forma's views. */
+/** The buttons under the categories: all but magazines open Forma's views. */
 const SHORTCUTS: Shortcut[] = [
   { id: 'favorites', label: 'Favourites', tagline: 'The games you starred' },
   { id: 'magazines', label: 'Magazines', tagline: 'Read the classics', soon: true },
   { id: 'collections', label: 'Collections', tagline: 'Your own lists of games' },
-  {
-    id: 'recommended',
-    label: 'Recommended',
-    tagline: 'Picked from what you play',
-    soon: true
-  }
+  { id: 'recommended', label: 'Recommended', tagline: 'Picked from what you play' }
 ];
 /** Forma's view each working shortcut opens. */
 const SHORTCUT_VIEWS: Record<string, { view: string; label: string }> = {
   favorites: { view: 'favorites', label: 'Favourites' },
   // Forma's: a branch per collection, made from Start → Collections.
   collections: { view: 'collections', label: 'Collections' },
+  // Forma's: games not played yet, most like what is played.
+  recommended: { view: 'recommended', label: 'Recommended' },
   // The All games tile, after the categories.
   all: { view: 'all', label: ALL_GAMES.label }
 };

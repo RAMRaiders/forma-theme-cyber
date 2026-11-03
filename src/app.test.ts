@@ -237,11 +237,20 @@ describe('the default theme', () => {
   it('shows what is coming later, and says so rather than opening it', async () => {
     const { press, text } = await start();
     await vi.waitFor(() => expect(text('.shortcut').length).toBe(4));
-    expect(text('.shortcut.soon h2')).toEqual(['Magazines', 'Recommended']);
+    expect(text('.shortcut.soon h2')).toEqual(['Magazines']);
+    await toShortcut(press, text, 'Magazines');
+    await press('confirm');
+    expect(text('.toast')).toEqual(['Magazines is coming in a later version']);
+    expect(text('.shortcut.selected h2')).toEqual(['Magazines']);
+  });
+
+  it('has a Recommended shortcut: games not played yet', async () => {
+    const { press, text } = await start();
+    await vi.waitFor(() => expect(text('.shortcut-recommended .tag')[0]).toMatch(/ games?$/));
     await toShortcut(press, text, 'Recommended');
     await press('confirm');
-    expect(text('.toast')).toEqual(['Recommended is coming in a later version']);
-    expect(text('.shortcut.selected h2')).toEqual(['Recommended']);
+    await vi.waitFor(() => expect(text('.crumb')).toEqual(['Recommended']));
+    await vi.waitFor(() => expect(text('.games .row').length).toBeGreaterThan(0));
   });
 
   it('leaves Start and Select to Forma, and shows its menu is there', async () => {
