@@ -7,8 +7,17 @@ import { el } from './dom.js';
 const FACT_MS = 10_000;
 /** The board follows the selection once it rests: holding a direction does not redraw it. */
 const BOARD_MS = 150;
-/** How long what was shown takes to go, as the next system comes in. */
-const LEAVE_MS = 260;
+/** How long what was shown takes to fade, as the next system comes in. */
+const LEAVE_MS = 220;
+/**
+ * The stage changes once the selection rests this long, so a quick run down the rail moves the
+ * rail alone, without the stage flickering through every system on the way.
+ */
+const REST_MS = 120;
+/** At most this long waiting for the next system's pictures before showing it anyway. */
+const DECODE_MS = 350;
+/** Text too long for its box scrolls through at this speed, in px per second. */
+const SCROLL_PX_S = 16;
 
 type Spec = keyof NonNullable<SystemInfo['specs']>;
 
@@ -87,6 +96,9 @@ export class SystemView {
   #fact = 0;
   #factTimer: ReturnType<typeof setInterval> | undefined;
   #boardTimer: ReturnType<typeof setTimeout> | undefined;
+  #restTimer: ReturnType<typeof setTimeout> | undefined;
+  /** Pictures already asked for, so neighbours are fetched once. */
+  readonly #preloaded = new Set<string>();
   /** Curiosities move on by themselves; Interface → Rotate curiosities. */
   rotateFacts = true;
   /** Which selection a pending info load belongs to: a quick scroll must not show a stale one. */
@@ -129,19 +141,36 @@ export class SystemView {
     if (!r || !system) return;
     r.classList.add('selected');
     this.#centre(r);
+    this.#preload(index);
     const ticket = ++this.#ticket;
     const show = (info: SystemInfo | null) => {
+      if (ticket !== this.#ticket) return;
       this.#info = info;
       this.#fact = 0;
-      this.#render(system, !now);
+      this.#render(system, !now, ticket);
       this.#drawBoard(system, now ? 0 : BOARD_MS);
     };
-    // Loaded with the catalogue, so normally at hand: drawn once, never first without its info.
-    const known = this.infos.peek(system.summary.name);
-    if (known !== undefined) return show(known);
-    void this.infos.get(system.summary.name).then((info) => {
-      if (ticket === this.#ticket) show(info);
-    });
+    clearTimeout(this.#restTimer);
+    const load = () => {
+      // Loaded with the catalogue, so normally at hand: drawn once, never first without its info.
+      const known = this.infos.peek(system.summary.name);
+      if (known !== undefined) return show(known);
+      void this.infos.get(system.summary.name).then(show);
+    };
+    if (now) load();
+    else this.#restTimer = setTimeout(load, REST_MS);
+  }
+
+  /** The pictures of the systems either side, fetched ahead so they are ready when reached. */
+  #preload(index: number): void {
+    for (const n of [index + 1, index - 1, index + 2, index - 2]) {
+      const system = this.#systems[n];
+      for (const url of [system?.photo, system?.logo]) {
+        if (!url || this.#preloaded.has(url)) continue;
+        this.#preloaded.add(url);
+        new Image().src = url;
+      }
+    }
   }
 
   /** The next curiosity, now (Y), instead of waiting. */
@@ -150,6 +179,7 @@ export class SystemView {
     if (facts.length < 2) return;
     this.#fact = (this.#fact + 1) % facts.length;
     this.#swap('fact', this.#factStrip(), true);
+    this.#scrollOverflow();
     this.#scheduleFact();
   }
 
@@ -157,6 +187,7 @@ export class SystemView {
   hide(): void {
     clearInterval(this.#factTimer);
     clearTimeout(this.#boardTimer);
+    clearTimeout(this.#restTimer);
   }
 
   /** The rail slides so the selected logo sits in its middle (a transform: cheap on a Pi). */
@@ -207,15 +238,11 @@ export class SystemView {
     setTimeout(() => old.remove(), LEAVE_MS);
   }
 
-  #render(system: CyberSystem, animate: boolean): void {
+  #render(system: CyberSystem, animate: boolean, ticket: number): void {
     const s = system.summary;
     const info = this.#info;
     const maker = info?.specs?.maker ?? s.manufacturer;
-    this.root.style.setProperty('--sys', `rgb(${systemRgb(maker, system.category)})`);
-    // Down the rail, the old system leaves upward and the new one rises from below.
-    this.root.style.setProperty('--dir', String(this.#selected >= this.#shown ? 1 : -1));
     animate &&= this.#shown !== this.#selected;
-    this.#shown = this.#selected;
 
     const title = el('h2', { class: 'name' }, info?.name ?? s.fullname ?? s.name);
     const year = s.releaseYear ? String(s.releaseYear) : null;
@@ -230,7 +257,7 @@ export class SystemView {
                 'div',
                 { class: 'spec', style: `--n: ${n}` },
                 el('dt', {}, label),
-                el('dd', {}, value)
+                scroller('dd', value)
               )
             ]
           : [];
@@ -238,23 +265,19 @@ export class SystemView {
       return items.length ? el('dl', { class: `specs specs-${side}` }, ...items) : null;
     };
 
-    this.#swap(
-      'year',
-      year ? el('div', { class: 'year', 'aria-hidden': 'true' }, year) : null,
-      animate
-    );
-    this.#swap(
+    const parts: [Slot, HTMLElement | null][] = [];
+    parts.push(['year', year ? el('div', { class: 'year', 'aria-hidden': 'true' }, year) : null]);
+    parts.push([
       'intro',
       el(
         'div',
         { class: 'intro' },
         el('div', { class: 'heading' }, logoImage(system, 'logo'), title),
         byline ? el('p', { class: 'byline' }, byline) : null,
-        info?.description ? el('p', { class: 'description' }, info.description) : null
-      ),
-      animate
-    );
-    this.#swap(
+        info?.description ? scroller('p', info.description, 'description') : null
+      )
+    ]);
+    parts.push([
       'tally',
       el(
         'div',
@@ -266,10 +289,9 @@ export class SystemView {
           { class: 'index' },
           `${String(this.#selected + 1).padStart(2, '0')} / ${String(this.#systems.length).padStart(2, '0')}`
         )
-      ),
-      animate
-    );
-    this.#swap(
+      )
+    ]);
+    parts.push([
       'showcase',
       el(
         'div',
@@ -277,11 +299,40 @@ export class SystemView {
         callouts('left', LEFT),
         stage(system, title.textContent ?? ''),
         callouts('right', RIGHT)
-      ),
-      animate
-    );
-    this.#swap('fact', this.#factStrip(), animate);
-    this.#scheduleFact();
+      )
+    ]);
+    parts.push(['fact', this.#factStrip()]);
+    const apply = () => {
+      if (ticket !== this.#ticket) return;
+      this.root.style.setProperty('--sys', `rgb(${systemRgb(maker, system.category)})`);
+      this.#shown = this.#selected;
+      for (const [slot, part] of parts) this.#swap(slot, part, animate);
+      this.#scrollOverflow();
+      this.#scheduleFact();
+    };
+    // The next system shows whole, its pictures ready, rather than its words first.
+    if (!animate) return apply();
+    const images = parts.flatMap(([, part]) => (part ? [...part.querySelectorAll('img')] : []));
+    void settle(images).then(apply);
+  }
+
+  /**
+   * Words too long for their box (a long story, a long spec) scroll slowly through it and back,
+   * resting at each end, so all of it can be read. Moved by a transform: cheap on a Pi.
+   */
+  #scrollOverflow(): void {
+    requestAnimationFrame(() => {
+      for (const box of this.#panel.querySelectorAll<HTMLElement>(':not(.leaving) .scroll')) {
+        const inner = box.firstElementChild as HTMLElement | null;
+        const over = (inner?.scrollHeight ?? 0) - box.clientHeight;
+        if (!inner || over <= 2) continue;
+        // Resting a quarter of the time at each end.
+        const seconds = Math.max(6, (over / SCROLL_PX_S) * 2);
+        box.style.setProperty('--scroll', `${-over}px`);
+        box.style.setProperty('--scroll-s', `${seconds}s`);
+        box.classList.add('scrolling');
+      }
+    });
   }
 
   #factStrip(): HTMLElement | null {
@@ -296,7 +347,7 @@ export class SystemView {
         { class: 'label' },
         `Did you know? ${(this.#fact % facts.length) + 1}/${facts.length}`
       ),
-      el('p', {}, fact),
+      scroller('p', fact),
       // How long until the next one, when they move on by themselves.
       facts.length > 1 && this.rotateFacts
         ? el('span', { class: 'timer', style: `--fact-ms: ${FACT_MS}ms` })
@@ -311,6 +362,22 @@ export class SystemView {
       this.#factTimer = setInterval(() => this.nextFact(), FACT_MS);
     }
   }
+}
+
+/** Text in a box that scrolls it through when it is too long (see `#scrollOverflow`). */
+function scroller<K extends 'p' | 'dd'>(tag: K, text: string, cls = ''): HTMLElementTagNameMap[K] {
+  return el(tag, { class: `${cls} scroll`.trim() }, el('span', { class: 'scroll-inner' }, text));
+}
+
+/** Waits for pictures to be decoded, so they show at once; not longer than `DECODE_MS`. */
+function settle(images: HTMLImageElement[]): Promise<void> {
+  const decoded = images.map((img) =>
+    typeof img.decode === 'function' ? img.decode().catch(() => undefined) : Promise.resolve()
+  );
+  return Promise.race([
+    Promise.all(decoded).then(() => undefined),
+    new Promise<void>((done) => setTimeout(done, DECODE_MS))
+  ]);
 }
 
 /** A system's logo; a dark one gets a light halo; none (or a broken file) leaves nothing. */

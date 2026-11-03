@@ -100,7 +100,11 @@ describe('the default theme', () => {
 
     // A system without info.json still shows, from Forma's data.
     await press('down');
-    expect(text('.system-panel > :not(.leaving) .name')).toEqual(['Mega Drive']);
+    // The rail moves at once; the stage follows once the selection rests.
+    expect(text('.system-list li.selected .name')).toEqual(['Mega Drive']);
+    await vi.waitFor(() =>
+      expect(text('.system-panel > :not(.leaving) .name')).toEqual(['Mega Drive'])
+    );
     await press('up');
 
     await press('confirm');
