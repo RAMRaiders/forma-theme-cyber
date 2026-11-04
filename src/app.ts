@@ -32,7 +32,6 @@ import { loader } from './ui/loader.js';
 import { SongCard } from './ui/music.js';
 import { preload } from './ui/preload.js';
 import { SystemView } from './ui/system.js';
-import { BestsellerStore } from './data/bestsellers.js';
 
 /** One level of the path, and where the selection was, so going back returns to it. */
 interface Level {
@@ -103,7 +102,6 @@ export class App {
   readonly #backdrop = el('div', { class: 'backdrop', 'aria-hidden': 'true' });
   readonly #homeView = new HomeView();
   readonly #systemView: SystemView;
-  readonly #bestsellers: BestsellerStore;
   /** Which screen the current level is: Cyber's own two, or Forma's views as they come. */
   #mode: 'home' | 'systems' | 'browse' = 'browse';
   #groups: Tile[] = [];
@@ -125,11 +123,7 @@ export class App {
     /** Each system's info.json; tests pass their own. */
     private readonly infos = new InfoStore()
   ) {
-    this.#bestsellers = new BestsellerStore({
-      search: (query, limit) => this.forma.library.search(query, limit),
-      mediaUrl: (id, kind, width) => this.forma.library.mediaUrl(id, kind, width)
-    });
-    this.#systemView = new SystemView(infos, (svg) => this.#showBoard(svg), this.#bestsellers);
+    this.#systemView = new SystemView(infos, (svg) => this.#showBoard(svg));
     root.replaceChildren(
       this.#backdrop,
       el('header', {}, this.#title, this.#trail),
@@ -158,10 +152,7 @@ export class App {
 
   async start(): Promise<void> {
     this.forma.input.on((e) => this.#onInput(e));
-    this.forma.events.on('library:changed', () => {
-      this.#bestsellers.clear();
-      this.#reloadSoon();
-    });
+    this.forma.events.on('library:changed', () => this.#reloadSoon());
     // Views change with collections too: the shortcuts' counts follow.
     this.forma.events.on('views:changed', () => {
       void this.#loadViews();
