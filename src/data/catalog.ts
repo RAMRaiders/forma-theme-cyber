@@ -135,25 +135,10 @@ function cyberSystem(
   };
 }
 
-export type SystemsSort = 'games' | 'name' | 'year' | 'maker';
-
-const SORTS: Record<SystemsSort, (a: CyberSystem, b: CyberSystem) => number> = {
-  games: (a, b) => b.summary.gameCount - a.summary.gameCount || compareName(a, b),
-  name: compareName,
-  // Oldest first; a system without a year goes last.
-  year: (a, b) =>
-    (a.summary.releaseYear ?? 9999) - (b.summary.releaseYear ?? 9999) || compareName(a, b),
-  maker: (a, b) =>
-    (a.summary.manufacturer ?? '\uffff').localeCompare(b.summary.manufacturer ?? '\uffff') ||
-    (a.summary.releaseYear ?? 9999) - (b.summary.releaseYear ?? 9999) ||
-    compareName(a, b)
-};
-
-/** Categories that have games, each with its systems in `sort` order (biggest libraries first). */
+/** Categories that have games, each with its systems in the order Forma lists them (its setting). */
 export function group(
   systems: SystemSummary[],
   infos: ReadonlyMap<string, SystemInfo>,
-  sort: SystemsSort = 'games',
   arts: Readonly<Record<string, SystemArt>> = {}
 ): { category: Category; systems: CyberSystem[] }[] {
   const by = new Map<Category['id'], CyberSystem[]>();
@@ -167,7 +152,7 @@ export function group(
   }
   return CATEGORIES.filter((c) => by.has(c.id)).map((category) => ({
     category,
-    systems: by.get(category.id)!.sort(SORTS[sort])
+    systems: by.get(category.id)!
   }));
 }
 
@@ -178,20 +163,21 @@ export const ALL_GAMES: Category = {
   tagline: 'Every game, A to Z'
 };
 
-export function allGames(groups: { systems: CyberSystem[] }[]): {
+/** Every system with games, in the order Forma lists them (`order`, its setting). */
+export function allGames(
+  groups: { systems: CyberSystem[] }[],
+  order: readonly SystemSummary[]
+): {
   category: Category;
   systems: CyberSystem[];
 } {
+  const at = new Map(order.map((s, n) => [s.name, n]));
   return {
     category: ALL_GAMES,
     systems: groups
       .flatMap((g) => g.systems)
-      .sort((a, b) => b.summary.gameCount - a.summary.gameCount)
+      .sort((a, b) => (at.get(a.summary.name) ?? 0) - (at.get(b.summary.name) ?? 0))
   };
-}
-
-function compareName(a: CyberSystem, b: CyberSystem): number {
-  return (a.summary.fullname || a.summary.name).localeCompare(b.summary.fullname || b.summary.name);
 }
 
 /**

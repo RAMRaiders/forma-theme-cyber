@@ -32,7 +32,13 @@ const infos = new InfoStore((url) =>
 );
 
 async function start(permissions: string[] = [], slow: Record<string, number> = {}) {
-  const backend = mockBackend({ playMs: 50, permissions });
+  const backend = mockBackend({ playMs: 50, permissions: [...permissions, 'settings.system'] });
+  // Systems oldest first (Forma's order, as its Select menu sets it): the NES leads.
+  await backend.invoke('settings_set', {
+    key: 'library.systemsOrder',
+    value: 'year',
+    scope: 'system'
+  });
   // Commands answered late, as on a slow box.
   const invoke = backend.invoke.bind(backend);
   backend.invoke = async <T>(command: string, args?: Record<string, unknown>) => {
@@ -41,10 +47,16 @@ async function start(permissions: string[] = [], slow: Record<string, number> = 
     return invoke<T>(command, args);
   };
   let send: (e: InputEvent) => void = () => {};
+  // Every listener, to send what Forma would (the mock sends only some events itself).
+  const handlers = new Map<string, ((p: unknown) => void)[]>();
   const listen = backend.listen.bind(backend);
   backend.listen = <T>(event: string, handler: (p: T) => void) => {
     if (event === 'input') send = handler as (e: InputEvent) => void;
+    handlers.set(event, [...(handlers.get(event) ?? []), handler as (p: unknown) => void]);
     return listen(event, handler);
+  };
+  const fire = (event: string, payload: unknown) => {
+    for (const h of handlers.get(event) ?? []) h(payload);
   };
   const forma = await connect({ backend, keyboard: false });
   const root = document.querySelector<HTMLElement>('#app')!;
@@ -58,7 +70,7 @@ async function start(permissions: string[] = [], slow: Record<string, number> = 
   };
   const text = (selector: string) =>
     [...root.querySelectorAll(selector)].map((n) => n.textContent?.trim() ?? '');
-  return { root, press, text, forma, backend };
+  return { fire, root, press, text, forma, backend };
 }
 
 describe('the default theme', () => {
@@ -75,13 +87,13 @@ describe('the default theme', () => {
     const { press, text, root } = await start();
     await press('confirm');
     expect(text('.trail .crumb')).toEqual(['Consoles']);
-    // Biggest libraries first.
+    // In the order Forma lists them: oldest first here.
     expect(text('.system-list .name')).toEqual([
       'Nintendo Entertainment System',
       'Mega Drive',
       'Super Famicom',
-      'Homebrew',
-      'PlayStation'
+      'PlayStation',
+      'Homebrew'
     ]);
     // The system's own page: Cyber's info, its specs, a curiosity, and its board behind.
     await vi.waitFor(() =>
@@ -294,23 +306,28 @@ describe('the default theme', () => {
   });
 
   it('follows its settings as Forma’s menu changes them', async () => {
-    const { press, text, backend } = await start(['settings.system']);
+    const { press, text, backend, fire } = await start(['settings.system']);
     await backend.invoke('shell_set_theme_setting', { key: 'textSize', value: 'large' });
     expect(document.documentElement.dataset.textSize).toBe('large');
     await backend.invoke('shell_set_theme_setting', { key: 'board', value: 42 });
     expect(document.documentElement.dataset.board).toBe('on');
 
-    await backend.invoke('shell_set_theme_setting', { key: 'systemsSort', value: 'name' });
+    // Systems as Forma lists them; then in the order its Select menu sets.
     await press('confirm');
     await vi.waitFor(() =>
-      expect(text('.system-list .name')).toEqual([
-        'Homebrew',
-        'Mega Drive',
-        'Nintendo Entertainment System',
-        'PlayStation',
-        'Super Famicom'
-      ])
+      expect(text('.system-list .name')[0]).toEqual('Nintendo Entertainment System')
     );
+    await backend.invoke('settings_set', {
+      key: 'library.systemsOrder',
+      value: 'name',
+      scope: 'system'
+    });
+    fire('settings:changed', { scope: 'system', key: 'library.systemsOrder', value: 'name' });
+    const byName = (await backend.invoke<{ fullname: string }[]>('library_systems')).map(
+      (s) => s.fullname
+    );
+    expect(byName[0]).toBe('Homebrew');
+    await vi.waitFor(() => expect(text('.system-list .name')).toEqual(byName));
   });
 
   it('reads its settings one by one, over the single object it used to keep', async () => {

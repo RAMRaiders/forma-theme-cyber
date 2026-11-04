@@ -15,6 +15,7 @@ import {
   DEFAULT_PREFS,
   MARGINS_SETTING,
   type Prefs,
+  SYSTEMS_ORDER_SETTING,
   applyMargins,
   applyPrefs,
   loadMargins,
@@ -273,7 +274,7 @@ export class App {
         this.infos.all(systems.filter((s) => s.gameCount > 0).map((s) => s.name)),
         this.infos.art()
       ]);
-      this.#groups = group(systems, infos, this.#prefs.systemsSort, arts);
+      this.#groups = group(systems, infos, arts);
       // Every system's logo and picture, decoded in the background, ready for the rail.
       preload(this.#groups.flatMap((g) => g.systems.flatMap((s) => [s.logoSmall, s.photo])));
       const level = this.#level;
@@ -283,7 +284,7 @@ export class App {
         this.#backdrop.replaceChildren();
         this.#shortcuts = await this.#countShortcuts();
         // Every game, as one more tile after the categories.
-        const tiles = this.#groups.length ? [...this.#groups, allGames(this.#groups)] : [];
+        const tiles = this.#groups.length ? [...this.#groups, allGames(this.#groups, systems)] : [];
         const count = tiles.length + this.#shortcuts.length;
         level.index = Math.min(level.index, Math.max(0, count - 1));
         this.#main.replaceChildren(this.#homeView.root);
@@ -357,16 +358,14 @@ export class App {
   async #settingChanged({ scope, key, value }: SettingsChanged): Promise<void> {
     if (scope === 'system') {
       if (key === MARGINS_SETTING) applyMargins(margins(value));
+      // A new order for the systems shows at once, behind Forma's menu.
+      if (key === SYSTEMS_ORDER_SETTING && this.#mode !== 'browse') await this.#load();
       return;
     }
     const update = prefUpdate(key, value);
     if (!update) return;
-    const resort =
-      update.systemsSort !== undefined && update.systemsSort !== this.#prefs.systemsSort;
     this.#prefs = { ...this.#prefs, ...update };
     this.#applyPrefs();
-    // A new order shows at once, behind Forma's menu.
-    if (resort && this.#mode !== 'browse') await this.#load();
   }
 
   /** While the emulator starts: the game's art, its name and system, and the loader. */
@@ -511,7 +510,16 @@ export class App {
     clearTimeout(this.#contextTimer);
     this.#contextTimer = setTimeout(() => {
       const { system, game } = this.#optionsTarget();
-      this.forma.shell.setContext({ view: this.#view, system, game }).catch(() => {});
+      // Which list the selection moves in: Forma's Select menu offers options for it.
+      const list =
+        this.#mode === 'home'
+          ? 'categories'
+          : this.#mode === 'systems'
+            ? 'systems'
+            : this.#page?.listing.kind === 'games'
+              ? 'games'
+              : null;
+      this.forma.shell.setContext({ view: this.#view, system, game, list }).catch(() => {});
     }, CONTEXT_DELAY_MS);
   }
 

@@ -4,7 +4,7 @@
   "version": "0.7.12",
   "entry": "index.html",
   "logo": "logo.svg",
-  "sdk": "^1.15",
+  "sdk": "^1.16",
   "permissions": ["settings.system"],
   "resolutions": ["1280x720", "1920x1080"],
   "views": ["systems"],
@@ -98,32 +98,6 @@
       "group": "Look",
       "type": "toggle",
       "default": true
-    },
-    {
-      "key": "systemsSort",
-      "label": "Systems",
-      "description": "In each category",
-      "group": "Sorting",
-      "type": "choice",
-      "choices": [
-        {
-          "value": "games",
-          "label": "Most games first"
-        },
-        {
-          "value": "name",
-          "label": "By name"
-        },
-        {
-          "value": "year",
-          "label": "Oldest first"
-        },
-        {
-          "value": "maker",
-          "label": "By maker"
-        }
-      ],
-      "default": "games"
     }
   ]
 }

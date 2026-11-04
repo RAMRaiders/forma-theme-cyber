@@ -28,7 +28,6 @@ describe('catalog', () => {
         system('imageviewer', 'system', 1)
       ],
       new Map([['neogeo', { category: 'arcade' as const }]]),
-      'games',
       {
         snes: { logo: 'logo.webp', picture: 'photo.webp', kind: 'cutout' },
         nes: { logo: 'logo.webp', logoDark: true, picture: 'photo.webp', kind: 'framed' }
@@ -39,7 +38,8 @@ describe('catalog', () => {
       ['handhelds', ['gba']],
       ['arcade', ['neogeo']],
       ['ports', ['sonic3-air']],
-      ['engines', ['openbor', 'easyrpg', 'pygame']]
+      // In the order Forma lists them.
+      ['engines', ['openbor', 'pygame', 'easyrpg']]
     ]);
     // Each system's art, from art.json; a system it does not list has none.
     const [snes, nes] = groups[0]!.systems;

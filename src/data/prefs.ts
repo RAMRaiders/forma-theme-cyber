@@ -16,8 +16,6 @@ export interface Prefs {
   previews: boolean;
   /** Curiosities move on by themselves on a system's page. */
   rotateFacts: boolean;
-  /** A category's systems, in this order. */
-  systemsSort: 'games' | 'name' | 'year' | 'maker';
 }
 
 export const DEFAULT_PREFS: Prefs = {
@@ -26,9 +24,14 @@ export const DEFAULT_PREFS: Prefs = {
   systemsLook: 'neon',
   motion: true,
   previews: true,
-  rotateFacts: true,
-  systemsSort: 'games'
+  rotateFacts: true
 };
+
+/**
+ * The order systems come in: Forma's setting, for every theme, set in its Select menu over the
+ * systems. `library.systems()` lists them so; Cyber keeps that order.
+ */
+export const SYSTEMS_ORDER_SETTING = 'library.systemsOrder';
 
 /** Where Cyber kept its prefs before Forma's menu showed them: one object, read once more. */
 const LEGACY_KEY = 'interface';
