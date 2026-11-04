@@ -55,6 +55,11 @@ export class HomeView {
     this.#shortcuts.replaceChildren(...buttons);
     this.#selected = -1;
     this.select(selected);
+    // Every row that runs is set up now, not on its tile's first selection: the first moves
+    // (at boot, while the Pi is busiest) then only change which row runs.
+    requestAnimationFrame(() => {
+      for (const card of cards) marquee(card);
+    });
   }
 
   /** The shortcut selected, if the selection is on one. */
@@ -97,13 +102,12 @@ function marquee(tile: HTMLElement): void {
         img.addEventListener('load', done, { once: true });
         img.addEventListener('error', done, { once: true });
       });
-    void Promise.all(loading.map(loaded)).then(() => {
-      if (tile.classList.contains('selected')) marquee(tile);
-    });
+    void Promise.all(loading.map(loaded)).then(() => marquee(tile));
     return;
   }
   const width = track.scrollWidth;
-  if (width <= row.clientWidth + 1) return;
+  // Not laid out (the screen is hidden): measured when the tile is selected instead.
+  if (!row.clientWidth || width <= row.clientWidth + 1) return;
   track.dataset.looped = '1';
   row.classList.add('looped');
   track.append(...[...track.children].map((logo) => logo.cloneNode(true)));
