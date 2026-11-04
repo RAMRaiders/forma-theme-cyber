@@ -32,5 +32,7 @@
     "It was the first computer of any kind to sell one million units.",
     "Its text screen was only 22 characters wide."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Gridrunner", "Omega Race", "Jelly Monsters"],
+  "bestsellersBy": "classics"
 }

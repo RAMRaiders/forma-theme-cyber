@@ -3,5 +3,7 @@
     "Oric computers were especially popular in France.",
     "The Atmos replaced the Oric-1's calculator-style keys with a typewriter-style keyboard."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["3D Fongus", "Zorgons Revenge", "Defence Force"],
+  "bestsellersBy": "classics"
 }

@@ -31,5 +31,7 @@
     "NEC's CD-ROM² add-on of 1988 was the first CD-ROM drive for a home video game console.",
     "The HuC6280 is a modified 65C02 that includes the sound generator and a timer on the same die."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Blazing Lazers", "Bonk's Adventure", "Alien Crush"],
+  "bestsellersBy": "classics"
 }

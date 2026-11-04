@@ -22,5 +22,7 @@
     "The Magical Shop accessory captured images from a VCR so users could add text and print them as stickers.",
     "It was never sold outside Japan."
   ],
-  "unverified": ["1 MB"]
+  "unverified": ["1 MB"],
+  "bestsellers": ["Anime Land", "Dorīmuchenji Kokinchanno Fasshonpātī", "HARIHARI Shīru Paradaisu"],
+  "bestsellersBy": "classics"
 }

@@ -26,5 +26,7 @@
     "It uses the same Signetics 2650 CPU as the Emerson Arcadia 2001.",
     "About 40 titles were made for it, three of which went unreleased."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Car Races", "Pinball", "Air/Sea Battle"],
+  "bestsellersBy": "classics"
 }

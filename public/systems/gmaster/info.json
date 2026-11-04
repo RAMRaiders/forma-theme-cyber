@@ -22,5 +22,7 @@
     "The Game Plus variant sold in France looked more like a Game Boy and could not play Game Master cartridges.",
     "About 18 games were released for it."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Bubble Boy", "Dungeon Adventure", "Continental Galaxy"],
+  "bestsellersBy": "classics"
 }

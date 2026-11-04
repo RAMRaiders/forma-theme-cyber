@@ -80,6 +80,11 @@ export interface SystemInfo {
   curiosities?: string[];
   /** Its best-selling games, best first; `A|B` for other titles of the same game. */
   bestsellers?: string[];
+  /**
+   * `classics` where no sales figures are known: well-known games instead (the ones most rated
+   * on the LaunchBox Games Database, or picked by hand), shown as such, not as best sellers.
+   */
+  bestsellersBy?: 'sales' | 'classics';
 }
 
 /** What art a system has (public/systems/art.json, built by scripts/build-art.mjs). */

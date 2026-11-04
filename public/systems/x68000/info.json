@@ -42,5 +42,7 @@
   "unverified": [
     "Sharp CYNTHIA",
     "Up to 768 × 512; 65,536 colours at lower resolutions; hardware sprites"
-  ]
+  ],
+  "bestsellers": ["Akumajou Dracula", "Alien Syndrome", "Final Fight"],
+  "bestsellersBy": "classics"
 }

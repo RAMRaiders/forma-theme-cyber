@@ -27,5 +27,7 @@
     "It reached stores shortly before the ColecoVision.",
     "Emerson reportedly built versions of Pac-Man, Galaxian and Defender for it but never shipped them, reportedly because of legal pressure from Atari."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Astro Invader", "3D Soccer", "3D Bowling"],
+  "bestsellersBy": "classics"
 }

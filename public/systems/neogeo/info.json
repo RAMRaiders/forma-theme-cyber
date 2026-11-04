@@ -35,5 +35,7 @@
     "Many game boxes advertised '100 MEGA' or 'MAX 330 MEGA' to highlight their cartridge sizes in megabits.",
     "The last official MVS release, Samurai Shodown V Special, came out in 2004."
   ],
-  "unverified": ["SNK LSPC2-A2"]
+  "unverified": ["SNK LSPC2-A2"],
+  "bestsellers": ["Metal Slug", "The King of Fighters '98", "Samurai Shodown"],
+  "bestsellersBy": "classics"
 }

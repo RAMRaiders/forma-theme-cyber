@@ -35,5 +35,7 @@
     "PlayCable let subscribers download games over cable TV.",
     "The FTC investigated Mattel because a promised Keyboard Component was delayed for years."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Astrosmash", "BurgerTime", "Night Stalker"],
+  "bestsellersBy": "classics"
 }

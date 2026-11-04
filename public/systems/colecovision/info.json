@@ -32,5 +32,7 @@
     "Expansion Module #3 turned it into the Coleco Adam computer.",
     "Its controllers had a 12-button keypad that took game-specific overlays."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Donkey Kong", "BurgerTime", "Mouse Trap"],
+  "bestsellersBy": "classics"
 }

@@ -5,5 +5,7 @@
     "Myst and Bungie's Marathon were made for the Mac first.",
     "Macs ran on Motorola 68000-family processors until Apple moved to PowerPC in 1994."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Myst", "Doom II", "Fallout 2"],
+  "bestsellersBy": "classics"
 }

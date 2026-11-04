@@ -32,5 +32,7 @@
     "Unofficial clones were built in large numbers in the Soviet Union and Eastern Europe.",
     "In the US it was sold in modified form as the Timex Sinclair 2068."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Jetpac", "Manic Miner", "Deathchase"],
+  "bestsellersBy": "classics"
 }

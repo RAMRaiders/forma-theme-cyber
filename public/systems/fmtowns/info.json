@@ -4,5 +4,7 @@
     "It was named after Charles Townes, the Nobel-winning laser physicist.",
     "The FM Towns Marty of 1993 turned it into a games console."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["After Burner", "Indiana Jones and the Fate of Atlantis", "Lemmings"],
+  "bestsellersBy": "classics"
 }

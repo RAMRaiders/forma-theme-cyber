@@ -27,5 +27,7 @@
     "A laptop-style educational version, the Super Junior Computer, used the same game hardware.",
     "About 24 cartridges are known to exist for it."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["2nd Space", "Armour Force", "Artic Zone"],
+  "bestsellersBy": "classics"
 }

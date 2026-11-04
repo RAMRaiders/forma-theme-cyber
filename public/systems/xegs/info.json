@@ -4,5 +4,7 @@
     "Missile Command is built into it.",
     "It plays the existing cartridges and software of the Atari 8-bit computers."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Archon: The Light and the Dark", "Mario Bros.", "Donkey Kong"],
+  "bestsellersBy": "classics"
 }

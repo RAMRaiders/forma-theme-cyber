@@ -27,5 +27,11 @@
   "unverified": [
     "About 3.5 million (WonderSwan family)",
     "Gunpey, a puzzle game named after Yokoi, was one of its launch titles."
-  ]
+  ],
+  "bestsellers": [
+    "Rockman & Forte: Mirai Kara no Chousensha",
+    "beatmania for WonderSwan",
+    "Kaze no Klonoa: Moonlight Museum"
+  ],
+  "bestsellersBy": "classics"
 }

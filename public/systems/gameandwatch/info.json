@@ -27,5 +27,7 @@
     "Several models, such as Donkey Kong and Oil Panic, used a clamshell with two screens, the format the Nintendo DS later revived.",
     "Nintendo released new Game & Watch units for Super Mario Bros. in 2020 and The Legend of Zelda in 2021 as anniversary products."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Donkey Kong", "Mario Bros.", "Ball"],
+  "bestsellersBy": "classics"
 }

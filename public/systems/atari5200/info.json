@@ -35,5 +35,7 @@
     "Its analog joysticks do not spring back to centre.",
     "Its controllers included a numeric keypad and Start, Pause and Reset keys."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Pac-Man", "The Activision Decathlon", "Astro Chase"],
+  "bestsellersBy": "classics"
 }

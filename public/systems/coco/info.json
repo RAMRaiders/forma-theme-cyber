@@ -5,5 +5,7 @@
     "The multitasking OS-9 operating system ran on it.",
     "The Dragon 32 and 64, made in Wales, were based on the same design."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Dungeons of Daggorath", "Downland", "Polaris"],
+  "bestsellersBy": "classics"
 }

@@ -5,5 +5,7 @@
     "The picture can be flipped so left-handed players can hold it upside down.",
     "Up to eight Lynxes can be linked with ComLynx cables in some games."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Batman Returns", "Chip's Challenge", "California Games"],
+  "bestsellersBy": "classics"
 }

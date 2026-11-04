@@ -35,5 +35,7 @@
     "The controller's trigger-grip joystick also turns like a paddle knob.",
     "The ZGRASS expansion was designed to turn it into a full computer with a keyboard and CP/M support."
   ],
-  "unverified": ["Bally Data Chip", "Bally Address Chip"]
+  "unverified": ["Bally Data Chip", "Bally Address Chip"],
+  "bestsellers": ["Amazing Maze / Tic-Tac-Toe", "Astro Battle", "Artillery Duel"],
+  "bestsellersBy": "classics"
 }

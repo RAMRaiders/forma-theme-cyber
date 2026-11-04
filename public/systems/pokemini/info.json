@@ -23,5 +23,7 @@
     "Its infrared port let two units play together without a cable.",
     "It came in three colours named after Pokémon: Wooper Blue, Chikorita Green and Smoochum Purple."
   ],
-  "unverified": ["Epson S1C88-based @ 4 MHz"]
+  "unverified": ["Epson S1C88-based @ 4 MHz"],
+  "bestsellers": ["Pichu Bros. Mini", "Pokémon Tetris", "Pokémon Pinball Mini"],
+  "bestsellersBy": "classics"
 }

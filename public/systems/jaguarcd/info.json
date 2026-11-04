@@ -4,5 +4,7 @@
     "It came with Jeff Minter's Virtual Light Machine, which draws visuals to music CDs.",
     "Only about a dozen games were made for it."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Battlemorph", "Baldies", "Primal Rage"],
+  "bestsellersBy": "classics"
 }

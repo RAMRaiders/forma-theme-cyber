@@ -35,5 +35,7 @@
     "Milton Bradley bought GCE in 1983, and the console was discontinued after the 1983–84 market crash.",
     "The rights holder later allowed non-commercial distribution of the Vectrex games, helping a homebrew scene that is still active."
   ],
-  "unverified": ["MOS 6522 VIA", "MC1408"]
+  "unverified": ["MOS 6522 VIA", "MC1408"],
+  "bestsellers": ["Berzerk", "Pole Position", "Star Trek: The Motion Picture"],
+  "bestsellersBy": "classics"
 }

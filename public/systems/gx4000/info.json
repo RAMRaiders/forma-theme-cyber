@@ -31,5 +31,7 @@
     "Burnin' Rubber was bundled with the console.",
     "Its cartridges also work in the 6128 Plus and 464 Plus computers."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Barbarian II: The Dungeon of Drax", "Burnin' Rubber", "Fire & Forget II"],
+  "bestsellersBy": "classics"
 }

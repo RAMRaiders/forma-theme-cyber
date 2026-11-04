@@ -36,5 +36,7 @@
     "A single-unit Mega Drive with built-in 32X, code-named Neptune, was announced but never released.",
     "It plugs into the Mega Drive's cartridge slot, and ordinary Mega Drive games are played through it."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Knuckles' Chaotix", "After Burner", "Virtua Racing Deluxe"],
+  "bestsellersBy": "classics"
 }

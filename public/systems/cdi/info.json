@@ -5,5 +5,7 @@
     "A Digital Video Cartridge added MPEG-1 decoding for Video CD films.",
     "It ran CD-RTOS, a version of Microware's OS-9."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Hotel Mario", "Link: The Faces of Evil", "Zelda: The Wand of Gamelon"],
+  "bestsellersBy": "classics"
 }

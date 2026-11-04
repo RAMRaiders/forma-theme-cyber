@@ -24,5 +24,7 @@
     "It still runs on a single AA battery.",
     "Like the rest of the WonderSwan family, it was sold only in Japan."
   ],
-  "unverified": ["About 3.5 million (WonderSwan family)"]
+  "unverified": ["About 3.5 million (WonderSwan family)"],
+  "bestsellers": ["Guilty Gear Petit 2", "Final Fantasy IV", "Guilty Gear Petit"],
+  "bestsellersBy": "classics"
 }

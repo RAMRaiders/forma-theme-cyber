@@ -22,5 +22,7 @@
     "Its games cost about US$9 to $15, well below Game Boy prices.",
     "Its first homebrew game, Assembloids, was released in 2020."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Alien", "Block Buster", "Balloon Fight"],
+  "bestsellersBy": "classics"
 }

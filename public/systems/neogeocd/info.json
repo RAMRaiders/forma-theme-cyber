@@ -32,5 +32,7 @@
     "Some games took 30 to 60 seconds to load.",
     "Eight games were released only on the Neo Geo CD."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Metal Slug", "Metal Slug 2", "The King of Fighters '96"],
+  "bestsellersBy": "classics"
 }

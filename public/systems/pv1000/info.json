@@ -27,5 +27,7 @@
     "Its successor on the console side was the Casio Loopy of 1995.",
     "It came out in Japan in 1983, the same year as the Famicom and the SG-1000."
   ],
-  "unverified": ["disappeared within about a year"]
+  "unverified": ["disappeared within about a year"],
+  "bestsellers": ["Amidar", "Dig Dug", "Pooyan"],
+  "bestsellersBy": "classics"
 }

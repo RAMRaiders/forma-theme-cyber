@@ -23,5 +23,7 @@
     "The original model had two cartridge slots; the 1999 Pocket Pro cut it to one and ran on two AA batteries instead of four.",
     "Its library of about 20 games included handheld versions of Resident Evil 2 and Duke Nukem 3D."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Resident Evil 2", "Batman & Robin", "Sonic Jam"],
+  "bestsellersBy": "classics"
 }

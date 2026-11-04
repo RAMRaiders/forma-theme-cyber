@@ -23,5 +23,7 @@
     "Its built-in software included a puzzle game and a simple paint program.",
     "It ran on four AA batteries for an estimated 60 to 70 hours."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Block Maze", "Reversi", "Astro Bomber"],
+  "bestsellersBy": "classics"
 }

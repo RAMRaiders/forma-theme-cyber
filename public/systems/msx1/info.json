@@ -35,5 +35,7 @@
     "In the Arab world, Sakhr sold MSX machines with Arabic-language support.",
     "Its video chip is the same Texas Instruments family used in the ColecoVision and SG-1000."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Knightmare", "1942", "Antarctic Adventure"],
+  "bestsellersBy": "classics"
 }

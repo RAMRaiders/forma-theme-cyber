@@ -4,5 +4,7 @@
     "It is built on the same AGA chipset as the Amiga 1200.",
     "The SX-1 and SX32 add-ons turned it into an Amiga computer with a keyboard and drive ports."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Akira", "Banshee", "The Chaos Engine"],
+  "bestsellersBy": "classics"
 }

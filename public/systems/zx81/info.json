@@ -5,5 +5,7 @@
     "In FAST mode the screen goes blank while the computer is working.",
     "In the US it was sold as the Timex Sinclair 1000."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["3D Monster Maze", "Mazogs", "Flight Simulation"],
+  "bestsellersBy": "classics"
 }

@@ -32,5 +32,7 @@
     "The display used red LEDs, which were the cheapest and least power-hungry option at the time.",
     "Its image is produced by a single column of LEDs per eye swept across the view by a vibrating mirror."
   ],
-  "unverified": ["64 KB WRAM / 128 KB VRAM"]
+  "unverified": ["64 KB WRAM / 128 KB VRAM"],
+  "bestsellers": ["Virtual Boy Wario Land", "Mario's Tennis", "3D Tetris"],
+  "bestsellersBy": "classics"
 }

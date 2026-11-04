@@ -40,5 +40,7 @@
     "In Germany it was sold under the Schneider brand.",
     "The 1990 GX4000 console and CPC Plus range were built on upgraded CPC hardware."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Gryzor", "Rick Dangerous", "Bomb Jack"],
+  "bestsellersBy": "classics"
 }

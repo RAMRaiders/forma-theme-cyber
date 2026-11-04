@@ -35,5 +35,7 @@
     "The CPU slows to about 1.19 MHz when it accesses TIA or RIOT.",
     "NTSC 7800 cartridges carry a digital signature checked by the BIOS at boot."
   ],
-  "unverified": ["The CPU slows to about 1.19 MHz when it accesses TIA or RIOT."]
+  "unverified": ["The CPU slows to about 1.19 MHz when it accesses TIA or RIOT."],
+  "bestsellers": ["Galaga", "Donkey Kong", "Centipede"],
+  "bestsellersBy": "classics"
 }

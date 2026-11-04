@@ -27,5 +27,7 @@
     "Its datasette and joystick ports use different connectors from the C64's, so C64 peripherals needed adapters.",
     "It shares the TED chip with the cheaper Commodore 16 and 116."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Auf Wiedersehen Monty", "Commando", "Monty on the Run"],
+  "bestsellersBy": "classics"
 }

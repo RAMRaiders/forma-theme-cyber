@@ -5,5 +5,7 @@
     "Doom was released as shareware in December 1993, its first episode free to copy.",
     "Some games were copy-protected with questions from the manual or code wheels in the box."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["DOOM", "DOOM II", "Duke Nukem 3D"],
+  "bestsellersBy": "classics"
 }

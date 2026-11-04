@@ -5,5 +5,7 @@
     "Jordan Mechner made Karateka and Prince of Persia on the Apple II.",
     "The Apple IIe stayed on sale until 1993."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Karateka", "Lode Runner", "Choplifter!"],
+  "bestsellersBy": "classics"
 }

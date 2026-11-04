@@ -5,5 +5,7 @@
     "Star Raiders, a first-person space game, was one of its showcase titles.",
     "Its POKEY sound chip was also used in many Atari arcade machines."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Star Raiders", "Bruce Lee", "Alley Cat"],
+  "bestsellersBy": "classics"
 }

@@ -4,5 +4,7 @@
     "Its Speech Synthesizer used the same speech technology as TI's Speak & Spell.",
     "A price war with Commodore drove its price down to about $50 before TI left the market in 1983."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Parsec", "Donkey Kong", "007: Aqua Base"],
+  "bestsellersBy": "classics"
 }

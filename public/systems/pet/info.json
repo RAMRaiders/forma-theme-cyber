@@ -4,5 +4,7 @@
     "The first PET of 1977 had a calculator-style keyboard and a built-in cassette deck.",
     "Its PETSCII graphic characters were printed on the keys."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["3D Startrek", "B-1 Nuclear Bomber", "Miner!"],
+  "bestsellersBy": "classics"
 }

@@ -34,5 +34,7 @@
   ],
   "unverified": [
     "Each licensed manufacturer had to make a profit on the hardware itself, since 3DO only earned royalties on software."
-  ]
+  ],
+  "bestsellers": ["Road Rash", "Gex", "Alone in the Dark"],
+  "bestsellersBy": "classics"
 }

@@ -31,5 +31,7 @@
     "Its video chip is the same TMS9918 family used in the ColecoVision and MSX computers.",
     "Its successor, the SG-1000 Mark III, was redesigned as the Master System for the West."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Girl's Garden", "Bank Panic", "Bomb Jack"],
+  "bestsellersBy": "classics"
 }

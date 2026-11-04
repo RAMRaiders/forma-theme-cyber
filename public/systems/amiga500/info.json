@@ -4,5 +4,7 @@
     "It was the best-selling Amiga, with the whole computer inside its keyboard.",
     "Without a disk, early models showed a hand holding a floppy, asking for a Workbench disk."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Agony", "Lemmings", "Lotus Turbo Challenge 2"],
+  "bestsellersBy": "classics"
 }

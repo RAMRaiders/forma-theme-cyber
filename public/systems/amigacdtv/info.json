@@ -4,5 +4,7 @@
     "It is essentially an Amiga 500 with a CD-ROM drive, sold as a living-room multimedia player.",
     "It came with a wireless infrared remote control."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Turrican II", "Defender of the Crown", "Xenon 2: Megablast"],
+  "bestsellersBy": "classics"
 }

@@ -4,5 +4,7 @@
     "It launched in 1977 alongside the Apple II and Commodore PET, a trio of early home computers.",
     "Tandy sold it through its RadioShack stores."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Adventureland", "Dancing Demon", "Android Nim"],
+  "bestsellersBy": "classics"
 }

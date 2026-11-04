@@ -5,5 +5,7 @@
     "Its designers Sophie Wilson and Steve Furber later created the ARM processor.",
     "The 1986 BBC Domesday Project put a survey of the UK on LaserVision discs read by a BBC Master."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Licence to Kill", "Chuckie Egg", "Elite"],
+  "bestsellersBy": "classics"
 }

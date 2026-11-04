@@ -381,7 +381,7 @@ export class SystemView {
         { class: 'tally' },
         el('span', { class: 'count' }, s.gameCount.toLocaleString('en')),
         el('span', { class: 'unit' }, s.gameCount === 1 ? 'game' : 'games'),
-        bestsellerShelf(bestsellers(s.name, info?.bestsellers))
+        bestsellerShelf(bestsellers(s.name, info?.bestsellers), info?.bestsellersBy !== 'classics')
       )
     ]);
     parts.push([
@@ -467,15 +467,16 @@ export class SystemView {
 }
 
 /**
- * The system's best sellers, as pictures of their real cartridges or discs, ranked. A game
+ * The system's best sellers (or its classics), as pictures of their real cartridges or discs, ranked. A game
  * whose picture does not load is left out; nothing when there are none.
  */
-function bestsellerShelf(best: Bestseller[]): HTMLElement | null {
+function bestsellerShelf(best: Bestseller[], ranked: boolean): HTMLElement | null {
   if (!best.length) return null;
   return el(
     'div',
     { class: 'bestsellers' },
-    el('span', { class: 'label' }, 'Best sellers'),
+    // Classics have no order to show: no ranks on them.
+    el('span', { class: 'label' }, ranked ? 'Best sellers' : 'Classics'),
     el(
       'ol',
       {},
@@ -484,7 +485,12 @@ function bestsellerShelf(best: Bestseller[]): HTMLElement | null {
         const item = el(
           'li',
           {},
-          el('span', { class: 'pic' }, art, el('span', { class: 'rank' }, String(n + 1))),
+          el(
+            'span',
+            { class: 'pic' },
+            art,
+            ranked ? el('span', { class: 'rank' }, String(n + 1)) : ''
+          ),
           el('span', { class: 'name' }, game.name)
         );
         art.addEventListener('error', () => item.remove());

@@ -35,5 +35,7 @@
     "Most G7000 cartridges run on it, and some later cartridges show enhanced backgrounds when played on the G7400.",
     "It added Thomson's EF9340 and EF9341 video chips, which drew teletext-style graphics over the G7000's."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Cosmic Conflict", "Golf", "Take the Money and Run"],
+  "bestsellersBy": "classics"
 }

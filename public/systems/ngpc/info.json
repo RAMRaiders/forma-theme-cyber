@@ -31,5 +31,11 @@
     "Two AA batteries ran it for around 40 hours.",
     "SNK withdrew it from North America and Europe in 2000, after Aruze bought the company."
   ],
-  "unverified": ["Two AA batteries ran it for around 40 hours."]
+  "unverified": ["Two AA batteries ran it for around 40 hours."],
+  "bestsellers": [
+    "Sonic the Hedgehog Pocket Adventure",
+    "Metal Slug: 2nd Mission",
+    "SNK vs. Capcom: The Match of the Millennium"
+  ],
+  "bestsellersBy": "classics"
 }

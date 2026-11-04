@@ -35,5 +35,7 @@
     "Konami's SCC sound chip, built into some game cartridges, added five wavetable channels to the system.",
     "Its Yamaha V9938 video chip added 80-column text, resolutions up to 512 × 212 and a 256-colour mode."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Metal Gear", "Metal Gear 2: Solid Snake", "Vampire Killer"],
+  "bestsellersBy": "classics"
 }

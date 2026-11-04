@@ -43,5 +43,7 @@
     "Its desktop was GEM, licensed from Digital Research.",
     "The 1989 STE update added a blitter, a 4,096-colour palette and stereo DMA sound."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Dungeon Master", "Bomb Jack", "Death Sword"],
+  "bestsellersBy": "classics"
 }
