@@ -31,5 +31,6 @@
     "Space Invaders contains a full SNES version of the game that is copied into the console's RAM and run when played on a Super Game Boy.",
     "Built-in menus let players pick from 32 colour palettes or paint their own border."
   ],
-  "unverified": ["SGB-CPU 01", "ICD2"]
+  "unverified": ["SGB-CPU 01", "ICD2"],
+  "bestsellers": ["Tetris", "Pokémon Red|Pokémon Blue", "Super Mario Land"]
 }
