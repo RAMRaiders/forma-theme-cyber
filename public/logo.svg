@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 254 72" width="254" height="72">
+  <title>Cyber</title>
+  <defs>
+    <linearGradient id="neon" gradientUnits="userSpaceOnUse" x1="18" y1="0" x2="236" y2="0">
+      <stop offset="0" stop-color="#22e4ff"/>
+      <stop offset="0.55" stop-color="#9b5cff"/>
+      <stop offset="1" stop-color="#ff2e88"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-60%" width="140%" height="220%">
+      <feGaussianBlur stdDeviation="4.5"/>
+    </filter>
+    <path id="word" d="M50 16H26l-6 6v28l6 6h24 M62 16l17 18 17-18 M79 34v22 M108 16v40h28l6-6v-8l-6-6h-28 M108 16h26l6 6v8l-6 6 M188 16h-34v40h34 M154 36h26 M200 56V16h28l6 6v8l-6 6h-28 M216 36l18 20"/>
+  </defs>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <use href="#word" stroke="url(#neon)" stroke-width="10" opacity="0.75" filter="url(#glow)"/>
+    <use href="#word" stroke="url(#neon)" stroke-width="6"/>
+    <use href="#word" stroke="#fff" stroke-width="1.8" opacity="0.8"/>
+  </g>
+</svg>

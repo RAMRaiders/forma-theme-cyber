@@ -1,9 +1,10 @@
 {
   "id": "cyber",
   "name": "Cyber",
-  "version": "0.7.11",
+  "version": "0.7.12",
   "entry": "index.html",
-  "sdk": "^1.14",
+  "logo": "logo.svg",
+  "sdk": "^1.15",
   "permissions": ["settings.system"],
   "resolutions": ["1280x720", "1920x1080"],
   "views": ["systems"],
