@@ -105,8 +105,8 @@ function marquee(tile: HTMLElement): void {
   const width = track.scrollWidth;
   if (width <= row.clientWidth + 1) return;
   track.dataset.looped = '1';
+  row.classList.add('looped');
   track.append(...[...track.children].map((logo) => logo.cloneNode(true)));
-  track.style.setProperty('--marquee-w', `${width}px`);
   track.style.setProperty('--marquee-s', `${(width / MARQUEE_PX_S).toFixed(1)}s`);
 }
 

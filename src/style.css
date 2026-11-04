@@ -539,8 +539,10 @@ main {
   object-fit: contain;
 }
 
-/* The selected tile's logos run past, all of them, edges faded. */
-.tile.selected .logos {
+/* A row of logos that runs past (more than fit), edges faded. Always, not only when its tile is
+   selected: a mask that comes and goes with the selection makes the Pi's WebKit rebuild the
+   row's layer each move. */
+.tile .logos.looped {
   -webkit-mask-image: linear-gradient(
     90deg,
     transparent,
@@ -551,14 +553,22 @@ main {
   mask-image: linear-gradient(90deg, transparent, #000 1.2rem, #000 calc(100% - 2rem), transparent);
 }
 
-.tile.selected .logos-track[data-looped] {
+/* It runs while its tile is selected, and stops where it is when the selection moves on, to
+   go on from there when it comes back: no jump back to the start on every move. */
+.tile .logos-track[data-looped] {
   animation: marquee var(--marquee-s, 20s) linear 0.6s infinite;
+  animation-play-state: paused;
   will-change: transform;
 }
 
+.tile.selected .logos-track[data-looped] {
+  animation-play-state: running;
+}
+
+/* The track holds the logos twice, so half its width is one copy, whatever the text size. */
 @keyframes marquee {
   to {
-    transform: translateX(calc(-1 * var(--marquee-w, 0px)));
+    transform: translateX(-50%);
   }
 }
 
