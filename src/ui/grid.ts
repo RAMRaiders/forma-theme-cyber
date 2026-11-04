@@ -1,4 +1,4 @@
-import { el } from './dom.js';
+import { el, reveal } from './dom.js';
 
 export interface Card {
   key: string;
@@ -31,7 +31,7 @@ export class GridView {
     if (!card) return;
     card.classList.add('selected');
     card.setAttribute('aria-selected', 'true');
-    card.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    reveal(card, this.root, true);
   }
 
   /** Columns as laid out right now, for up/down movement. */

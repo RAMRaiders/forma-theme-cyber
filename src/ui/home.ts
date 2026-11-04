@@ -1,7 +1,7 @@
 import type { Category, CyberSystem } from '../data/catalog.js';
 import { categoryArt } from './art.js';
 import { circuitSvg } from './circuit.js';
-import { el } from './dom.js';
+import { el, reveal } from './dom.js';
 
 export interface Tile {
   category: Category;
@@ -75,7 +75,7 @@ export class HomeView {
     if (!t) return;
     t.classList.add('selected');
     t.setAttribute('aria-selected', 'true');
-    t.scrollIntoView({ block: 'nearest' });
+    if (t.parentElement === this.#categories) reveal(t, this.#categories);
     marquee(t);
   }
 

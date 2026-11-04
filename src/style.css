@@ -46,6 +46,8 @@ body,
   margin: 0;
   height: 100%;
   overflow: hidden;
+  /* Not even a script may scroll the page: a pixel of overflow made the whole screen jump. */
+  overflow: clip;
   background: var(--bg);
   color: var(--fg);
 }
@@ -352,9 +354,11 @@ main {
 .shortcut.selected {
   opacity: 1;
   border-color: var(--cat);
+  /* Inside the edge only: a glow spilling outside was left behind as a ghost on the Pi when
+     the selection moved on (WebKit missed it when redrawing). */
   box-shadow:
-    0 0 0 0.12rem var(--cat),
-    0 0 0.6rem rgb(var(--cat-rgb) / 45%);
+    inset 0 0 0 0.12rem var(--cat),
+    inset 0 0 0.9rem rgb(var(--cat-rgb) / 45%);
 }
 
 .shortcut.selected h2 {
@@ -472,7 +476,6 @@ main {
   inset: 4% 8% 2%;
   color: var(--cat);
   filter: drop-shadow(0 0 0.35rem rgb(var(--cat-rgb) / 55%));
-  opacity: 0.85;
 }
 
 .tile .art svg {
@@ -520,7 +523,8 @@ main {
   height: 1.1rem;
   margin-top: 0.5rem;
   overflow: hidden;
-  opacity: 0.6;
+  /* Fixed: changed with the selection, the Pi's WebKit rebuilt the running row's layer. */
+  opacity: 0.8;
 }
 
 .tile .logos-track {
@@ -581,9 +585,11 @@ main {
 /* Selected: lit in its colour, the hero a little forward, all inside the tile. */
 .tile.selected {
   border-color: var(--cat);
+  /* Inside the edge only: a glow spilling outside was left behind as a ghost on the Pi when
+     the selection moved on (WebKit missed it when redrawing). */
   box-shadow:
-    0 0 0 0.12rem var(--cat),
-    0 0 0.6rem rgb(var(--cat-rgb) / 45%);
+    inset 0 0 0 0.12rem var(--cat),
+    inset 0 0 0.9rem rgb(var(--cat-rgb) / 45%);
 }
 
 .tile.selected h2 {
@@ -591,14 +597,6 @@ main {
 }
 
 .tile.selected .halo {
-  opacity: 1;
-}
-
-.tile.selected .art {
-  opacity: 1;
-}
-
-.tile.selected .logos {
   opacity: 1;
 }
 
