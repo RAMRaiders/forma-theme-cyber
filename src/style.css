@@ -1663,7 +1663,8 @@ kbd {
   --song-rgb: 255 46 136;
   position: fixed;
   top: calc(var(--safe) + 4.2rem);
-  right: var(--safe);
+  /* Out past the stage's frame, a small gap from the screen's edge. */
+  right: 0.75rem;
   z-index: 40;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
