@@ -10,7 +10,8 @@
   "curiosities": [
     "Many classic PC games became portable after their developers released the engine source code, starting with id Software's Doom in 1997.",
     "Some ports, such as the NXEngine version of Cave Story, are full rewrites based on reverse engineering of the original game.",
-    "Ports can add widescreen, higher resolutions and controller support that the original games lacked."
+    "Ports can add widescreen, higher resolutions and controller support that the original games lacked.",
+    "Many source ports still need the original game's data files, because only the engine's code was released."
   ],
   "unverified": []
 }

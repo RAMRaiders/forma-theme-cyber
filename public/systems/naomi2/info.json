@@ -35,7 +35,8 @@
   "curiosities": [
     "Its Elan chip moved geometry transform and lighting off the CPU, a feature the original NAOMI lacked.",
     "Virtua Fighter 4 debuted on NAOMI 2 in 2001 before its PlayStation 2 port.",
-    "Initial D Arcade Stage (2002) ran on the board and spawned a long-running arcade series."
+    "Initial D Arcade Stage (2002) ran on the board and spawned a long-running arcade series.",
+    "Its board carries two PowerVR2 graphics chips, against one on the original NAOMI."
   ],
   "unverified": []
 }

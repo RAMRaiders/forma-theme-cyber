@@ -1,0 +1,7 @@
+{
+  "curiosities": [
+    "Lutro reimplements the LÖVE game framework as a libretro core.",
+    "Its games are written in Lua."
+  ],
+  "unverified": []
+}

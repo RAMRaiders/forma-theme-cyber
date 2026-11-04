@@ -36,7 +36,8 @@
   "curiosities": [
     "Only Panasonic ever made turbo R machines, and only two models were released.",
     "The R800 processor runs Z80 code and adds a hardware multiplier.",
-    "The FS-A1GT added a built-in MIDI interface."
+    "The FS-A1GT added a built-in MIDI interface.",
+    "It also contains a Z80 and switches to it for older software that needs exact Z80 timing."
   ],
   "unverified": ["Toshiba T9769"]
 }

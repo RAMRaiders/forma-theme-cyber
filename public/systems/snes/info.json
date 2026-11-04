@@ -38,7 +38,8 @@
     "The sound chip was designed by Ken Kutaragi of Sony, who later led development of the PlayStation.",
     "A Sony-built CD-ROM add-on, the 'Nintendo PlayStation', was announced in 1991 and then abandoned, leading Sony to make its own console.",
     "Star Fox carried a Super FX coprocessor in its cartridge to draw real-time 3D polygons.",
-    "The North American model has a boxy grey-and-purple shell, while the Japanese and European versions share the rounded Super Famicom design."
+    "The North American model has a boxy grey-and-purple shell, while the Japanese and European versions share the rounded Super Famicom design.",
+    "Its sound is run by a separate SPC700 processor with its own 64 KB of RAM."
   ],
   "unverified": []
 }
