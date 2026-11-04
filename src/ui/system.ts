@@ -483,9 +483,9 @@ function bestsellerShelf(best: Bestseller[]): HTMLElement | null {
         const art = el('img', { src: game.art, alt: game.name, decoding: 'async' });
         const item = el(
           'li',
-          { title: game.name },
-          art,
-          el('span', { class: 'rank' }, String(n + 1))
+          {},
+          el('span', { class: 'pic' }, art, el('span', { class: 'rank' }, String(n + 1))),
+          el('span', { class: 'name' }, game.name)
         );
         art.addEventListener('error', () => item.remove());
         return item;
