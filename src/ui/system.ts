@@ -1,3 +1,4 @@
+import type { Bestseller, BestsellerStore } from '../data/bestsellers.js';
 import type { CategoryId, CyberSystem, InfoStore, SystemInfo } from '../data/catalog.js';
 import { categoryArt } from './art.js';
 import { circuitSvg } from './circuit.js';
@@ -144,11 +145,15 @@ export class SystemView {
   #drawnFor: string | null = null;
   /** Which selection a pending info load belongs to: a quick scroll must not show a stale one. */
   #ticket = 0;
+  /** The selected system's best sellers that the user has. */
+  #best: Bestseller[] = [];
 
   constructor(
     private readonly infos: InfoStore,
     /** Shows a board behind the whole screen (the app's backdrop). */
-    private readonly backdrop: (svg: string) => void
+    private readonly backdrop: (svg: string) => void,
+    /** The best sellers the user has, for the stage; none without it. */
+    private readonly bestsellers?: BestsellerStore
   ) {
     this.#rail.append(this.#list);
     this.root.append(this.#rail, this.#panel);
@@ -198,12 +203,21 @@ export class SystemView {
     this.#centre(r);
     this.#preload(index);
     const ticket = ++this.#ticket;
-    const show = (info: SystemInfo | null) => {
+    const draw = (info: SystemInfo | null, best: Bestseller[]) => {
       if (ticket !== this.#ticket) return;
       this.#info = info;
+      this.#best = best;
       this.#fact = 0;
       this.#render(system, !now, ticket);
       this.#drawBoard(system, now ? 0 : BOARD_MS);
+    };
+    // With its best sellers, looked up once: drawn whole, never filled in afterwards.
+    const show = (info: SystemInfo | null) => {
+      if (ticket !== this.#ticket) return;
+      const name = system.summary.name;
+      const known = this.bestsellers?.peek(name);
+      if (!this.bestsellers || known) return draw(info, known ?? []);
+      void this.bestsellers.get(name, info?.bestsellers).then((best) => draw(info, best));
     };
     clearTimeout(this.#restTimer);
     const load = () => {
@@ -379,7 +393,8 @@ export class SystemView {
         'div',
         { class: 'tally' },
         el('span', { class: 'count' }, s.gameCount.toLocaleString('en')),
-        el('span', { class: 'unit' }, s.gameCount === 1 ? 'game' : 'games')
+        el('span', { class: 'unit' }, s.gameCount === 1 ? 'game' : 'games'),
+        bestsellerShelf(this.#best, info?.specs?.media)
       )
     ]);
     parts.push([
@@ -462,6 +477,35 @@ export class SystemView {
       this.#factTimer = setInterval(() => this.nextFact(), FACT_MS);
     }
   }
+}
+
+/**
+ * The system's best sellers the user has, as small cartridges (or disc cases, for a system on
+ * discs) with their box art on the label. Nothing when there are none.
+ */
+function bestsellerShelf(best: Bestseller[], media: string | undefined): HTMLElement | null {
+  if (!best.length) return null;
+  const shape = /\b(cd|disc|dvd|gd-rom|umd)/i.test(media ?? '') ? 'disc' : 'cart';
+  return el(
+    'div',
+    { class: 'bestsellers' },
+    el('span', { class: 'label' }, 'Best sellers'),
+    el(
+      'ol',
+      {},
+      ...best.map((game, n) => {
+        const art = el('img', { src: game.art, alt: game.name, decoding: 'async' });
+        const item = el(
+          'li',
+          { class: `${shape}`, title: game.name },
+          el('span', { class: 'shell' }, art),
+          el('span', { class: 'rank' }, String(n + 1))
+        );
+        art.addEventListener('error', () => item.remove());
+        return item;
+      })
+    )
+  );
 }
 
 /** Text in a box that scrolls it through when it is too long (see `#scrollOverflow`). */

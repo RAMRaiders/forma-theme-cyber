@@ -772,7 +772,7 @@ main {
   display: grid;
   /* Fixed rows and columns: a longer story, a bigger count or a two-line curiosity never moves
      the console; what does not fit scrolls in its own box. */
-  grid-template-columns: minmax(0, 1fr) 10rem;
+  grid-template-columns: minmax(0, 1fr) 15rem;
   grid-template-rows: 10.4rem minmax(0, 1fr) 3.6rem;
   grid-template-areas:
     'intro tally'
@@ -871,6 +871,107 @@ main {
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--sys);
+}
+
+/* Under the count, the system's best sellers the user has: small cartridges, or disc cases,
+   with the box art on the label. A fixed size, so the count above never moves. */
+.system-panel .bestsellers {
+  display: grid;
+  justify-items: end;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+}
+
+.system-panel .bestsellers .label {
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.system-panel .bestsellers ol {
+  display: flex;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.system-panel .bestsellers li {
+  position: relative;
+  width: 3.7rem;
+  height: 4.4rem;
+}
+
+/* A cartridge: a grey shell, ridged at the top, the box art as its label. */
+.system-panel .bestsellers .shell {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--sys-45);
+  background: linear-gradient(#2a2f3c, #171a23);
+  box-shadow: 0 0 0.6rem var(--sys-20);
+}
+
+.system-panel .bestsellers .cart .shell {
+  border-radius: 0.35rem 0.35rem 0.2rem 0.2rem;
+  /* The corner cut of a cartridge's top. */
+  clip-path: polygon(0 0.5rem, 0.5rem 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.system-panel .bestsellers .cart .shell::before {
+  content: '';
+  position: absolute;
+  inset: 0.18rem 0.5rem auto;
+  height: 0.45rem;
+  background: repeating-linear-gradient(90deg, #3a4050 0 0.12rem, transparent 0.12rem 0.3rem);
+}
+
+.system-panel .bestsellers .cart img {
+  position: absolute;
+  inset: 0.85rem 0.3rem 0.3rem;
+  width: calc(100% - 0.6rem);
+  height: calc(100% - 1.15rem);
+  object-fit: cover;
+  border-radius: 0.12rem;
+}
+
+/* A disc case: the cover full size, a spine down its left. */
+.system-panel .bestsellers .disc .shell {
+  top: 0.35rem;
+  border-radius: 0.2rem;
+}
+
+.system-panel .bestsellers .disc img {
+  position: absolute;
+  inset: 0 0 0 0.35rem;
+  width: calc(100% - 0.35rem);
+  height: 100%;
+  object-fit: cover;
+}
+
+.system-panel .bestsellers .disc .shell::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0.35rem;
+  background: linear-gradient(90deg, #0b0d13, #2a2f3c);
+}
+
+.system-panel .bestsellers .rank {
+  position: absolute;
+  right: -0.3rem;
+  bottom: -0.3rem;
+  display: grid;
+  place-items: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 50%;
+  background: var(--sys);
+  color: #05070d;
+  font-size: 0.62rem;
+  font-weight: 800;
 }
 
 /* The console between its callouts. */
@@ -1967,6 +2068,10 @@ kbd {
 
   .system-panel .tally .count {
     font-size: 2.2rem;
+  }
+
+  .system-panel .bestsellers {
+    display: none;
   }
 
   .system-panel .photo {

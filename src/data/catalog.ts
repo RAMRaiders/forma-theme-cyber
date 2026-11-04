@@ -78,6 +78,8 @@ export interface SystemInfo {
     Record<string, string>;
   chips?: { role: string; part: string }[];
   curiosities?: string[];
+  /** Its best-selling games, best first; `A|B` for other titles of the same game. */
+  bestsellers?: string[];
 }
 
 /** What art a system has (public/systems/art.json, built by scripts/build-art.mjs). */

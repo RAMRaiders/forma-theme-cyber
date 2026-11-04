@@ -37,5 +37,6 @@
     "Games used mapper chips such as Nintendo's MMC3 inside the cartridge to bank-switch far more memory than the console could address on its own.",
     "The Famicom launched in Japan in 1983 with Donkey Kong, Donkey Kong Jr. and Popeye."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": ["Super Mario Bros.", "Duck Hunt", "Super Mario Bros. 3"]
 }

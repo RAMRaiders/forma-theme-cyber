@@ -32,5 +32,10 @@
     "The Game Boy Player attachment let the GameCube play Game Boy Advance cartridges on a TV.",
     "The e-Reader accessory scanned dot-code strips printed on cards to unlock levels and mini-games."
   ],
-  "unverified": []
+  "unverified": [],
+  "bestsellers": [
+    "Pokémon Ruby|Pokémon Sapphire",
+    "Pokémon FireRed|Pokémon LeafGreen",
+    "Pokémon Emerald"
+  ]
 }
