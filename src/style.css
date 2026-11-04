@@ -602,8 +602,10 @@ main {
 
 .systems {
   display: grid;
-  grid-template-columns: 19rem minmax(0, 1fr);
+  grid-template-columns: 15rem minmax(0, 1fr);
   gap: 1.4rem;
+  /* One row of the rail, and the selection bar over it. */
+  --rail-row: 3.6rem;
   height: 100%;
   min-height: 0;
 }
@@ -636,7 +638,7 @@ main {
   left: 0.6rem;
   right: 0.6rem;
   top: 50%;
-  height: 3.8rem;
+  height: var(--rail-row);
   translate: 0 -50%;
   border: 1px solid var(--sys-70);
   border-radius: calc(var(--radius) * 1.6);
@@ -649,7 +651,7 @@ main {
   position: absolute;
   left: 0;
   top: 50%;
-  height: 2.2rem;
+  height: 1.8rem;
   width: 0.22rem;
   translate: 0 -50%;
   border-radius: 1rem;
@@ -671,16 +673,17 @@ main {
   display: grid;
   place-items: center;
   /* Every row the same height: the list's slide is all that moves. */
-  height: 3.8rem;
+  height: var(--rail-row);
   padding: 0 1.2rem;
   opacity: 0.45;
 }
 
-/* Each logo centred in the same box, as large as it fits: wide ones fill the width, tall
-   ones the height. */
+/* Each logo centred in the same small box, as large as it fits in it: wide ones fill its
+   width, tall ones its height. */
 .system-list .logo {
   width: 100%;
-  height: 2.5rem;
+  max-width: 10rem;
+  height: 1.6rem;
   object-fit: contain;
 }
 
