@@ -87,8 +87,10 @@ export class HomeView {
 }
 
 /**
- * A selected tile's logos, when more than fit, run past in a loop: the row is doubled and slides
- * one copy's width, so its end flows back into its start. Only a transform moves.
+ * A tile's logos, when more than fit, run past in a loop: the row is doubled and slides one
+ * copy's width, so its end flows back into its start. Only a transform moves. Every such row
+ * runs all the time, whichever tile is selected: a row that stopped and started with the
+ * selection jumped on the Pi.
  */
 function marquee(tile: HTMLElement): void {
   const row = tile.querySelector<HTMLElement>('.logos');
