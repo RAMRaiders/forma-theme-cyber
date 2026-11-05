@@ -73,12 +73,6 @@ const MAKER_RGB: [RegExp, string][] = [
   [/^(bally|sammy|epoch|casio)/i, '255 105 200']
 ];
 
-/** The colour the screen takes for a system: its maker's, else its category's. */
-export function systemRgb(maker: string | undefined | null, category: CategoryId): string {
-  const known = maker ? MAKER_RGB.find(([re]) => re.test(maker.trim())) : undefined;
-  return known?.[1] ?? CATEGORY_RGB[category];
-}
-
 function rgbToHue(rgb: string): number {
   const [r, g, b] = rgb.split(' ').map((v) => Number(v) / 255) as [number, number, number];
   const max = Math.max(r, g, b);
@@ -98,14 +92,37 @@ function neon(hue: number): string {
 }
 
 /**
- * A system's own neon colours, `[main, accent]`, by its place in the list: each next one a
- * golden angle (about 137°) round the colour wheel from the last, so neighbours are never
- * alike and a whole category runs through the spectrum. The accent sits a little further
- * round, for the second glow. The category's colour is the first.
+ * A system's own neon colours, `[main, accent]`: its logo's colours (Cyber found them in the
+ * logo in colour), then its maker's. A logo with one colour has its maker's as the accent; a
+ * logo with none (black, white, grey) takes its maker's colour. Without either, a colour by
+ * its place in the list: a golden angle (about 137°) round the wheel from the last, so
+ * neighbours are never alike.
  */
-export function systemColours(index: number, category: CategoryId): [string, string] {
-  const main = (rgbToHue(CATEGORY_RGB[category]) + index * 137.508) % 360;
+export function systemColours(
+  system: { hues: readonly number[]; maker?: string | null; category: CategoryId },
+  index: number
+): [string, string] {
+  const maker = system.maker ? makerRgb(system.maker) : null;
+  const [first, second] = system.hues;
+  if (first !== undefined) {
+    const main = neon(first);
+    if (second !== undefined) return [main, neon(second)];
+    // The maker's colour as the accent, unless it is the logo's own again.
+    if (maker && hueApart(rgbToHue(maker), first) > 30) return [main, maker];
+    return [main, neon((first + 45) % 360)];
+  }
+  if (maker) return [maker, neon((rgbToHue(maker) + 45) % 360)];
+  const main = (rgbToHue(CATEGORY_RGB[system.category]) + index * 137.508) % 360;
   return [neon(main), neon((main + 50) % 360)];
+}
+
+function hueApart(a: number, b: number): number {
+  const d = Math.abs(a - b) % 360;
+  return Math.min(d, 360 - d);
+}
+
+function makerRgb(maker: string): string | null {
+  return MAKER_RGB.find(([re]) => re.test(maker.trim()))?.[1] ?? null;
 }
 
 /** The parts of the stage that change together when the selection moves. */
@@ -396,12 +413,13 @@ export class SystemView {
     parts.push(['fact', this.#factStrip()]);
     const apply = () => {
       if (ticket !== this.#ticket) return;
-      // The system's own colours; the circuit-board look keeps the maker's. On the page root:
-      // the backdrop, outside this view, takes them too.
-      const [rgb, accent] =
-        this.look === 'board'
-          ? [systemRgb(maker, system.category), systemRgb(maker, system.category)]
-          : systemColours(this.#selected, system.category);
+      // The system's own colours, on the page root: the backdrop, outside this view, takes
+      // them too.
+      // Every look: the logo's colours and the maker's.
+      const [rgb, accent] = systemColours(
+        { hues: system.hues, maker, category: system.category },
+        this.#selected
+      );
       const root = document.documentElement.style;
       root.setProperty('--sys', `rgb(${rgb})`);
       root.setProperty('--sys-rgb', rgb);

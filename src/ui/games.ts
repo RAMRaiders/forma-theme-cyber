@@ -7,7 +7,7 @@ import { STAGE_PICTURES, Stage, type StageOptions } from './stage.js';
 /** Row height in rem; rows are positioned by index, so only visible ones exist. */
 const ROW_REM = 3.4;
 /** The width asked of a game's logo for its row. */
-export const ROW_LOGO_WIDTH = 360;
+const ROW_LOGO_WIDTH = 360;
 /** Rows rendered beyond the viewport, so fast scrolling does not show gaps. */
 const OVERSCAN = 6;
 /**

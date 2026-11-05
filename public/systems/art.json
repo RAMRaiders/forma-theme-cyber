@@ -8,32 +8,53 @@
   "abuse": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      17,
+      213
+    ]
   },
   "adam": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      355
+    ]
   },
   "advision": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "amiga1200": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      215,
+      5
+    ]
   },
   "amiga500": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5,
+      215
+    ]
   },
   "amigacd32": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "amigacdtv": {
     "logo": "logo.webp",
@@ -43,57 +64,93 @@
   "amstradcpc": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      345
+    ]
   },
   "apfm1000": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "apple2": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5,
+      65
+    ]
   },
   "apple2gs": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5,
+      66
+    ]
   },
   "arcadia": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5,
+      225
+    ]
   },
   "archimedes": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      35
+    ]
   },
   "arduboy": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      285
+    ]
   },
   "astrocade": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      45
+    ]
   },
   "atari2600": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "atari5200": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      225
+    ]
   },
   "atari7800": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "atari800": {
     "logo": "logo.webp",
@@ -108,12 +165,18 @@
   "atom": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      135
+    ]
   },
   "atomiswave": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      20
+    ]
   },
   "bbcmicro": {
     "logo": "logo.webp",
@@ -126,7 +189,11 @@
   },
   "bennugd": {
     "logo": "logo.webp",
-    "picture": null
+    "picture": null,
+    "hues": [
+      255,
+      35
+    ]
   },
   "bk": {
     "logo": null,
@@ -135,32 +202,55 @@
   },
   "bstone": {
     "logo": "logo.webp",
-    "picture": null
+    "picture": null,
+    "hues": [
+      57
+    ]
   },
   "c128": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      10,
+      195
+    ]
   },
   "c20": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      10,
+      195
+    ]
   },
   "c64": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      10,
+      195
+    ]
   },
   "camplynx": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      235,
+      55
+    ]
   },
   "cannonball": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      55,
+      195
+    ]
   },
   "cassettevision": {
     "logo": "logo.webp",
@@ -175,7 +265,10 @@
   "cdi": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      195
+    ]
   },
   "cdogs": {
     "logo": "logo.webp",
@@ -185,48 +278,81 @@
   "cgenie": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      214,
+      355
+    ]
   },
   "cgenius": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      65,
+      16
+    ]
   },
   "channelf": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      355
+    ]
   },
   "coco": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5,
+      205
+    ]
   },
   "colecovision": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      47,
+      6
+    ]
   },
   "commanderx16": {
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      196,
+      44
+    ]
   },
   "corsixth": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      125
+    ]
   },
   "cplus4": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      7,
+      192
+    ]
   },
   "crvision": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      44
+    ]
   },
   "ctvboy": {
     "logo": "logo.webp",
@@ -236,12 +362,19 @@
   "daphne": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      43
+    ]
   },
   "devilutionx": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      13,
+      46
+    ]
   },
   "dice": {
     "logo": "logo.webp",
@@ -255,7 +388,11 @@
   "dos": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      45,
+      355
+    ]
   },
   "dragon64": {
     "logo": null,
@@ -265,11 +402,17 @@
   "dreamcast": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      215
+    ]
   },
   "dxx-rebirth": {
     "logo": "logo.webp",
-    "picture": null
+    "picture": null,
+    "hues": [
+      5
+    ]
   },
   "easyrpg": {
     "logo": "logo.webp",
@@ -279,85 +422,136 @@
   "ecwolf": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      355
+    ]
   },
   "eduke32": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      215
+    ]
   },
   "electron": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      125
+    ]
   },
   "enterprise": {
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      50,
+      195
+    ]
   },
   "etlegacy": {
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      357
+    ]
   },
   "fallout1-ce": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      35
+    ]
   },
   "fallout2-ce": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      35
+    ]
   },
   "fbneo": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      7
+    ]
   },
   "fds": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      45
+    ]
   },
   "flash": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      355
+    ]
   },
   "fm7": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      355
+    ]
   },
   "fmtowns": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      165,
+      355
+    ]
   },
   "fury": {
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      37,
+      212
+    ]
   },
   "gamate": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      55
+    ]
   },
   "gameandwatch": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "gamecom": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "gamecube": {
     "logo": "logo.webp",
@@ -367,61 +561,97 @@
   "gamegear": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      245,
+      5
+    ]
   },
   "gamepock": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      45
+    ]
   },
   "gb": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      225
+    ]
   },
   "gb2players": {
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      235
+    ]
   },
   "gba": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      245
+    ]
   },
   "gbc": {
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      236,
+      45
+    ]
   },
   "gbc2players": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      235,
+      345
+    ]
   },
   "gmaster": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "gp32": {
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      245
+    ]
   },
   "gx4000": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      46
+    ]
   },
   "gzdoom": {
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      215
+    ]
   },
   "halflife": {
     "logo": "logo.webp",
@@ -431,18 +661,29 @@
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      316,
+      27
+    ]
   },
   "hurrican": {
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      16,
+      226
+    ]
   },
   "imageviewer": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      355
+    ]
   },
   "intellivision": {
     "logo": "logo.webp",
@@ -452,12 +693,18 @@
   "jaguar": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      355
+    ]
   },
   "jaguarcd": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "jazz2": {
     "logo": null,
@@ -466,7 +713,10 @@
   "laser310": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "lcdgames": {
     "logo": "logo.webp",
@@ -476,43 +726,72 @@
   "library": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      215,
+      35
+    ]
   },
   "loopy": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      325,
+      195
+    ]
   },
   "lowresnx": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      25
+    ]
   },
   "lutro": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      245
+    ]
   },
   "lynx": {
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      45,
+      5
+    ]
   },
   "macintosh": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5,
+      65
+    ]
   },
   "mame": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      204
+    ]
   },
   "mastersystem": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5,
+      215
+    ]
   },
   "mc10": {
     "logo": "logo.webp",
@@ -522,27 +801,44 @@
   "megacd": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      46,
+      215
+    ]
   },
   "megadrive": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      216
+    ]
   },
   "megadrive-msu": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "megaduck": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      185
+    ]
   },
   "model3": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      254,
+      197
+    ]
   },
   "moonlight": {
     "logo": "logo.webp",
@@ -552,7 +848,11 @@
   "mrboom": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      243,
+      55
+    ]
   },
   "msx1": {
     "logo": "logo.webp",
@@ -577,7 +877,11 @@
   "multivision": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      205,
+      55
+    ]
   },
   "mz2000": {
     "logo": "logo.webp",
@@ -606,31 +910,50 @@
   "n64": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      225
+    ]
   },
   "n64dd": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      225,
+      135
+    ]
   },
   "namco22": {
     "logo": "logo.webp",
-    "picture": null
+    "picture": null,
+    "hues": [
+      355
+    ]
   },
   "naomi": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "naomi2": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      25
+    ]
   },
   "nds": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "neogeo": {
     "logo": "logo.webp",
@@ -640,51 +963,81 @@
   "neogeocd": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      55
+    ]
   },
   "nes": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "ngp": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "ngpc": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "odcommander": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      35
+    ]
   },
   "odyssey2": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      27
+    ]
   },
   "openbor": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "openjazz": {
     "logo": "logo.webp",
-    "picture": null
+    "picture": null,
+    "hues": [
+      95
+    ]
   },
   "oricatmos": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "pc60": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "framed"
+    "kind": "framed",
+    "hues": [
+      5
+    ]
   },
   "pc80": {
     "logo": "logo.webp",
@@ -705,17 +1058,27 @@
   "pcengine": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "pcenginecd": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "pcfx": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      45,
+      245
+    ]
   },
   "pcw": {
     "logo": "logo.webp",
@@ -735,7 +1098,11 @@
   "pico": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      55,
+      215
+    ]
   },
   "pico8": {
     "logo": "logo.webp",
@@ -746,32 +1113,51 @@
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      55
+    ]
   },
   "ports": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      30
+    ]
   },
   "prboom": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      15
+    ]
   },
   "psp": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      205
+    ]
   },
   "psx": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      345,
+      45
+    ]
   },
   "pv1000": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      215
+    ]
   },
   "pv2000": {
     "logo": "logo.webp",
@@ -781,7 +1167,11 @@
   "pygame": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      185,
+      55
+    ]
   },
   "quake": {
     "logo": null,
@@ -803,12 +1193,19 @@
   },
   "recordings": {
     "logo": "logo.webp",
-    "picture": null
+    "picture": null,
+    "hues": [
+      5
+    ]
   },
   "reminiscence": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      222,
+      186
+    ]
   },
   "rott": {
     "logo": null,
@@ -826,42 +1223,68 @@
   "samcoupe": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      225
+    ]
   },
   "satellaview": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      195,
+      55
+    ]
   },
   "saturn": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      236
+    ]
   },
   "sc3000": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5,
+      215
+    ]
   },
   "scummvm": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      85
+    ]
   },
   "scv": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      35
+    ]
   },
   "sdlpop": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      45
+    ]
   },
   "sega32x": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      215
+    ]
   },
   "segaai": {
     "logo": "logo.webp",
@@ -871,33 +1294,54 @@
   "sg1000": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "sgb": {
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5,
+      235
+    ]
   },
   "sgb-msu1": {
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5,
+      235
+    ]
   },
   "singe": {
     "logo": "logo.webp",
-    "picture": null
+    "picture": null,
+    "hues": [
+      78,
+      105
+    ]
   },
   "snes": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      355
+    ]
   },
   "snes-msu1": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      355
+    ]
   },
   "socrates": {
     "logo": "logo.webp",
@@ -907,53 +1351,90 @@
   "solarus": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      45
+    ]
   },
   "sonic-mania": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      52,
+      213
+    ]
   },
   "sonic3-air": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      44,
+      223
+    ]
   },
   "sonicretro": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      45,
+      245
+    ]
   },
   "spectravideo": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      25,
+      355
+    ]
   },
   "sufami": {
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      235,
+      15
+    ]
   },
   "superbroswar": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5,
+      45
+    ]
   },
   "supergrafx": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      185
+    ]
   },
   "supervision": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      344,
+      115
+    ]
   },
   "supracan": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      355
+    ]
   },
   "sv8000": {
     "logo": "logo.webp",
@@ -967,7 +1448,11 @@
   "thextech": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      221,
+      135
+    ]
   },
   "thomson": {
     "logo": "logo.webp",
@@ -1006,7 +1491,10 @@
   "tutor": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      355
+    ]
   },
   "tvc": {
     "logo": null,
@@ -1016,12 +1504,19 @@
   "tvgames": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      201,
+      44
+    ]
   },
   "tyrian": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      47
+    ]
   },
   "uzebox": {
     "logo": "logo.webp",
@@ -1031,7 +1526,10 @@
   "vc4000": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "vectrex": {
     "logo": "logo.webp",
@@ -1041,12 +1539,18 @@
   "vgmplay": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      215
+    ]
   },
   "videopacplus": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "vircon32": {
     "logo": "logo.webp",
@@ -1055,17 +1559,27 @@
   "virtualboy": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      355
+    ]
   },
   "vis": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      15
+    ]
   },
   "vsmile": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      32,
+      195
+    ]
   },
   "wii": {
     "logo": "logo.webp",
@@ -1075,12 +1589,19 @@
   "wswan": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "wswanc": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      4,
+      195
+    ]
   },
   "x1": {
     "logo": "logo.webp",
@@ -1090,31 +1611,52 @@
   "x68000": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5
+    ]
   },
   "xegs": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      5,
+      225
+    ]
   },
   "xrick": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      35
+    ]
   },
   "zc210": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      355
+    ]
   },
   "zx81": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      45,
+      5
+    ]
   },
   "zxspectrum": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "hues": [
+      45,
+      5
+    ]
   }
 }

@@ -88,6 +88,8 @@ export interface SystemArt {
   picture: string | null;
   /** `cutout`: on a transparent background, stood on the stage; `framed`: a photo, in a frame. */
   kind?: 'cutout' | 'framed';
+  /** The colours of its logo, in colour: hues in degrees, the main one first. */
+  hues?: number[];
 }
 
 /** A system as Cyber shows it: Forma's summary, its category, and its art. */
@@ -101,6 +103,8 @@ export interface CyberSystem {
   logoDark: boolean;
   photo: string | null;
   photoKind: 'cutout' | 'framed';
+  /** Its logo's hues, main first; none for a logo in black, white or grey. */
+  hues: number[];
 }
 
 function categoryOf(system: SystemSummary, info?: SystemInfo): CategoryId | null {
@@ -123,7 +127,8 @@ function cyberSystem(
     logoSmall: own?.logo ? art(summary.name, own.logo.replace(/\.webp$/, '-small.webp')) : null,
     logoDark: own?.logoDark ?? false,
     photo: own?.picture ? art(summary.name, own.picture) : null,
-    photoKind: own?.kind ?? 'cutout'
+    photoKind: own?.kind ?? 'cutout',
+    hues: own?.hues ?? []
   };
 }
 

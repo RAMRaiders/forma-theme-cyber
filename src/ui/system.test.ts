@@ -1,25 +1,45 @@
 import { describe, expect, it } from 'vitest';
 
-import { systemColours, systemRgb } from './system.js';
+import { systemColours } from './system.js';
 
-describe('the colour a system lights its screen with', () => {
-  it('is its maker’s', () => {
-    expect(systemRgb('Sega', 'consoles')).toBe('47 140 255');
-    expect(systemRgb('Nintendo / St.GIGA', 'consoles')).toBe('255 59 78');
-    expect(systemRgb('Sony Computer Entertainment', 'consoles')).toBe('125 107 255');
+const hueOf = (rgb: string) => {
+  const [r, g, b] = rgb.split(' ').map((v) => Number(v) / 255) as [number, number, number];
+  const max = Math.max(r, g, b);
+  const d = max - Math.min(r, g, b);
+  const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return Math.round((h * 60 + 360) % 360);
+};
+
+describe('the colours a system lights its screen with', () => {
+  it('are its logo’s own: both of them, in neon', () => {
+    // PlayStation: red and yellow.
+    const [main, accent] = systemColours(
+      { hues: [345, 45], maker: 'Sony', category: 'consoles' },
+      0
+    );
+    expect(Math.abs(hueOf(main) - 345)).toBeLessThan(4);
+    expect(Math.abs(hueOf(accent) - 45)).toBeLessThan(4);
   });
 
-  it('else its category’s, as on its home tile', () => {
-    expect(systemRgb('Watara', 'handhelds')).toBe('61 255 160');
-    expect(systemRgb(undefined, 'engines')).toBe('167 123 255');
+  it('with its maker’s as the accent when the logo has one colour', () => {
+    // Super Nintendo's red, Nintendo's red too: a step round instead.
+    const snes = systemColours({ hues: [355], maker: 'Nintendo', category: 'consoles' }, 0);
+    expect(hueOf(snes[1])).not.toBe(hueOf('255 59 78'));
+    // FBNeo's orange, an arcade maker's pink.
+    const other = systemColours({ hues: [30], maker: 'Sega', category: 'arcade' }, 0);
+    expect(other[1]).toBe('47 140 255');
   });
-});
 
-describe('systemColours', () => {
-  it('gives neighbours in a list clearly different colours', () => {
-    const hues = [0, 1, 2, 3, 4].map((i) => systemColours(i, 'consoles')[0]);
-    expect(new Set(hues).size).toBe(5);
-    expect(systemColours(2, 'consoles')).toEqual(systemColours(2, 'consoles'));
-    for (const c of systemColours(7, 'arcade')) expect(c).toMatch(/^\d{1,3} \d{1,3} \d{1,3}$/);
+  it('are its maker’s when the logo has no colour', () => {
+    const [main] = systemColours({ hues: [], maker: 'Sega', category: 'consoles' }, 3);
+    expect(main).toBe('47 140 255');
+  });
+
+  it('else differ clearly from their neighbours’, by place in the list', () => {
+    const mains = [0, 1, 2, 3, 4].map(
+      (i) => systemColours({ hues: [], maker: 'Watara', category: 'handhelds' }, i)[0]
+    );
+    expect(new Set(mains).size).toBe(5);
+    for (const c of mains) expect(c).toMatch(/^\d{1,3} \d{1,3} \d{1,3}$/);
   });
 });

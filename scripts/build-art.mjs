@@ -12,6 +12,8 @@
  *   cut out of its plain background when it is a studio shot, else shown framed.
  *
  *   node scripts/build-art.mjs <carbon art dir> [cache dir]
+ *
+ * Then scripts/build-colours.mjs, for each logo's colours (kept here when this runs again).
  */
 import { mkdirSync, readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -258,6 +260,10 @@ async function commonsPicture(system) {
 }
 
 const art = {};
+/** The logos' colours, found by build-colours.mjs: kept. */
+const before = existsSync(join(OUT, 'art.json'))
+  ? JSON.parse(readFileSync(join(OUT, 'art.json'), 'utf8'))
+  : {};
 const credits = [];
 for (const system of systems) {
   mkdirSync(join(OUT, system.id), { recursive: true });
@@ -267,7 +273,8 @@ for (const system of systems) {
     logo: l ? 'logo.webp' : null,
     ...(l?.dark ? { logoDark: true } : {}),
     picture: p ? 'photo.webp' : null,
-    ...(p ? { kind: p.kind } : {})
+    ...(p ? { kind: p.kind } : {}),
+    ...(before[system.id]?.hues ? { hues: before[system.id].hues } : {})
   };
   for (const [what, c] of [
     ['picture', p?.credit],
