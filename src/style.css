@@ -599,9 +599,9 @@ main {
   display: grid;
   /* The stage, the whole screen; the strip of logos over its middle while moving. */
   grid-template-rows: minmax(0, 1fr);
-  /* The strip's height, and one logo's place in it, under the selection frame. */
-  --strip: 6.4rem;
-  --strip-item: 15rem;
+  /* The column's width, and one logo's place in it, under the selection frame. */
+  --strip: 19rem;
+  --strip-item: 4.6rem;
   height: 100%;
   min-height: 0;
 }
@@ -634,15 +634,15 @@ main {
   transition-duration: 120ms;
 }
 
-/* The strip: a band of logos across the middle, fading toward its ends. */
+/* The column: logos down the middle of the screen, fading toward its ends. */
 .system-rail {
   position: absolute;
   z-index: 3;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: var(--strip);
-  translate: 0 -50%;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: var(--strip);
+  translate: -50% 0;
   overflow: hidden;
   opacity: 0;
   visibility: hidden;
@@ -651,15 +651,13 @@ main {
     visibility 0s linear 450ms;
   will-change: opacity;
   background: linear-gradient(
-    90deg,
     transparent,
     rgb(4 6 14 / 92%) 18%,
     rgb(4 6 14 / 92%) 82%,
     transparent
   );
-  box-shadow:
-    0 -1px 0 var(--sys-30),
-    0 1px 0 var(--sys-30);
+  -webkit-mask-image: linear-gradient(transparent, #000 18%, #000 82%, transparent);
+  mask-image: linear-gradient(transparent, #000 18%, #000 82%, transparent);
 }
 
 .systems.browsing .system-rail {
@@ -676,11 +674,11 @@ main {
   content: '';
   position: absolute;
   z-index: 0;
-  left: 50%;
-  top: 0.5rem;
-  bottom: 0.5rem;
-  width: var(--strip-item);
-  translate: -50% 0;
+  left: 0.6rem;
+  right: 0.6rem;
+  top: 50%;
+  height: var(--strip-item);
+  translate: 0 -50%;
   border: 1px solid var(--sys-70);
   border-radius: calc(var(--radius) * 1.6);
   background: linear-gradient(var(--sys-10), var(--sys-30));
@@ -690,11 +688,11 @@ main {
 .system-rail::after {
   content: '';
   position: absolute;
-  left: 50%;
-  bottom: 0.5rem;
-  width: 3rem;
-  height: 0.22rem;
-  translate: -50% 0;
+  left: 0.6rem;
+  top: 50%;
+  width: 0.22rem;
+  height: 2rem;
+  translate: 0 -50%;
   border-radius: 1rem;
   background: var(--sys);
 }
@@ -703,9 +701,9 @@ main {
 .system-rail .where {
   position: absolute;
   z-index: 1;
-  right: 50%;
-  bottom: 0.75rem;
-  translate: calc(var(--strip-item) / 2 - 0.8rem) 0;
+  right: 1.2rem;
+  top: 50%;
+  translate: 0 calc(var(--strip-item) / 2 - 1.3rem);
   font-family: var(--mono);
   font-size: 0.55rem;
   letter-spacing: 0.12em;
@@ -716,7 +714,7 @@ main {
   position: relative;
   z-index: 1;
   display: flex;
-  height: 100%;
+  flex-direction: column;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -729,10 +727,9 @@ main {
   display: grid;
   flex: none;
   place-items: center;
-  /* Every logo the same width: the strip's slide is all that moves. */
-  width: var(--strip-item);
-  height: 100%;
-  padding: 0 1.8rem;
+  /* Every logo the same height: the column's slide is all that moves. */
+  height: var(--strip-item);
+  padding: 0 2.2rem;
   opacity: 0.2;
 }
 
@@ -919,8 +916,8 @@ main {
 .system-panel .cover img {
   width: auto;
   height: auto;
-  max-width: 5rem;
-  max-height: 7rem;
+  max-width: 5.4rem;
+  max-height: 9rem;
 }
 
 .system-panel .stand.n1 img {
@@ -939,13 +936,29 @@ main {
   justify-items: center;
 }
 
-/* An odd last one centred under the others. */
-.system-panel .gear .item:last-child:nth-child(odd) {
+.system-panel .gear h3 {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgb(var(--sys2-rgb));
+}
+
+/* With the heading first, an odd last one is an even child. */
+.system-panel .gear .item:last-child:nth-child(even) {
   grid-column: 1 / -1;
 }
 
 .system-panel .gear.n1 {
   grid-template-columns: 1fr;
+}
+
+.system-panel .gear.n1 h3 {
+  justify-self: center;
 }
 
 .system-panel .item {
@@ -959,7 +972,7 @@ main {
   width: auto;
   height: auto;
   max-width: 100%;
-  max-height: 4.6rem;
+  max-height: 5.4rem;
 }
 
 .system-panel .gear.n1 .item img {
@@ -1209,9 +1222,12 @@ main {
 .system-panel .showcase {
   grid-area: showcase;
   display: grid;
-  grid-template-columns: minmax(0, 11.5rem) minmax(0, 1fr) minmax(0, 11.5rem);
-  align-items: center;
-  gap: 1rem;
+  grid-template-columns: minmax(0, 10.5rem) minmax(0, 1fr) minmax(0, 10.5rem);
+  /* One row, the whole height (the games view's showcase sets rows of its own). */
+  grid-template-rows: minmax(0, 1fr);
+  /* The callouts spread over the whole height beside the console: no empty band under them. */
+  align-items: stretch;
+  gap: 0.8rem;
   min-height: 0;
 }
 
@@ -1226,8 +1242,8 @@ main {
 
 .system-panel .photo {
   /* At most its own size: a picture stretched past it goes soft. */
-  width: auto;
-  max-width: min(100%, 30rem);
+  /* A little past its own size (it stays sharp to about this), to fill the stage. */
+  width: min(100%, 22rem);
   height: auto;
   max-height: 100%;
   object-fit: contain;
@@ -1333,6 +1349,7 @@ main {
 
 .system-panel .specs {
   display: grid;
+  align-content: space-evenly;
   gap: 1.3rem;
   margin: 0;
   padding: 0.8rem 0;
@@ -1437,7 +1454,7 @@ main {
   max-height: calc(3 * 1.3em);
   margin: 0.15rem 0 0;
   overflow: hidden;
-  font-size: 0.7rem;
+  font-size: 0.76rem;
   line-height: 1.3;
 }
 

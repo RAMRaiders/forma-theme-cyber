@@ -326,10 +326,10 @@ export class SystemView {
       r.dataset.near = d <= 3 ? String(d) : '';
     }
     this.#where.textContent = `${this.#selected + 1} / ${this.#rows.length}`;
-    const strip = this.#rail.clientWidth;
+    const strip = this.#rail.clientHeight;
     if (strip === 0) return;
-    const x = row.offsetLeft + row.offsetWidth / 2 - strip / 2;
-    this.#list.style.transform = `translateX(${-x}px)`;
+    const y = row.offsetTop + row.offsetHeight / 2 - strip / 2;
+    this.#list.style.transform = `translateY(${-y}px)`;
   }
 
   #drawBoard(system: CyberSystem, delay: number): void {
@@ -712,7 +712,8 @@ export function gear(system: Pick<CyberSystem, 'peripherals'>): HTMLElement | nu
   if (!items.length) return null;
   return el(
     'div',
-    { class: `gear n${items.length}`, 'aria-label': 'Peripherals' },
+    { class: `gear n${items.length}` },
+    el('h3', {}, 'Peripherals'),
     ...items.map((p) => shelfFigure('item', p.src, p.name, p.name))
   );
 }
