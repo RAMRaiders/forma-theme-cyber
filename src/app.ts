@@ -32,7 +32,7 @@ import { HomeView, type Shortcut, type Tile } from './ui/home.js';
 import { loader } from './ui/loader.js';
 import { SongCard } from './ui/music.js';
 import { preload } from './ui/preload.js';
-import { accentOf } from './ui/stage.js';
+import { STAGE_PICTURES, accentOf } from './ui/stage.js';
 import { SystemView } from './ui/system.js';
 
 /** One level of the path, and where the selection was, so going back returns to it. */
@@ -84,6 +84,9 @@ const MOVES: Partial<Record<Action, Move>> = {
   pageDown: 'pageDown'
 };
 
+/** Moved this far through a list, Forma is asked again for the pictures around the selection. */
+const PREPARE_AGAIN = 100;
+
 export class App {
   readonly #title = el('h1', {});
   readonly #trail = el('nav', { class: 'trail', 'aria-label': 'Breadcrumb' });
@@ -108,6 +111,22 @@ export class App {
     stopVideo: () => void this.forma.video.stop().catch(() => {}),
     prepare: (items) => void this.forma.library.prepareMedia(items as never).catch(() => {})
   });
+  /** The game list on screen, for Forma to make its pictures ahead. */
+  #listPlace: { view: string; path: string[] } | null = null;
+  #preparedAround = 0;
+
+  /**
+   * Has Forma make the pictures of the games around `around` in the list on screen, in the
+   * background: so they show at once, not as full-size originals decoded on the spot.
+   */
+  #prepareList(around: number): void {
+    const place = this.#listPlace;
+    if (!place) return;
+    this.#preparedAround = around;
+    const pictures = STAGE_PICTURES.map(([kind, width]) => ({ kind, width }));
+    void this.forma.library.prepareList(place.view, place.path, around, pictures).catch(() => {});
+  }
+
   /** Cyber's look and order: its settings, which Forma's menu shows (Start → Interface). */
   #prefs: Prefs = { ...DEFAULT_PREFS };
   /** What plays, in the header, when something does. */
@@ -261,6 +280,8 @@ export class App {
         this.#level.index = Math.min(index, Math.max(0, list.total - 1));
         this.#main.replaceChildren(this.#games.root);
         this.#games.show(list, this.#level.index);
+        this.#listPlace = { view, path };
+        this.#prepareList(this.#level.index);
       } else {
         this.#list = null;
         this.#cards = await this.#allCards(first);
@@ -511,6 +532,9 @@ export class App {
     } else if (this.#list) {
       level.index = moveList(level.index, this.#list.total, move, this.#games.pageSize(), repeat);
       this.#games.select(level.index);
+      if (Math.abs(level.index - this.#preparedAround) > PREPARE_AGAIN) {
+        this.#prepareList(level.index);
+      }
     } else {
       level.index = moveGrid(level.index, this.#cards.length, this.#grid.columns(), move);
       this.#grid.select(level.index);
