@@ -5,6 +5,7 @@ import type {
   Game,
   GameStart,
   InputEvent,
+  MediaKind,
   SettingsChanged,
   ViewInfo
 } from '@ramraiders/forma-sdk';
@@ -91,9 +92,17 @@ export class App {
   readonly #toast = el('div', { class: 'toast', role: 'status', hidden: '' });
   readonly #playing = el('div', { class: 'overlay playing', hidden: '' });
   readonly #grid = new GridView();
-  readonly #games = new GamesView((game) => {
-    const kind = game.media.image ? 'image' : game.media.thumbnail ? 'thumbnail' : null;
-    return kind ? this.forma.library.mediaUrl(game.id, kind, DETAIL_WIDTH) : null;
+  readonly #games = new GamesView({
+    // Only kinds the game has: the media map holds a URL per kind it has. Newer Formas know
+    // more kinds than this SDK's types (box back, cartridge…), hence the cast.
+    media: (game, kind, width) =>
+      (game.media as Partial<Record<string, string>>)[kind]
+        ? this.forma.library.mediaUrl(game.id, kind as MediaKind, width)
+        : null,
+    achievements: async (game) => {
+      const { data } = await this.forma.ra.game(game.id);
+      return { earned: data.earned, total: data.achievementCount };
+    }
   });
   /** Cyber's look and order: its settings, which Forma's menu shows (Start → Interface). */
   #prefs: Prefs = { ...DEFAULT_PREFS };
