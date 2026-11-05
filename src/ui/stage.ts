@@ -57,8 +57,6 @@ export interface StageOptions {
   play?: (game: Game) => Promise<{ playing: boolean }>;
   /** Stops it. */
   stopVideo?: () => void;
-  /** The logo of a game's system (Cyber's own art), small; `dark`: it needs a light plate. */
-  systemLogo?: (system: string) => { src: string; dark: boolean } | null;
   /** Has the pictures of games about to be shown made ahead, nearest first. */
   prepare?: (items: { gameId: number; kind: Kind; width: number }[]) => void;
 }
@@ -307,12 +305,6 @@ export class Stage {
   /** Act 1's heart: the logo (or the name), the score, and what kind of game it is. */
   #titleBlock(game: ShowGame): HTMLElement {
     const block = el('div', { class: 'title-block' });
-    const system = this.options.systemLogo?.(game.system);
-    if (system) {
-      const img = picture(system.src, `system-logo${system.dark ? ' dark' : ''}`);
-      img.addEventListener('error', () => img.remove());
-      block.append(img);
-    }
     const logo = this.options.media(game, 'wheel', 720) ?? this.options.media(game, 'marquee', 720);
     if (logo) {
       const img = picture(logo, 'logo');

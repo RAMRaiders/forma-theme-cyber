@@ -109,6 +109,27 @@ h1.current {
   text-shadow: 0 0 0.5rem rgb(34 228 255 / 45%);
 }
 
+/* A system as its logo, the height of the words around it. */
+.trail .crumb.has-logo {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+}
+
+.trail .crumb-logo {
+  height: 1.9rem;
+  max-width: 12rem;
+  object-fit: contain;
+  object-position: left center;
+}
+
+/* Too dark for the background: on a light plate (no glow filter). */
+.trail .crumb-logo.dark {
+  padding: 0.2rem 0.45rem;
+  border-radius: 0.25rem;
+  background: rgb(255 255 255 / 82%);
+}
+
 .trail .crumb::before {
   content: '▸';
   margin: 0 0.7rem;
@@ -1586,23 +1607,6 @@ main {
   align-self: start;
   padding-top: 1rem;
   transform-origin: left top;
-}
-
-/* The game's system, small, above its title: the right one in lists of every system too. */
-.stage .system-logo {
-  display: block;
-  height: 2.6rem;
-  max-width: 14rem;
-  margin-bottom: 1rem;
-  object-fit: contain;
-  object-position: left center;
-}
-
-/* Too dark for the background: on a light plate (no glow filter: the title block moves). */
-.stage .system-logo.dark {
-  padding: 0.35rem 0.6rem;
-  border-radius: 0.3rem;
-  background: rgb(255 255 255 / 82%);
 }
 
 .stage .logo {

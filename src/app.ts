@@ -10,15 +10,7 @@ import type {
 } from '@ramraiders/forma-sdk';
 import { FormaError } from '@ramraiders/forma-sdk';
 
-import {
-  ALL_GAMES,
-  CATEGORIES,
-  type CyberSystem,
-  InfoStore,
-  MAGAZINES,
-  allGames,
-  group
-} from './data/catalog.js';
+import { ALL_GAMES, CATEGORIES, InfoStore, MAGAZINES, allGames, group } from './data/catalog.js';
 import {
   DEFAULT_PREFS,
   MARGINS_SETTING,
@@ -97,6 +89,9 @@ const MOVES: Partial<Record<Action, Move>> = {
 /** Moved this far through a list, Forma is asked again for the pictures around the selection. */
 const PREPARE_AGAIN = 100;
 
+/** One step of the breadcrumb: a name, or a system's logo (`label`: its name, for screen readers). */
+type Crumb = string | { label: string; logo: string; dark: boolean };
+
 export class App {
   readonly #title = el('h1', {});
   readonly #trail = el('nav', { class: 'trail', 'aria-label': 'Breadcrumb' });
@@ -117,10 +112,6 @@ export class App {
       return { earned: data.earned, total: data.achievementCount };
     },
     accent: accentOf,
-    systemLogo: (name) => {
-      const system = this.#systemsByName.get(name);
-      return system?.logoSmall ? { src: system.logoSmall, dark: system.logoDark } : null;
-    },
     play: (game) => this.forma.video.play(game.id),
     stopVideo: () => void this.forma.video.stop().catch(() => {}),
     prepare: (items) => void this.forma.library.prepareMedia(items as never).catch(() => {})
@@ -152,8 +143,6 @@ export class App {
   /** Which screen the current level is: Cyber's own two, or Forma's views as they come. */
   #mode: 'home' | 'systems' | 'browse' = 'browse';
   #groups: Tile[] = [];
-  /** Every system Cyber shows, by name: for a game's system logo. */
-  #systemsByName = new Map<string, CyberSystem>();
   #shortcuts: Shortcut[] = SHORTCUTS;
 
   #views: ViewInfo[] = [];
@@ -328,9 +317,6 @@ export class App {
         this.infos.art()
       ]);
       this.#groups = group(systems, infos, arts);
-      this.#systemsByName = new Map(
-        this.#groups.flatMap((g) => g.systems).map((s) => [s.summary.name, s])
-      );
       // Every system's logo and picture, decoded in the background, ready for the rail.
       preload(this.#groups.flatMap((g) => g.systems.flatMap((s) => [s.logoSmall, s.photo])));
       const level = this.#level;
@@ -459,21 +445,25 @@ export class App {
   }
 
   /** Breadcrumbs in Cyber's view: the category, then the system. */
-  #cyberTrail(): string[] {
+  #cyberTrail(): Crumb[] {
     const [category, system] = this.#level.path;
     if (category?.startsWith(SHORTCUT)) {
       const id = category.slice(SHORTCUT.length);
       return [SHORTCUT_VIEWS[id]?.label ?? id, ...(this.#page?.trail ?? []).map((c) => c.label)];
     }
     const tile = this.#groups.find((g) => g.category.id === category);
-    const name = tile?.systems.find((s) => s.summary.name === system)?.summary;
+    const found = tile?.systems.find((s) => s.summary.name === system);
+    const name = found ? found.summary.fullname || found.summary.name : null;
     return [
       ...(tile
         ? [tile.category.label]
         : category
           ? [CATEGORIES.find((c) => c.id === category)?.label ?? category]
           : []),
-      ...(name ? [name.fullname || name.name] : [])
+      // The system as its logo, where Cyber has one; else its name.
+      ...(found && name
+        ? [found.logoSmall ? { label: name, logo: found.logoSmall, dark: found.logoDark } : name]
+        : [])
     ];
   }
 
@@ -519,9 +509,19 @@ export class App {
         : (this.#page?.trail ?? []).map((c) => c.label);
     this.#title.classList.toggle('current', crumbs.length === 0);
     this.#trail.replaceChildren(
-      ...crumbs.map((c, i) =>
-        el('span', { class: i === crumbs.length - 1 ? 'crumb current' : 'crumb' }, c)
-      )
+      ...crumbs.map((c, i) => {
+        const cls = i === crumbs.length - 1 ? 'crumb current' : 'crumb';
+        if (typeof c === 'string') return el('span', { class: cls }, c);
+        const logo = el('img', {
+          class: `crumb-logo${c.dark ? ' dark' : ''}`,
+          src: c.logo,
+          alt: c.label
+        });
+        const crumb = el('span', { class: `${cls} has-logo` }, logo);
+        // No logo after all: the name, as any other crumb.
+        logo.addEventListener('error', () => crumb.replaceChildren(c.label), { once: true });
+        return crumb;
+      })
     );
     const games = this.#mode === 'browse' && this.#page?.listing.kind === 'games';
     // Select and Start are Forma's own: its views list and its menu, over any theme.

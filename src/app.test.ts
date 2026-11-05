@@ -31,7 +31,11 @@ const infos = new InfoStore((url) =>
     : Promise.reject(new Error('404'))
 );
 
-async function start(permissions: string[] = [], slow: Record<string, number> = {}) {
+async function start(
+  permissions: string[] = [],
+  slow: Record<string, number> = {},
+  store: InfoStore = infos
+) {
   const backend = mockBackend({ playMs: 50, permissions: [...permissions, 'settings.system'] });
   // Systems oldest first (Forma's order, as its Select menu sets it): the NES leads.
   await backend.invoke('settings_set', {
@@ -60,7 +64,7 @@ async function start(permissions: string[] = [], slow: Record<string, number> = 
   };
   const forma = await connect({ backend, keyboard: false });
   const root = document.querySelector<HTMLElement>('#app')!;
-  await new App(forma, root, infos).start();
+  await new App(forma, root, store).start();
 
   const press = async (action: InputEvent['action'], repeat = false) => {
     send({ action, button: null, gamepad: 0, pressed: true, repeat });
@@ -81,6 +85,26 @@ describe('the default theme', () => {
     expect(text('.tile h2')).toEqual(['Consoles', 'All games', 'Magazines']);
     expect(text('.tile.selected .tag')).toEqual(['5 systems', '9 games']);
     expect(text('.hint')).toEqual(['AOpen', 'StartMenu']);
+  });
+
+  it('shows a system with a logo as its logo in the breadcrumb', async () => {
+    const withLogo = new InfoStore((url) =>
+      url === './systems/art.json'
+        ? Promise.resolve({ nes: { logo: 'logo.webp', logoDark: true, picture: null } })
+        : Promise.reject(new Error('404'))
+    );
+    const { press, root, text } = await start([], {}, withLogo);
+    await press('confirm');
+    await press('confirm');
+    await vi.waitFor(() => expect(root.querySelector('.trail .crumb-logo')).not.toBeNull());
+    const logo = root.querySelector<HTMLImageElement>('.trail .crumb.current .crumb-logo')!;
+    expect(logo.getAttribute('src')).toBe('./systems/nes/logo-small.webp');
+    expect(logo.alt).toBe('Nintendo Entertainment System');
+    expect(logo.classList.contains('dark')).toBe(true);
+    expect(text('.trail .crumb')[0]).toBe('Consoles');
+    // A logo that will not load: the name instead.
+    logo.dispatchEvent(new Event('error'));
+    expect(text('.trail .crumb.current')).toEqual(['Nintendo Entertainment System']);
   });
 
   it('goes category → system → games, and back to where it was', async () => {

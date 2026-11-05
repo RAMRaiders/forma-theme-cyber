@@ -168,20 +168,6 @@ describe('the game stage', () => {
     expect(s.backdrop.classList.contains('through')).toBe(false);
   });
 
-  it('shows the game’s system logo above its title, on a plate when dark', () => {
-    const media = () => null;
-    const systemLogo = (name: string) =>
-      name === 'snes' ? { src: './systems/snes/logo-small.webp', dark: true } : null;
-    const s = new Stage({ media, systemLogo });
-    document.body.replaceChildren(s.backdrop, s.root);
-    s.show(game());
-    const logo = s.root.querySelector<HTMLImageElement>('.title-block > .system-logo')!;
-    expect(logo.getAttribute('src')).toBe('./systems/snes/logo-small.webp');
-    expect(logo.classList.contains('dark')).toBe(true);
-    s.show(game({ id: 2, system: 'unknown' }));
-    expect(s.root.querySelector('.system-logo')).toBeNull();
-  });
-
   it('takes its colour from the game', async () => {
     const { s, accent } = stage();
     s.show(game({}, EVERYTHING));
