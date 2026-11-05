@@ -70,101 +70,61 @@
     "VIC-20ProgrammersReferenceGuide1stEdition6thPrinti"
   ],
   "cplus4": ["Commodore_C16_Plus4_Reference_Book", "Videobasic-C16", "C16MSXN40"],
-  "gamegear": [
-    "OfficialSegaGenesisGameGearStrategies3rdEdition",
-    "magicknightrayearth2gamegearhiresscans"
-  ],
+  "gamegear": ["OfficialSegaGenesisGameGearStrategies3rdEdition"],
   "megacd": ["beepmega-cdappendix-booklet-march-1992"],
   "sg1000": ["beep-1986-04"],
-  "gb": [
-    "kirklands-manual-labor-nintendo-game-boy-usa-4k-version",
-    "pokemon-blue-nintendogameboy-hiresscans",
-    "pokemon-rot-blau-nintendo-game-boy-offizieller-spieleberater"
-  ],
+  "gb": ["pokemon-rot-blau-nintendo-game-boy-offizieller-spieleberater"],
   "fds": ["famimaga-1992-apr-17", "famimagajune1987", "famimaga5111990"],
-  "virtualboy": ["VirtualBoy_201903", "NintendoVirtualBoyManuals"],
-  "intellivision": ["advanced-dungeons-and-dragons-intellivision", "Astrosmash_1981_Mattel"],
-  "colecovision": [
-    "1980-coleco-catalog",
-    "manuals-handheld-games-Coleco-DonkeyKongJr",
-    "manuals-handheld-games-Coleco-PacMan"
-  ],
-  "atari5200": ["AtariAgeIssues1-7", "AtariAgeVol02num03", "Atari5200Manuals_201812"],
-  "atari7800": ["ImpossibleMissionUSA", "Asteroids_1987_Atari"],
-  "vectrex": ["vectrex-french", "vectrex_instruction_manual_collection"],
-  "odyssey2": ["Odyssey_Installation_and_Game_Rules_1972_Magnavox_US", "MagnavoxOdyssey"],
+  "virtualboy": [],
+  "intellivision": [],
+  "colecovision": ["1980-coleco-catalog"],
+  "atari5200": ["AtariAgeIssues1-7", "AtariAgeVol02num03"],
+  "atari7800": [],
+  "vectrex": [],
+  "odyssey2": [],
   "ngpc": ["ngpc_20211014", "softv2"],
-  "wswan": [
-    "superrobottaisencompactwshiresscans",
-    "digimonadventure02d1tamerswscolorhiresscans",
-    "shamankingasuenoishiwscolorhiresscans"
-  ],
+  "wswan": [],
   "sgb": ["Nintendo_Players_Guide_Super_Game_Boy"],
-  "gb2players": [
-    "kirklands-manual-labor-nintendo-game-boy-usa-4k-version",
-    "pokemon-blue-nintendogameboy-hiresscans",
-    "pokemon-rot-blau-nintendo-game-boy-offizieller-spieleberater"
-  ],
+  "gb2players": ["pokemon-rot-blau-nintendo-game-boy-offizieller-spieleberater"],
   "msx2": ["MSXMAGAZINE2", "MSXMAGAZINE_201807", "msxcomputermagazine"],
   "msx2+": ["MSXMAGAZINE_201807", "MSXMAGAZINE2"],
   "msxturbor": ["MSXMAGAZINE3_201808", "MSXMAGAZINE_201807"],
   "ngp": ["softv2", "ngpc_20211014"],
-  "wswanc": [
-    "digimontamersdigimonmedleywscolorhiresscans",
-    "digimonadventure02tagtamerswshiresscans"
-  ],
+  "wswanc": [],
   "mastersystem": [
     "MMSega01Oct92",
     "mean-machines-sega-magazine-04",
     "mean-machines-sega-magazine-03"
   ],
-  "pcenginecd": ["ysivthedawnofyspcenginehirescans", "legendofxanaduthepcenginehiresscans"],
+  "pcenginecd": [],
   "supergrafx": ["nec-supergrafx", "DaimakaimuraSuperGrafxHiResScans"],
   "neogeocd": ["NeoGeoCDSoftCatalogue", "ngcd_20211014", "013-neo-geo-cd"],
-  "naomi": ["arcadia-magazine-32-Jan-HOD", "gamest-199"],
+  "naomi": ["gamest-199"],
   "fbneo": ["gamest-183", "gamest0260", "gamest0068"],
-  "daphne": [
-    "DragonsLairIITimewarp",
-    "SpaceAce",
-    "DragonsLairDragonsLairIISpaceAce20thAnniversaryManual"
-  ],
+  "daphne": [],
   "gameandwatch": ["GameAndWatchPerfectCatalogue", "donkeykongiicautionshowtoplay_201909"],
-  "gamecom": [
-    "tiger-game-com-sonic-jam-scans",
-    "tiger-game-com-resident-evil-2-scans",
-    "tiger-game-com-fighters-megamix-scans"
-  ],
+  "gamecom": [],
   "satellaview": [
     "satellaview-tsuushin-1995-05-monthly-famicom-tsushin-may-extra-issue_202107",
     "satellaview-tsushin-1995-09-images"
   ],
   "pokemini": [],
-  "arcadia": ["AlienInvadersEmersonArcadia2001", "SpaceAttackforEmersonArcadia2001"],
-  "astrocade": [
-    "CursorBASICExpressNewsletterAstrocadeAltColorScans",
-    "BallyAstrocadeManuals_201812"
-  ],
-  "videopacplus": [
-    "Videopac_Computer_G7000_Instructions_For_Use_1978_Philips_en-de",
-    "videopacphilips"
-  ],
+  "arcadia": [],
+  "astrocade": ["CursorBASICExpressNewsletterAstrocadeAltColorScans"],
+  "videopacplus": ["videopacphilips"],
   "prboom": [
     "doom-ii-official-strategy-guide",
     "ultimate-future-games-14-supplement-playstation-doom-guide",
     "Doom_III_Gamespot_Guide"
   ],
-  "sdlpop": ["Prince_Of_Persia_1990_Broderbund_Software", "PrinceOfPersia_201906"],
-  "xrick": ["rick-dangerous-comic", "Rick_Dangerous_1989_Core_Design"],
+  "sdlpop": [],
+  "xrick": [],
   "scummvm": [
     "lucasarts-the-adventurer--magazine-complete",
     "Curse_of_Monkey_Island_The_Prima",
     "the-adventurer"
   ],
-  "mrboom": [
-    "super-bomberman-3-pal",
-    "super-bomberman-3-sfc-hiresscans",
-    "super-bomberman-2-sfc-hiresscans"
-  ],
+  "mrboom": [],
   "naomi2": ["gamest0052", "gamest0066"],
   "atomiswave": ["gamest0200"],
   "gbc2players": ["Total_Game_Boy_Issue_01", "Total_Game_Boy_Issue_03"]

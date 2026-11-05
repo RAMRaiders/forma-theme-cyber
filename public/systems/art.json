@@ -199,16 +199,6 @@
     "consoleHues": [
       39,
       355
-    ],
-    "magazines": [
-      {
-        "file": "mag-1.webp",
-        "title": "Alien Invaders Emerson Arcadia 2001"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Space Attack for Emerson Arcadia 2001"
-      }
     ]
   },
   "archimedes": {
@@ -248,10 +238,6 @@
       {
         "file": "mag-1.webp",
         "title": "Cursor / BASIC Express Newsletter for Bally Arcade / Astrocade Alternative ColorScans"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Bally Astrocade Manuals"
       }
     ]
   },
@@ -313,10 +299,6 @@
       {
         "file": "mag-2.webp",
         "title": "Atari Age Vol 02num 03"
-      },
-      {
-        "file": "mag-3.webp",
-        "title": "Atari 5200 Manuals"
       }
     ]
   },
@@ -329,16 +311,6 @@
     ],
     "consoleHues": [
       15
-    ],
-    "magazines": [
-      {
-        "file": "mag-1.webp",
-        "title": "Atari 7800 Manuals"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Atari 7800 Manual: Asteroids (1987)(Atari)"
-      }
     ]
   },
   "atari800": {
@@ -618,14 +590,6 @@
       {
         "file": "mag-1.webp",
         "title": "1980 Coleco Toys and Games Catalog"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Handheld Game Manual: Donkey Kong Jr (Coleco)"
-      },
-      {
-        "file": "mag-3.webp",
-        "title": "Handheld Game Manual: Pac Man (Coleco)"
       }
     ],
     "peripherals": [
@@ -723,20 +687,6 @@
       54,
       208,
       91
-    ],
-    "magazines": [
-      {
-        "file": "mag-1.webp",
-        "title": "Dragon's Lair II Timewarp (Digital Leisure DVD Version)"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Space Ace (Digital Leisure DVD Version)"
-      },
-      {
-        "file": "mag-3.webp",
-        "title": "Dragon's Lair Dragon's Lair II Space Ace 20th Anniversary Manual"
-      }
     ]
   },
   "devilutionx": {
@@ -1058,20 +1008,6 @@
     "kind": "cutout",
     "hues": [
       5
-    ],
-    "magazines": [
-      {
-        "file": "mag-1.webp",
-        "title": "Tiger Game.com Sonic Jam scans"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Tiger Game.com Resident Evil 2 scans"
-      },
-      {
-        "file": "mag-3.webp",
-        "title": "Tiger Game.com Fighters Megamix scans"
-      }
     ]
   },
   "gamecube": {
@@ -1118,10 +1054,6 @@
       {
         "file": "mag-1.webp",
         "title": "Official Sega Genesis & Game Gear Strategies ( 3rd Edition)"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Magic Knight Rayearth 2 - Making Of Magic Knight (Sega Game Gear) - Box, Cart, Manual Scans"
       }
     ],
     "peripherals": [
@@ -1154,14 +1086,6 @@
     ],
     "magazines": [
       {
-        "file": "mag-1.webp",
-        "title": "Kirkland's Manual Labor - Nintendo Game Boy - USA - 4K version"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Pokemon - Blue Version (Nintendo Game Boy) - Box, Manual Scans"
-      },
-      {
         "file": "mag-3.webp",
         "title": "Pokémon Rot / Blau - Nintendo Game Boy - Offizieller Spieleberater"
       }
@@ -1189,14 +1113,6 @@
       85
     ],
     "magazines": [
-      {
-        "file": "mag-1.webp",
-        "title": "Kirkland's Manual Labor - Nintendo Game Boy - USA - 4K version"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Pokemon - Blue Version (Nintendo Game Boy) - Box, Manual Scans"
-      },
       {
         "file": "mag-3.webp",
         "title": "Pokémon Rot / Blau - Nintendo Game Boy - Offizieller Spieleberater"
@@ -1379,16 +1295,6 @@
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
-    "magazines": [
-      {
-        "file": "mag-1.webp",
-        "title": "Advanced Dungeons And Dragons Intellivision"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Mattel Intellivision: Astrosmash (1981)(Mattel)"
-      }
-    ],
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -1703,20 +1609,6 @@
       325,
       195,
       36
-    ],
-    "magazines": [
-      {
-        "file": "mag-1.webp",
-        "title": "Super Bomberman 3 ( PAL )"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Super Bomberman 3 (Nintendo Super Famicom) - Box, Manual, Cart Scans"
-      },
-      {
-        "file": "mag-3.webp",
-        "title": "Super Bomberman 2 (Nintendo Super Famicom) - Box, Manual, Cart Scans"
-      }
     ]
   },
   "msx1": {
@@ -1908,10 +1800,6 @@
       5
     ],
     "magazines": [
-      {
-        "file": "mag-1.webp",
-        "title": "Arcadia Magazine No 32 January 01 2003 The House of the Dead III pages"
-      },
       {
         "file": "mag-2.webp",
         "title": "Gamest 199"
@@ -2115,12 +2003,6 @@
     ],
     "consoleHues": [
       355
-    ],
-    "magazines": [
-      {
-        "file": "mag-1.webp",
-        "title": "Odyssey Installation and Game Rules (1972)(Magnavox)"
-      }
     ]
   },
   "openbor": {
@@ -2227,20 +2109,6 @@
     ],
     "consoleHues": [
       20
-    ],
-    "magazines": [
-      {
-        "file": "mag-1.webp",
-        "title": "NEC PC Engine CD-ROM2 manual"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Ys IV - The Dawn Of Ys (PC Engine CD) - Box, Disc, Manual Scans"
-      },
-      {
-        "file": "mag-3.webp",
-        "title": "Legend Of Xanadu, The (PC Engine CD) - Box, Disc, Manual Scans"
-      }
     ],
     "peripherals": [
       {
@@ -2623,12 +2491,6 @@
     ],
     "consoleHues": [
       27
-    ],
-    "magazines": [
-      {
-        "file": "mag-1.webp",
-        "title": "Prince Of Persia (1990)(Broderbund Software)"
-      }
     ]
   },
   "sega32x": {
@@ -3041,16 +2903,6 @@
       215,
       355
     ],
-    "magazines": [
-      {
-        "file": "mag-1.webp",
-        "title": "Livrets d'instruction Vectrex en français (Vectrex manuals in French)"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Vectrex Instruction Manual Collection"
-      }
-    ],
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -3081,10 +2933,6 @@
     ],
     "magazines": [
       {
-        "file": "mag-1.webp",
-        "title": "Videopac Computer G7000 Instructions For Use (1978)(Philips)(en-de)"
-      },
-      {
         "file": "mag-2.webp",
         "title": "Videopac Philips"
       }
@@ -3103,16 +2951,6 @@
     ],
     "consoleHues": [
       356
-    ],
-    "magazines": [
-      {
-        "file": "mag-1.webp",
-        "title": "Virtual Boy PIX"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Nintendo Virtual Boy Manuals"
-      }
     ],
     "peripherals": [
       {
@@ -3168,20 +3006,6 @@
     "kind": "cutout",
     "hues": [
       5
-    ],
-    "magazines": [
-      {
-        "file": "mag-1.webp",
-        "title": "Super Robot Taisen Compact (Bandai WonderSwan) - Manual Scans"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Digimon Adventure 02 - D1 Tamers (Bandai WonderSwan Color) - Manual Scans"
-      },
-      {
-        "file": "mag-3.webp",
-        "title": "Shaman King - Asu E No Ishi (Bandai WonderSwan Color) - Manual Scans"
-      }
     ]
   },
   "wswanc": {
@@ -3194,16 +3018,6 @@
     ],
     "consoleHues": [
       228
-    ],
-    "magazines": [
-      {
-        "file": "mag-1.webp",
-        "title": "Digimon Tamers - Digimon Medley (Bandai WonderSwan Color) - Manual Scans"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Digimon Adventure 02 - Tag Tamers (Bandai WonderSwan) - Manual Scans"
-      }
     ]
   },
   "x1": {
@@ -3255,16 +3069,6 @@
     ],
     "consoleHues": [
       25
-    ],
-    "magazines": [
-      {
-        "file": "mag-1.webp",
-        "title": "Rick Dangerous comic"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Commodore C64 Manual: Rick Dangerous (1989)(Core Design)"
-      }
     ]
   },
   "zc210": {

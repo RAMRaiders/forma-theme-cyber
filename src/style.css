@@ -854,7 +854,7 @@ main {
 }
 
 .system-panel .shelf .cover {
-  height: 5.6rem;
+  justify-self: center;
   border-radius: 0.2rem;
   overflow: hidden;
   box-shadow:
@@ -873,7 +873,6 @@ main {
 .system-panel .shelf .cover.lead {
   order: -1;
   grid-row: span 2;
-  height: 11.9rem;
   transform: rotate(-3deg);
   box-shadow:
     0 0 0 1px rgb(var(--sys-rgb) / 50%),
@@ -884,15 +883,24 @@ main {
 /* Two: side by side, the second a little smaller. */
 .system-panel .shelf .stand.n2 .cover:not(.lead) {
   grid-row: span 2;
-  height: 9.6rem;
 }
 
+/* Never cut: each cover whole, in its own shape, as big as its place allows. */
 .system-panel .shelf .cover img {
-  height: 100%;
   width: auto;
-  max-width: 9.2rem;
-  object-fit: cover;
-  object-position: top;
+  height: auto;
+  max-width: 4.6rem;
+  max-height: 5.6rem;
+}
+
+.system-panel .shelf .cover.lead img {
+  max-width: 9rem;
+  max-height: 11.9rem;
+}
+
+.system-panel .shelf .stand.n2 .cover:not(.lead) img {
+  max-width: 6.4rem;
+  max-height: 9.6rem;
 }
 
 /* The peripherals, lying on the floor in front, each with its shadow and its name. */
