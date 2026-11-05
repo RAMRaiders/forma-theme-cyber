@@ -38,5 +38,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Knuckles' Chaotix", "After Burner", "Virtua Racing Deluxe"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Sega of America pushed for a cheap way to bring 32-bit games to the Genesis while the Saturn was being finished. The 32X add-on launched in November 1994.",
+    "It plugged into the Genesis cartridge slot and needed its own power supply. Virtua Racing Deluxe, Star Wars Arcade and Knuckles' Chaotix were among its few games.",
+    "Released just before the Saturn, it confused players and was dropped within a year."
+  ]
 }

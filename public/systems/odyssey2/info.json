@@ -30,5 +30,10 @@
   ],
   "unverified": ["1982 JP"],
   "bestsellers": ["K.C. Munchkin!", "The Quest for the Rings", "Pick Axe Pete!"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "After Ralph Baer's original Magnavox Odyssey, Magnavox, now part of Philips, launched the Odyssey² in 1978, with a full keyboard built in.",
+    "In Europe it was the Philips Videopac G7000. Its games mixed arcade action with keyboard play, and The Quest for the Rings combined a board game with the console.",
+    "About two million were sold before the crash of 1983; the Videopac+ G7400 followed in Europe."
+  ]
 }

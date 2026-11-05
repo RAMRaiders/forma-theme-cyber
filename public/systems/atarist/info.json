@@ -45,5 +45,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Dungeon Master", "Bomb Jack", "Death Sword"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "After leaving Commodore, Jack Tramiel bought Atari's computer business in 1984 and built a 68000 machine fast and cheaply: the 520ST launched in 1985, with a GUI, a mouse and a price far below a Mac's.",
+    "Its built-in MIDI ports made it the standard computer in recording studios, where Cubase was born on it. In Europe it was a games machine too, rivalling the Amiga, with games such as Dungeon Master, Starglider and Carrier Command.",
+    "The ST line ran until the Falcon of 1992. Some musicians still use theirs for its tight MIDI timing."
+  ]
 }

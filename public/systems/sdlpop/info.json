@@ -21,5 +21,10 @@
     "Mechner's original Apple II source code was recovered from old floppy disks in 2012.",
     "SDLPoP's fixes for original bugs can be switched off to play exactly like the DOS version."
   ],
-  "unverified": []
+  "unverified": [],
+  "story": [
+    "Jordan Mechner created Prince of Persia in 1989, animated by filming his brother running and jumping.",
+    "SDLPoP is a port of the original DOS version made from its disassembled code.",
+    "It lets the classic run on modern systems as it did in 1990."
+  ]
 }

@@ -45,5 +45,10 @@
     "A cartridge slot accepted RAM expansion carts that some Capcom and SNK fighting games required."
   ],
   "unverified": [],
-  "bestsellers": ["Virtua Fighter 2", "Virtua Fighter", "Sega Rally Championship"]
+  "bestsellers": ["Virtua Fighter 2", "Virtua Fighter", "Sega Rally Championship"],
+  "story": [
+    "Sega designed the Saturn for 2D, with two Hitachi SH-2 processors, and added more 3D power late, when the PlayStation's plans became known. It launched in Japan in November 1994 and did well there.",
+    "In North America Sega launched it by surprise in May 1995, months early, angering shops; Sony then priced the PlayStation $100 lower. Hard to program, it lost the West, though Virtua Fighter 2, Nights into Dreams, Panzer Dragoon Saga and the arcade ports made it a cult machine.",
+    "It sold about nine million units, most in Japan, and Sega replaced it with the Dreamcast in 1998."
+  ]
 }

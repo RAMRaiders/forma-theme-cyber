@@ -37,5 +37,10 @@
   ],
   "unverified": ["MOS 6522 VIA", "MC1408"],
   "bestsellers": ["Berzerk", "Pole Position", "Star Trek: The Motion Picture"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Smith Engineering and General Consumer Electronics built the Vectrex in 1982, the only home console with its own vector screen, drawing lines like the Asteroids arcade machine.",
+    "Coloured plastic overlays added colour, and it had a light pen and 3D glasses.",
+    "The crash of 1983 ended it in 1984, but its makers later freed its games for anyone to share, and homebrew continues."
+  ]
 }

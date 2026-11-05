@@ -28,5 +28,10 @@
     "The Game Boy Pocket has a smaller link port than the original Game Boy, so linking the two needs a converter cable."
   ],
   "unverified": [],
-  "bestsellers": ["Tetris", "Pokémon Red|Pokémon Blue", "Super Mario Land"]
+  "bestsellers": ["Tetris", "Pokémon Red|Pokémon Blue", "Super Mario Land"],
+  "story": [
+    "Gunpei Yokoi, creator of the Game & Watch, and his team at Nintendo R&D1 designed the Game Boy: four shades of green, a small Z80-like processor and four AA batteries for more than ten hours. It launched in April 1989.",
+    "From the start it had a link port: the Game Link Cable let two players race in F-1 Race, battle in Tetris and, from 1996, trade and fight Pokémon, which made the cable a playground essential.",
+    "With the Game Boy Color, it sold about 119 million units. Here two Game Boys run side by side, linked, as they were in the schoolyard."
+  ]
 }

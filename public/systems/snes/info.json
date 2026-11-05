@@ -42,5 +42,10 @@
     "Its sound is run by a separate SPC700 processor with its own 64 KB of RAM."
   ],
   "unverified": [],
-  "bestsellers": ["Super Mario World", "Super Mario All-Stars", "Donkey Kong Country"]
+  "bestsellers": ["Super Mario World", "Super Mario All-Stars", "Donkey Kong Country"],
+  "story": [
+    "Nintendo answered Sega's Mega Drive late: the Super Famicom launched in Japan in November 1990, where its first shipment of 300,000 sold out within hours. Masayuki Uemura, who had designed the Famicom, led the hardware; Sony designed its sound chip.",
+    "In North America it arrived in 1991 as the Super NES, into a bitter fight with the Genesis. Mode 7, add-on chips in the cartridges such as the Super FX of Star Fox, and games like Super Mario World, Street Fighter II, Donkey Kong Country and Final Fantasy VI made the case for it.",
+    "It sold about 49 million units and outlasted its rival. Its failed CD add-on, planned first with Sony and then with Philips, led to the PlayStation and the CD-i Zelda games."
+  ]
 }

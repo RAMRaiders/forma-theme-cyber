@@ -18,5 +18,10 @@
   ],
   "unverified": [
     "A group of former core developers forked the project as pygame-ce (Community Edition) in 2023."
+  ],
+  "story": [
+    "Pygame started in 2000 as a library for writing games in Python.",
+    "It is easy to learn and has been used to write thousands of games.",
+    "It is used in schools to teach programming through games."
   ]
 }

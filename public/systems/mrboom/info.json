@@ -16,5 +16,10 @@
     "Players can ride kangaroos, push bombs and trigger them with remote controls.",
     "Its team modes include grouping players by colour or pitting humans against bots."
   ],
-  "unverified": ["Late 1990s (DOS)"]
+  "unverified": ["Late 1990s (DOS)"],
+  "story": [
+    "Mr. Boom is a free Bomberman-style game started in 1997, playable by up to eight players.",
+    "It was made by fans and is now available on many systems through libretro.",
+    "It keeps the multiplayer spirit of Bomberman alive."
+  ]
 }

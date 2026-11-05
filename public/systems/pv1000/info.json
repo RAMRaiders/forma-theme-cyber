@@ -29,5 +29,10 @@
   ],
   "unverified": ["disappeared within about a year"],
   "bestsellers": ["Amidar", "Dig Dug", "Pooyan"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Casio released the PV-1000 in Japan in 1983, its only games console.",
+    "It sold poorly against the Famicom and was withdrawn quickly.",
+    "It is now a rare collector's item."
+  ]
 }

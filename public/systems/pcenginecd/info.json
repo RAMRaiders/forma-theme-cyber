@@ -37,5 +37,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Akumajou Dracula X: Chi no Rondo", "Lords of Thunder", "Gate of Thunder"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "NEC and Hudson released the CD-ROM² for the PC Engine in December 1988, the first CD drive for a console.",
+    "CDs brought recorded music, voice and animated scenes to games such as Ys I & II, Gate of Thunder and Dracula X: Rondo of Blood.",
+    "Its upgrades, Super CD-ROM² and Arcade CD-ROM², kept it going in Japan for years."
+  ]
 }

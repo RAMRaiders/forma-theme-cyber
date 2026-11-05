@@ -15,5 +15,10 @@
     "On 1 April 2011 the team released Mystery of Solarus XD, a parody spin-off.",
     "It comes with a Quest Editor for building maps, sprites and dialogs."
   ],
-  "unverified": []
+  "unverified": [],
+  "story": [
+    "Christopho started Solarus in 2006 to make Zelda Mystery of Solarus DX, an action-adventure game inspired by A Link to the Past.",
+    "Solarus grew into a free engine and editor for making 2D action-RPGs.",
+    "It is used by fans to create new games in the style of 16-bit classics."
+  ]
 }

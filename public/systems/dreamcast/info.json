@@ -34,5 +34,10 @@
     "It was the first console sold with a built-in modem for online play."
   ],
   "unverified": [],
-  "bestsellers": ["Sonic Adventure", "Crazy Taxi", "Shenmue"]
+  "bestsellers": ["Sonic Adventure", "Crazy Taxi", "Shenmue"],
+  "story": [
+    "After the Saturn's failure in the West, Sega built a console that would be easy to program: a Hitachi SH-4, NEC's PowerVR graphics and a modem in every box. It launched in Japan in November 1998 and in North America on 9.9.99.",
+    "The American launch was a record, and online play, the VMU and games such as Soulcalibur, Shenmue, Jet Set Radio, Crazy Taxi and Phantasy Star Online showed what it could do. But Sony's PlayStation 2 was coming, and disc piracy hurt sales.",
+    "Sega stopped making it in March 2001 and left console hardware. Homebrew and independent releases on its discs have never stopped."
+  ]
 }

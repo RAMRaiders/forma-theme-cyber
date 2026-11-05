@@ -32,5 +32,10 @@
     "Built-in menus let players pick from 32 colour palettes or paint their own border."
   ],
   "unverified": ["SGB-CPU 01", "ICD2"],
-  "bestsellers": ["Tetris", "Pokémon Red|Pokémon Blue", "Super Mario Land"]
+  "bestsellers": ["Tetris", "Pokémon Red|Pokémon Blue", "Super Mario Land"],
+  "story": [
+    "Nintendo wanted Game Boy owners to play on the television too: the Super Game Boy, released in 1994, was a Super NES cartridge with a Game Boy inside it and a slot on top for Game Boy cartridges.",
+    "It added colour palettes, a border round the picture and, in games made for it, special colours, borders and sound from the Super NES. Donkey Kong '94, Kirby's Dream Land 2 and the first Pokémon games took advantage of it.",
+    "A Super Game Boy 2 with a link port followed in Japan in 1998, and the idea came back as the Game Boy Player for the GameCube."
+  ]
 }

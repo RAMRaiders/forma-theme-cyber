@@ -33,5 +33,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Girl's Garden", "Bank Panic", "Bomb Jack"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Sega's first home console, the SG-1000, launched in Japan on 15 July 1983, the same day as Nintendo's Famicom.",
+    "It sold respectably, mostly ports of Sega's arcade games, but the Famicom pulled far ahead.",
+    "Its successors, the Mark III and the Master System, kept the same base and improved on it."
+  ]
 }

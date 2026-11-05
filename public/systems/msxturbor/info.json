@@ -39,5 +39,10 @@
     "The FS-A1GT added a built-in MIDI interface.",
     "It also contains a Z80 and switches to it for older software that needs exact Z80 timing."
   ],
-  "unverified": ["Toshiba T9769"]
+  "unverified": ["Toshiba T9769"],
+  "story": [
+    "Panasonic released the MSX turbo R in 1990, the last standard of the MSX line, with a faster R800 processor and PCM sound.",
+    "Only Panasonic built it and only in Japan; its games were mostly MSX2 games played faster, with a few of its own.",
+    "It was the end of the line: the MSX standard faded after it."
+  ]
 }

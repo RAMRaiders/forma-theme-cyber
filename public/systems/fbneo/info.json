@@ -41,5 +41,10 @@
     "Besides arcade boards it also emulates several home systems, such as the Mega Drive and PC Engine.",
     "Its licence forbids commercial use."
   ],
-  "unverified": []
+  "unverified": [],
+  "story": [
+    "FinalBurn began in 2000 as a Capcom CPS-2 emulator by Dave, and grew into FinalBurn Alpha, covering Neo Geo, CPS-1, CPS-2, CPS-3 and Toaplan, Cave and Data East boards.",
+    "In 2019 its developers renamed it FinalBurn Neo and opened it up again. It favours arcade games played as they were: accurate timing, netplay and run-ahead to cut input lag, light enough for small machines like the Raspberry Pi.",
+    "Today it is the usual way to play the golden age of 2D arcade fighters and shooters, from Street Fighter II and Metal Slug to the Cave danmaku games, on everything from phones to handheld retro consoles."
+  ]
 }

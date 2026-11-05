@@ -14,6 +14,10 @@ import { preload, ready } from './preload.js';
 
 /** A curiosity stays this long before the next one. */
 const FACT_MS = 10_000;
+/** The text under the logo turns from the system's description to each chapter of its story. */
+const READ_MS = 16_000;
+/** The chapters of a system's story, in order. */
+const CHAPTERS = ['How it began', 'In its day', 'What it left'];
 /**
  * The board follows the selection once it has rested a while: a new board is a full-screen
  * drawing, costly on a Pi, so moving through the rail does not redraw it at every step.
@@ -157,7 +161,7 @@ function makerRgb(maker: string): string | null {
 }
 
 /** The parts of the stage that change together when the selection moves. */
-type Slot = 'intro' | 'tally' | 'showcase' | 'press' | 'gear' | 'fact';
+type Slot = 'intro' | 'reading' | 'tally' | 'showcase' | 'press' | 'gear' | 'fact';
 
 /**
  * A category's systems: a strip of logos over the middle while moving, kept centred on the
@@ -187,6 +191,9 @@ export class SystemView {
   #makers: MakerLogo[] = [];
   #fact = 0;
   #factTimer: ReturnType<typeof setInterval> | undefined;
+  /** Which of the description and the story's chapters shows under the logo. */
+  #read = 0;
+  #readTimer: ReturnType<typeof setInterval> | undefined;
   #boardTimer: ReturnType<typeof setTimeout> | undefined;
   #restTimer: ReturnType<typeof setTimeout> | undefined;
   #dropTimer: ReturnType<typeof setTimeout> | undefined;
@@ -260,6 +267,7 @@ export class SystemView {
       if (ticket !== this.#ticket) return;
       this.#info = info;
       this.#fact = 0;
+      this.#read = 0;
       this.#render(system, !now, ticket);
       this.#drawBoard(system, now ? 0 : BOARD_MS);
     };
@@ -311,6 +319,7 @@ export class SystemView {
     clearTimeout(this.#dropTimer);
     this.root.classList.remove('browsing');
     clearInterval(this.#factTimer);
+    clearInterval(this.#readTimer);
     clearTimeout(this.#boardTimer);
     clearTimeout(this.#restTimer);
   }
@@ -446,10 +455,10 @@ export class SystemView {
         'div',
         { class: 'intro' },
         el('div', { class: 'heading' }, logoImage(system, 'logo'), title),
-        byline,
-        info?.description ? scroller('p', info.description, 'description') : null
+        byline
       )
     ]);
+    parts.push(['reading', this.#readingPart()]);
     parts.push([
       'tally',
       el(
@@ -498,6 +507,7 @@ export class SystemView {
       this.#turnPage(parts, animate);
       this.#scrollOverflow();
       this.#scheduleFact();
+      this.#scheduleReading();
     };
     // The next system shows whole, its pictures ready, rather than its words first.
     if (!animate) return apply();
@@ -522,6 +532,41 @@ export class SystemView {
         box.classList.add('scrolling');
       }
     });
+  }
+
+  /** What shows under the logo, in turn: the description, then each chapter of the story. */
+  #readings(): { label: string; text: string }[] {
+    const info = this.#info;
+    return [
+      ...(info?.description ? [{ label: 'About', text: info.description }] : []),
+      ...(info?.story ?? []).map((text, n) => ({ label: CHAPTERS[n] ?? 'Its story', text }))
+    ];
+  }
+
+  #readingPart(): HTMLElement | null {
+    const all = this.#readings();
+    const reading = all[this.#read % Math.max(1, all.length)];
+    if (!reading) return null;
+    return el(
+      'div',
+      { class: 'reading' },
+      el('h3', {}, reading.label),
+      scroller('p', reading.text, 'description')
+    );
+  }
+
+  /** The next of the description and the story's chapters, fading in over the last. */
+  #nextReading(): void {
+    this.#read += 1;
+    this.#swap('reading', this.#readingPart(), true);
+    this.#scrollOverflow();
+  }
+
+  #scheduleReading(): void {
+    clearInterval(this.#readTimer);
+    if (this.#readings().length > 1 && this.rotateFacts) {
+      this.#readTimer = setInterval(() => this.#nextReading(), READ_MS);
+    }
   }
 
   #factStrip(): HTMLElement | null {

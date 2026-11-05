@@ -39,5 +39,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Impossible Mission", "Boulder Dash", "Ghostbusters"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Commodore's engineers built two chips, the VIC-II for graphics and Bob Yannes's SID for sound, then wrapped them in a computer: the Commodore 64 launched in 1982 at a price below its rivals.",
+    "Jack Tramiel's price cuts made it the best-selling home computer of its time. Its SID chip gave it music no rival could match, and it had thousands of games, from Impossible Mission to Paradroid and The Last Ninja.",
+    "Estimates put its sales between 12 and 17 million. It was sold until 1994, and the demoscene and chiptune music still use it."
+  ]
 }

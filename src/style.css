@@ -846,9 +846,10 @@ main {
      middle the console with its hardware round it, the press to its left, the peripherals
      to its right. */
   grid-template-columns: 13.5rem minmax(0, 1fr) 13.5rem;
-  grid-template-rows: auto minmax(0, 1fr) 3.4rem;
+  grid-template-rows: auto auto minmax(0, 1fr) 3.4rem;
   grid-template-areas:
     'intro intro tally'
+    'reading reading tally'
     'press showcase gear'
     'fact fact fact';
   gap: 0.6rem 2rem;
@@ -936,9 +937,10 @@ main {
   justify-items: center;
 }
 
+/* The small headings: the reading's, Best sellers or Classics, Peripherals; one style. */
+.system-panel .reading h3,
+.system-panel .bestsellers .label,
 .system-panel .gear h3 {
-  grid-column: 1 / -1;
-  justify-self: start;
   margin: 0;
   font-family: var(--mono);
   font-size: 0.6rem;
@@ -946,6 +948,11 @@ main {
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: rgb(var(--sys2-rgb));
+}
+
+.system-panel .gear h3 {
+  grid-column: 1 / -1;
+  justify-self: start;
 }
 
 /* With the heading first, an odd last one is an even child. */
@@ -1008,6 +1015,19 @@ main {
   white-space: nowrap;
   color: var(--muted);
   text-shadow: 0 0 0.4rem #000;
+}
+
+/* Under the logo, in turn, the description and the chapters of the system's story: always the
+   same height, so nothing moves as one fades into the next. */
+.system-panel .reading {
+  grid-area: reading;
+  min-width: 0;
+  height: calc(1.25rem + 4 * 1.45 * 0.86rem);
+  overflow: hidden;
+}
+
+.system-panel .reading .description {
+  margin: 0.35rem 0 0;
 }
 
 .system-panel .intro {
@@ -1140,10 +1160,7 @@ main {
 }
 
 .system-panel .bestsellers .label {
-  font-size: 0.6rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--muted);
+  justify-self: start;
 }
 
 .system-panel .bestsellers ol {

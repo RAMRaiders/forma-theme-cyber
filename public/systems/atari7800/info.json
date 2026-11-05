@@ -37,5 +37,10 @@
   ],
   "unverified": ["The CPU slows to about 1.19 MHz when it accesses TIA or RIOT."],
   "bestsellers": ["Galaga", "Donkey Kong", "Centipede"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Atari commissioned General Computer Corporation, who had made Ms. Pac-Man, to build its next console; the 7800 was ready in 1984 and played 2600 games too.",
+    "Then Atari was sold to Jack Tramiel, who put it on the shelf; it only launched in 1986, against the NES. Its graphics chip could move many sprites, but its sound was the 2600's. Food Fight, Ninja Golf and Midnight Mutants were among its games.",
+    "About a million units were sold before it ended in 1992; its homebrew scene is lively today."
+  ]
 }

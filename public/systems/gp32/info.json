@@ -30,5 +30,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Blue Angelo: Angels from the Shrine", "Dooly Soccer 2002", "Kimchi-man GP32"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Game Park of South Korea released the GP32 in 2001, a handheld built for homebrew.",
+    "Its open design made it popular for emulators and homebrew games.",
+    "It inspired many of the open handhelds that followed."
+  ]
 }

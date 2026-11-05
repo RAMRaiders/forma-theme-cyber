@@ -42,5 +42,10 @@
     "The PS one, a smaller redesign of 2000, outsold every other console that year, the new PlayStation 2 included."
   ],
   "unverified": ["Sony CXD8514Q", "Sony SPU CXD2922"],
-  "bestsellers": ["Gran Turismo", "Final Fantasy VII", "Gran Turismo 2"]
+  "bestsellers": ["Gran Turismo", "Final Fantasy VII", "Gran Turismo 2"],
+  "story": [
+    "Sony's console grew out of a failed partnership: Nintendo had asked Sony to build a CD-ROM drive for the Super NES, then publicly dropped it in 1991 for Philips. Ken Kutaragi convinced Sony to go on alone, and the PlayStation launched in Japan in December 1994.",
+    "Cheap CDs, easy development tools and a fair licensing deal brought in publishers that had struggled with cartridges. Squaresoft moved Final Fantasy VII to it, and Gran Turismo, Metal Gear Solid, Tekken and Crash Bandicoot followed. Sony marketed it to teenagers and adults, not only to children.",
+    "It became the first console to sell more than 100 million units, overtook Nintendo and Sega, and made Sony the leading name in home consoles for the next decade."
+  ]
 }

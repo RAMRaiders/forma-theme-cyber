@@ -31,5 +31,10 @@
     "GD-ROM games are copied into RAM on a DIMM board at boot rather than read from disc during play.",
     "Several NAOMI boards can be linked in one cabinet to drive multiple screens."
   ],
-  "unverified": ["Sega's R&D head reportedly chose the name in honour of model Naomi Campbell."]
+  "unverified": ["Sega's R&D head reportedly chose the name in honour of model Naomi Campbell."],
+  "story": [
+    "Sega built the NAOMI arcade board in 1998 on the same design as the Dreamcast, with more memory, so games could pass from arcade to home with little work.",
+    "Crazy Taxi, The House of the Dead 2, Marvel vs. Capcom 2, Virtua Tennis and Ikaruga ran on it, and many came home on the Dreamcast.",
+    "It was used for arcade games for almost a decade, longer than the Dreamcast was sold."
+  ]
 }

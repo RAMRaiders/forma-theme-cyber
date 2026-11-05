@@ -27,5 +27,10 @@
     "SparkFun sold a kit version called the Uzebox AVCore.",
     "Its hardware schematics and software kernel are published as open source."
   ],
-  "unverified": ["2008"]
+  "unverified": ["2008"],
+  "story": [
+    "Alec Bourque designed the Uzebox in 2008 as an open-source retro console built from a single ATmega microcontroller doing all the video and sound in software.",
+    "Anyone can build one from a kit; its community has written games, emulators and demos for it, from Tetris clones to platformers.",
+    "It shows how far a tiny chip can go, and its games now run in emulation alongside the consoles that inspired it."
+  ]
 }

@@ -29,5 +29,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Astro Invader", "3D Soccer", "3D Bowling"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Emerson's Arcadia 2001 launched in 1982, a small console based on a Signetics chip and built under licence in many forms by other companies.",
+    "Its games were mostly versions of arcade hits, often under other names.",
+    "It lasted only months in America before the crash of 1983, but its clones were sold across Europe and Asia."
+  ]
 }

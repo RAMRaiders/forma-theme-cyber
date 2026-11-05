@@ -29,5 +29,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Donkey Kong", "Mario Bros.", "Ball"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Gunpei Yokoi had the idea after seeing a man playing with a calculator on a train. Nintendo's Game & Watch, launched in 1980, was a single game with a clock on an LCD screen.",
+    "Ball, Fire, Octopus and the dual-screen Donkey Kong of 1982, where the D-pad was introduced, sold more than 40 million units in all.",
+    "Its D-pad became the standard for controllers, and its dual screens returned on the Nintendo DS."
+  ]
 }

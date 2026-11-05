@@ -15,5 +15,10 @@
     "xrick has been ported to many devices, including the Rockbox firmware for music players.",
     "Rick Dangerous is known for traps that kill the player without warning, so levels are learned by trial and error."
   ],
-  "unverified": []
+  "unverified": [],
+  "story": [
+    "Core Design released Rick Dangerous in 1989, a platformer that parodied Indiana Jones.",
+    "xrick is a fan remake that recreates the original game for modern systems.",
+    "It keeps a classic of British home computer games alive."
+  ]
 }

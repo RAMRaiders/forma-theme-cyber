@@ -21,5 +21,10 @@
     "The first source port, DOSDoom, appeared within a day of the source release.",
     "Its fork PrBoom+ focuses on playing back demo recordings exactly as the original game would."
   ],
-  "unverified": ["1993 (Doom) · late 1990s (PrBoom)"]
+  "unverified": ["1993 (Doom) · late 1990s (PrBoom)"],
+  "story": [
+    "id Software released the source code of Doom in 1997, and fans began to improve it.",
+    "PrBoom, from Boom and later versions, kept Doom faithful while making it run well on modern machines.",
+    "It is the reference for playing Doom as it was in 1993."
+  ]
 }

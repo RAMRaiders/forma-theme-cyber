@@ -33,5 +33,10 @@
     "The Japanese Master System included a built-in FM sound chip."
   ],
   "unverified": [],
-  "bestsellers": ["Alex Kidd in Miracle World", "Sonic the Hedgehog", "Sonic the Hedgehog 2"]
+  "bestsellers": ["Alex Kidd in Miracle World", "Sonic the Hedgehog", "Sonic the Hedgehog 2"],
+  "story": [
+    "Sega's SG-1000 had lost to the Famicom, so it built the Mark III in 1985, then restyled it as the Master System for the West in 1986.",
+    "It was technically stronger than the NES but Nintendo's licensing kept most publishers away, and in North America it struggled. In Europe, and above all in Brazil, where Tectoy built and sold it for decades, it was a great success. Alex Kidd, Phantasy Star, Wonder Boy III and the 8-bit Sonic games were its stars.",
+    "Its hardware lived on almost unchanged in the Game Gear, and Tectoy still sells Master Systems with games built in."
+  ]
 }

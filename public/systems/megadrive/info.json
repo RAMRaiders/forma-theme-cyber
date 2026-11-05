@@ -37,5 +37,10 @@
     "The 32X and Mega-CD add-ons could be connected at the same time."
   ],
   "unverified": [],
-  "bestsellers": ["Sonic the Hedgehog", "Sonic the Hedgehog 2", "Disney's Aladdin|Aladdin"]
+  "bestsellers": ["Sonic the Hedgehog", "Sonic the Hedgehog 2", "Disney's Aladdin|Aladdin"],
+  "story": [
+    "Sega built the Mega Drive on its System 16 arcade boards: a Motorola 68000 with a Z80 for sound. It launched in Japan in October 1988, where it stayed behind the PC Engine and the Famicom.",
+    "In North America it became the Genesis in 1989, with 'Genesis does what Nintendon't' advertising and arcade ports. Under Tom Kalinske, Sega bundled Sonic the Hedgehog from 1991 and for a while outsold the Super NES there, with sports games from EA and a cooler, older image.",
+    "It sold around 30 million units, stayed popular in Brazil for decades, and its music, from the Yamaha FM chip, is loved to this day."
+  ]
 }

@@ -37,5 +37,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Pac-Man", "The Activision Decathlon", "Astro Chase"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Atari built the 5200 on its 400 and 800 computers to face Intellivision and ColecoVision; it launched in November 1982.",
+    "Its arcade ports were good, but its analogue joysticks did not centre and broke easily, and it could not play 2600 games at first.",
+    "The crash of 1983 ended it in 1984; about a million were sold."
+  ]
 }

@@ -42,5 +42,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Gryzor", "Rick Dangerous", "Bomb Jack"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Alan Sugar's Amstrad, a seller of cheap hi-fi, entered computers in 1984 with the CPC 464: a Z80 machine sold complete, with its own monitor and a tape deck built in, so a family needed no television.",
+    "It sold strongly in Britain, France, Spain and Germany. Its Mode 0 gave 16 colours from a palette of 27, and studios such as Ubisoft, Loriciels, Infogrames and Dinamic made games for it; the 6128 added a disk drive in 1985.",
+    "The CPC sold about three million units. Its success let Amstrad buy Sinclair in 1986; the GX4000 console of 1990, built on the CPC Plus, was a short-lived end."
+  ]
 }

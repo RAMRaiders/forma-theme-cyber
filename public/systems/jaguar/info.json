@@ -32,5 +32,10 @@
     "Its controller has a 12-button numeric keypad that took game overlays."
   ],
   "unverified": [],
-  "bestsellers": ["Alien vs Predator", "Tempest 2000", "Cybermorph"]
+  "bestsellers": ["Alien vs Predator", "Tempest 2000", "Cybermorph"],
+  "story": [
+    "Atari, nearly out of the console business, launched the Jaguar in November 1993, claiming it was the first 64-bit console.",
+    "It was powerful but difficult to program, and had few games; Tempest 2000, Alien vs Predator and Doom were among the best.",
+    "Atari stopped it in 1996 after selling well under a million units, and left the hardware business soon after."
+  ]
 }

@@ -38,5 +38,10 @@
     "Pac-Man",
     "Pitfall!|Pitfall! Pitfall Harry's Jungle Adventure",
     "Missile Command"
+  ],
+  "story": [
+    "Atari built the Video Computer System to play many games on cartridges rather than one built in. Engineers Jay Miner and Joe Decuir designed its chip around a 6507; Nolan Bushnell sold Atari to Warner to pay for the launch, in September 1977.",
+    "It sold slowly at first, then Space Invaders under licence in 1980 made it the first console to be a hit thanks to a single game. Activision, founded by Atari programmers, became the first third-party publisher.",
+    "A flood of poor games, including Pac-Man and E.T., helped bring on the North American crash of 1983. Still, about 30 million units were sold, and its homebrew scene is busy today."
   ]
 }

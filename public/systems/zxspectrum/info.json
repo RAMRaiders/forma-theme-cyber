@@ -34,5 +34,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Jetpac", "Manic Miner", "Deathchase"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Clive Sinclair wanted a home computer most British families could afford. Richard Altwasser designed the ZX Spectrum around a Z80 and one custom chip, with rubber keys and colour, and it launched in April 1982 for £125.",
+    "Teenagers wrote games for it in their bedrooms and sold them on tape through shops and magazines. Ultimate Play the Game, Ocean, Dinamic and Codemasters grew on it, and it was hugely popular in Britain, Spain and across the Eastern bloc, where clones were built.",
+    "It sold about five million units and started much of Europe's game industry. Sinclair sold its computers to Amstrad in 1986."
+  ]
 }

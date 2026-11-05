@@ -34,5 +34,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Gridrunner", "Omega Race", "Jelly Monsters"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Commodore wanted a colour computer for under $300. Built around MOS's VIC chip, the VIC-20 launched in Japan as the VIC-1001 in 1980 and worldwide in 1981.",
+    "William Shatner sold it on television as 'the wonder computer of the 1980s'. With 5 KB of memory and 22 columns of text it was modest, but it was sold in toy and department stores, not only computer shops, and games came on cartridges and tapes.",
+    "It became the first computer to sell a million units, and opened the way for the Commodore 64 that replaced it."
+  ]
 }

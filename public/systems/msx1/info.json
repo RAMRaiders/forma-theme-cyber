@@ -37,5 +37,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Knightmare", "1942", "Antarctic Adventure"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Kazuhiko Nishi of ASCII and Microsoft Japan wanted one standard for home computers, as VHS was for video. Announced in 1983, MSX was a specification any maker could build: a Z80, a TI video chip, a General Instrument sound chip and Microsoft BASIC.",
+    "Sony, Panasonic, Philips, Toshiba, Yamaha and many others built MSX machines. They sold well in Japan, the Netherlands, Spain, Brazil and the Arab world, though not in Britain or America. Konami made its name on it with Metal Gear, Nemesis and Knightmare.",
+    "Millions of MSX computers were sold over the standard's four generations, and Hideo Kojima's Metal Gear first appeared on the MSX2."
+  ]
 }

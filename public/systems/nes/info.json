@@ -38,5 +38,10 @@
     "The Famicom launched in Japan in 1983 with Donkey Kong, Donkey Kong Jr. and Popeye."
   ],
   "unverified": [],
-  "bestsellers": ["Super Mario Bros.", "Duck Hunt", "Super Mario Bros. 3"]
+  "bestsellers": ["Super Mario Bros.", "Duck Hunt", "Super Mario Bros. 3"],
+  "story": [
+    "Masayuki Uemura's team at Nintendo built the Family Computer to be cheap and to play arcade games well; it launched in Japan in July 1983 and, after a recall of early units, became a national phenomenon.",
+    "America was another matter: the market had collapsed in 1983. Nintendo redesigned it as a grey, front-loading 'Entertainment System', sold it with a robot and a light gun as a toy, and launched it in New York in 1985. Strict licensing and its lockout chip kept poor games off it. Super Mario Bros., The Legend of Zelda and Metroid did the rest.",
+    "It brought home video games back from the dead in North America, set the rules for publishers for decades, and sold about 62 million units."
+  ]
 }

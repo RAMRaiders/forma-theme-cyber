@@ -37,5 +37,10 @@
   ],
   "unverified": ["Bally Data Chip", "Bally Address Chip"],
   "bestsellers": ["Amazing Maze / Tic-Tac-Toe", "Astro Battle", "Artillery Duel"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Bally's home console, designed by the people behind its arcade games, launched in 1978 as the Bally Professional Arcade.",
+    "Its BASIC cartridge let owners write their own games, and its arcade ports were good, but it was expensive.",
+    "Sold on as the Astrocade until 1985, it remains a rarity."
+  ]
 }

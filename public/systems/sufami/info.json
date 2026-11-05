@@ -31,5 +31,10 @@
     "The game in slot A is the one played, while a cartridge in slot B can supply extra data to it.",
     "Its games launched at 3,980 yen, cheaper than typical Super Famicom cartridges."
   ],
-  "unverified": []
+  "unverified": [],
+  "story": [
+    "Bandai's SuFami Turbo of 1996 was an adapter for the Super Famicom with two cartridge slots, so games could share data.",
+    "It was cheaper to make games for, and SD Gundam and other anime titles came out on it.",
+    "Only a few games were released, all in Japan."
+  ]
 }

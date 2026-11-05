@@ -26,5 +26,10 @@
   ],
   "unverified": ["About 3.5 million (WonderSwan family)"],
   "bestsellers": ["Guilty Gear Petit 2", "Final Fantasy IV", "Guilty Gear Petit"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Bandai added colour to its WonderSwan in December 2000, keeping its battery life and its long shape that could be held upright or sideways.",
+    "Square's Final Fantasy remakes and anime licences sold it in Japan, and the SwanCrystal of 2002 improved the screen.",
+    "It held a share of the Japanese market against the Game Boy Advance until Bandai stopped making it in 2003."
+  ]
 }

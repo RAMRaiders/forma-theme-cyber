@@ -28,5 +28,10 @@
   ],
   "unverified": ["1978 NA", "The console has a built-in game, Rocket Patrol.", "1 KB"],
   "bestsellers": ["Backgammon", "Baseball", "Catena"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "APF Electronics released the M-1000 console in 1978, later able to turn into a computer.",
+    "It had controllers with keypads, and was one of the first to be sold as more than a games machine.",
+    "It was soon overtaken by the Atari 2600."
+  ]
 }

@@ -24,5 +24,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Alien", "Block Buster", "Balloon Fight"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Watara of Hong Kong released the Supervision in 1992 as a cheaper rival to the Game Boy, with a larger screen.",
+    "Its games were simple and its screen blurred, but it was sold widely in Europe and Asia at a low price.",
+    "It is now a curious footnote of the handheld wars."
+  ]
 }

@@ -36,5 +36,10 @@
     "Each licensed manufacturer had to make a profit on the hardware itself, since 3DO only earned royalties on software."
   ],
   "bestsellers": ["Road Rash", "Gex", "Alone in the Dark"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Trip Hawkins, founder of Electronic Arts, created the 3DO Company to license a console design for others to build, as VHS had been. Panasonic's FZ-1 launched it in October 1993.",
+    "It was a 32-bit CD console, but at $699 it was too dear, and Panasonic, Goldstar and Sanyo each had to make a profit on the hardware. Road Rash, Need for Speed, Gex and Star Control II were among its best.",
+    "It faded once the Saturn and PlayStation arrived, and 3DO sold the hardware business in 1996 to make games for other systems."
+  ]
 }

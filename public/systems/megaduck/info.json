@@ -29,5 +29,10 @@
   ],
   "unverified": [],
   "bestsellers": ["2nd Space", "Armour Force", "Artic Zone"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "The Mega Duck, also known as the Cougar Boy, was a handheld released around 1993 by Welback Holdings of Hong Kong.",
+    "Its hardware was very similar to the Game Boy, but its cartridges were not compatible.",
+    "It was sold in parts of Europe and South America and is now a collector's item."
+  ]
 }

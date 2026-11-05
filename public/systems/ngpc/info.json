@@ -37,5 +37,10 @@
     "Metal Slug: 2nd Mission",
     "SNK vs. Capcom: The Match of the Millennium"
   ],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "SNK launched the Neo Geo Pocket in 1998 and replaced it with a colour model in 1999.",
+    "Its clicky microswitch joystick and a fine library of fighting games and puzzlers, such as SNK vs. Capcom: The Match of the Millennium, made it a cult classic.",
+    "SNK's financial trouble ended it in 2001."
+  ]
 }

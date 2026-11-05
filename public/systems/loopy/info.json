@@ -24,5 +24,10 @@
   ],
   "unverified": ["1 MB"],
   "bestsellers": ["Anime Land", "Dorīmuchenji Kokinchanno Fasshonpātī", "HARIHARI Shīru Paradaisu"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Casio released the Loopy in Japan in 1995, a console aimed at girls.",
+    "It had a built-in printer for making stickers from screenshots.",
+    "Only a few games were made for it, and it is now a curiosity."
+  ]
 }

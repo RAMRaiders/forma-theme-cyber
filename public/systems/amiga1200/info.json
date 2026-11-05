@@ -45,5 +45,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Agony", "Lemmings", "Lotus Turbo Challenge 2"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "The Amiga began in 1982 as Hi-Toro, a small Californian company led by Jay Miner, the designer of Atari's 8-bit chips, which set out to build a games machine around custom chips. Out of money, it was bought by Commodore in 1984, and the Amiga 1000 arrived in 1985 with colour, sound and multitasking far ahead of the PC and Mac of the day.",
+    "The A1200 came in late 1992 with the AGA chipset: 256 colours on screen from a palette of 16.8 million and a 68020 processor, in the same wedge case as the hugely popular A500. In Europe, and above all in Britain, it carried a scene of bedroom coders and studios such as Team17, Psygnosis, DMA Design and the Bitmap Brothers.",
+    "Commodore went bankrupt in April 1994, and the Amiga never had a true successor. Its games, its demoscene and its tracker music outlived it, and studios that started on it went on to make Lemmings, Worms and Grand Theft Auto."
+  ]
 }

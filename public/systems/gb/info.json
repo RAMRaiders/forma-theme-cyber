@@ -30,5 +30,10 @@
     "Outside Japan it came with Tetris, which is credited with much of its success."
   ],
   "unverified": ["Its four AA batteries gave around 30 hours of play."],
-  "bestsellers": ["Tetris", "Pokémon Red|Pokémon Blue", "Super Mario Land"]
+  "bestsellers": ["Tetris", "Pokémon Red|Pokémon Blue", "Super Mario Land"],
+  "story": [
+    "Gunpei Yokoi, creator of the Game & Watch, and his team at Nintendo R&D1 designed the Game Boy: four shades of green, a small Z80-like processor and four AA batteries for more than ten hours. It launched in April 1989.",
+    "Tetris, bundled with it in the West, made it something adults played on trains and planes. Its rivals had colour screens but ate batteries; the Game Boy kept winning. Super Mario Land, Link's Awakening and, in 1996, Pokémon kept it going for years.",
+    "With the Game Boy Color, it sold about 119 million units, and its sound chip became a musical instrument for chiptune artists."
+  ]
 }

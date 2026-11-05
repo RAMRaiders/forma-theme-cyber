@@ -34,5 +34,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Donkey Kong", "BurgerTime", "Mouse Trap"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Coleco, a maker of toys and pools, launched the ColecoVision in August 1982 with a near-perfect port of Nintendo's Donkey Kong bundled with it.",
+    "It gave home players something close to the arcade, and an adapter even played Atari 2600 cartridges. Zaxxon, Venture, Lady Bug and Mr. Do! followed. It sold about two million units in its first eighteen months.",
+    "The crash of 1983 and Coleco's Adam computer, which began as an add-on for it, ended it by 1985; homebrew games have kept coming."
+  ]
 }

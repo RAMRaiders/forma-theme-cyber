@@ -28,5 +28,10 @@
     "The Game Boy Printer plugged into the same port, and Pokémon Yellow could print Pokédex entries on it."
   ],
   "unverified": [],
-  "bestsellers": ["Pokémon Gold|Pokémon Silver", "Pokémon Crystal", "Super Mario Bros. Deluxe"]
+  "bestsellers": ["Pokémon Gold|Pokémon Silver", "Pokémon Crystal", "Super Mario Bros. Deluxe"],
+  "story": [
+    "Nine years after the Game Boy, Nintendo gave it colour: the Game Boy Color launched in October 1998, twice as fast, with up to 56 colours on screen and still playing every Game Boy game.",
+    "Its link cable, and an infrared port, let two players trade and battle Pokémon in Gold and Silver, race and fight: here two of them run side by side, linked.",
+    "Counted with the Game Boy, it sold about 119 million units."
+  ]
 }

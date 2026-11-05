@@ -24,5 +24,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Bubble Boy", "Dungeon Adventure", "Continental Galaxy"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Hartung's Game Master was a cheap handheld sold in Germany and Europe from about 1990.",
+    "It was an inexpensive alternative to the Game Boy for children.",
+    "It is now a curiosity for collectors."
+  ]
 }

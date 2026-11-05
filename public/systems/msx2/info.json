@@ -37,5 +37,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Metal Gear", "Metal Gear 2: Solid Snake", "Vampire Killer"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "The second generation of the MSX standard came in 1985 with Yamaha's V9938 video chip: 256 colours, 80-column text and more memory.",
+    "In Japan it became a serious games computer: Konami's Metal Gear and Metal Gear 2, Space Manbow and Snatcher, and Compile's Aleste, while in the Netherlands, Spain and Brazil Philips and others kept selling it.",
+    "Its MSX2+ and turbo R successors followed, and fans still make hardware and games for it."
+  ]
 }

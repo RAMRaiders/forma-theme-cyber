@@ -34,5 +34,10 @@
   ],
   "unverified": ["64 KB WRAM / 128 KB VRAM"],
   "bestsellers": ["Virtual Boy Wario Land", "Mario's Tennis", "3D Tetris"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Gunpei Yokoi's last design for Nintendo, the Virtual Boy of 1995, showed true 3D in red and black, using a mirror scanning a line of red LEDs.",
+    "It was sold as a portable but had to stand on a table, and many found it uncomfortable. Mario's Tennis, Wario Land and Red Alarm were among its few games.",
+    "It was stopped within a year, Nintendo's least successful console."
+  ]
 }

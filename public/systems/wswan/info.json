@@ -33,5 +33,10 @@
     "beatmania for WonderSwan",
     "Kaze no Klonoa: Moonlight Museum"
   ],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Gunpei Yokoi, who had left Nintendo after creating the Game Boy, designed the WonderSwan for Bandai with his company Koto; it launched in Japan in March 1999, two years after his death.",
+    "It was cheap and ran for 30 hours on a single AA battery, and it could be played upright or sideways. Final Fantasy remakes from Square and many anime games kept it alive; a Color model followed in 2000.",
+    "It took a share of the Japanese handheld market but never left Japan, and Bandai stopped it in 2003 as the Game Boy Advance spread."
+  ]
 }

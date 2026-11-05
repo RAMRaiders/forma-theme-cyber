@@ -16,5 +16,10 @@
     "Beats of Rage had been downloaded more than a million times by 2006.",
     "The engine has been ported to the Dreamcast, PlayStation 2, PSP and Wii."
   ],
-  "unverified": ["BSD-3-Clause"]
+  "unverified": ["BSD-3-Clause"],
+  "story": [
+    "OpenBOR began with Beats of Rage, a beat 'em up made in 2004 by Senile Team from SNK's King of Fighters sprites, with an engine anyone could reuse.",
+    "Opened up as OpenBOR, the engine let fans build whole games of their own: side-scrolling brawlers, shooters and platformers made from scripts and sprites.",
+    "Thousands of fan games, many tributes to Streets of Rage and Final Fight, were made with it, and it runs on almost every handheld and console."
+  ]
 }

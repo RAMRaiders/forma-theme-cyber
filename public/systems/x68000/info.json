@@ -44,5 +44,10 @@
     "Up to 768 × 512; 65,536 colours at lower resolutions; hardware sprites"
   ],
   "bestsellers": ["Akumajou Dracula", "Alien Syndrome", "Final Fight"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Sharp's X68000 of 1987 was a powerful Japanese computer, with a 68000 processor and graphics close to arcade boards of the time.",
+    "Many arcade games were ported to it almost perfectly, and Capcom used it to develop its CPS games.",
+    "It is remembered as the computer that brought the arcade home, and is still loved by collectors in Japan."
+  ]
 }

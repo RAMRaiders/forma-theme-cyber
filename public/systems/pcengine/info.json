@@ -33,5 +33,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Blazing Lazers", "Bonk's Adventure", "Alien Crush"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "NEC and Hudson Soft built the PC Engine around Hudson's own chips; it launched in Japan in October 1987 in a tiny box, its games on credit-card-sized HuCards.",
+    "In Japan it beat the Famicom for a while and, in 1988, became the first console with a CD-ROM add-on. In North America, as the TurboGrafx-16 of 1989, it lost to the Genesis and Super NES. Bonk, R-Type, Ys and many shooters made it beloved.",
+    "It sold millions of units in all its forms, and NEC brought back a PC Engine Mini in 2020."
+  ]
 }

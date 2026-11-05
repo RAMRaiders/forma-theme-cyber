@@ -37,5 +37,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Cosmic Conflict", "Golf", "Take the Money and Run"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Philips released the Videopac+ G7400 in Europe in 1983 as an update of the Odyssey².",
+    "It added better graphics and could play the older Videopac games.",
+    "It was released just before the crash and sold poorly."
+  ]
 }

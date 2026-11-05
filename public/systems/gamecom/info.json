@@ -25,5 +25,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Resident Evil 2", "Batman & Robin", "Sonic Jam"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Tiger Electronics launched the Game.com in 1997 as a handheld with a touchscreen and a stylus.",
+    "It could connect to the internet with a modem, and had games such as Resident Evil 2 and Sonic Jam.",
+    "Its blurred screen and few games limited its success, and it was stopped in 2000."
+  ]
 }

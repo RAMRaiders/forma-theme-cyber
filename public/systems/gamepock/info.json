@@ -25,5 +25,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Block Maze", "Reversi", "Astro Bomber"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Epoch released the Game Pocket Computer in Japan in 1984, one of the first handhelds with cartridges.",
+    "It had a black-and-white LCD screen and a few games.",
+    "It sold poorly and is now very rare."
+  ]
 }

@@ -29,5 +29,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Auf Wiedersehen Monty", "Commando", "Monty on the Run"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Commodore released the Plus/4 in 1984 as a business computer with built-in office software.",
+    "It was not compatible with the Commodore 64's games, which limited its appeal.",
+    "It sold poorly in America, but found more success in parts of Europe."
+  ]
 }

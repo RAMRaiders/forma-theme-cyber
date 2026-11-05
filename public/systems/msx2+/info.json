@@ -39,5 +39,10 @@
     "Its YJK colour mode stores colour in a way similar to video signals, which lets it show 19,268 colours."
   ],
   "bestsellers": ["F-1 Spirit 3D Special", "Moon light Saga ~Chapter Horus~ ", "Turtle Mania"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "The MSX2+ standard of 1988 added smoother scrolling and more colours, and was released only in Japan.",
+    "Panasonic, Sony and Sanyo built it; it played the whole MSX2 library and a few games of its own.",
+    "It led to the MSX turbo R, the last of the line."
+  ]
 }

@@ -71,6 +71,8 @@ export interface SystemInfo {
     Record<string, string>;
   chips?: { role: string; part: string }[];
   curiosities?: string[];
+  /** Its story in three short chapters: how it began, in its day, what it left. */
+  story?: string[];
   /** Its best-selling games, best first; `A|B` for other titles of the same game. */
   bestsellers?: string[];
   /**

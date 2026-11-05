@@ -29,5 +29,10 @@
     "Like the original Game Boy, its screen had no backlight."
   ],
   "unverified": [],
-  "bestsellers": ["Pokémon Gold|Pokémon Silver", "Pokémon Crystal", "Super Mario Bros. Deluxe"]
+  "bestsellers": ["Pokémon Gold|Pokémon Silver", "Pokémon Crystal", "Super Mario Bros. Deluxe"],
+  "story": [
+    "Nine years after the Game Boy, Nintendo gave it colour: the Game Boy Color launched in October 1998, twice as fast, with up to 56 colours on screen and still playing every Game Boy game.",
+    "Pokémon was at its peak, and Gold and Silver, Link's Awakening DX, the Oracle games and Super Mario Bros. Deluxe sold it. Its infrared port let games swap data without a cable.",
+    "Counted with the Game Boy, it sold about 119 million units, and it bridged the way to the Game Boy Advance."
+  ]
 }

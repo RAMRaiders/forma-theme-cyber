@@ -34,5 +34,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Metal Slug", "Metal Slug 2", "The King of Fighters '96"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Neo Geo cartridges were very expensive, so in 1994 SNK released the Neo Geo CD, playing the same games from much cheaper CDs.",
+    "Its single-speed drive made for long loading screens, which a faster CDZ model only partly fixed, but its CD audio gave some games new soundtracks.",
+    "It kept SNK's fighters within reach of more homes until the end of the 1990s."
+  ]
 }

@@ -25,5 +25,10 @@
   ],
   "unverified": ["Epson S1C88-based @ 4 MHz"],
   "bestsellers": ["Pichu Bros. Mini", "Pokémon Tetris", "Pokémon Pinball Mini"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Nintendo released the Pokémon Mini in 2001, the smallest cartridge-based console it ever made.",
+    "It had an accelerometer, a rumble motor and an infrared port; its games were short and simple.",
+    "Only a few games were released, and it is remembered as a curiosity of the Pokémon boom."
+  ]
 }

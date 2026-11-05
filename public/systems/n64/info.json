@@ -34,5 +34,10 @@
     "GoldenEye 007 was made at Rare by a team most of whom had never made a game before."
   ],
   "unverified": [],
-  "bestsellers": ["Super Mario 64", "Mario Kart 64", "GoldenEye 007"]
+  "bestsellers": ["Super Mario 64", "Mario Kart 64", "GoldenEye 007"],
+  "story": [
+    "Nintendo worked with Silicon Graphics on 'Project Reality', a 64-bit console with a MIPS processor and real 3D. It launched in Japan in June 1996 with Super Mario 64 and Pilotwings 64.",
+    "Its controller brought an analogue stick to every player, and Mario 64, Ocarina of Time, GoldenEye 007, Mario Kart 64 and later the Rumble Pak set the rules of 3D games. Cartridges kept loading fast but were costly and small, and Square left for Sony.",
+    "It sold about 33 million units, second to the PlayStation, and its four controller ports made it the home of multiplayer."
+  ]
 }

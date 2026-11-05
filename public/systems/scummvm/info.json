@@ -16,5 +16,10 @@
     "The ResidualVM project, which handled 3D adventures such as Grim Fandango, was merged into ScummVM.",
     "The project has taken part in Google Summer of Code almost every year since 2007."
   ],
-  "unverified": []
+  "unverified": [],
+  "story": [
+    "ScummVM started in 2001 to run LucasArts adventure games made with the SCUMM engine on modern computers.",
+    "It grew to support adventure games from Sierra, Revolution, Westwood and many others.",
+    "Some companies have even used it to release their old games again."
+  ]
 }

@@ -45,5 +45,10 @@
     "1941: Counter Attack",
     "Aldynes: The Misson Code for Rage Crisis"
   ],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "NEC released the SuperGrafx in Japan in 1989 as an upgraded PC Engine.",
+    "It had a second graphics chip but only a handful of games used it, such as Ghouls 'n Ghosts.",
+    "It was a commercial failure, but is popular with collectors."
+  ]
 }

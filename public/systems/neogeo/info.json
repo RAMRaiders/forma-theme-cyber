@@ -37,5 +37,10 @@
   ],
   "unverified": ["SNK LSPC2-A2"],
   "bestsellers": ["Metal Slug", "The King of Fighters '98", "Samurai Shodown"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "SNK built the Neo Geo as one system for arcades and homes: the MVS arcade board, launched in 1990, took several games in one cabinet, and the AES home console played exactly the same cartridges.",
+    "The home version cost around $650, with games at $200 or more, so it was sold to the few and rented in Japan. Its huge cartridges carried Fatal Fury, The King of Fighters, Samurai Shodown, Metal Slug and Garou.",
+    "New MVS games came out until 2004, longer than for any other arcade system, and its fighters and shooters are still played in tournaments."
+  ]
 }

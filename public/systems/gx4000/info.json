@@ -33,5 +33,10 @@
   ],
   "unverified": [],
   "bestsellers": ["Barbarian II: The Dungeon of Drax", "Burnin' Rubber", "Fire & Forget II"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Amstrad turned its CPC Plus computer into a console, the GX4000, in 1990.",
+    "It was technically capable, but it arrived just as the Mega Drive and Super NES were taking over.",
+    "Very few games were released for it and it was withdrawn quickly."
+  ]
 }

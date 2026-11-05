@@ -37,5 +37,10 @@
     "Super Mario Bros. 2|Super Mario Bros.: The Lost Levels",
     "The Legend of Zelda|Zelda no Densetsu: The Hyrule Fantasy",
     "Zelda II: The Adventure of Link|The Legend of Zelda 2: Link no Bouken|Link no Bouken"
+  ],
+  "story": [
+    "Cartridges with more memory were expensive in 1986, so Nintendo released the Family Computer Disk System in Japan: a disk drive under the Famicom, reading 112 KB double-sided Disk Cards, with an extra sound channel.",
+    "Games could be rewritten at Disk Writer kiosks in shops for a small fee. The Legend of Zelda, Metroid, Kid Icarus and Doki Doki Panic, later Super Mario Bros. 2 in the West, first came out on disk.",
+    "Cheaper, larger cartridges soon caught up, and piracy of the disks worried Nintendo. Kiosks kept rewriting disks until 2003."
   ]
 }

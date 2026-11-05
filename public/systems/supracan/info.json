@@ -33,5 +33,10 @@
   ],
   "unverified": ["Funtech reportedly lost more than US$6 million on the console."],
   "bestsellers": ["Bào Bào Dòngwùyuán", "Chāojí Zhōnghuá Zhí Bàng Liánméng", "Fēizhōu Tànxiǎn"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "story": [
+    "Funtech's Super A'Can was released in Taiwan in 1995.",
+    "It was technically ambitious, but it had few games and sold very poorly.",
+    "Funtech lost a lot of money on it, and the console is now very rare."
+  ]
 }
