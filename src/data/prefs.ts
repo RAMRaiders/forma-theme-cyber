@@ -42,8 +42,6 @@ export const DEFAULT_PREFS: Prefs = {
  * systems. `library.systems()` lists them so; Cyber keeps that order.
  */
 export const SYSTEMS_ORDER_SETTING = 'library.systemsOrder';
-/** Forma's setting: games' videos are heard (Start → Audio → Video sound). */
-export const VIDEO_SOUND_SETTING = 'video.sound';
 
 /** Where Cyber kept its prefs before Forma's menu showed them: one object, read once more. */
 const LEGACY_KEY = 'interface';

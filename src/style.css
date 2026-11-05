@@ -1432,8 +1432,28 @@ main {
   animation: push 6s ease-out both;
 }
 
-.stage-backdrop .video video {
-  opacity: 0.78;
+/*
+ * A game's video plays under the page (Forma's player, full screen): everything behind the
+ * stage turns see-through, the art fading away; the shades over it (::before, ::after), the
+ * words and the box stay drawn over the video.
+ */
+:root.video-through,
+:root.video-through body,
+:root.video-through #app {
+  background: transparent;
+}
+
+:root.video-through .backdrop {
+  /* Not opacity: it holds animated layers, and the Pi's WebKit ghosts those when it changes. */
+  visibility: hidden;
+}
+
+.stage-backdrop.through {
+  background: transparent;
+}
+
+.stage-backdrop.through .layer {
+  opacity: 0;
 }
 
 /* The game's own colour, glowing up from below. */

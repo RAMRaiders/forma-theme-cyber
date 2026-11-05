@@ -51,10 +51,12 @@ export interface StageOptions {
   /** The game's colour, from a small picture of it; `null` keeps Cyber's own. */
   accent?: (url: string) => Promise<string | null>;
   /**
-   * A game's video starts (`true`) or stops: Forma answers whether it is heard, and lowers the
-   * music meanwhile. Without it, videos play muted.
+   * Plays a game's video, full screen under the page (Forma's player: the page's own breaks up
+   * on a Raspberry Pi); `playing` once it shows. Without it, there are no videos.
    */
-  video?: (playing: boolean) => Promise<{ sound: boolean }>;
+  play?: (game: Game) => Promise<{ playing: boolean }>;
+  /** Stops it. */
+  stopVideo?: () => void;
   /** Has the pictures of games about to be shown made ahead, nearest first. */
   prepare?: (items: { gameId: number; kind: Kind; width: number }[]) => void;
 }
@@ -168,12 +170,10 @@ function picture(src: string, cls: string): HTMLImageElement {
   return img;
 }
 
+/** A video asked of Forma: it must hear when it should stop. */
 interface Preview {
-  abort: AbortController;
-  url?: string;
-  player?: HTMLVideoElement;
-  /** Forma was told it plays: it must hear that it stopped. */
-  told?: boolean;
+  /** It shows, and the page is see-through. */
+  shown: boolean;
 }
 
 export class Stage {
@@ -424,7 +424,7 @@ export class Stage {
           box.classList.add('flipped');
           // While the video plays, the box rests: the Pi's decoder has the time to itself.
           this.#every(() => {
-            if (!this.backdrop.querySelector('.layer.video:not(.waiting)')) {
+            if (!this.backdrop.classList.contains('through')) {
               box.classList.toggle('flipped');
             }
           }, FLIP_MS);
@@ -466,7 +466,7 @@ export class Stage {
   #actThree(game: Game): void {
     if (this.#game?.id !== game.id) return;
     this.root.dataset.act = '3';
-    if (this.backdrop.querySelector('.movie')) return;
+    if (this.backdrop.classList.contains('through')) return;
     const stills = STILLS.map((k) => this.options.media(game, k, 960)).filter(
       (u): u is string => u !== null
     );
@@ -482,77 +482,38 @@ export class Stage {
   }
 
   #startVideo(game: Game, actThree: boolean): void {
-    const url = this.previews ? this.options.media(game, 'video') : null;
-    if (!url) return;
-    const preview: Preview = { abort: new AbortController() };
+    const play = this.options.play;
+    if (!this.previews || !play || !this.options.media(game, 'video')) return;
+    const preview: Preview = { shown: false };
     this.#preview = preview;
-    // From a blob: WebKitGTK's media player (GStreamer) loads only http(s) and blob URLs, so
-    // a video straight from forma:// fails as an unsupported format.
-    fetch(url, { signal: preview.abort.signal })
-      .then((response) =>
-        response.ok ? response.blob() : Promise.reject(new Error(`HTTP ${response.status}`))
-      )
-      .then((blob) => {
+    play(game)
+      .then(({ playing }) => {
         if (this.#preview !== preview) return;
-        preview.url = URL.createObjectURL(blob);
-        const player = el('video', {
-          src: preview.url,
-          muted: '',
-          autoplay: '',
-          loop: '',
-          playsinline: '',
-          class: 'movie'
-        });
-        player.muted = true;
-        preview.player = player;
-        const layer = el('div', { class: 'layer video waiting' }, player);
-        // Shown once it really plays: a box without a decoder for it (a Pi 5 has no H.264
-        // hardware) would otherwise show an empty screen.
-        player.addEventListener(
-          'playing',
-          () => {
-            void this.#heard(preview);
-            const wait = actThree ? Math.max(0, this.#shownAt + ACT_THREE_MS - Date.now()) : 0;
-            this.#later(() => {
-              const old = [...this.backdrop.children].filter((n) => n !== layer);
-              layer.classList.remove('waiting');
-              this.#fadeOut(old);
-              if (actThree) this.#actThree(game);
-            }, wait);
-          },
-          { once: true }
-        );
-        player.addEventListener('error', () => {
-          layer.remove();
-          if (this.#preview !== preview) return;
+        if (!playing) {
           this.#preview = null;
-          if (preview.told) void this.options.video?.(false).catch(() => {});
           if (actThree && this.act === 3) this.#actThree(game);
-        });
-        this.backdrop.append(layer);
+          return;
+        }
+        // Shown no sooner than act 3 would have been.
+        const wait = actThree ? Math.max(0, this.#shownAt + ACT_THREE_MS - Date.now()) : 0;
+        this.#later(() => {
+          preview.shown = true;
+          this.#seeThrough(true);
+          if (actThree) this.#actThree(game);
+        }, wait);
       })
       .catch(() => {
         if (this.#preview === preview) this.#preview = null;
       });
   }
 
-  /** Asks Forma whether the preview is heard (the music goes down if so), and follows. */
-  async #heard(preview: Preview): Promise<void> {
-    const video = this.options.video;
-    if (!video || !preview.player) return;
-    preview.told = true;
-    try {
-      const { sound } = await video(true);
-      if (this.#preview === preview && preview.player) preview.player.muted = !sound;
-    } catch {
-      // Forma could not say: it stays muted.
-    }
-  }
-
-  /** Video sound was turned on or off in Forma's menu: the video playing follows. */
-  soundChanged(): void {
-    const preview = this.#preview;
-    if (preview?.told) void this.#heard(preview);
+  /**
+   * The page see-through behind the stage, so the video under it shows: the art behind fades
+   * away; the shades over it, the words and the box stay.
+   */
+  #seeThrough(on: boolean): void {
+    this.backdrop.classList.toggle('through', on);
+    document.documentElement.classList.toggle('video-through', on);
   }
 
   #later(work: () => void, ms: number): void {
@@ -571,15 +532,9 @@ export class Stage {
     const preview = this.#preview;
     this.#preview = null;
     if (!preview) return;
-    preview.abort.abort();
-    if (preview.player) {
-      // Off screen it would play on, and be heard.
-      preview.player.pause();
-      preview.player.removeAttribute('src');
-      preview.player.load();
-    }
-    if (preview.url) URL.revokeObjectURL(preview.url);
-    if (preview.told) void this.options.video?.(false).catch(() => {});
+    // Opaque again at once: the video's last picture never shows over the next game.
+    this.#seeThrough(false);
+    this.options.stopVideo?.();
   }
 }
 

@@ -16,7 +16,6 @@ import {
   MARGINS_SETTING,
   type Prefs,
   SYSTEMS_ORDER_SETTING,
-  VIDEO_SOUND_SETTING,
   applyMargins,
   applyPrefs,
   loadMargins,
@@ -105,7 +104,8 @@ export class App {
       return { earned: data.earned, total: data.achievementCount };
     },
     accent: accentOf,
-    video: (playing) => this.forma.video.playing(playing),
+    play: (game) => this.forma.video.play(game.id),
+    stopVideo: () => void this.forma.video.stop().catch(() => {}),
     prepare: (items) => void this.forma.library.prepareMedia(items as never).catch(() => {})
   });
   /** Cyber's look and order: its settings, which Forma's menu shows (Start → Interface). */
@@ -374,7 +374,6 @@ export class App {
   async #settingChanged({ scope, key, value }: SettingsChanged): Promise<void> {
     if (scope === 'system') {
       if (key === MARGINS_SETTING) applyMargins(margins(value));
-      if (key === VIDEO_SOUND_SETTING) this.#games.soundChanged();
       // A new order for the systems shows at once, behind Forma's menu.
       if (key === SYSTEMS_ORDER_SETTING && this.#mode !== 'browse') await this.#load();
       return;

@@ -128,40 +128,39 @@ describe('the game stage', () => {
     );
   });
 
-  it('plays the video with the sound Forma says, and tells Forma when it stops', async () => {
+  it('has Forma play the video under a see-through page, and stop it', async () => {
     const media = (g: Game, kind: Kind) =>
       (g.media as Partial<Record<string, string>>)[kind] ? `forma://media/${g.id}/${kind}` : null;
-    const video = vi.fn((playing: boolean) => Promise.resolve({ sound: playing }));
-    const s = new Stage({ media, video });
+    const play = vi.fn(() => Promise.resolve({ playing: true }));
+    const stopVideo = vi.fn();
+    const s = new Stage({ media, play, stopVideo });
     document.body.replaceChildren(s.backdrop, s.root);
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(() => Promise.resolve({ ok: true, blob: () => Promise.resolve(new Blob(['v'])) }))
-    );
-    URL.createObjectURL = vi.fn(() => 'blob:v');
-    URL.revokeObjectURL = vi.fn();
-    HTMLMediaElement.prototype.pause = vi.fn();
-    HTMLMediaElement.prototype.load = vi.fn();
 
-    s.show(game({}, { video: 'v' }));
+    s.show(game({}, { video: 'v', fanart: 'f' }));
     await vi.advanceTimersByTimeAsync(ACT_TWO_MS);
-    const player = document.querySelector('video')!;
-    expect(player.muted).toBe(true);
-    player.dispatchEvent(new Event('playing'));
-    await vi.advanceTimersByTimeAsync(0);
-    expect(video).toHaveBeenLastCalledWith(true);
-    expect(player.muted).toBe(false);
-
-    // Turned off in Forma's menu while it plays.
-    video.mockImplementation(() => Promise.resolve({ sound: false }));
-    s.soundChanged();
-    await vi.advanceTimersByTimeAsync(0);
-    expect(player.muted).toBe(true);
+    expect(play).toHaveBeenCalledTimes(1);
+    expect(s.backdrop.classList.contains('through')).toBe(false);
+    // Seen from act 3, not before.
+    await vi.advanceTimersByTimeAsync(ACT_THREE_MS);
+    expect(s.backdrop.classList.contains('through')).toBe(true);
+    expect(document.documentElement.classList.contains('video-through')).toBe(true);
+    expect(document.querySelector('.still')).toBeNull();
 
     s.clear();
-    expect(video).toHaveBeenLastCalledWith(false);
-    expect(player.pause).toHaveBeenCalled();
-    vi.unstubAllGlobals();
+    expect(stopVideo).toHaveBeenCalledTimes(1);
+    expect(document.documentElement.classList.contains('video-through')).toBe(false);
+  });
+
+  it('shows the screenshots when Forma cannot play the video', async () => {
+    const media = (g: Game, kind: Kind) =>
+      (g.media as Partial<Record<string, string>>)[kind] ? `forma://media/${g.id}/${kind}` : null;
+    const s = new Stage({ media, play: () => Promise.resolve({ playing: false }) });
+    document.body.replaceChildren(s.backdrop, s.root);
+    s.show(game({}, { video: 'v', image: 'i' }));
+    await vi.advanceTimersByTimeAsync(ACT_TWO_MS + ACT_THREE_MS);
+    expect(s.act).toBe(3);
+    expect(document.querySelector('.stage-backdrop .still')).not.toBeNull();
+    expect(s.backdrop.classList.contains('through')).toBe(false);
   });
 
   it('takes its colour from the game', async () => {

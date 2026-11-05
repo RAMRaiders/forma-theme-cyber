@@ -187,9 +187,4 @@ export class GamesView {
   resume(): void {
     if (this.#source) this.#showDetail();
   }
-
-  /** Video sound was turned on or off in Forma's menu. */
-  soundChanged(): void {
-    this.#stage.soundChanged();
-  }
 }
