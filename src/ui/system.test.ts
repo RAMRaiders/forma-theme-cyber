@@ -72,24 +72,20 @@ describe('more of a system’s colours', () => {
 
 describe('the shelf', () => {
   const mag = (n: number) => ({ src: `./systems/x/mag-${n}.webp`, title: `Issue ${n}` });
-  const none = { manual: null, magazines: [], peripherals: [] };
+  const none = { magazines: [], peripherals: [] };
 
-  it('fans the magazines, the first in the middle, the manual before them, the peripherals named', () => {
+  it('stands three magazines, the first in the middle, and names the peripherals', () => {
     const box = shelf({
-      manual: { src: './systems/x/manual.webp', title: 'Control Deck' },
       magazines: [mag(1), mag(2), mag(3), mag(4)],
       peripherals: [{ src: './systems/x/gear-1.webp', name: 'Light gun' }]
     })!;
     const covers = [...box.querySelectorAll('.stand .cover img')].map((i) => i.getAttribute('alt'));
     expect(covers).toEqual(['Issue 2', 'Issue 1', 'Issue 3']);
     expect(box.querySelector('.cover.lead img')?.getAttribute('alt')).toBe('Issue 1');
-    expect(box.querySelector('.manual img')?.getAttribute('alt')).toBe(
-      "Owner's manual: Control Deck"
-    );
     expect(box.querySelector('.gear figcaption')?.textContent).toBe('Light gun');
   });
 
-  it('leaves out what a system has none of, and is nothing for one with none', () => {
+  it('leaves out what a system has none of, and is nothing for one with neither', () => {
     const box = shelf({ ...none, magazines: [mag(1)] })!;
     expect(box.querySelector('.gear')).toBeNull();
     expect(box.querySelectorAll('.cover')).toHaveLength(1);

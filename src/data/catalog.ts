@@ -94,8 +94,6 @@ export interface SystemArt {
   consoleHues?: number[];
   /** Magazines about it (scripts/build-magazines.mjs): their covers, in its folder. */
   magazines?: { file: string; title: string }[];
-  /** Its owner's manual's cover, the same way. */
-  manual?: { file: string; title: string };
   /** Its peripherals (scripts/build-peripherals.mjs): cut-out photos, in its folder. */
   peripherals?: { file: string; name: string }[];
 }
@@ -157,8 +155,6 @@ export interface CyberSystem {
   consoleHues: number[];
   /** Covers of magazines about it, the best first. */
   magazines: { src: string; title: string }[];
-  /** Its owner's manual's cover. */
-  manual: { src: string; title: string } | null;
   /** Its controllers and add-ons, cut out. */
   peripherals: { src: string; name: string }[];
 }
@@ -190,9 +186,6 @@ function cyberSystem(
       src: art(summary.name, m.file),
       title: m.title
     })),
-    manual: own?.manual
-      ? { src: art(summary.name, own.manual.file), title: own.manual.title }
-      : null,
     peripherals: (own?.peripherals ?? []).map((p) => ({
       src: art(summary.name, p.file),
       name: p.name

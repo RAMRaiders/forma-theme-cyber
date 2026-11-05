@@ -67,15 +67,12 @@ async function cover(item) {
 /** `ONLY=snes,psx`: just these systems, the others kept as they are. */
 const only = process.env.ONLY ? new Set(process.env.ONLY.split(',')) : null;
 
-/** `WHAT=magazines` or `WHAT=manuals`: only those; both by default. */
-const what = process.env.WHAT ?? 'both';
-
 const art = JSON.parse(readFileSync(ART, 'utf8'));
 const credits = [
-  '# Magazines and manuals',
+  '# Magazines',
   '',
-  "Front pages of magazines about each system, and of its owner's manual, from the Internet",
-  'Archive, shown on the systems screen. Built by `scripts/build-magazines.mjs`.',
+  'Front pages of magazines about each system, from the Internet Archive, shown on the systems',
+  'screen. Built by `scripts/build-magazines.mjs`.',
   ''
 ];
 
@@ -101,7 +98,7 @@ function entryOf(id) {
 
 const keep = (id) => only && !only.has(id);
 
-if (what !== 'manuals') {
+{
   const picks = JSON.parse(readFileSync(join(ROOT, 'scripts', 'magazines.json'), 'utf8'));
   for (const [id, items] of Object.entries(picks)) {
     if (keep(id)) continue;
@@ -123,24 +120,10 @@ if (what !== 'manuals') {
   }
 }
 
-if (what !== 'magazines') {
-  const manuals = JSON.parse(readFileSync(join(ROOT, 'scripts', 'manuals.json'), 'utf8'));
-  for (const [id, item] of Object.entries(manuals)) {
-    if (keep(id)) continue;
-    const entry = entryOf(id);
-    try {
-      entry.manual = await fetchCover(id, item, 'manual.webp');
-    } catch (e) {
-      delete entry.manual;
-      console.warn(`${id}: manual ${item} skipped (${e.message})`);
-    }
-  }
-}
-
 // Those not fetched this time keep their line.
 for (const [id, entry] of Object.entries(art)) {
-  if (!keep(id) && what === 'both') continue;
-  for (const m of [...(entry.magazines ?? []), ...(entry.manual ? [entry.manual] : [])]) {
+  if (!keep(id)) continue;
+  for (const m of entry.magazines ?? []) {
     const line = `- **${id}**: ${m.title}`;
     if (!credits.some((c) => c.startsWith(`- **${id}**: [${m.title}]`))) credits.push(line);
   }

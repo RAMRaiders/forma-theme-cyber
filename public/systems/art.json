@@ -23,10 +23,6 @@
       55,
       245
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Panasonic 3DO FZ-1 manual"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -96,11 +92,7 @@
         "file": "mag-3.webp",
         "title": "CU Amiga Magazine Issue 046"
       }
-    ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Amiga Manual: Amiga A1200 (1995)(Escom)"
-    }
+    ]
   },
   "amiga500": {
     "logo": "logo.webp",
@@ -161,11 +153,7 @@
         "file": "mag-3.webp",
         "title": "Amstrad Action Issue 064"
       }
-    ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Amstrad CPC464 Manual del Usuario (1987)(Amstrad)"
-    }
+    ]
   },
   "apfm1000": {
     "logo": "logo.webp",
@@ -221,11 +209,7 @@
         "file": "mag-2.webp",
         "title": "Space Attack for Emerson Arcadia 2001"
       }
-    ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Emerson Arcadia 2001 User's Manual"
-    }
+    ]
   },
   "archimedes": {
     "logo": "logo.webp",
@@ -295,10 +279,6 @@
     "consoleHues": [
       25
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Atari 2600 Manual: Atari 2600 Owner's Manual (1982)(Atari)"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -359,11 +339,7 @@
         "file": "mag-2.webp",
         "title": "Atari 7800 Manual: Asteroids (1987)(Atari)"
       }
-    ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Atari 7800 Manual: Atari 7800 Pro System Owner's Manual (1987)(Atari)"
-    }
+    ]
   },
   "atari800": {
     "logo": "logo.webp",
@@ -393,11 +369,7 @@
         "file": "mag-3.webp",
         "title": "Atari ST User - Issue 088 (Europress)"
       }
-    ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Atari 520ST Owner's Manual (Rev. B)"
-    }
+    ]
   },
   "atom": {
     "logo": "logo.webp",
@@ -526,10 +498,6 @@
         "title": "ZZap!64 Magazine Issue 006"
       }
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Commodore 64 User's Guide"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -660,10 +628,6 @@
         "title": "Handheld Game Manual: Pac Man (Coleco)"
       }
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Coleco ColecoVision Manual: Colecovision Owner's Manual (1982)(Coleco)"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -842,10 +806,6 @@
       5,
       135
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Sega Dreamcast Manual: DreamCast Instruction Manual (2000)(Sega)"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -1090,11 +1050,7 @@
         "file": "mag-1.webp",
         "title": "Game And Watch Perfect Catalogue - ゲーム&ウオッチパーフェクトカタログ"
       }
-    ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Mario Bros Multi Screen Game & Watch instruction booklet"
-    }
+    ]
   },
   "gamecom": {
     "logo": "logo.webp",
@@ -1138,10 +1094,6 @@
       175,
       351
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Nintendo GameCube Console"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -1172,10 +1124,6 @@
         "title": "Magic Knight Rayearth 2 - Making Of Magic Knight (Sega Game Gear) - Box, Cart, Manual Scans"
       }
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Sega Game Gear User Manual"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -1276,10 +1224,6 @@
     "hues": [
       245
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Game Boy Advance Instruction Booklet (2003)(Nintendo)"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -1315,11 +1259,7 @@
       45,
       175,
       345
-    ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Nintendo Game Boy Color manual"
-    }
+    ]
   },
   "gbc2players": {
     "logo": "logo.webp",
@@ -1449,10 +1389,6 @@
         "title": "Mattel Intellivision: Astrosmash (1981)(Mattel)"
       }
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Mattel Intellivision: Intellivision II Service Manual (1982)(Mattel)"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -1476,10 +1412,6 @@
     "consoleHues": [
       1
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Atari Jaguar CD manual"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -1653,10 +1585,6 @@
         "title": "Mean Machines Sega Magazine Issue 03"
       }
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Sega Master System II Instruction Manual (1991)(E)(8L)"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -1686,11 +1614,7 @@
         "file": "mag-1.webp",
         "title": "BEEP Mega CD Appendix Booklet (March 1992)"
       }
-    ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Mega-CD / Sega CD and Sega CD 32X Game Manuals"
-    }
+    ]
   },
   "megadrive": {
     "logo": "logo.webp",
@@ -1713,10 +1637,6 @@
     "hues": [
       216
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Sega Genesis Manual: Genesis Instruction Manual (1991)(Sega)"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -1943,10 +1863,6 @@
       219,
       143
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Nintendo 64 Instruction Booklet (1996)(Nintendo)"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -2050,10 +1966,6 @@
         "title": "Neo Geo Freak 0033"
       }
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Neo Geo AES Manual (1990)(SNK)"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -2128,10 +2040,6 @@
     "hues": [
       5
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Control Deck - Nintendo Entertainment System (1986)(Nintendo)"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -2213,11 +2121,7 @@
         "file": "mag-1.webp",
         "title": "Odyssey Installation and Game Rules (1972)(Magnavox)"
       }
-    ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Magnavox Odyssey 2 Owner's Manual (1980)"
-    }
+    ]
   },
   "openbor": {
     "logo": "logo.webp",
@@ -2299,10 +2203,6 @@
       204,
       56
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "NEC PC Engine DUO-RX manual"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -2342,10 +2242,6 @@
         "title": "Legend Of Xanadu, The (PC Engine CD) - Box, Disc, Manual Scans"
       }
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "NEC PC Engine CD-ROM2 manual"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -2426,11 +2322,7 @@
       92,
       27,
       208
-    ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Nintendo Pokemon mini User Guide"
-    }
+    ]
   },
   "ports": {
     "logo": "logo.webp",
@@ -2502,10 +2394,6 @@
       175,
       215
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "playstation (scph 5501)"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -2636,11 +2524,7 @@
         "file": "mag-2.webp",
         "title": "Satellaview Tsushin サテラビュー通信 1995年9月号"
       }
-    ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Satellaview HiRes"
-    }
+    ]
   },
   "saturn": {
     "logo": "logo.webp",
@@ -2663,10 +2547,6 @@
     "hues": [
       236
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Sega Saturn Manual: Sega Saturn Instruction Manual (1995)(Sega)"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -2766,11 +2646,7 @@
     ],
     "consoleHues": [
       355
-    ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Sega Service Manual Genesis 32X, Mega Drive 32X (1995)(U)"
-    }
+    ]
   },
   "segaai": {
     "logo": "logo.webp",
@@ -2793,11 +2669,7 @@
         "file": "mag-1.webp",
         "title": "Beep 1986 04"
       }
-    ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "SG 1000 II User's Manual (1984)(J)"
-    }
+    ]
   },
   "sgb": {
     "logo": "logo.webp",
@@ -2860,10 +2732,6 @@
       209,
       155
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Super Nintendo Instruction Booklet (1991)(Nintendo)"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -3183,10 +3051,6 @@
         "title": "Vectrex Instruction Manual Collection"
       }
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Vectrex Service Manual HP-3000, 140024-1, Field Service Manual"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -3224,11 +3088,7 @@
         "file": "mag-2.webp",
         "title": "Videopac Philips"
       }
-    ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Videopac Computer PLUS G7400 Instructions For Use (1978)(Philips)(en-de)"
-    }
+    ]
   },
   "vircon32": {
     "logo": "logo.webp",
@@ -3460,10 +3320,6 @@
         "title": "Sinclair User Magazine Issue 058"
       }
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Sinclair ZX Spectrum +2 Manual"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -3488,10 +3344,6 @@
         "title": "Official UK Playstation 2 Magazine - Issue 003"
       }
     ],
-    "manual": {
-      "file": "manual.webp",
-      "title": "Sony PlayStation 2 SCPH-50000 Series Service Manual (2nd Edition) for GH-023 Board (H-chassis)"
-    },
     "peripherals": [
       {
         "file": "gear-1.webp",

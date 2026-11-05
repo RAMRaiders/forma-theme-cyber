@@ -293,8 +293,7 @@ export class SystemView {
   }
 
   /**
-   * The rail back, and, after a rest on a system with a shelf (its manual, its magazines, its
-   * peripherals), away again: the shelf shows in its place. Only fades: the stage under it
+   * The rail back, and, after a rest on a system with a shelf (its magazines, its peripherals), away again: the shelf shows in its place. Only fades: the stage under it
    * was laid out for both all along, so nothing moves.
    */
   #wake(): void {
@@ -670,15 +669,13 @@ function stage(system: CyberSystem, name: string): HTMLElement {
 }
 
 /**
- * What came with the system and what was written about it, set out in the stage where the rail
- * was, once it fades after a rest: magazines about it fanned on a stand, its owner's manual
- * leaning in front of them, its peripherals lying on the floor before them, each named. Lit as
- * the console is: on the same floor, its glow under them. A picture that will not load is taken
- * away; `null` for a system with none of them.
+ * What was written about the system and what plugged into it, set out in the stage where the
+ * rail was, once it fades after a rest: magazines about it standing side by side, each cover
+ * whole, and its peripherals lying on the floor before them, each named. Lit as the console
+ * is: on the same floor, its glow under them. A picture that will not load is taken away;
+ * `null` for a system with neither.
  */
-export function shelf(
-  system: Pick<CyberSystem, 'manual' | 'magazines' | 'peripherals'>
-): HTMLElement | null {
+export function shelf(system: Pick<CyberSystem, 'magazines' | 'peripherals'>): HTMLElement | null {
   const figure = (cls: string, src: string, alt: string, caption?: string) => {
     const fig = el(
       'figure',
@@ -689,20 +686,16 @@ export function shelf(
     fig.querySelector('img')?.addEventListener('error', () => fig.remove(), { once: true });
     return fig;
   };
-  // The first magazine in the middle of the fan: [2, 1, 3] across.
+  // The first magazine in the middle, the biggest: [2, 1, 3] across.
   const mags = system.magazines.slice(0, 3);
-  const fan = mags.length === 3 ? [mags[1]!, mags[0]!, mags[2]!] : mags;
-  const stand =
-    fan.length || system.manual
-      ? el(
-          'div',
-          { class: `stand n${fan.length}` },
-          ...fan.map((m) => figure(m === mags[0] ? 'cover lead' : 'cover', m.src, m.title)),
-          system.manual
-            ? figure('manual', system.manual.src, `Owner's manual: ${system.manual.title}`)
-            : null
-        )
-      : null;
+  const row = mags.length === 3 ? [mags[1]!, mags[0]!, mags[2]!] : mags;
+  const stand = row.length
+    ? el(
+        'div',
+        { class: `stand n${row.length}` },
+        ...row.map((m) => figure(m === mags[0] ? 'cover lead' : 'cover', m.src, m.title))
+      )
+    : null;
   const gear = system.peripherals.length
     ? el(
         'div',
@@ -713,7 +706,7 @@ export function shelf(
   if (!stand && !gear) return null;
   return el(
     'aside',
-    { class: 'shelf', 'aria-label': 'Its manual, press and peripherals' },
+    { class: 'shelf', 'aria-label': 'In the press, and its peripherals' },
     stand,
     gear
   );
