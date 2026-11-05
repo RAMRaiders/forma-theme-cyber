@@ -601,6 +601,10 @@ main {
   /* The stage reaches under the rail, where the shelf shows once the rail fades after a rest:
      laid out for both all along, so resting only fades. */
   --under-rail: 16.4rem;
+  /* Going to rest is slow and calm; coming back, on a move, quick, out of the next system's
+     way. Every part that changes uses these. */
+  --wake: 260ms ease-out;
+  --rest: 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
   /* One row of the rail, and the selection bar over it. */
   --rail-row: 3.6rem;
   height: 100%;
@@ -622,8 +626,9 @@ main {
   z-index: 2;
   grid-area: 1 / 1;
   transition:
-    opacity 600ms ease,
-    transform 600ms ease;
+    opacity var(--wake),
+    transform var(--wake);
+  will-change: opacity, transform;
   min-height: 0;
   overflow: hidden;
   background: linear-gradient(90deg, rgb(4 6 12 / 82%), rgb(4 6 12 / 45%) 70%, transparent);
@@ -733,6 +738,9 @@ main {
 .systems.resting .system-rail {
   opacity: 0;
   transform: translateX(-2rem);
+  transition:
+    opacity 600ms ease,
+    transform var(--rest);
 }
 
 .system-panel {
@@ -803,15 +811,16 @@ main {
   visibility: hidden;
   opacity: 0;
   transition:
-    opacity 700ms ease 150ms,
-    visibility 0s linear 850ms;
+    opacity 200ms ease-out,
+    visibility 0s linear 200ms;
+  will-change: opacity;
 }
 
 .systems.resting .system-panel .shelf {
   visibility: visible;
   opacity: 1;
   transition:
-    opacity 700ms ease 150ms,
+    opacity 700ms ease 200ms,
     visibility 0s;
 }
 
@@ -957,7 +966,7 @@ main {
   grid-area: intro;
   min-width: 0;
   overflow: hidden;
-  transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform var(--wake);
   will-change: transform;
 }
 
@@ -966,6 +975,7 @@ main {
    stands under them where the rail was. Moved, not laid out again. */
 .systems.resting .system-panel .intro {
   transform: translateX(calc(-1 * var(--under-rail)));
+  transition: transform var(--rest);
 }
 
 .system-panel .heading {
@@ -1041,8 +1051,8 @@ main {
   color: rgb(223 246 255 / 86%);
   font-size: 0.86rem;
   line-height: 1.45;
-  /* Three lines; a longer story scrolls through them. */
-  max-height: calc(3 * 1.45em);
+  /* Four lines; a longer story scrolls through them. */
+  max-height: calc(4 * 1.45em);
   text-shadow:
     0 0 0.3rem #000,
     0 0 1rem #000;
@@ -1410,7 +1420,10 @@ main {
   isolation: isolate;
 }
 
-.system-panel .fact::before {
+/* Its box twice: beside the rail, and the whole width, which fades in over it at rest. Only
+   opacity changes: a box whose edge moved was drawn again every frame. */
+.system-panel .fact::before,
+.system-panel .fact::after {
   content: '';
   position: absolute;
   z-index: -1;
@@ -1418,20 +1431,39 @@ main {
   border: 1px solid var(--sys-30);
   border-radius: var(--radius);
   background: linear-gradient(90deg, var(--sys-20), rgb(4 8 16 / 72%) 45%, rgb(4 8 16 / 55%));
-  transition: left 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: opacity 0s;
+}
+
+.system-panel .fact::after {
+  left: 0;
+  opacity: 0;
+  transition: opacity var(--wake);
+  will-change: opacity;
+}
+
+.systems.resting .system-panel .fact::after {
+  opacity: 1;
+  transition: opacity var(--rest);
+}
+
+/* The narrow box goes once the wide one is in, so the two never show at once. */
+.systems.resting .system-panel .fact::before {
+  opacity: 0;
+  transition: opacity 0s 700ms;
 }
 
 .system-panel .fact > :not(.timer) {
-  transition: transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.systems.resting .system-panel .fact::before,
-.systems.resting .system-panel .fact .timer {
-  left: 0;
+  transition: transform var(--wake);
+  will-change: transform;
 }
 
 .systems.resting .system-panel .fact > :not(.timer) {
   transform: translateX(calc(-1 * var(--under-rail)));
+  transition: transform var(--rest);
+}
+
+.systems.resting .system-panel .fact .timer {
+  left: 0;
 }
 
 .system-panel .fact .label {
@@ -1489,7 +1521,6 @@ main {
   left: var(--under-rail);
   right: 0;
   bottom: 0;
-  transition: left 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
   height: 2px;
   background: linear-gradient(
     90deg,
@@ -2437,15 +2468,14 @@ kbd {
 }
 
 /* The card, beside the rail; under the shelf too once the rail has faded. */
-:root[data-systems-look='neon'] .system-panel::before {
+:root[data-systems-look='neon'] .system-panel::before,
+:root[data-systems-look='neon'] .system-panel::after {
   content: '';
   position: absolute;
   z-index: -2;
   top: 0.4rem;
   right: 0.4rem;
   bottom: 0.4rem;
-  left: var(--under-rail);
-  transition: left 600ms ease;
   border: 1px solid rgb(var(--sys-rgb) / 45%);
   border-radius: calc(var(--radius) * 3);
   background:
@@ -2460,8 +2490,27 @@ kbd {
     inset 0 0 2.4rem rgb(var(--sys2-rgb) / 9%);
 }
 
-:root[data-systems-look='neon'] .systems.resting .system-panel::before {
+/* The card beside the rail, and the card the whole width, which fades in over it at rest:
+   only opacity changes, never an edge, which had the Pi draw the whole card every frame. */
+:root[data-systems-look='neon'] .system-panel::before {
+  left: var(--under-rail);
+}
+
+:root[data-systems-look='neon'] .system-panel::after {
   left: 0.4rem;
+  opacity: 0;
+  transition: opacity var(--wake);
+  will-change: opacity;
+}
+
+:root[data-systems-look='neon'] .systems.resting .system-panel::after {
+  opacity: 1;
+  transition: opacity var(--rest);
+}
+
+:root[data-systems-look='neon'] .systems.resting .system-panel::before {
+  opacity: 0;
+  transition: opacity 0s 700ms;
 }
 
 :root[data-systems-look='neon'] .system-rail {
