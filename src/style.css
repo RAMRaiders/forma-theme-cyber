@@ -1378,18 +1378,18 @@ main {
 /* ---- Games ------------------------------------------------------------- */
 
 /*
- * A game list beside the selected game's showcase, both over its fan art. Glass panels, but no
- * backdrop-filter: blurring the screen behind them every frame is too much for a Pi.
+ * The selected game owns the screen: a stage that plays out in acts over its fan art (see
+ * ui/stage.ts), with the list as a thin rail at the edge that fades while the player rests.
+ * Every move is a transform or an opacity: the Pi composites those without repainting.
  */
 .games {
-  display: grid;
-  grid-template-columns: minmax(0, 0.78fr) minmax(0, 2fr);
-  gap: 1.6rem;
+  position: relative;
   height: 100%;
+  --rail: 19rem;
 }
 
-/* The fan art fills the screen behind everything; the newest fades in over the last. */
-.fanart-stage {
+/* Behind everything: the fan art, then the video or screenshots, faded in over the last. */
+.stage-backdrop {
   position: fixed;
   inset: 0;
   z-index: -1;
@@ -1397,54 +1397,74 @@ main {
   background: var(--bg);
 }
 
-.fanart-stage .layer {
+.stage-backdrop .layer {
   position: absolute;
   inset: 0;
-  transition: opacity 600ms ease-out;
+  transition: opacity 900ms ease-out;
 }
 
-.fanart-stage .layer.waiting,
-.fanart-stage .layer.leaving {
+.stage-backdrop .layer.waiting,
+.stage-backdrop .layer.leaving {
   opacity: 0;
 }
 
-.fanart-stage img {
+.stage-backdrop img,
+.stage-backdrop video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.62;
-  animation: drift 26s ease-in-out infinite alternate;
+}
+
+.stage-backdrop .fanart img {
+  opacity: 0.7;
+  animation: drift 30s ease-in-out infinite alternate;
   will-change: transform;
 }
 
 /* No fan art: a small screenshot, blown up, is soft enough to sit behind text. */
-.fanart-stage .layer.soft img {
-  opacity: 0.32;
+.stage-backdrop .soft img {
+  opacity: 0.3;
   transform: scale(1.15);
-  animation: none;
-  image-rendering: auto;
 }
 
-/* Dark where the list and text are, the art showing through in the middle. */
-.fanart-stage::after {
+.stage-backdrop .still img {
+  opacity: 0.6;
+  animation: push 6s ease-out both;
+}
+
+.stage-backdrop .video video {
+  opacity: 0.78;
+}
+
+/* The game's own colour, glowing up from below. */
+.stage-backdrop::before {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 1;
+  background: radial-gradient(
+    ellipse 70% 55% at 70% 100%,
+    color-mix(in srgb, var(--game, var(--accent)) 22%, transparent),
+    transparent
+  );
+  transition: background 1.2s;
+}
+
+/* Dark where the rail and the words are; the art showing through on the right. */
+.stage-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
   background:
     linear-gradient(
       90deg,
-      rgb(4 6 12 / 94%) 0%,
-      rgb(4 6 12 / 78%) 26%,
-      rgb(4 6 12 / 30%) 60%,
-      rgb(4 6 12 / 55%) 100%
+      rgb(4 6 12 / 92%) 0%,
+      rgb(4 6 12 / 62%) 30%,
+      rgb(4 6 12 / 12%) 62%,
+      rgb(4 6 12 / 30%) 100%
     ),
-    linear-gradient(0deg, rgb(4 6 12 / 92%) 0%, rgb(4 6 12 / 10%) 45%, rgb(4 6 12 / 70%) 100%);
-}
-
-@keyframes fanart-in {
-  from {
-    opacity: 0;
-  }
+    linear-gradient(0deg, rgb(4 6 12 / 88%) 0%, rgb(4 6 12 / 0%) 38%, rgb(4 6 12 / 55%) 100%);
 }
 
 @keyframes drift {
@@ -1456,17 +1476,33 @@ main {
   }
 }
 
-:root[data-motion='off'] .fanart-stage img {
-  animation: none;
+@keyframes push {
+  from {
+    transform: scale(1.12);
+  }
+  to {
+    transform: scale(1.02);
+  }
 }
 
-.list {
-  position: relative;
+/* The list: a narrow rail, the names around the selection fading out above and below. */
+.games .list {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--rail);
   overflow-y: auto;
   scrollbar-width: none;
-  border-radius: var(--radius);
-  background: rgb(6 10 20 / 62%);
-  box-shadow: inset 0 0 0 1px rgb(34 228 255 / 10%);
+  mask-image: linear-gradient(transparent, #000 28%, #000 72%, transparent);
+  transition:
+    opacity 700ms ease,
+    transform 700ms ease;
+}
+
+.games.resting .list {
+  opacity: 0;
+  transform: translateX(-2rem);
 }
 
 .list .spacer {
@@ -1475,548 +1511,414 @@ main {
 
 .row {
   position: absolute;
-  left: 0.35rem;
-  right: 0.35rem;
+  left: 0;
+  right: 0;
   height: 2.6rem;
   line-height: 2.6rem;
-  padding: 0 1rem;
-  border-radius: var(--radius);
+  padding: 0 1rem 0 1.2rem;
+  color: var(--muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  border-left: 0.2rem solid transparent;
 }
 
 .row.selected {
-  background: linear-gradient(90deg, rgb(255 46 136 / 85%), rgb(255 46 136 / 35%));
-  box-shadow: 0 0 1rem rgb(255 46 136 / 35%);
+  color: var(--fg);
+  font-weight: 600;
+  border-left-color: var(--accent);
+  background: linear-gradient(90deg, rgb(255 46 136 / 38%), transparent);
+  text-shadow: 0 0 0.8rem rgb(255 46 136 / 60%);
 }
 
-/* The showcase: name and rating; box and screen; details and story. */
-.game-show {
+/* The stage: the title and facts on the left, the collection on the right, captions below. */
+.games .stage {
+  position: absolute;
+  inset: 0 0 0 calc(var(--rail) + 1.5rem);
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.75fr);
-  grid-template-rows: auto minmax(0, 1fr) minmax(0, 0.85fr);
-  grid-template-areas:
-    'head head'
-    'collector screen'
-    'info story';
-  gap: 1rem 1.4rem;
-  min-height: 0;
-  height: 100%;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  column-gap: 2rem;
+  --glow: var(--game, var(--accent));
+  transition: transform 700ms ease;
 }
 
-.game-show.no-box {
-  grid-template-areas:
-    'head head'
-    'screen screen'
-    'info story';
+.games.resting .stage {
+  transform: translateX(calc(var(--rail) * -0.45));
 }
 
-.game-show .head {
-  grid-area: head;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1.5rem;
-  min-width: 0;
+.stage > * {
+  transition:
+    opacity 900ms ease,
+    transform 1100ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.game-show .name {
-  flex: 1;
-  min-width: 0;
+.stage .title-block {
+  grid-area: 1 / 1;
+  align-self: start;
+  padding-top: 1rem;
+  transform-origin: left top;
 }
 
-.game-show .logo {
+.stage .logo {
   display: block;
-  max-height: 4.6rem;
-  max-width: 26rem;
+  max-width: min(100%, 30rem);
+  max-height: 12rem;
   object-fit: contain;
-  object-position: left bottom;
-  filter: drop-shadow(0 0.3rem 0.8rem rgb(0 0 0 / 70%));
-  animation: rise 500ms ease-out both;
+  object-position: left center;
+  filter: drop-shadow(0 0 1.4rem color-mix(in srgb, var(--glow) 45%, transparent))
+    drop-shadow(0 0.3rem 0.6rem rgb(0 0 0 / 70%));
 }
 
-.game-show h2 {
+.stage h2 {
   margin: 0;
-  font-size: 2.1rem;
-  line-height: 1.1;
-  white-space: nowrap;
+  font-size: 3.2rem;
+  line-height: 1.05;
+  font-weight: 800;
+  text-shadow: 0 0.2rem 1.2rem rgb(0 0 0 / 80%);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
   overflow: hidden;
-  text-overflow: ellipsis;
-  text-shadow:
-    0 0 1.2rem rgb(34 228 255 / 35%),
-    0 0.15rem 0.4rem rgb(0 0 0 / 80%);
 }
 
-/* With a logo, the name is a caption under it. */
-.game-show .head.has-logo h2 {
-  margin-top: 0.3rem;
-  font-size: 1rem;
+.stage .has-logo h2 {
+  margin-top: 0.6rem;
+  font-size: 1.15rem;
   font-weight: 500;
   color: var(--muted);
-  text-shadow: none;
+  -webkit-line-clamp: 1;
 }
 
-.game-show .badges {
+.stage .tagline {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 0.5rem;
+  align-items: center;
+  gap: 0.5rem 0.7rem;
+  margin-top: 1rem;
 }
 
-.game-show .badge {
-  padding: 0.1rem 0.6rem;
-  border-radius: 1rem;
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
-  color: var(--neon);
-  background: rgb(34 228 255 / 10%);
-  box-shadow: inset 0 0 0 1px rgb(34 228 255 / 35%);
-}
-
-.game-show .badge.favourite {
-  color: #ffd84a;
-  background: rgb(255 216 74 / 10%);
-  box-shadow: inset 0 0 0 1px rgb(255 216 74 / 40%);
-}
-
-.game-show .rating {
-  display: grid;
-  grid-template-columns: auto auto;
-  align-items: baseline;
-  justify-items: end;
-  flex-shrink: 0;
-}
-
-.game-show .score {
+.stage .score {
   font-family: var(--mono);
   font-size: 2.6rem;
   font-weight: 700;
-  color: var(--fg);
-  text-shadow: 0 0 1rem rgb(255 46 136 / 60%);
+  line-height: 1;
+  color: var(--glow);
+  text-shadow: 0 0 1.2rem color-mix(in srgb, var(--glow) 60%, transparent);
 }
 
-.game-show .out-of {
-  font-family: var(--mono);
-  color: var(--muted);
-}
-
-/* Five stars, filled to the rating. */
-.game-show .stars {
-  grid-column: 1 / -1;
+.stage .stars {
+  position: relative;
+  margin-right: 0.6rem;
   font-size: 1.1rem;
   letter-spacing: 0.15em;
-  background: linear-gradient(
-    90deg,
-    var(--accent) calc(var(--rating) * 100%),
-    rgb(125 147 168 / 35%) 0
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
+  color: rgb(255 255 255 / 18%);
 }
 
-.game-show .stars::before {
+.stage .stars::before {
   content: '★★★★★';
 }
 
-/* The box, in 3D: a slight turn, its spine, and the back when it turns round. */
-.game-show .collector {
-  grid-area: collector;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 0;
-}
-
-/* The perspective on the case's own parent: one level higher, the case was drawn flat. */
-.game-show .box3d {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  perspective: 60rem;
-  opacity: 0;
-}
-
-.game-show .box3d.ready {
-  opacity: 1;
-  animation: rise 500ms ease-out both;
-}
-
-.game-show .case {
-  position: relative;
-  height: 92%;
-  max-width: 100%;
-  transform-style: preserve-3d;
-  transform: rotateY(-24deg) rotateX(3deg);
-  transition: transform 1.4s cubic-bezier(0.6, 0, 0.3, 1);
-}
-
-.game-show .box3d.flipped .case {
-  transform: rotateY(156deg) rotateX(3deg);
-}
-
-.game-show .case img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-  border-radius: 0.2rem;
-  backface-visibility: hidden;
-  box-shadow: 0 1.2rem 2.5rem rgb(0 0 0 / 65%);
-}
-
-.game-show .case .back {
+.stage .stars::after {
+  content: '★★★★★';
   position: absolute;
   inset: 0;
-  width: 100%;
-  transform: rotateY(180deg);
+  color: var(--glow);
+  clip-path: inset(0 calc(100% - var(--rating) * 100%) 0 0);
 }
 
-.game-show .case .spine {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 1.4rem;
-  transform-origin: left center;
-  transform: rotateY(90deg);
-  background: linear-gradient(90deg, #05070d, #1a2436 50%, #05070d);
+.stage .tag {
+  padding: 0.2rem 0.7rem;
+  border-radius: 1rem;
+  font-size: 0.95rem;
+  background: rgb(4 6 12 / 55%);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 16%);
 }
 
-.game-show .render {
-  max-height: 100%;
-  max-width: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 1.2rem 1.6rem rgb(0 0 0 / 65%));
-  animation: rise 500ms ease-out both;
+.stage .tag.favourite {
+  color: #ffd75e;
+  box-shadow: inset 0 0 0 1px rgb(255 215 94 / 45%);
 }
 
-/* The cartridge (or disc), leaning against the box. */
-.game-show .cartridge {
-  position: absolute;
-  right: 2%;
-  bottom: 2%;
-  max-width: 46%;
-  max-height: 48%;
-  object-fit: contain;
-  transform: rotate(9deg);
-  filter: drop-shadow(0 0.8rem 1.2rem rgb(0 0 0 / 70%));
-  animation: slide-in 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+.stage .facts-block {
+  grid-area: 2 / 1;
+  align-self: start;
+  margin-top: 2rem;
+  max-width: 34rem;
 }
 
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(0.8rem);
-  }
-}
-
-@keyframes slide-in {
-  from {
-    opacity: 0;
-    transform: translate(3rem, 1rem) rotate(24deg);
-  }
-}
-
-:root[data-motion='off'] .game-show * {
-  animation: none !important;
-  transition: none !important;
-}
-
-/* The screen: screenshots in turn, then the video; a strip of what there is. */
-/* The screen at a TV's shape, the strip of what there is standing beside it. */
-.game-show .screen {
-  grid-area: screen;
-  display: flex;
-  justify-content: center;
-  gap: 0.7rem;
-  min-height: 0;
-  min-width: 0;
-}
-
-.game-show .frame {
-  position: relative;
-  flex: 0 1 auto;
-  height: 100%;
-  aspect-ratio: 4 / 3;
-  max-width: calc(100% - 7.2rem);
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: rgb(0 0 0 / 70%);
-  box-shadow:
-    0 0 0 1px rgb(34 228 255 / 45%),
-    0 0 1.6rem rgb(34 228 255 / 22%),
-    0 1rem 2rem rgb(0 0 0 / 60%);
-}
-
-.game-show .frame.empty::before {
-  content: 'No screenshots yet';
-  position: absolute;
-  inset: 0;
+.stage .facts {
   display: grid;
-  place-items: center;
-  color: var(--muted);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.6rem;
+  margin: 0;
 }
 
-.game-show .frame .still,
-.game-show .frame .movie {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+.stage .facts dt {
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--glow);
 }
 
-.game-show .frame .still {
-  animation: fanart-in 500ms ease-out both;
+.stage .facts dd {
+  margin: 0.15rem 0 0;
+  font-size: 1.15rem;
+  text-shadow: 0 0.1rem 0.5rem rgb(0 0 0 / 80%);
 }
 
-.game-show .frame .still.leaving {
-  opacity: 0;
-  transition: opacity 500ms;
+.stage .achievements {
+  margin-top: 1.4rem;
+  font-size: 1rem;
 }
 
-/* The video shows once it really plays. */
-.game-show .frame .movie {
-  opacity: 0;
-  transition: opacity 400ms;
-}
-
-.game-show .screen.playing .movie {
-  opacity: 1;
-}
-
-/* Scanlines over the screen, for the arcade feel. */
-.game-show .frame::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(0deg, rgb(0 0 0 / 14%) 0 1px, transparent 1px 3px);
-}
-
-.game-show .strip {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 6.5rem;
-  flex-shrink: 0;
-}
-
-.game-show .thumb {
-  position: relative;
-  flex: 0 0 auto;
-  aspect-ratio: 4 / 3;
-  border-radius: 0.25rem;
+.stage .achievements .bar {
+  height: 0.3rem;
+  margin-top: 0.4rem;
+  border-radius: 0.2rem;
+  background: rgb(255 255 255 / 12%);
   overflow: hidden;
-  background: rgb(6 10 20 / 80%);
-  box-shadow: inset 0 0 0 1px rgb(125 147 168 / 30%);
-  opacity: 0.65;
-  transition:
-    opacity 300ms,
-    box-shadow 300ms;
 }
 
-.game-show .thumb img {
+.stage .achievements .bar::after {
+  content: '';
+  display: block;
+  height: 100%;
+  width: calc(var(--done) * 100%);
+  background: #ffd75e;
+}
+
+/* The collection: the box turning, the cartridge leaning on it, screenshots fanned behind. */
+.stage .collection {
+  grid-area: 1 / 2 / 3 / 3;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding-bottom: 6rem;
+}
+
+.stage .shots {
+  position: absolute;
+  inset: 0 0 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stage .shot {
+  position: absolute;
+  width: 17rem;
+  aspect-ratio: 4 / 3;
+  border-radius: 0.3rem;
+  overflow: hidden;
+  box-shadow:
+    0 0.8rem 2rem rgb(0 0 0 / 70%),
+    0 0 0 1px rgb(255 255 255 / 15%);
+  transform: translate(calc((var(--i) - 1) * 10rem), calc(-4rem + var(--i) * 1.5rem))
+    rotate(calc((var(--i) - 1) * 7deg));
+  transition:
+    transform 1100ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 900ms ease;
+  transition-delay: calc(var(--i) * 120ms);
+}
+
+.stage .shot img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.game-show .thumb .label {
+.stage .box3d {
+  position: relative;
+  z-index: 1;
+  height: min(26rem, 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 60rem;
+}
+
+.stage .case {
+  position: relative;
+  height: 100%;
+  aspect-ratio: 3 / 4;
+  transform-style: preserve-3d;
+  transform: rotateY(-22deg);
+  transition: transform 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stage .box3d.flipped .case {
+  transform: rotateY(158deg);
+}
+
+.stage .case img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  border-radius: 0.2rem;
+  backface-visibility: hidden;
+  box-shadow: 0 1.5rem 3rem rgb(0 0 0 / 75%);
+}
+
+.stage .case .back {
+  transform: rotateY(180deg);
+}
+
+.stage .case .spine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1.6rem;
+  background: linear-gradient(90deg, #111, #2a2f3a);
+  transform-origin: left center;
+  transform: rotateY(-90deg);
+}
+
+.stage .cartridge {
+  position: absolute;
+  z-index: 2;
+  right: 4%;
+  bottom: 5rem;
+  max-height: 12rem;
+  max-width: 40%;
+  object-fit: contain;
+  filter: drop-shadow(0 1rem 1.4rem rgb(0 0 0 / 75%));
+  transform: rotate(8deg);
+}
+
+/* The story, a sentence or two at a time, like subtitles. */
+.stage .captions {
   position: absolute;
   left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 0.05rem 0.3rem;
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  background: rgb(4 6 12 / 75%);
+  right: 30%;
+  bottom: 0.5rem;
 }
 
-.game-show .thumb.video {
-  aspect-ratio: auto;
-  height: 2.2rem;
-  display: grid;
-  place-items: center;
-  color: var(--accent);
-}
-
-.game-show .thumb.video .label {
-  position: static;
-  background: none;
+.stage .captions .label {
   font-size: 0.75rem;
-}
-
-.game-show .thumb.active {
-  opacity: 1;
-  box-shadow:
-    inset 0 0 0 2px var(--accent),
-    0 0 0.8rem rgb(255 46 136 / 45%);
-}
-
-/* Details, play counts and achievements. */
-.game-show .info {
-  grid-area: info;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 0.5rem;
-  min-height: 0;
-  overflow: hidden;
-  padding: 0.9rem 1rem;
-  border-radius: var(--radius);
-  background: rgb(6 10 20 / 72%);
-  box-shadow: inset 0 0 0 1px rgb(34 228 255 / 12%);
-}
-
-.game-show .facts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.35rem 1rem;
-  margin: 0;
-}
-
-.game-show .facts div {
-  min-width: 0;
-}
-
-/* An odd one out at the end takes the whole row. */
-.game-show .facts div:last-child:nth-child(odd) {
-  grid-column: 1 / -1;
-}
-
-.game-show .facts dt {
-  font-size: 0.7rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted);
+  color: var(--glow);
 }
 
-.game-show .facts dd {
-  margin: 0;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  line-height: 1.3;
+.stage .captions .line {
+  margin: 0.4rem 0 0;
+  font-size: 1.55rem;
+  line-height: 1.4;
+  text-shadow:
+    0 0.15rem 0.6rem rgb(0 0 0 / 95%),
+    0 0 1.6rem rgb(0 0 0 / 80%);
+  transition:
+    opacity 350ms ease,
+    transform 350ms ease;
 }
 
-/* Play counts, beside the rating. */
-.game-show .stats {
-  display: flex;
-  gap: 1.6rem;
-  margin-bottom: 0.35rem;
-  padding-right: 1.6rem;
-  border-right: 1px solid rgb(125 147 168 / 25%);
+.stage .captions .line.turning {
+  opacity: 0;
+  transform: translateY(0.6rem);
 }
 
-.game-show .stat {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  white-space: nowrap;
+/* Act 1: the title alone, large and low; the rest waits off stage. */
+.stage[data-act='1'] .title-block {
+  transform: translateY(6rem) scale(1.12);
 }
 
-.game-show .stat b {
-  font-family: var(--mono);
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--neon);
+.stage[data-act='1'] .facts-block {
+  opacity: 0;
+  transform: translateY(2.5rem);
 }
 
-.game-show .stat span {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted);
+.stage[data-act='1'] .collection {
+  opacity: 0;
+  transform: translateX(18%) scale(0.92);
 }
 
-.game-show .achievements {
-  display: grid;
-  gap: 0.3rem;
-  font-size: 0.85rem;
-  animation: rise 400ms ease-out both;
+.stage[data-act='1'] .shot {
+  transform: translate(0, 0) rotate(0);
+  opacity: 0;
 }
 
-.game-show .achievements .bar {
-  height: 0.35rem;
-  border-radius: 1rem;
-  background: linear-gradient(90deg, #ffd84a calc(var(--done) * 100%), rgb(125 147 168 / 25%) 0);
-  box-shadow: 0 0 0.6rem rgb(255 216 74 / 30%);
+.stage[data-act='1'] .cartridge {
+  transform: translateX(6rem) rotate(20deg);
+  opacity: 0;
 }
 
-/* The description, or an arcade game's history: it rolls when it does not fit. */
-.game-show .story {
-  grid-area: story;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  padding: 0.9rem 1.1rem;
-  border-radius: var(--radius);
-  background: rgb(6 10 20 / 72%);
-  box-shadow: inset 0 0 0 1px rgb(34 228 255 / 12%);
+.stage .cartridge {
+  transition:
+    transform 1100ms cubic-bezier(0.2, 0.8, 0.2, 1) 500ms,
+    opacity 900ms ease 500ms;
 }
 
-.game-show .story h3 {
-  margin: 0 0 0.4rem;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--accent);
+.stage[data-act='1'] .captions,
+.stage[data-act='2'] .captions {
+  opacity: 0;
+  transform: translateY(1rem);
 }
 
-.game-show .story .window {
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  mask-image: linear-gradient(180deg, #000 85%, transparent);
+/* Act 3: the video has the screen; the title steps up, the box back to a corner. */
+.stage[data-act='3'] .title-block {
+  transform: scale(0.72);
 }
 
-.game-show .story p {
-  margin: 0 0 0.7rem;
-  line-height: 1.5;
+.stage[data-act='3'] .facts-block {
+  opacity: 0;
+  transform: translateY(-1rem);
 }
 
-.game-show .story p.none {
-  color: var(--muted);
+.stage[data-act='3'] .collection {
+  transform: translate(32%, 30%) scale(0.5);
 }
 
-.game-show .story .text.rolling {
-  animation: roll var(--story-time) linear 0s infinite;
+.stage[data-act='3'] .shots {
+  opacity: 0;
 }
 
-@keyframes roll {
-  0%,
-  12% {
-    transform: translateY(0);
-  }
-  88%,
-  100% {
-    transform: translateY(calc(-1 * var(--overflow)));
-  }
+.stage .shots {
+  transition: opacity 900ms ease;
 }
 
-/* A 720p screen: the text is larger against it, so the details get more of the height. */
+/* No collection: the words take the width. */
+.stage.no-box .title-block,
+.stage.no-box .facts-block {
+  grid-column: 1 / 3;
+}
+
+.stage.no-box .captions {
+  right: 10%;
+}
+
+:root[data-motion='off'] .stage > *,
+:root[data-motion='off'] .stage .shot,
+:root[data-motion='off'] .stage .cartridge,
+:root[data-motion='off'] .games .list {
+  transition: none;
+}
+
+:root[data-motion='off'] .stage-backdrop img {
+  animation: none;
+}
+
+/* A 720p screen: the text is larger against it, so the collection gives way a little. */
 @media (max-height: 800px) {
-  .game-show {
-    grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
-    gap: 0.7rem 1rem;
+  .games {
+    --rail: 16rem;
   }
 
-  .game-show .info,
-  .game-show .story {
-    padding: 0.6rem 0.8rem;
+  .stage .box3d {
+    height: min(21rem, 100%);
   }
 
-  .game-show .stats {
-    gap: 1rem;
-    padding-right: 1rem;
+  .stage .shot {
+    width: 13rem;
+  }
+
+  .stage .captions .line {
+    font-size: 1.3rem;
   }
 }
 
@@ -2636,23 +2538,17 @@ kbd {
     max-height: 9rem;
   }
 
-  /* The list narrower; the box goes, the screen keeps its room. */
+  /* The rail narrower; the screenshots go, the box and title keep their room. */
   .games {
-    grid-template-columns: minmax(0, 0.7fr) minmax(0, 2fr);
-    gap: 1rem;
+    --rail: 13rem;
   }
 
-  .game-show,
-  .game-show.no-box {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-areas:
-      'head head'
-      'screen screen'
-      'info story';
-  }
-
-  .game-show .collector {
+  .stage .shots {
     display: none;
+  }
+
+  .stage .captions {
+    right: 0;
   }
 }
 
@@ -2685,37 +2581,22 @@ kbd {
     max-height: 6.5rem;
   }
 
+  /* A small screen: the title, facts and story; the collection goes. */
   .games {
-    gap: 1rem;
+    --rail: 11rem;
   }
 
-  /* A small screen: the box and the strip go, the screen and the text stay. */
-  .game-show,
-  .game-show.no-box {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: auto minmax(0, 1fr) minmax(0, 0.8fr);
-    grid-template-areas:
-      'head head'
-      'screen screen'
-      'info story';
-    gap: 0.6rem;
-  }
-
-  .game-show .collector,
-  .game-show .strip {
+  .stage .collection {
     display: none;
   }
 
-  .game-show .frame {
-    max-width: 100%;
+  .stage .title-block,
+  .stage .facts-block {
+    grid-column: 1 / 3;
   }
 
-  .game-show .stats {
-    display: none;
-  }
-
-  .game-show .score {
-    font-size: 1.8rem;
+  .stage .captions .line {
+    font-size: 1.05rem;
   }
 
   .hints {

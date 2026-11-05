@@ -33,6 +33,7 @@ import { HomeView, type Shortcut, type Tile } from './ui/home.js';
 import { loader } from './ui/loader.js';
 import { SongCard } from './ui/music.js';
 import { preload } from './ui/preload.js';
+import { accentOf } from './ui/stage.js';
 import { SystemView } from './ui/system.js';
 
 /** One level of the path, and where the selection was, so going back returns to it. */
@@ -102,7 +103,8 @@ export class App {
     achievements: async (game) => {
       const { data } = await this.forma.ra.game(game.id);
       return { earned: data.earned, total: data.achievementCount };
-    }
+    },
+    accent: accentOf
   });
   /** Cyber's look and order: its settings, which Forma's menu shows (Start → Interface). */
   #prefs: Prefs = { ...DEFAULT_PREFS };
