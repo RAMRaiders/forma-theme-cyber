@@ -36,5 +36,16 @@ derivative work: MagentaGreen, Public domain.
 - **fairchild**: [Fairchild Semiconductor Logo.svg](https://commons.wikimedia.org/wiki/File:Fairchild_Semiconductor_Logo.svg), by Fairchild Semiconductor, Public domain.
 - **interton**: [Logo INTERTON ELECTRONIC (horizontal).svg](https://commons.wikimedia.org/wiki/File:Logo_INTERTON_ELECTRONIC_(horizontal).svg), by UnknownUnknown 
 Vectorization:  MagentaGreen, Public domain.
-- **3do**: [3DO Logo.svg](https://commons.wikimedia.org/wiki/File:3DO_Logo.svg), by unbekannt3DO/Panasonic, Public domain.
+- **3do**: [3DO Company logo.png](https://commons.wikimedia.org/wiki/File:3DO_Company_logo.png), by Unknown authorUnknown author, Public domain.
 - **midway**: [Midway Games logo.svg](https://commons.wikimedia.org/wiki/File:Midway_Games_logo.svg), by Midway Games Inc., Public domain.
+- **apf**: [APF Electronics wordmark.svg](https://commons.wikimedia.org/wiki/File:APF_Electronics_wordmark.svg), by APF Electronics, Public domain.
+- **sinclair**: [Sinclair.svg](https://commons.wikimedia.org/wiki/File:Sinclair.svg), by File:Sinclair.gif: Original uploader was Wackymacs at en.wikipedia.
+Later version(s) were uploaded by Letdorf at en.wikipedia.
+
+derivative work Polluks, Public domain.
+- **sanyo**: [Logo Sanyo old.svg](https://commons.wikimedia.org/wiki/File:Logo_Sanyo_old.svg), by Unknown authorUnknown author, Public domain.
+- **goldstar**: [GoldStar Logo.png](https://commons.wikimedia.org/wiki/File:GoldStar_Logo.png), by Raphaelbaudet2015, CC BY-SA 4.0.
+- **cinematronics**: [Cinematronics logo.png](https://commons.wikimedia.org/wiki/File:Cinematronics_logo.png), by Unknown authorUnknown author, Public domain.
+- **scummvm**: [Scummvm logo.svg](https://commons.wikimedia.org/wiki/File:Scummvm_logo.svg), by Jean Marc Gimenez for the ScummVM project, GPLv2.
+- **solarus**: [Solarus logo.svg](https://commons.wikimedia.org/wiki/File:Solarus_logo.svg), by Oclero, CC BY-SA 4.0.
+- **pygame**: [Pygame logo.svg](https://commons.wikimedia.org/wiki/File:Pygame_logo.svg), by TheCorruptor, LGPL.

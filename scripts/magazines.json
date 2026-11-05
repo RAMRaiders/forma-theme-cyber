@@ -52,5 +52,150 @@
     "3DOMagazineIssue10199605ParagonPublishingGB",
     "3DO_Magazine_Issue_12_1996-07_Paragon_Publishing_GB",
     "3do-magazine-japan-issue-09-may-june-1995"
-  ]
+  ],
+  "zxspectrum": ["YourSinclair37Jan89", "sinclair-user-magazine-045", "sinclair-user-magazine-058"],
+  "c64": ["Zzap044Dec88", "zzap64-magazine-044", "zzap64-magazine-006"],
+  "amstradcpc": ["AmstradComputerUser200786", "AmstradAction052", "amstrad-action-064"],
+  "atarist": [
+    "Atari_ST_User_Issue_067_1991-09_Europress_GB",
+    "Atari_ST_User_Issue_099_1994-04_Europress_GB",
+    "Atari_ST_User_Issue_088_1993-06_Europress_GB"
+  ],
+  "amiga1200": ["cuamiga-magazine-027", "cuamiga-magazine-025", "cuamiga-magazine-046"],
+  "msx1": ["MSXMagazine-Japan", "msxcomputermagazine", "MSXMAGAZINE3_201808"],
+  "x68000": ["OhX1990-1995", "OhX_1991-08", "OhX_1993-05"],
+  "c20": [
+    "Personal_Computing_On_The_VIC-20_1982_Commodore",
+    "computes-vic-20-collection_202206",
+    "VIC-20ProgrammersReferenceGuide1stEdition6thPrinti"
+  ],
+  "cplus4": ["Commodore_C16_Plus4_Reference_Book", "Videobasic-C16", "C16MSXN40"],
+  "gamegear": [
+    "OfficialSegaGenesisGameGearStrategies3rdEdition",
+    "magicknightrayearth2gamegearhiresscans"
+  ],
+  "megacd": ["beepmega-cdappendix-booklet-march-1992", "mega-cd-sega-cd-game-booklets"],
+  "sg1000": ["beep-1986-04"],
+  "gb": [
+    "kirklands-manual-labor-nintendo-game-boy-usa-4k-version",
+    "pokemon-blue-nintendogameboy-hiresscans",
+    "pokemon-rot-blau-nintendo-game-boy-offizieller-spieleberater"
+  ],
+  "fds": ["famimaga-1992-apr-17", "famimagajune1987", "famimaga5111990"],
+  "virtualboy": ["VirtualBoy_201903", "NintendoVirtualBoyManuals"],
+  "intellivision": [
+    "Intellivision_II_Service_Manual_1982_Mattel_US",
+    "advanced-dungeons-and-dragons-intellivision",
+    "Astrosmash_1981_Mattel"
+  ],
+  "colecovision": [
+    "1980-coleco-catalog",
+    "manuals-handheld-games-Coleco-DonkeyKongJr",
+    "manuals-handheld-games-Coleco-PacMan"
+  ],
+  "atari5200": ["AtariAgeIssues1-7", "AtariAgeVol02num03", "Atari5200Manuals_201812"],
+  "atari7800": [
+    "Atari_7800_Pro_System_Owners_Manual_1987_Atari_US_Rev_A",
+    "ImpossibleMissionUSA",
+    "Asteroids_1987_Atari"
+  ],
+  "vectrex": [
+    "vectrex-service_manual-hp-3000-140024-1_field_service_manual_1983",
+    "vectrex-french",
+    "vectrex_instruction_manual_collection"
+  ],
+  "odyssey2": [
+    "odyssey2ownersmanual1980",
+    "Odyssey_Installation_and_Game_Rules_1972_Magnavox_US",
+    "MagnavoxOdyssey"
+  ],
+  "ngpc": ["ngpc_20211014", "softv2"],
+  "wswan": [
+    "superrobottaisencompactwshiresscans",
+    "digimonadventure02d1tamerswscolorhiresscans",
+    "shamankingasuenoishiwscolorhiresscans"
+  ],
+  "sgb": ["Nintendo_Players_Guide_Super_Game_Boy"],
+  "gb2players": [
+    "kirklands-manual-labor-nintendo-game-boy-usa-4k-version",
+    "pokemon-blue-nintendogameboy-hiresscans",
+    "pokemon-rot-blau-nintendo-game-boy-offizieller-spieleberater"
+  ],
+  "msx2": ["MSXMAGAZINE2", "MSXMAGAZINE_201807", "msxcomputermagazine"],
+  "msx2+": ["MSXMAGAZINE_201807", "MSXMAGAZINE2"],
+  "msxturbor": ["MSXMAGAZINE3_201808", "MSXMAGAZINE_201807"],
+  "ngp": ["softv2", "ngpc_20211014"],
+  "wswanc": [
+    "digimontamersdigimonmedleywscolorhiresscans",
+    "digimonadventure02tagtamerswshiresscans"
+  ],
+  "mastersystem": [
+    "MMSega01Oct92",
+    "mean-machines-sega-magazine-04",
+    "mean-machines-sega-magazine-03"
+  ],
+  "pcenginecd": [
+    "nec-pc-engine-core-grafx-cd-rom2",
+    "ysivthedawnofyspcenginehirescans",
+    "legendofxanaduthepcenginehiresscans"
+  ],
+  "supergrafx": ["nec-supergrafx", "DaimakaimuraSuperGrafxHiResScans"],
+  "neogeocd": ["NeoGeoCDSoftCatalogue", "ngcd_20211014", "013-neo-geo-cd"],
+  "naomi": ["arcadia-magazine-32-Jan-HOD", "gamest-199"],
+  "fbneo": ["gamest-183", "gamest0260", "gamest0068"],
+  "daphne": [
+    "DragonsLairIITimewarp",
+    "SpaceAce",
+    "DragonsLairDragonsLairIISpaceAce20thAnniversaryManual"
+  ],
+  "gameandwatch": [
+    "GameAndWatchPerfectCatalogue",
+    "mario-bros-multi-screen-manual",
+    "donkeykongiicautionshowtoplay_201909"
+  ],
+  "gamecom": [
+    "tiger-game-com-sonic-jam-scans",
+    "tiger-game-com-resident-evil-2-scans",
+    "tiger-game-com-fighters-megamix-scans"
+  ],
+  "satellaview": [
+    "satellaview-tsuushin-1995-05-monthly-famicom-tsushin-may-extra-issue_202107",
+    "satellaview-tsushin-1995-09-images",
+    "SatellaviewHiRes"
+  ],
+  "pokemini": ["nintendo-pokemon-mini"],
+  "arcadia": [
+    "Arcadia2001OwnersManual",
+    "AlienInvadersEmersonArcadia2001",
+    "SpaceAttackforEmersonArcadia2001"
+  ],
+  "astrocade": [
+    "CursorBASICExpressNewsletterAstrocadeAltColorScans",
+    "BallyAstrocadeManuals_201812"
+  ],
+  "videopacplus": [
+    "Videopac_Computer_PLUS_G7400_Instructions_For_Use_1978_Philips_en-de",
+    "Videopac_Computer_G7000_Instructions_For_Use_1978_Philips_en-de",
+    "videopacphilips"
+  ],
+  "prboom": [
+    "doom-ii-official-strategy-guide",
+    "ultimate-future-games-14-supplement-playstation-doom-guide",
+    "Doom_III_Gamespot_Guide"
+  ],
+  "sdlpop": ["Prince_Of_Persia_1990_Broderbund_Software", "PrinceOfPersia_201906"],
+  "xrick": ["rick-dangerous-comic", "Rick_Dangerous_1989_Core_Design"],
+  "scummvm": [
+    "lucasarts-the-adventurer--magazine-complete",
+    "Curse_of_Monkey_Island_The_Prima",
+    "the-adventurer"
+  ],
+  "mrboom": [
+    "super-bomberman-3-pal",
+    "super-bomberman-3-sfc-hiresscans",
+    "super-bomberman-2-sfc-hiresscans"
+  ],
+  "naomi2": ["gamest0052", "gamest0066"],
+  "atomiswave": ["gamest0200"],
+  "gbc2players": ["Total_Game_Boy_Issue_01", "Total_Game_Boy_Issue_03"]
 }

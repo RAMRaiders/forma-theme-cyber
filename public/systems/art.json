@@ -68,6 +68,20 @@
     ],
     "consoleHues": [
       3
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "CU Amiga Magazine Issue 027"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "CU Amiga Magazine Issue 025"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "CU Amiga Magazine Issue 046"
+      }
     ]
   },
   "amiga500": {
@@ -115,6 +129,20 @@
     "consoleHues": [
       5,
       135
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Amstrad Computer User 01-90 (Aug 84 - May 92)"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Amstrad Action 001-117"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Amstrad Action Issue 064"
+      }
     ]
   },
   "apfm1000": {
@@ -161,6 +189,20 @@
     "consoleHues": [
       39,
       355
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Emerson Arcadia 2001 User's Manual"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Alien Invaders Emerson Arcadia 2001"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Space Attack for Emerson Arcadia 2001"
+      }
     ]
   },
   "archimedes": {
@@ -195,6 +237,16 @@
     "consoleHues": [
       39,
       1
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Cursor / BASIC Express Newsletter for Bally Arcade / Astrocade Alternative ColorScans"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Bally Astrocade Manuals"
+      }
     ]
   },
   "atari2600": {
@@ -228,6 +280,20 @@
     "kind": "cutout",
     "hues": [
       225
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Atari Age Volumes 1 & 2"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Atari Age Vol 02num 03"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Atari 5200 Manuals"
+      }
     ]
   },
   "atari7800": {
@@ -239,6 +305,20 @@
     ],
     "consoleHues": [
       15
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Atari 7800 Manual: Atari 7800 Pro System Owner's Manual (1987)(Atari)"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Atari 7800 Manuals"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Atari 7800 Manual: Asteroids (1987)(Atari)"
+      }
     ]
   },
   "atari800": {
@@ -255,6 +335,20 @@
     "kind": "cutout",
     "consoleHues": [
       355
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Atari ST User - Issue 067 (Europress)"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Atari ST User - Issue 099 (Europress)"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Atari ST User - Issue 088 (Europress)"
+      }
     ]
   },
   "atom": {
@@ -274,6 +368,12 @@
     ],
     "consoleHues": [
       5
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Gamest 0200"
+      }
     ]
   },
   "bbcmicro": {
@@ -335,6 +435,20 @@
     ],
     "consoleHues": [
       6
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Personal Computing On The VIC-20 (1982)(Commodore)"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Compute!s VIC-20 Collection Book - Compute Computes"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "VIC-20 Programmers Reference Guide 1st Edition 6th Printing"
+      }
     ]
   },
   "c64": {
@@ -349,6 +463,20 @@
     ],
     "consoleHues": [
       5
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Zzap!64 001-107 (May85 - Mar 02)"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "ZZap!64 Magazine Issue 044"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "ZZap!64 Magazine Issue 006"
+      }
     ]
   },
   "camplynx": {
@@ -455,6 +583,20 @@
     "hues": [
       47,
       6
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "1980 Coleco Toys and Games Catalog"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Handheld Game Manual: Donkey Kong Jr (Coleco)"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Handheld Game Manual: Pac Man (Coleco)"
+      }
     ]
   },
   "commanderx16": {
@@ -489,6 +631,20 @@
       192,
       44,
       143
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Commodore C16 Plus4 Reference Book"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Videobasic per Commodore 16"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "C16-MSX"
+      }
     ]
   },
   "crvision": {
@@ -523,6 +679,20 @@
       54,
       208,
       91
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Dragon's Lair II Timewarp (Digital Leisure DVD Version)"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Space Ace (Digital Leisure DVD Version)"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Dragon's Lair Dragon's Lair II Space Ace 20th Anniversary Manual"
+      }
     ]
   },
   "devilutionx": {
@@ -710,6 +880,20 @@
       226,
       47,
       105
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Gamest 183"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Gamest 0260"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Gamest 0068"
+      }
     ]
   },
   "fds": {
@@ -721,6 +905,20 @@
     ],
     "consoleHues": [
       356
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Famimaga April 17 1992"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Famimaga June 5 1987"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Famimaga May 11 1990"
+      }
     ]
   },
   "flash": {
@@ -788,6 +986,20 @@
     ],
     "consoleHues": [
       5
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Game And Watch Perfect Catalogue - ゲーム&ウオッチパーフェクトカタログ"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Mario Bros Multi Screen Game & Watch instruction booklet"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Game & Watch - Manual Scans"
+      }
     ]
   },
   "gamecom": {
@@ -796,6 +1008,20 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Tiger Game.com Sonic Jam scans"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Tiger Game.com Resident Evil 2 scans"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Tiger Game.com Fighters Megamix scans"
+      }
     ]
   },
   "gamecube": {
@@ -827,6 +1053,16 @@
       245,
       5,
       125
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Official Sega Genesis & Game Gear Strategies ( 3rd Edition)"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Magic Knight Rayearth 2 - Making Of Magic Knight (Sega Game Gear) - Box, Cart, Manual Scans"
+      }
     ]
   },
   "gamepock": {
@@ -849,6 +1085,20 @@
     ],
     "consoleHues": [
       85
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Kirkland's Manual Labor - Nintendo Game Boy - USA - 4K version"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Pokemon - Blue Version (Nintendo Game Boy) - Box, Manual Scans"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Pokémon Rot / Blau - Nintendo Game Boy - Offizieller Spieleberater"
+      }
     ]
   },
   "gb2players": {
@@ -861,6 +1111,20 @@
     ],
     "consoleHues": [
       85
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Kirkland's Manual Labor - Nintendo Game Boy - USA - 4K version"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Pokemon - Blue Version (Nintendo Game Boy) - Box, Manual Scans"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Pokémon Rot / Blau - Nintendo Game Boy - Offizieller Spieleberater"
+      }
     ]
   },
   "gba": {
@@ -919,6 +1183,16 @@
     ],
     "consoleHues": [
       186
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Total Game Boy Issue 01"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Total Game Boy Issue 03"
+      }
     ]
   },
   "gmaster": {
@@ -1014,7 +1288,21 @@
   "intellivision": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Mattel Intellivision: Intellivision II Service Manual (1982)(Mattel)"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Advanced Dungeons And Dragons Intellivision"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Mattel Intellivision: Astrosmash (1981)(Mattel)"
+      }
+    ]
   },
   "jaguar": {
     "logo": "logo.webp",
@@ -1172,6 +1460,20 @@
     ],
     "consoleHues": [
       2
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Mean Machines Sega Issues 1-53"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Mean Machines Sega Magazine Issue 04"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Mean Machines Sega Magazine Issue 03"
+      }
     ]
   },
   "mc10": {
@@ -1186,6 +1488,16 @@
     "hues": [
       46,
       215
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "BEEP Mega CD Appendix Booklet (March 1992)"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Mega-CD / Sega CD and Sega CD 32X Game Manuals"
+      }
     ]
   },
   "megadrive": {
@@ -1261,6 +1573,20 @@
       325,
       195,
       36
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Super Bomberman 3 ( PAL )"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Super Bomberman 3 (Nintendo Super Famicom) - Box, Manual, Cart Scans"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Super Bomberman 2 (Nintendo Super Famicom) - Box, Manual, Cart Scans"
+      }
     ]
   },
   "msx1": {
@@ -1269,12 +1595,40 @@
     "kind": "cutout",
     "consoleHues": [
       5
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "MSX Magazine"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Archive of MSX Computer Magazine (Dutch)"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "MSX Magazine Revival Vol. 3 - MSX MAGAZINE 永久保存版3"
+      }
     ]
   },
   "msx2": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "MSX Magazine Revival Vol. 2 - MSX MAGAZINE 永久保存版2"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "MSX Magazine Revival Vol. 1 - MSX MAGAZINE 永久保存版"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Archive of MSX Computer Magazine (Dutch)"
+      }
+    ]
   },
   "msx2+": {
     "logo": "logo.webp",
@@ -1282,12 +1636,32 @@
     "kind": "cutout",
     "consoleHues": [
       356
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "MSX Magazine Revival Vol. 1 - MSX MAGAZINE 永久保存版"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "MSX Magazine Revival Vol. 2 - MSX MAGAZINE 永久保存版2"
+      }
     ]
   },
   "msxturbor": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "MSX Magazine Revival Vol. 3 - MSX MAGAZINE 永久保存版3"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "MSX Magazine Revival Vol. 1 - MSX MAGAZINE 永久保存版"
+      }
+    ]
   },
   "multivision": {
     "logo": "logo.webp",
@@ -1384,6 +1758,16 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Arcadia Magazine No 32 January 01 2003 The House of the Dead III pages"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Gamest 199"
+      }
     ]
   },
   "naomi2": {
@@ -1396,6 +1780,16 @@
     "consoleHues": [
       115,
       27
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Gamest 0052"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Gamest 0066"
+      }
     ]
   },
   "nds": {
@@ -1437,6 +1831,20 @@
       355,
       195,
       154
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Neo Geo CD Software Catalogue"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "SNK Neo-Geo CD WW Magazine Advertisements & Reviews"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "電玩玩味叢書 013 NEO GEO CD特辑"
+      }
     ]
   },
   "nes": {
@@ -1467,6 +1875,16 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "NeoGeo Pocket Soft Information Vol. 2"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "SNK Neo-Geo Pocket Color WW Magazine Advertisements & Reviews"
+      }
     ]
   },
   "ngpc": {
@@ -1475,6 +1893,16 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "SNK Neo-Geo Pocket Color WW Magazine Advertisements & Reviews"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "NeoGeo Pocket Soft Information Vol. 2"
+      }
     ]
   },
   "odcommander": {
@@ -1497,6 +1925,16 @@
     ],
     "consoleHues": [
       355
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Magnavox Odyssey 2 Owner's Manual (1980)"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Odyssey Installation and Game Rules (1972)(Magnavox)"
+      }
     ]
   },
   "openbor": {
@@ -1589,6 +2027,20 @@
     ],
     "consoleHues": [
       20
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "NEC PC Engine CD-ROM2 manual"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Ys IV - The Dawn Of Ys (PC Engine CD) - Box, Disc, Manual Scans"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Legend Of Xanadu, The (PC Engine CD) - Box, Disc, Manual Scans"
+      }
     ]
   },
   "pcfx": {
@@ -1660,6 +2112,12 @@
       92,
       27,
       208
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Nintendo Pokemon mini User Guide"
+      }
     ]
   },
   "ports": {
@@ -1684,6 +2142,20 @@
     ],
     "consoleHues": [
       25
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "DOOM II Official Strategy Guide"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Ultimate Future Games Issue 14 - Supplement Playstation Doom Guide"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Doom III Gamespot Guide"
+      }
     ]
   },
   "psp": {
@@ -1824,6 +2296,20 @@
       358,
       211,
       155
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Satellaview Tsushin Monthly FamicomTsushin May extra issue"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Satellaview Tsushin サテラビュー通信 1995年9月号"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Satellaview HiRes"
+      }
     ]
   },
   "saturn": {
@@ -1872,6 +2358,20 @@
       33,
       84,
       187
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "LucasArts \"The Adventurer\" Magazine Complete 13 Issues"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Curse of Monkey Island, The Prima"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "The Adventurer magazine"
+      }
     ]
   },
   "scv": {
@@ -1895,6 +2395,12 @@
     ],
     "consoleHues": [
       27
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Prince Of Persia (1990)(Broderbund Software)"
+      }
     ]
   },
   "sega32x": {
@@ -1929,6 +2435,12 @@
     "consoleHues": [
       224,
       11
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Beep 1986 04"
+      }
     ]
   },
   "sgb": {
@@ -1939,6 +2451,12 @@
     "hues": [
       5,
       235
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Nintendo Player's Guide Super Game Boy"
+      }
     ]
   },
   "sgb-msu1": {
@@ -1966,10 +2484,14 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "The Super Famicom - 1990-11-30 - Number 1 - Volume 1 - Issue 1"
+        "title": "Super Play Super Nintendo Magazine (medium resolution) Complete Set"
       },
       {
         "file": "mag-2.webp",
+        "title": "The Super Famicom - 1990-11-30 - Number 1 - Volume 1 - Issue 1"
+      },
+      {
+        "file": "mag-3.webp",
         "title": "The Super Famicom - 1991-01-25 - Number 4 - Volume 2 - Issue 1"
       }
     ],
@@ -2107,6 +2629,16 @@
     ],
     "consoleHues": [
       198
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "NEC Super Grafx JAP Magazine Advertisements"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Daimakaimura (NEC Supergrafx) - Box, Manual and Card Scans"
+      }
     ]
   },
   "supervision": {
@@ -2266,6 +2798,20 @@
       54,
       215,
       355
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Vectrex Service Manual HP-3000, 140024-1, Field Service Manual"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Livrets d'instruction Vectrex en français (Vectrex manuals in French)"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Vectrex Instruction Manual Collection"
+      }
     ]
   },
   "vgmplay": {
@@ -2288,6 +2834,20 @@
     ],
     "consoleHues": [
       10
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Videopac Computer PLUS G7400 Instructions For Use (1978)(Philips)(en-de)"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Videopac Computer G7000 Instructions For Use (1978)(Philips)(en-de)"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Videopac Philips"
+      }
     ]
   },
   "vircon32": {
@@ -2303,6 +2863,16 @@
     ],
     "consoleHues": [
       356
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Virtual Boy PIX"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Nintendo Virtual Boy Manuals"
+      }
     ]
   },
   "vis": {
@@ -2344,6 +2914,20 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Super Robot Taisen Compact (Bandai WonderSwan) - Manual Scans"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Digimon Adventure 02 - D1 Tamers (Bandai WonderSwan Color) - Manual Scans"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Shaman King - Asu E No Ishi (Bandai WonderSwan Color) - Manual Scans"
+      }
     ]
   },
   "wswanc": {
@@ -2356,6 +2940,16 @@
     ],
     "consoleHues": [
       228
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Digimon Tamers - Digimon Medley (Bandai WonderSwan Color) - Manual Scans"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Digimon Adventure 02 - Tag Tamers (Bandai WonderSwan) - Manual Scans"
+      }
     ]
   },
   "x1": {
@@ -2372,6 +2966,20 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Oh! X 1990 - 1995"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Oh!X 1991 08"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Oh!X 1993 05"
+      }
     ]
   },
   "xegs": {
@@ -2393,6 +3001,16 @@
     ],
     "consoleHues": [
       25
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Rick Dangerous comic"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Commodore C64 Manual: Rick Dangerous (1989)(Core Design)"
+      }
     ]
   },
   "zc210": {
@@ -2433,6 +3051,20 @@
       357,
       55,
       193
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Your Sinclair 01-93"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Sinclair User Magazine Issue 045"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Sinclair User Magazine Issue 058"
+      }
     ]
   },
   "ps2": {

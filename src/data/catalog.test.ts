@@ -1,7 +1,7 @@
 import type { SystemSummary } from '@ramraiders/forma-sdk';
 import { describe, expect, it } from 'vitest';
 
-import { InfoStore, group, makerLogo } from './catalog.js';
+import { InfoStore, group, makerLogos } from './catalog.js';
 
 const system = (name: string, hardware: string | null, gameCount: number): SystemSummary => ({
   name,
@@ -66,19 +66,31 @@ describe('catalog', () => {
   });
 });
 
-describe('makerLogo', () => {
+describe('makerLogos', () => {
   const makers = [
     { id: 'sega', match: '^sega', logo: 'sega.webp' },
     { id: 'nec', match: '^nec\\b', logo: 'nec.webp' },
+    { id: 'sony', match: '^sony', logo: 'sony.webp' },
+    { id: 'philips', match: '^philips', logo: 'philips.webp' },
+    { id: 'mb', match: '^(mb|milton bradley)$', logo: 'mb.webp' },
     { id: 'bad', match: '(', logo: 'bad.webp' }
   ];
   it('finds the maker a name starts with, whatever its case', () => {
-    expect(makerLogo('SEGA Enterprises', makers)).toBe('./makers/sega.webp');
-    expect(makerLogo('NEC Home Electronics', makers)).toBe('./makers/nec.webp');
+    expect(makerLogos('SEGA Enterprises', makers)).toEqual(['./makers/sega.webp']);
+    expect(makerLogos('NEC Home Electronics', makers)).toEqual(['./makers/nec.webp']);
   });
-  it('is null for a maker without one, no maker, or a word that only starts the same', () => {
-    expect(makerLogo('Necrosoft', makers)).toBeNull();
-    expect(makerLogo('Watara', makers)).toBeNull();
-    expect(makerLogo(null, makers)).toBeNull();
+  it('finds each maker a name lists, in its order', () => {
+    expect(makerLogos('Several (Philips, Sony and others)', makers)).toEqual([
+      './makers/philips.webp',
+      './makers/sony.webp'
+    ]);
+    expect(makerLogos('General Consumer Electronics (later Milton Bradley)', makers)).toEqual([
+      './makers/mb.webp'
+    ]);
+  });
+  it('is none for a maker without one, no maker, or a word that only starts the same', () => {
+    expect(makerLogos('Necrosoft', makers)).toEqual([]);
+    expect(makerLogos('Watara', makers)).toEqual([]);
+    expect(makerLogos(null, makers)).toEqual([]);
   });
 });

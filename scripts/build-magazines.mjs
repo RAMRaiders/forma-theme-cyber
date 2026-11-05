@@ -44,6 +44,29 @@ function tidy(title) {
     .trim();
 }
 
+/**
+ * An item's front page: a scanned book's cover; else, for a folder of pictures, its first
+ * picture by name.
+ */
+async function cover(item) {
+  try {
+    return await get(`https://archive.org/download/${item}/page/cover_h${HEIGHT * 2}.jpg`, 2);
+  } catch {
+    const { result = [] } = await (await get(`https://archive.org/metadata/${item}/files`)).json();
+    const first = result
+      .map((f) => f.name)
+      .filter((n) => /\.(jpe?g|png)$/i.test(n) && !/thumb|__ia/i.test(n))
+      .sort((a, b) => a.localeCompare(b, 'en', { numeric: true }))[0];
+    if (!first) throw new Error(`no cover in ${item}`);
+    return get(
+      `https://archive.org/download/${item}/${encodeURIComponent(first).replace(/%2F/g, '/')}`
+    );
+  }
+}
+
+/** `ONLY=snes,psx`: just these systems, the others kept as they are. */
+const only = process.env.ONLY ? new Set(process.env.ONLY.split(',')) : null;
+
 const picks = JSON.parse(readFileSync(join(ROOT, 'scripts', 'magazines.json'), 'utf8'));
 const art = JSON.parse(readFileSync(ART, 'utf8'));
 const credits = [
@@ -54,6 +77,12 @@ const credits = [
   ''
 ];
 for (const [id, items] of Object.entries(picks)) {
+  if (only && !only.has(id)) {
+    for (const m of art[id]?.magazines ?? []) {
+      credits.push(`- **${id}**: ${m.title}`);
+    }
+    continue;
+  }
   // A system without art of its own (no logo, no photo) can still have its press.
   const entry = (art[id] ??= { logo: null, picture: null });
   const dir = join(SYSTEMS, id);
@@ -66,11 +95,7 @@ for (const [id, items] of Object.entries(picks)) {
     try {
       const meta = await (await get(`https://archive.org/metadata/${item}/metadata`)).json();
       const title = tidy(String(meta.result?.title ?? item));
-      const jpg = Buffer.from(
-        await (
-          await get(`https://archive.org/download/${item}/page/cover_h${HEIGHT * 2}.jpg`)
-        ).arrayBuffer()
-      );
+      const jpg = Buffer.from(await (await cover(item)).arrayBuffer());
       const file = `mag-${magazines.length + 1}.webp`;
       await sharp(jpg)
         .resize({ height: HEIGHT, withoutEnlargement: true })

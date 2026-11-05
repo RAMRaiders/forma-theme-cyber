@@ -832,6 +832,12 @@ main {
 }
 
 /* The maker, as its own logo, the height of a line and a half; the year after it. */
+.system-panel .byline .makers {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
 .system-panel .byline .maker-logo {
   height: 1.35rem;
   max-width: 9rem;

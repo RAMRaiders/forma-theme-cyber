@@ -5,7 +5,7 @@ import {
   type InfoStore,
   type MakerLogo,
   type SystemInfo,
-  makerLogo
+  makerLogos
 } from '../data/catalog.js';
 import { categoryArt } from './art.js';
 import { circuitSvg } from './circuit.js';
@@ -395,7 +395,7 @@ export class SystemView {
     const title = el('h2', { class: 'name' }, info?.name ?? s.fullname ?? s.name);
     const year = s.releaseYear ? String(s.releaseYear) : null;
     const released = info?.specs?.released ?? year;
-    const byline = bylineOf(maker, released, makerLogo(maker, this.#makers));
+    const byline = bylineOf(maker, released, makerLogos(maker, this.#makers));
 
     const callouts = (side: 'left' | 'right', specs: [Spec, string][]) => {
       const items = specs.flatMap(([key, label], n) => {
@@ -587,14 +587,20 @@ function settle(images: HTMLImageElement[]): Promise<void> {
 function bylineOf(
   maker: string | null | undefined,
   released: string | null | undefined,
-  logo: string | null
+  logos: readonly string[]
 ): HTMLElement | null {
   if (!maker && !released) return null;
   const line = el('p', { class: 'byline' });
-  if (maker && logo) {
-    const img = el('img', { class: 'maker-logo', src: logo, alt: maker, decoding: 'async' });
-    img.addEventListener('error', () => img.replaceWith(maker), { once: true });
-    line.append(img);
+  if (maker && logos.length) {
+    // All of them, or the name: never some logos and a gap.
+    const imgs = logos.map((src) =>
+      el('img', { class: 'maker-logo', src, alt: '', decoding: 'async' })
+    );
+    const makers = el('span', { class: 'makers', role: 'img', 'aria-label': maker }, ...imgs);
+    for (const img of imgs) {
+      img.addEventListener('error', () => makers.replaceWith(maker), { once: true });
+    }
+    line.append(makers);
   } else if (maker) {
     line.append(maker);
   }

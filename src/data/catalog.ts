@@ -104,20 +104,36 @@ export interface MakerLogo {
   logo: string;
 }
 
-/** The logo of the maker `name` names (the first it starts with), as a URL; `null` if none. */
-export function makerLogo(
+/**
+ * The logos of the makers `name` names, as URLs: the one it starts with; else, for a system
+ * several companies made ("Several (Sony, Panasonic, Philips…)"), each one it names that Cyber
+ * has a logo for, in its order, three at most. None if it names none.
+ */
+export function makerLogos(
   name: string | null | undefined,
   makers: readonly MakerLogo[]
-): string | null {
-  if (!name) return null;
-  const found = makers.find((m) => {
+): string[] {
+  const text = name?.trim();
+  if (!text) return [];
+  const test = (pattern: string) => {
     try {
-      return new RegExp(m.match, 'i').test(name.trim());
+      return new RegExp(pattern, 'i').exec(text);
     } catch {
-      return false;
+      return null;
     }
-  });
-  return found ? `./makers/${found.logo}` : null;
+  };
+  const url = (m: MakerLogo) => `./makers/${m.logo}`;
+  const lead = makers.find((m) => test(m.match));
+  if (lead) return [url(lead)];
+  // Anywhere in it, as a whole word.
+  return makers
+    .flatMap((m) => {
+      const found = test(m.match.replace(/^\^/, '\\b').replace(/\$$/, '\\b'));
+      return found ? [{ m, at: found.index }] : [];
+    })
+    .sort((a, b) => a.at - b.at)
+    .slice(0, 3)
+    .map(({ m }) => url(m));
 }
 
 /** A system as Cyber shows it: Forma's summary, its category, and its art. */

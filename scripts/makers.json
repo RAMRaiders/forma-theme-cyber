@@ -164,12 +164,52 @@
     {
       "id": "3do",
       "match": "^the 3do company|^3do",
-      "file": "3DO Logo.svg"
+      "file": "3DO Company logo.png"
     },
     {
       "id": "midway",
       "match": "^bally|^midway",
       "file": "Midway Games logo.svg"
+    },
+    {
+      "id": "apf",
+      "match": "^apf",
+      "file": "APF Electronics wordmark.svg"
+    },
+    {
+      "id": "sinclair",
+      "match": "^sinclair",
+      "file": "Sinclair.svg"
+    },
+    {
+      "id": "sanyo",
+      "match": "^sanyo",
+      "file": "Logo Sanyo old.svg"
+    },
+    {
+      "id": "goldstar",
+      "match": "^goldstar",
+      "file": "GoldStar Logo.png"
+    },
+    {
+      "id": "cinematronics",
+      "match": "^cinematronics",
+      "file": "Cinematronics logo.png"
+    },
+    {
+      "id": "scummvm",
+      "match": "^scummvm",
+      "file": "Scummvm logo.svg"
+    },
+    {
+      "id": "solarus",
+      "match": "solarus",
+      "file": "Solarus logo.svg"
+    },
+    {
+      "id": "pygame",
+      "match": "pygame",
+      "file": "Pygame logo.svg"
     }
   ]
 }

@@ -168,5 +168,45 @@
     "id": "midway",
     "match": "^bally|^midway",
     "logo": "midway.webp"
+  },
+  {
+    "id": "apf",
+    "match": "^apf",
+    "logo": "apf.webp"
+  },
+  {
+    "id": "sinclair",
+    "match": "^sinclair",
+    "logo": "sinclair.webp"
+  },
+  {
+    "id": "sanyo",
+    "match": "^sanyo",
+    "logo": "sanyo.webp"
+  },
+  {
+    "id": "goldstar",
+    "match": "^goldstar",
+    "logo": "goldstar.webp"
+  },
+  {
+    "id": "cinematronics",
+    "match": "^cinematronics",
+    "logo": "cinematronics.webp"
+  },
+  {
+    "id": "scummvm",
+    "match": "^scummvm",
+    "logo": "scummvm.webp"
+  },
+  {
+    "id": "solarus",
+    "match": "solarus",
+    "logo": "solarus.webp"
+  },
+  {
+    "id": "pygame",
+    "match": "pygame",
+    "logo": "pygame.webp"
   }
 ]
