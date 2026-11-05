@@ -2666,3 +2666,725 @@ kbd {
     animation: none;
   }
 }
+
+/* ── Collector: a shelf of spines, the box turning in a lit case, the game's dossier ───────── */
+
+.collector {
+  --game: var(--neon);
+  position: relative;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 19rem minmax(0, 1fr) 24rem;
+  column-gap: 1.8rem;
+  padding-bottom: 0.4rem;
+}
+
+/* The fan art, small and dim: scaled up, it is its own blur (no filter). */
+.collector-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.collector-backdrop img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.2;
+  transition: opacity 900ms ease;
+}
+
+.collector-backdrop img.waiting,
+.collector-backdrop img.leaving {
+  opacity: 0;
+}
+
+/* A showroom: dark at the edges, a neon floor grid going away under the case. */
+.collector-backdrop::before {
+  content: '';
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  bottom: -8%;
+  height: 52%;
+  transform: perspective(30rem) rotateX(62deg);
+  transform-origin: 50% 100%;
+  background:
+    repeating-linear-gradient(90deg, rgb(34 228 255 / 16%) 0 1px, transparent 1px 4rem),
+    repeating-linear-gradient(0deg, rgb(34 228 255 / 16%) 0 1px, transparent 1px 4rem);
+  opacity: 0.55;
+}
+
+.collector-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 55% at 52% 45%, transparent 0%, rgb(4 6 12 / 70%) 70%),
+    linear-gradient(180deg, rgb(4 6 12 / 60%) 0%, transparent 25%, transparent 70%, var(--bg) 100%);
+}
+
+/* The shelf: boxes on their sides, spines out. */
+.shelf {
+  position: relative;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding-right: 1.8rem;
+}
+
+.shelf::-webkit-scrollbar {
+  display: none;
+}
+
+.spine-row {
+  position: absolute;
+  left: 0;
+  right: 1.8rem;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-right: 0.7rem;
+  overflow: hidden;
+  border: 1px solid hsl(var(--hue) 60% 45% / 35%);
+  border-radius: 0.2rem;
+  background: linear-gradient(
+    90deg,
+    hsl(var(--hue) 50% 20%) 0%,
+    hsl(var(--hue) 40% 11%) 65%,
+    #090e18 100%
+  );
+  color: #c9dbe8;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.68;
+  transition:
+    transform 220ms ease,
+    opacity 220ms ease;
+}
+
+.spine-row .band {
+  flex: none;
+  align-self: stretch;
+  width: 0.45rem;
+  background: hsl(var(--hue) 85% 58%);
+}
+
+.spine-row .title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.spine-row .year {
+  flex: none;
+  color: var(--muted);
+  font-size: 0.66rem;
+}
+
+/* The one picked slides out of the stack. */
+.spine-row.selected {
+  transform: translateX(1.6rem);
+  opacity: 1;
+  color: #fff;
+  border-color: var(--game);
+  box-shadow:
+    0 0 0.9rem rgb(34 228 255 / 30%),
+    inset 0 0 0 1px rgb(255 255 255 / 8%);
+}
+
+/* The showcase: label, case, poses, prints. */
+.showcase {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  justify-items: center;
+  row-gap: 0.5rem;
+}
+
+.slab-label {
+  width: min(100%, 36rem);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  column-gap: 0.9rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid rgb(255 255 255 / 16%);
+  border-top: 2px solid var(--game);
+  border-radius: 0.35rem;
+  background: linear-gradient(180deg, rgb(20 30 48 / 92%), rgb(8 12 22 / 92%));
+  box-shadow: 0 0 1.4rem rgb(0 0 0 / 55%);
+}
+
+.slab-label .mark {
+  display: flex;
+  align-items: center;
+  max-width: 6.5rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+.slab-label .mark img {
+  max-width: 6.5rem;
+  height: 1.9rem;
+  object-fit: contain;
+}
+
+.slab-label .mark img.dark {
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.2rem;
+  background: rgb(255 255 255 / 85%);
+}
+
+.slab-label .what {
+  display: grid;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.slab-label .brand {
+  font-family: var(--mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.24em;
+  color: var(--game);
+}
+
+.slab-label strong {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 1.02rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.slab-label .line {
+  font-size: 0.7rem;
+  color: #a9bccb;
+}
+
+.slab-label .serial {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--muted);
+}
+
+.barcode {
+  display: flex;
+  height: 2.1rem;
+  padding: 0.2rem 0.3rem;
+  border-radius: 0.15rem;
+  background: #e8f1f8;
+}
+
+.barcode i {
+  display: block;
+  background: #0b1220;
+}
+
+.slab-label .grade {
+  display: grid;
+  justify-items: center;
+  padding-left: 0.9rem;
+  border-left: 1px solid rgb(255 255 255 / 14%);
+}
+
+.slab-label .grade strong {
+  font-family: var(--mono);
+  font-size: 1.9rem;
+  line-height: 1;
+  color: var(--game);
+  text-shadow: 0 0 0.8rem rgb(34 228 255 / 45%);
+}
+
+.slab-label .grade span {
+  margin-top: 0.15rem;
+  font-family: var(--mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #cfe0ec;
+}
+
+.slab-label .grade.none strong {
+  color: var(--muted);
+  text-shadow: none;
+}
+
+/* The case: a spotlight from above, a plinth with a neon ring, the box floating over it. */
+.display {
+  position: relative;
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.display .spotlight {
+  position: absolute;
+  inset: -0.5rem 8% 0;
+  background: radial-gradient(ellipse 45% 85% at 50% 0%, rgb(255 255 255 / 9%), transparent 72%);
+  pointer-events: none;
+}
+
+.display .plinth {
+  position: absolute;
+  left: 50%;
+  bottom: 0.2rem;
+  width: 24rem;
+  height: 4rem;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, #18233a 0%, #0a101c 55%, transparent 72%);
+}
+
+.display .ring {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 26%;
+  bottom: 26%;
+  border: 2px solid var(--game);
+  border-radius: 50%;
+  box-shadow:
+    0 0 1.1rem var(--game),
+    inset 0 0 0.8rem var(--game);
+  opacity: 0.7;
+  animation: collector-ring 3.2s ease-in-out infinite alternate;
+}
+
+@keyframes collector-ring {
+  to {
+    opacity: 0.35;
+  }
+}
+
+.display .float {
+  position: relative;
+  margin-bottom: 2.2rem;
+  perspective: 60rem;
+  animation: collector-float 6s ease-in-out infinite alternate;
+}
+
+.display.has-cart .float {
+  margin-right: 7rem;
+}
+
+@keyframes collector-float {
+  from {
+    transform: translateY(0.35rem);
+  }
+  to {
+    transform: translateY(-0.45rem);
+  }
+}
+
+/* The box: six faces around its middle; visibility, not opacity (that flattens 3D). */
+.cbox {
+  position: relative;
+  width: var(--w);
+  height: var(--h);
+  transform-style: preserve-3d;
+  transition: transform 1.6s cubic-bezier(0.65, 0.05, 0.3, 1);
+  visibility: hidden;
+}
+
+.cbox.ready {
+  visibility: visible;
+}
+
+.cbox .face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  backface-visibility: hidden;
+  background: #0b1220;
+}
+
+.cbox .face > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.cbox .front,
+.cbox .back {
+  width: var(--w);
+  height: var(--h);
+}
+
+.cbox .front {
+  transform: translateZ(calc(var(--d) / 2));
+}
+
+.cbox .back {
+  transform: rotateY(180deg) translateZ(calc(var(--d) / 2));
+}
+
+.cbox .spine,
+.cbox .side {
+  left: calc((var(--w) - var(--d)) / 2);
+  width: var(--d);
+  height: var(--h);
+}
+
+.cbox .spine {
+  transform: rotateY(-90deg) translateZ(calc(var(--w) / 2));
+}
+
+.cbox .side {
+  transform: rotateY(90deg) translateZ(calc(var(--w) / 2));
+  background: linear-gradient(90deg, #1b2436, #2b3650 50%, #1b2436);
+}
+
+.cbox .top,
+.cbox .bottom {
+  top: calc((var(--h) - var(--d)) / 2);
+  width: var(--w);
+  height: var(--d);
+  background: #1c2638;
+}
+
+.cbox .top {
+  transform: rotateX(90deg) translateZ(calc(var(--h) / 2));
+}
+
+.cbox .bottom {
+  transform: rotateX(-90deg) translateZ(calc(var(--h) / 2));
+}
+
+/* Light on the shrink-wrap, fixed to the front. */
+.cbox .front::after,
+.cbox .back::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgb(255 255 255 / 15%) 46%, transparent 58%);
+  pointer-events: none;
+}
+
+/* Faces made up where the game has no picture. */
+.made-cover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #0d1626, #05070d);
+}
+
+.made-cover .art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+}
+
+.made-cover .logo,
+.made-cover strong {
+  position: absolute;
+  top: 7%;
+  left: 8%;
+  width: 84%;
+  max-height: 30%;
+  object-fit: contain;
+  font-size: 1.3rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.made-spine {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    90deg,
+    hsl(var(--hue) 70% 22%),
+    hsl(var(--hue) 70% 40%) 50%,
+    hsl(var(--hue) 70% 22%)
+  );
+}
+
+.made-spine .along {
+  flex: none;
+  width: var(--h);
+  height: var(--d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(90deg);
+}
+
+.made-spine .logo {
+  max-width: 55%;
+  max-height: 80%;
+  object-fit: contain;
+}
+
+.made-spine strong {
+  white-space: nowrap;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.made-back {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.8rem;
+  background: linear-gradient(180deg, #101a2c, #070b14);
+}
+
+.made-back .shot {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.made-back p {
+  margin: 0;
+  font-size: 0.55rem;
+  line-height: 1.4;
+  color: #9fb4c4;
+}
+
+/* The cartridge, standing in front, to the right. */
+.display .cart {
+  position: absolute;
+  right: 4%;
+  bottom: 2.1rem;
+  width: 10rem;
+  max-height: 9rem;
+  object-fit: contain;
+  transform: rotate(-5deg);
+}
+
+.showcase .poses {
+  display: flex;
+  gap: 1.4rem;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.showcase .poses .on {
+  color: var(--game);
+}
+
+.showcase .poses .on::before {
+  content: '◆ ';
+}
+
+/* Screenshots as prints, fanned a little. */
+.prints {
+  display: flex;
+  gap: 1.1rem;
+  justify-content: center;
+  height: 6.6rem;
+}
+
+.prints .print {
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  padding: 0.28rem 0.28rem 0.8rem;
+  background: #e6edf4;
+  border-radius: 0.1rem;
+  box-shadow: 0 0.4rem 1rem rgb(0 0 0 / 55%);
+  transform: rotate(calc((var(--i) - 1) * 2.5deg));
+}
+
+.prints .print img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The dossier: everything known, what is kept, what was played. */
+.dossier {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow: hidden;
+  padding: 1rem 1.2rem;
+  border: 1px solid rgb(34 228 255 / 16%);
+  border-top: 2px solid var(--game);
+  border-radius: 0.4rem;
+  background: var(--panel);
+}
+
+.dossier .head .logo {
+  display: block;
+  max-width: 100%;
+  max-height: 4.6rem;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.dossier .head h2 {
+  margin: 0.35rem 0 0;
+  font-size: 1.1rem;
+  line-height: 1.25;
+}
+
+.dossier h3 {
+  margin: 0 0 0.3rem;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--game);
+}
+
+.dossier .specs {
+  display: grid;
+  gap: 0.22rem;
+  margin: 0;
+}
+
+.dossier .specs > div {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  align-items: baseline;
+  font-size: 0.76rem;
+}
+
+.dossier .specs dt {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.dossier .specs dd {
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.dossier .stars {
+  position: relative;
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  color: rgb(255 255 255 / 18%);
+}
+
+.dossier .stars::before {
+  content: '★★★★★';
+}
+
+.dossier .stars::after {
+  content: '★★★★★';
+  position: absolute;
+  inset: 0;
+  color: var(--game);
+  clip-path: inset(0 calc(100% - var(--rating) * 100%) 0 0);
+}
+
+.dossier .status {
+  margin: 0 0 0.35rem;
+  font-weight: 700;
+}
+
+.dossier .inventory ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dossier .inventory li {
+  padding: 0.1rem 0.45rem;
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 1rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: rgb(255 255 255 / 32%);
+}
+
+.dossier .inventory li.has {
+  border-color: var(--game);
+  color: var(--fg);
+}
+
+.dossier .record p {
+  margin: 0;
+  font-size: 0.78rem;
+}
+
+.dossier .achievements {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 0.35rem;
+  font-size: 0.7rem;
+}
+
+.dossier .bar {
+  position: relative;
+  height: 0.3rem;
+  border-radius: 0.2rem;
+  background: rgb(255 255 255 / 10%);
+}
+
+.dossier .bar::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--done) * 100%);
+  border-radius: inherit;
+  background: var(--game);
+}
+
+.dossier .story {
+  min-height: 0;
+}
+
+.dossier .story .line {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #b7cad8;
+  transition: opacity 350ms ease;
+}
+
+.dossier .story .line.turning {
+  opacity: 0;
+}
+
+:root[data-motion='off'] .display .ring,
+:root[data-motion='off'] .display .float {
+  animation: none;
+}
+
+:root[data-motion='off'] .cbox {
+  transition: none;
+}

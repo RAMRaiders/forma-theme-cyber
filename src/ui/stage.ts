@@ -22,6 +22,7 @@ export type Kind =
   | 'fanart'
   | 'thumbnail'
   | 'boxback'
+  | 'boxside'
   | 'boxart'
   | 'cartridge'
   | 'image'
@@ -98,7 +99,7 @@ const CAPTION_CHARS = 170;
 const STILLS: Kind[] = ['image', 'titleshot', 'mix', 'map'];
 
 /** Systems whose games' descriptions are arcade histories. */
-const ARCADE = new Set([
+export const ARCADE = new Set([
   'mame',
   'fbneo',
   'neogeo',
@@ -121,7 +122,7 @@ const ARCADE = new Set([
   'arcade'
 ]);
 
-const REGIONS: Record<string, string> = {
+export const REGIONS: Record<string, string> = {
   wor: 'World',
   us: 'USA',
   eu: 'Europe',
@@ -142,7 +143,7 @@ const REGIONS: Record<string, string> = {
   asi: 'Asia'
 };
 
-const LANGUAGES: Record<string, string> = {
+export const LANGUAGES: Record<string, string> = {
   en: 'English',
   fr: 'French',
   de: 'German',
@@ -599,13 +600,13 @@ export function captions(text: string): string[] {
 }
 
 /** `1-2` → `1–2 players`. */
-function players(p: string): string {
+export function players(p: string): string {
   const n = p.replace('-', '–');
   return n === '1' ? '1 player' : `${n} players`;
 }
 
 /** How much it has been played, in a line; `null` when never. */
-function played(game: Game): string | null {
+export function played(game: Game): string | null {
   if (game.playCount <= 0) return 'Never yet';
   const parts = [`${game.playCount}×`];
   if (game.gameTime > 0) parts.push(playtime(game.gameTime));

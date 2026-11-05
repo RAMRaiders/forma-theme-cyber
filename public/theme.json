@@ -94,6 +94,10 @@
         {
           "value": "immersive",
           "label": "Immersive"
+        },
+        {
+          "value": "collector",
+          "label": "Collector"
         }
       ],
       "default": "immersive"

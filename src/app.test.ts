@@ -365,6 +365,26 @@ describe('the default theme', () => {
     await vi.waitFor(() => expect(text('.system-list .name')).toEqual(byName));
   });
 
+  it('switches a game list to the Collector view in place, its box turned left and right', async () => {
+    const { press, root, fire, text } = await start();
+    await press('confirm');
+    await press('confirm');
+    await vi.waitFor(() => expect(root.querySelector('.games')).not.toBeNull());
+    fire('settings:changed', { scope: 'theme', key: 'gamesView', value: 'collector' });
+    await vi.waitFor(() => expect(root.querySelector('.collector')).not.toBeNull());
+    expect(root.querySelector('.games')).toBeNull();
+    expect(text('.spine-row.selected .title')).toHaveLength(1);
+    expect(text('.hint')).toContain('◀ ▶Turn');
+    const box = root.querySelector<HTMLElement>('.cbox')!;
+    await press('right');
+    expect(box.dataset.pose).toBe('spine');
+    await press('left');
+    expect(box.dataset.pose).toBe('front');
+    // Up and down still move along the shelf.
+    await press('down');
+    expect(text('.spine-row.selected .title')).toHaveLength(1);
+  });
+
   it('reads its settings one by one, over the single object it used to keep', async () => {
     const backend = mockBackend({ permissions: [] });
     await backend.invoke('settings_set', {

@@ -3,6 +3,7 @@ import type {
   Browse,
   Forma,
   Game,
+  MediaKind,
   GameStart,
   InputEvent,
   SettingsChanged,
@@ -27,6 +28,7 @@ import { type Move, moveGrid, moveHome, moveList } from './logic/nav.js';
 import { LazyList } from './logic/pager.js';
 import { el } from './ui/dom.js';
 import { type Card, GridView } from './ui/grid.js';
+import { COLLECTOR_PICTURES, CollectorView } from './ui/collector.js';
 import { GamesView } from './ui/games.js';
 import { HomeView, type Shortcut, type Tile } from './ui/home.js';
 import { loader } from './ui/loader.js';
@@ -105,7 +107,7 @@ export class App {
     // more kinds than this SDK's types (box back, cartridge…), hence the cast.
     media: (game, kind, width) =>
       (game.media as Partial<Record<string, string>>)[kind]
-        ? this.forma.library.mediaUrl(game.id, kind, width)
+        ? this.forma.library.mediaUrl(game.id, kind as MediaKind, width)
         : null,
     achievements: async (game) => {
       const { data } = await this.forma.ra.game(game.id);
@@ -116,6 +118,34 @@ export class App {
     stopVideo: () => void this.forma.video.stop().catch(() => {}),
     prepare: (items) => void this.forma.library.prepareMedia(items as never).catch(() => {})
   });
+  /** The Collector view of a game list: Select → View on a list. */
+  readonly #collector = new CollectorView({
+    media: (game, kind, width) =>
+      (game.media as Partial<Record<string, string>>)[kind]
+        ? this.forma.library.mediaUrl(game.id, kind as MediaKind, width)
+        : null,
+    achievements: async (game) => {
+      const { data } = await this.forma.ra.game(game.id);
+      return { earned: data.earned, total: data.achievementCount };
+    },
+    accent: accentOf,
+    system: (name) => {
+      const system = this.#groups.flatMap((g) => g.systems).find((s) => s.summary.name === name);
+      if (!system) return null;
+      return {
+        name: system.summary.fullname || name,
+        logo: system.logoSmall,
+        dark: system.logoDark
+      };
+    },
+    prepare: (items) => void this.forma.library.prepareMedia(items as never).catch(() => {})
+  });
+
+  /** The game list's view, as the setting says. */
+  get #gameView(): GamesView | CollectorView {
+    return this.#prefs.gamesView === 'collector' ? this.#collector : this.#games;
+  }
+
   /** The game list on screen, for Forma to make its pictures ahead. */
   #listPlace: { view: string; path: string[] } | null = null;
   #preparedAround = 0;
@@ -128,8 +158,12 @@ export class App {
     const place = this.#listPlace;
     if (!place) return;
     this.#preparedAround = around;
-    const pictures = STAGE_PICTURES.map(([kind, width]) => ({ kind, width }));
-    void this.forma.library.prepareList(place.view, place.path, around, pictures).catch(() => {});
+    const pictures = (
+      this.#prefs.gamesView === 'collector' ? COLLECTOR_PICTURES : STAGE_PICTURES
+    ).map(([kind, width]) => ({ kind, width }));
+    void this.forma.library
+      .prepareList(place.view, place.path, around, pictures as never)
+      .catch(() => {});
   }
 
   /** Cyber's look and order: its settings, which Forma's menu shows (Start → Interface). */
@@ -207,7 +241,7 @@ export class App {
     });
     this.forma.events.on('game:end', ({ error }) => {
       this.#playing.hidden = true;
-      if (this.#list) this.#games.resume();
+      if (this.#list) this.#gameView.resume();
       if (error) this.#notify(`The game could not run: ${error}`);
     });
 
@@ -256,6 +290,7 @@ export class App {
   async #load(): Promise<void> {
     // Whatever shows next, the game list's video (and its sound) stops.
     this.#games.leave();
+    this.#collector.leave();
     const target = this.#target();
     if (this.#view === CYBER_VIEW && this.#stack.length <= 2 && !target.shortcut) {
       return this.#loadCyber();
@@ -278,13 +313,13 @@ export class App {
             return page.listing.kind === 'games' ? page.listing : { items: [], total: 0 };
           },
           PAGE,
-          () => this.#games.render()
+          () => this.#gameView.render()
         );
         await list.start(index);
         this.#list = list;
         this.#level.index = Math.min(index, Math.max(0, list.total - 1));
-        this.#main.replaceChildren(this.#games.root);
-        this.#games.show(list, this.#level.index);
+        this.#main.replaceChildren(this.#gameView.root);
+        this.#gameView.show(list, this.#level.index);
         this.#listPlace = { view, path };
         this.#prepareList(this.#level.index);
       } else {
@@ -406,6 +441,16 @@ export class App {
   /** The look on the page, and the settings the views follow. */
   #applyPrefs(): void {
     applyPrefs(this.#prefs);
+    // Another view for the list on screen: it takes over where the last was.
+    const view = this.#gameView;
+    if (this.#list && this.#mode === 'browse' && !this.#main.contains(view.root)) {
+      this.#games.leave();
+      this.#collector.leave();
+      this.#main.replaceChildren(view.root);
+      view.show(this.#list, this.#level.index);
+      this.#prepareList(this.#level.index);
+      this.#renderChrome();
+    }
     this.#games.previews = this.#prefs.previews;
     this.#systemView.rotateFacts = this.#prefs.rotateFacts;
     if (this.#systemView.look !== this.#prefs.systemsLook) {
@@ -527,6 +572,9 @@ export class App {
     // Select and Start are Forma's own: its views list and its menu, over any theme.
     const hints: [string, string][] = [
       ['A', games ? 'Play' : this.#mode === 'systems' ? 'Games' : 'Open'],
+      ...(games && this.#prefs.gamesView === 'collector'
+        ? [['◀ ▶', 'Turn'] as [string, string]]
+        : []),
       ...(games ? [['Y', 'Favourite'] as [string, string]] : []),
       ...(this.#mode === 'systems' ? [['Y', 'Next fact'] as [string, string]] : []),
       ...(this.#stack.length > 1 ? [['B', 'Back'] as [string, string]] : []),
@@ -565,9 +613,18 @@ export class App {
     } else if (this.#mode === 'systems') {
       level.index = moveList(level.index, this.#systemView.count, move, 5, repeat);
       this.#systemView.select(level.index, false, repeat);
+    } else if (
+      this.#list &&
+      this.#gameView === this.#collector &&
+      (move === 'left' || move === 'right')
+    ) {
+      // The Collector's box turns, left and right.
+      if (!repeat) this.#collector.turn(move === 'right' ? 1 : -1);
+      return;
     } else if (this.#list) {
-      level.index = moveList(level.index, this.#list.total, move, this.#games.pageSize(), repeat);
-      this.#games.select(level.index);
+      const view = this.#gameView;
+      level.index = moveList(level.index, this.#list.total, move, view.pageSize(), repeat);
+      view.select(level.index);
       if (Math.abs(level.index - this.#preparedAround) > PREPARE_AGAIN) {
         this.#prepareList(level.index);
       }
@@ -630,13 +687,13 @@ export class App {
       return this.#load();
     }
     if (this.#list) {
-      const game = this.#games.selected;
+      const game = this.#gameView.selected;
       if (!game) return;
-      this.#games.leave();
+      this.#gameView.leave();
       try {
         await this.forma.launch.game(game.id);
       } catch (error) {
-        this.#games.resume();
+        this.#gameView.resume();
         this.#notify(FormaError.from(error).message);
       }
       return;
@@ -654,11 +711,11 @@ export class App {
   }
 
   async #toggleFavorite(): Promise<void> {
-    const game = this.#games.selected;
+    const game = this.#gameView.selected;
     if (!this.#list || !game) return;
     try {
       await this.forma.library.setFavorite(game.id, !game.favorite);
-      this.#games.refreshSelected({ ...game, favorite: !game.favorite });
+      this.#gameView.refreshSelected({ ...game, favorite: !game.favorite });
       this.#notify(
         game.favorite ? `Removed ${game.name} from favourites` : `Added ${game.name} to favourites`
       );
@@ -676,7 +733,7 @@ export class App {
       const s = this.#systemView.selected?.summary;
       return { system: s ? { name: s.name, fullname: s.fullname } : null, game: null };
     }
-    const game = this.#list ? this.#games.selected : null;
+    const game = this.#list ? this.#gameView.selected : null;
     if (!game) return { system: null, game: null };
     const s = this.#groups.flatMap((g) => g.systems).find((x) => x.summary.name === game.system);
     return {

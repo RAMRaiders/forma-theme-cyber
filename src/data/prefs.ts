@@ -18,13 +18,14 @@ export interface Prefs {
   rotateFacts: boolean;
   /**
    * How a game list shows its games, picked on Select over the list. Immersive: the game on a
-   * stage of its own, in acts, the list a rail that rests away. More to come.
+   * stage of its own, in acts, the list a rail that rests away. Collector: a shelf of spines,
+   * the game's box turning in a lit case, and everything known about it.
    */
   gamesView: GamesView;
 }
 
 /** The game list's views, in the order Select offers them. */
-const GAMES_VIEWS = ['immersive'] as const;
+const GAMES_VIEWS = ['immersive', 'collector'] as const;
 export type GamesView = (typeof GAMES_VIEWS)[number];
 
 export const DEFAULT_PREFS: Prefs = {
