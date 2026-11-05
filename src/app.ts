@@ -543,7 +543,10 @@ export class App {
 
   #renderChrome(): void {
     // Which screen, for styles outside the screen's own element (the backdrop).
-    document.documentElement.dataset.screen = this.#mode;
+    // Only when it changes: set on every move, the Pi's WebKit restyled the whole page.
+    if (document.documentElement.dataset.screen !== this.#mode) {
+      document.documentElement.dataset.screen = this.#mode;
+    }
     const view = this.#views.find((v) => v.id === this.#view);
     // Breadcrumbs, for show: where you are, from the top (Categories, in Cyber's own view).
     this.#title.textContent = this.#view === CYBER_VIEW ? 'Categories' : (view?.name ?? this.#view);

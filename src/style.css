@@ -544,8 +544,11 @@ main {
   height: 1.1rem;
   margin-top: 0.5rem;
   overflow: hidden;
-  /* Fixed: changed with the selection, the Pi's WebKit rebuilt the running row's layer. */
   opacity: 0.8;
+}
+
+.tile .logo.off {
+  visibility: hidden;
 }
 
 .tile .logos-track {
@@ -555,60 +558,12 @@ main {
   height: 100%;
 }
 
-/* A margin, not a gap: the doubled row is then exactly twice one copy's width. */
 .tile .logo {
   flex: none;
   max-height: 100%;
   max-width: 5rem;
   margin-right: 0.8rem;
   object-fit: contain;
-}
-
-/* A row of logos that runs past (more than fit): its ends fade into the tile under two plain
-   gradients drawn over them, not a mask (the Pi's WebKit redraws a masked row every frame). */
-.tile .logos.looped {
-  position: relative;
-}
-
-.tile .logos.looped::before,
-.tile .logos.looped::after {
-  content: '';
-  position: absolute;
-  inset: 0 auto 0 0;
-  z-index: 1;
-  width: 1.2rem;
-  background: linear-gradient(90deg, rgb(5 7 13), transparent);
-}
-
-.tile .logos.looped::after {
-  inset: 0 0 0 auto;
-  width: 2rem;
-  background: linear-gradient(270deg, rgb(5 7 13), transparent);
-}
-
-/*
- * Only the selected tile's row runs, from its first logo after a moment's rest; the others rest
- * on their first logos. Never paused and resumed (that jumped ahead on the Pi): the animation
- * is there or not. Every such row keeps its own layer either way, so selecting one does not
- * rebuild it.
- */
-.tile .logos-track[data-looped] {
-  will-change: transform;
-}
-
-.tile.selected .logos-track[data-looped] {
-  animation: marquee var(--marquee-s, 20s) linear 1s infinite;
-}
-
-/* The track holds the logos twice, so half its width is one copy, whatever the text size. */
-@keyframes marquee {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-:root[data-motion='off'] .tile .logos-track {
-  animation: none;
 }
 
 /* Selected: lit in its colour, the hero a little forward, all inside the tile. */

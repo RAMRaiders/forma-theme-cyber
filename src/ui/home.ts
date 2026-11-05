@@ -21,8 +21,8 @@ export interface Shortcut {
   soon?: boolean;
 }
 
-/** The selected tile's logos run past at this speed, in px per second, to show them all. */
-const MARQUEE_PX_S = 45;
+/** The selected tile's logos, when more than fit, turn to the next few this often. */
+const LOGO_PAGE_MS = 3000;
 
 /**
  * Cyber's top level: one tile per category that has games, then a row of shortcuts under them.
@@ -34,6 +34,7 @@ export class HomeView {
   readonly #shortcuts = el('div', { class: 'shortcuts', role: 'listbox' });
   #tiles: HTMLElement[] = [];
   #selected = -1;
+  #pageTimer: ReturnType<typeof setInterval> | undefined;
   /** Categories shown; the shortcuts' indexes start here. */
   categories = 0;
   shortcuts = 0;
@@ -57,10 +58,10 @@ export class HomeView {
     this.#shortcuts.replaceChildren(...buttons);
     this.#selected = -1;
     this.select(selected);
-    // Every row that runs is set up now, not on its tile's first selection: the first moves
-    // (at boot, while the Pi is busiest) then only change which row runs.
+    // Every row is split into pages now, not on its tile's first selection: the first moves
+    // (at boot, while the Pi is busiest) then only change which row turns.
     requestAnimationFrame(() => {
-      for (const card of cards) marquee(card);
+      for (const card of cards) void paginate(card).then(() => this.#turnPages());
     });
   }
 
@@ -70,7 +71,9 @@ export class HomeView {
   }
 
   select(index: number): void {
-    this.#tiles[this.#selected]?.classList.remove('selected');
+    const before = this.#tiles[this.#selected];
+    if (before) showPage(before, 0);
+    before?.classList.remove('selected');
     this.#tiles[this.#selected]?.setAttribute('aria-selected', 'false');
     this.#selected = index;
     const t = this.#tiles[index];
@@ -78,7 +81,24 @@ export class HomeView {
     t.classList.add('selected');
     t.setAttribute('aria-selected', 'true');
     if (t.parentElement === this.#categories) reveal(t, this.#categories);
-    marquee(t);
+    this.#turnPages();
+  }
+
+  /**
+   * The selected tile's logos, when more than fit, turn a page every few seconds; nothing moves
+   * in between. (A row running past without end kept the Pi drawing every frame, and moves
+   * stuttered behind it.)
+   */
+  #turnPages(): void {
+    clearInterval(this.#pageTimer);
+    const tile = this.#tiles[this.#selected];
+    const count = tile ? (PAGES.get(tile)?.length ?? 0) : 0;
+    if (!tile || count < 2 || document.documentElement.dataset.motion === 'off') return;
+    let page = 0;
+    this.#pageTimer = setInterval(() => {
+      page = (page + 1) % count;
+      showPage(tile, page);
+    }, LOGO_PAGE_MS);
   }
 
   /** Columns as laid out right now, for up/down movement. */
@@ -88,33 +108,59 @@ export class HomeView {
   }
 }
 
+/** Each tile's logos, in pages of as many as fit its row: where each starts, and its logos. */
+const PAGES = new WeakMap<HTMLElement, { start: number; logos: HTMLImageElement[] }[]>();
+
 /**
- * A tile's logos, when more than fit, run past in a loop: the row is doubled and slides one
- * copy's width, so its end flows back into its start. Only a transform moves, and only on the
- * selected tile (style.css): the others rest on their first logos.
+ * Splits a tile's logos into pages of as many as fit its row, once they are in (at start-up
+ * they may still be loading), and shows the first. One page: nothing to turn.
  */
-function marquee(tile: HTMLElement): void {
+async function paginate(tile: HTMLElement): Promise<void> {
   const row = tile.querySelector<HTMLElement>('.logos');
   const track = row?.querySelector<HTMLElement>('.logos-track');
-  if (!row || !track || track.dataset.looped) return;
-  // Measured once its logos are in (at start-up they may still be loading).
-  const loading = [...track.querySelectorAll('img')].filter((img) => !img.complete);
-  if (loading.length) {
-    const loaded = (img: HTMLImageElement) =>
-      new Promise((done) => {
-        img.addEventListener('load', done, { once: true });
-        img.addEventListener('error', done, { once: true });
-      });
-    void Promise.all(loading.map(loaded)).then(() => marquee(tile));
-    return;
+  if (!row || !track || PAGES.has(tile)) return;
+  await Promise.all(
+    [...track.querySelectorAll('img')]
+      .filter((img) => !img.complete)
+      .map(
+        (img) =>
+          new Promise((done) => {
+            img.addEventListener('load', done, { once: true });
+            img.addEventListener('error', done, { once: true });
+          })
+      )
+  );
+  // Not laid out (the screen is hidden): done again when it shows.
+  const room = row.clientWidth;
+  if (!room || PAGES.has(tile)) return;
+  const pages: { start: number; logos: HTMLImageElement[] }[] = [];
+  const logos = [...track.querySelectorAll('img')];
+  // From the row's start: offsetLeft counts from the tile.
+  const base = logos[0]?.offsetLeft ?? 0;
+  for (const img of logos) {
+    const left = img.offsetLeft - base;
+    const page = pages[pages.length - 1];
+    if (page && left + img.offsetWidth - page.start <= room) page.logos.push(img);
+    else pages.push({ start: left, logos: [img] });
   }
-  const width = track.scrollWidth;
-  // Not laid out (the screen is hidden): measured when the tile is selected instead.
-  if (!row.clientWidth || width <= row.clientWidth + 1) return;
-  track.dataset.looped = '1';
-  row.classList.add('looped');
-  track.append(...[...track.children].map((logo) => logo.cloneNode(true)));
-  track.style.setProperty('--marquee-s', `${(width / MARQUEE_PX_S).toFixed(1)}s`);
+  PAGES.set(tile, pages);
+  showPage(tile, 0);
+}
+
+/**
+ * Shows a tile's page `n` of logos: the row shifted to it, the others hidden. Nothing is added
+ * or taken away, so nothing is laid out again (swapping the logos cost the Pi a third of a
+ * second each time); only the row is redrawn.
+ */
+function showPage(tile: HTMLElement, n: number): void {
+  const pages = PAGES.get(tile);
+  const page = pages?.[n];
+  const track = tile.querySelector<HTMLElement>('.logos-track');
+  if (!pages || !page || !track) return;
+  track.style.transform = page.start ? `translateX(${-page.start}px)` : '';
+  for (const [i, p] of pages.entries()) {
+    for (const logo of p.logos) logo.classList.toggle('off', i !== n);
+  }
 }
 
 const image = (src: string, cls: string) => {
