@@ -124,16 +124,19 @@ const ART: Record<Category['id'], string> = {
     <path d="M96 22l-6-4M144 22l6-4M92 38h-7M148 38h7" stroke="${CYAN}" stroke-width="2.5"/>`),
 
   // A cartridge turned into a program: the cartridge, an arrow, a window running it.
-  // Magazines: an open issue, a cover with its masthead behind it, a page turning.
-  magazines: svg(`
-    <path d="M58 40h56v84H58z" fill="currentColor" fill-opacity=".1"/>
-    <path d="M66 50h40" stroke="${PINK}" stroke-width="5"/>
-    <rect x="66" y="62" width="40" height="30" rx="2" stroke="${CYAN}" stroke-width="2.5"/>
-    <path d="M66 102h40M66 112h28" stroke="${WHITE}" stroke-width="2.5"/>
-    <path d="M120 48c18-6 36-6 54 0v76c-18-6-36-6-54 0z" fill="currentColor" fill-opacity=".1"/>
-    <path d="M174 48c10-4 20-5 30-4v76c-10-1-20 0-30 4" stroke="${WHITE}"/>
-    <path d="M132 64h30M132 76h30M132 88h22" stroke="${WHITE}" stroke-width="2.5"/>
-    <path d="M132 104l8-10 6 6 8-12 8 16" stroke="${CYAN}" stroke-width="2.5"/>`),
+  // Magazines: an issue standing, an invader on its cover, the last issue leaning behind it.
+  magazines: svg(
+    `
+    <rect x="62" y="38" width="62" height="92" rx="3" transform="rotate(-9 93 130)" fill="currentColor" fill-opacity=".08"/>
+    <path d="M70 52h36" transform="rotate(-9 93 130)" stroke-width="2.5" opacity=".6"/>
+    <rect x="100" y="30" width="64" height="98" rx="3" fill="currentColor" fill-opacity=".14"/>
+    <path d="M109 42h46" stroke="${PINK}" stroke-width="6"/>
+    <rect x="109" y="54" width="46" height="36" rx="2" stroke="${CYAN}" stroke-width="2.5"/>
+    ${invader(115.5, 60, 3, CYAN)}
+    <path d="M109 101h30M109 111h22" stroke="${WHITE}" stroke-width="2.5"/>
+    <circle cx="150" cy="111" r="7" stroke="${PINK}" stroke-width="2.5"/>`,
+    7
+  ),
 
   // A chip whose core is a gear, a second gear turning with it.
   engines: svg(

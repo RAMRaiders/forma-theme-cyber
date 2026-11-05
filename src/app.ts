@@ -3,7 +3,6 @@ import type {
   Browse,
   Forma,
   Game,
-  MediaKind,
   GameStart,
   InputEvent,
   SettingsChanged,
@@ -107,7 +106,7 @@ export class App {
     // more kinds than this SDK's types (box back, cartridge…), hence the cast.
     media: (game, kind, width) =>
       (game.media as Partial<Record<string, string>>)[kind]
-        ? this.forma.library.mediaUrl(game.id, kind as MediaKind, width)
+        ? this.forma.library.mediaUrl(game.id, kind, width)
         : null,
     achievements: async (game) => {
       const { data } = await this.forma.ra.game(game.id);
@@ -122,7 +121,7 @@ export class App {
   readonly #collector = new CollectorView({
     media: (game, kind, width) =>
       (game.media as Partial<Record<string, string>>)[kind]
-        ? this.forma.library.mediaUrl(game.id, kind as MediaKind, width)
+        ? this.forma.library.mediaUrl(game.id, kind, width)
         : null,
     achievements: async (game) => {
       const { data } = await this.forma.ra.game(game.id);
