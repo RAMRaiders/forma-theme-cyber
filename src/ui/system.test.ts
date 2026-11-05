@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
 
-import { gear, press, systemColours } from './system.js';
+import { gear, logoHeight, press, systemColours } from './system.js';
 
 const hueOf = (rgb: string) => {
   const [r, g, b] = rgb.split(' ').map((v) => Number(v) / 255) as [number, number, number];
@@ -67,6 +67,15 @@ describe('more of a system’s colours', () => {
       0
     );
     expect(colours).toHaveLength(3);
+  });
+});
+
+describe('a logo in the column', () => {
+  it('stands lower the wider it is, within 1rem and 2rem', () => {
+    expect(logoHeight(1)).toBe(2);
+    expect(logoHeight(3.5)).toBeCloseTo(2, 0);
+    expect(logoHeight(6)).toBeLessThan(logoHeight(3));
+    expect(logoHeight(40)).toBe(1);
   });
 });
 

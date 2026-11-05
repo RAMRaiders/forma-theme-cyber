@@ -334,7 +334,8 @@ export class SystemView {
       const d = Math.abs(n - this.#selected);
       r.dataset.near = d <= 3 ? String(d) : '';
     }
-    this.#where.textContent = `${this.#selected + 1} / ${this.#rows.length}`;
+    const games = this.#systems[this.#selected]?.summary.gameCount ?? 0;
+    this.#where.textContent = `${games.toLocaleString('en')} ${games === 1 ? 'game' : 'games'}`;
     const strip = this.#rail.clientHeight;
     if (strip === 0) return;
     const y = row.offsetTop + row.offsetHeight / 2 - strip / 2;
@@ -763,6 +764,14 @@ export function gear(system: Pick<CyberSystem, 'peripherals'>): HTMLElement | nu
   );
 }
 
+/**
+ * How tall a logo stands in the column, in rem, for its width over its height: the same area for
+ * every one (about 2 × 7rem), so a wide logo is low and a square one taller; 1rem to 2rem.
+ */
+export function logoHeight(aspect: number): number {
+  return Math.min(2, Math.max(1, 3.75 / Math.sqrt(aspect)));
+}
+
 function row(system: CyberSystem): HTMLElement {
   const s = system.summary;
   const logo = logoImage(system, 'logo');
@@ -775,5 +784,10 @@ function row(system: CyberSystem): HTMLElement {
   );
   // A logo that fails to load: the name shows in its place.
   logo?.addEventListener('error', () => item.classList.add('no-logo'));
+  // Every logo the same weight, whatever its shape: a wide one low, a square one taller.
+  logo?.addEventListener('load', () => {
+    const aspect = logo.naturalWidth / Math.max(1, logo.naturalHeight);
+    if (aspect > 0) logo.style.setProperty('--logo-h', `${logoHeight(aspect).toFixed(2)}rem`);
+  });
   return item;
 }

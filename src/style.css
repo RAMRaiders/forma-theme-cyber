@@ -748,13 +748,14 @@ main {
 
 /* Each logo centred in the same small box, as large as it fits in it. */
 .system-list .logo {
-  width: 100%;
-  height: 2.4rem;
+  /* Set from its shape once loaded (logoHeight): every logo the same weight. */
+  height: var(--logo-h, 1.6rem);
+  max-width: 8rem;
   object-fit: contain;
 }
 
 .system-list li.selected .logo {
-  transform: scale(1.18);
+  transform: scale(1.12);
 }
 
 /* A logo too dark for the background, lit from behind. */
