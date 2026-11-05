@@ -124,8 +124,10 @@ describe('the default theme', () => {
     await vi.waitFor(() =>
       expect(text('.system-panel > :not(.leaving) .description')).toEqual(['An 8-bit console.'])
     );
-    // The description first, under its heading; the story's chapters take turns with it.
-    expect(text('.system-panel > :not(.leaving) .reading h3')).toEqual(['About']);
+    // The description first; the story's chapters take turns with it.
+    expect(text('.system-panel > :not(.leaving) .reading .description')).toEqual([
+      'An 8-bit console.'
+    ]);
     expect(text('.system-panel > :not(.leaving) dd')).toEqual(['Ricoh 2A03']);
     // The stage: its games as a readout, its place in the rail, a callout on the left.
     expect(text('.system-panel > :not(.leaving) .tally .count')).toEqual(['3']);

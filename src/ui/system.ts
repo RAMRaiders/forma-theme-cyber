@@ -16,8 +16,8 @@ import { preload, ready } from './preload.js';
 const FACT_MS = 10_000;
 /** The text under the logo turns from the system's description to each chapter of its story. */
 const READ_MS = 16_000;
-/** The chapters of a system's story, in order. */
-const CHAPTERS = ['How it began', 'In its day', 'What it left'];
+/** How long the text under the logo takes to fade out, before the next fades in. */
+const READ_FADE_MS = 300;
 /**
  * The board follows the selection once it has rested a while: a new board is a full-screen
  * drawing, costly on a Pi, so moving through the rail does not redraw it at every step.
@@ -536,31 +536,35 @@ export class SystemView {
   }
 
   /** What shows under the logo, in turn: the description, then each chapter of the story. */
-  #readings(): { label: string; text: string }[] {
+  #readings(): string[] {
     const info = this.#info;
-    return [
-      ...(info?.description ? [{ label: 'About', text: info.description }] : []),
-      ...(info?.story ?? []).map((text, n) => ({ label: CHAPTERS[n] ?? 'Its story', text }))
-    ];
+    return [...(info?.description ? [info.description] : []), ...(info?.story ?? [])];
   }
 
   #readingPart(): HTMLElement | null {
     const all = this.#readings();
-    const reading = all[this.#read % Math.max(1, all.length)];
-    if (!reading) return null;
-    return el(
-      'div',
-      { class: 'reading' },
-      el('h3', {}, reading.label),
-      scroller('p', reading.text, 'description')
-    );
+    const text = all[this.#read % Math.max(1, all.length)];
+    if (!text) return null;
+    return el('div', { class: 'reading' }, scroller('p', text, 'description'));
   }
 
-  /** The next of the description and the story's chapters, fading in over the last. */
+  /**
+   * The next of the description and the story's chapters: only the words fade out and back in,
+   * in the same box; nothing else on the page is touched.
+   */
   #nextReading(): void {
+    const box = this.#slots.get('reading')?.querySelector<HTMLElement>('.description');
+    const all = this.#readings();
+    if (!box || all.length < 2) return;
     this.#read += 1;
-    this.#swap('reading', this.#readingPart(), true);
-    this.#scrollOverflow();
+    const text = all[this.#read % all.length] ?? '';
+    box.classList.add('fading');
+    setTimeout(() => {
+      const fresh = scroller('p', text, 'description fading');
+      box.replaceWith(fresh);
+      this.#scrollOverflow();
+      requestAnimationFrame(() => requestAnimationFrame(() => fresh.classList.remove('fading')));
+    }, READ_FADE_MS);
   }
 
   #scheduleReading(): void {

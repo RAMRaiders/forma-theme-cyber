@@ -939,7 +939,6 @@ main {
 }
 
 /* The small headings: the reading's, Best sellers or Classics, Peripherals; one style. */
-.system-panel .reading h3,
 .system-panel .bestsellers .label,
 .system-panel .gear h3 {
   margin: 0;
@@ -1023,12 +1022,17 @@ main {
 .system-panel .reading {
   grid-area: reading;
   min-width: 0;
-  height: calc(1.25rem + 4 * 1.45 * 0.86rem);
+  height: calc(4 * 1.45 * 0.86rem + 0.35rem);
   overflow: hidden;
 }
 
 .system-panel .reading .description {
   margin: 0.35rem 0 0;
+  transition: opacity 300ms ease;
+}
+
+.system-panel .reading .description.fading {
+  opacity: 0;
 }
 
 .system-panel .intro {
