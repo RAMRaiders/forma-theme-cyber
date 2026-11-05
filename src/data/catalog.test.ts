@@ -37,9 +37,8 @@ describe('catalog', () => {
       ['consoles', ['snes', 'nes']],
       ['handhelds', ['gba']],
       ['arcade', ['neogeo']],
-      ['ports', ['sonic3-air']],
-      // In the order Forma lists them.
-      ['engines', ['openbor', 'pygame', 'easyrpg']]
+      // Ports and recompiled games are engines too, each its own system, in Forma's order.
+      ['engines', ['sonic3-air', 'openbor', 'pygame', 'easyrpg']]
     ]);
     // Each system's art, from art.json; a system it does not list has none.
     const [snes, nes] = groups[0]!.systems;

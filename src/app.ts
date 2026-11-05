@@ -15,6 +15,7 @@ import {
   CATEGORIES,
   type CyberSystem,
   InfoStore,
+  MAGAZINES,
   allGames,
   group
 } from './data/catalog.js';
@@ -64,13 +65,15 @@ const BOARD_FADE_MS = 400;
 const SHORTCUT = '@';
 /** The buttons under the categories: all but magazines open Forma's views. */
 const SHORTCUTS: Shortcut[] = [
+  { id: 'recent', label: 'Last played', tagline: 'The games you played last' },
   { id: 'favorites', label: 'Favourites', tagline: 'The games you starred' },
-  { id: 'magazines', label: 'Magazines', tagline: 'Read the classics', soon: true },
   { id: 'collections', label: 'Collections', tagline: 'Your own lists of games' },
   { id: 'recommended', label: 'Recommended', tagline: 'Picked from what you play' }
 ];
 /** Forma's view each working shortcut opens. */
 const SHORTCUT_VIEWS: Record<string, { view: string; label: string }> = {
+  // Forma's: the last 50 games played, the latest first.
+  recent: { view: 'recent', label: 'Last played' },
   favorites: { view: 'favorites', label: 'Favourites' },
   // Forma's: a branch per collection, made from Start → Collections.
   collections: { view: 'collections', label: 'Collections' },
@@ -336,8 +339,10 @@ export class App {
         this.#systemView.hide();
         this.#backdrop.replaceChildren();
         this.#shortcuts = await this.#countShortcuts();
-        // Every game, as one more tile after the categories.
-        const tiles = this.#groups.length ? [...this.#groups, allGames(this.#groups, systems)] : [];
+        // Every game, as one more tile after the categories, then Forma's magazine reader.
+        const tiles = this.#groups.length
+          ? [...this.#groups, allGames(this.#groups, systems), await this.#magazinesTile()]
+          : [];
         const count = tiles.length + this.#shortcuts.length;
         level.index = Math.min(level.index, Math.max(0, count - 1));
         this.#main.replaceChildren(this.#homeView.root);
@@ -363,6 +368,19 @@ export class App {
     }
   }
 
+  /** The magazines tile: how many there are, opening Forma's reader. */
+  async #magazinesTile(): Promise<Tile> {
+    const n = await this.forma.magazines
+      .list()
+      .then((all) => all.length)
+      .catch(() => 0);
+    return {
+      category: MAGAZINES,
+      systems: [],
+      counts: [n ? `${n.toLocaleString('en')} ${n === 1 ? 'magazine' : 'magazines'}` : 'None yet']
+    };
+  }
+
   /** The shortcuts, with how many games the working ones hold. */
   async #countShortcuts(): Promise<Shortcut[]> {
     return Promise.all(
@@ -376,7 +394,9 @@ export class App {
             return { ...s, count: `${n} ${n === 1 ? 'list' : 'lists'}` };
           }
           const total = 'total' in page.listing ? page.listing.total : 0;
-          if (s.id === 'collections' && total === 0) return { ...s, count: 'None yet' };
+          if ((s.id === 'collections' || s.id === 'recent') && total === 0) {
+            return { ...s, count: 'None yet' };
+          }
           return { ...s, count: `${total.toLocaleString('en')} ${total === 1 ? 'game' : 'games'}` };
         } catch {
           return s;
@@ -591,6 +611,12 @@ export class App {
       if (this.#level.index === this.#groups.length) {
         this.#stack.push({ path: [`${SHORTCUT}all`], index: 0 });
         return this.#load();
+      }
+      // Forma's own reader, over Cyber; back is back here.
+      if (this.#level.index === this.#groups.length + 1) {
+        return void this.forma.magazines
+          .open()
+          .catch((error: unknown) => this.#notify(FormaError.from(error).message));
       }
       const tile = this.#groups[this.#level.index];
       if (!tile) return;

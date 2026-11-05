@@ -6,6 +6,8 @@ import { el, reveal } from './dom.js';
 export interface Tile {
   category: Category;
   systems: CyberSystem[];
+  /** What its tags say, in place of its systems and games (the magazines tile). */
+  counts?: string[];
 }
 
 /** A button under the categories: favourites, and what is coming later. */
@@ -127,7 +129,7 @@ const image = (src: string, cls: string) => {
  * category's colour, the category's own circuit board as texture, and its systems' logos along
  * the bottom.
  */
-function tile({ category, systems }: Tile): HTMLElement {
+function tile({ category, systems, counts }: Tile): HTMLElement {
   const games = systems.reduce((n, s) => n + s.summary.gameCount, 0);
   const texture = el('div', { class: 'texture', 'aria-hidden': 'true' });
   texture.innerHTML = circuitSvg(`category:${category.id}`, [], 0);
@@ -164,12 +166,12 @@ function tile({ category, systems }: Tile): HTMLElement {
       el(
         'p',
         { class: 'counts' },
-        el(
-          'span',
-          { class: 'tag' },
-          `${systems.length} ${systems.length === 1 ? 'system' : 'systems'}`
-        ),
-        el('span', { class: 'tag' }, `${games.toLocaleString('en')} games`)
+        ...(
+          counts ?? [
+            `${systems.length} ${systems.length === 1 ? 'system' : 'systems'}`,
+            `${games.toLocaleString('en')} games`
+          ]
+        ).map((text) => el('span', { class: 'tag' }, text))
       ),
       logos
     )
@@ -184,7 +186,9 @@ const ICONS: Record<string, string> = {
   collections:
     '<rect x="3.5" y="9" width="17" height="11.5" rx="1.5"/><path d="M5.5 6h13M7.5 3.5h9"/>',
   recommended:
-    '<path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="M12 8.5l1.2 2.3 2.3 1.2-2.3 1.2L12 15.5l-1.2-2.3L8.5 12l2.3-1.2z"/>'
+    '<path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><path d="M12 8.5l1.2 2.3 2.3 1.2-2.3 1.2L12 15.5l-1.2-2.3L8.5 12l2.3-1.2z"/>',
+  recent:
+    '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/><path d="M3.5 12H2M4 7l-1.5-1"/>'
 };
 
 function shortcut(s: Shortcut): HTMLElement {

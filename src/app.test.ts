@@ -78,7 +78,7 @@ describe('the default theme', () => {
     const { text } = await start();
     expect(text('h1')).toEqual(['Categories']);
     expect(text('h1.current')).toEqual(['Categories']);
-    expect(text('.tile h2')).toEqual(['Consoles', 'All games']);
+    expect(text('.tile h2')).toEqual(['Consoles', 'All games', 'Magazines']);
     expect(text('.tile.selected .tag')).toEqual(['5 systems', '9 games']);
     expect(text('.hint')).toEqual(['AOpen', 'StartMenu']);
   });
@@ -202,8 +202,8 @@ describe('the default theme', () => {
     const { press, text } = await start();
     await vi.waitFor(() =>
       expect(text('.shortcut h2')).toEqual([
+        'Last played',
         'Favourites',
-        'Magazines',
         'Collections',
         'Recommended'
       ])
@@ -232,9 +232,9 @@ describe('the default theme', () => {
 
   it('has an All games tile after the categories, listing every game A to Z', async () => {
     const { press, text } = await start();
-    await vi.waitFor(() => expect(text('.categories .tile h2').at(-1)).toBe('All games'));
+    await vi.waitFor(() => expect(text('.categories .tile h2').at(-2)).toBe('All games'));
     const tiles = text('.categories .tile h2').length;
-    for (let i = 1; i < tiles; i++) await press('right');
+    for (let i = 1; i < tiles - 1; i++) await press('right');
     expect(text('.tile.selected h2')).toEqual(['All games']);
     await press('confirm');
     await vi.waitFor(() => expect(text('.games .row').length).toBeGreaterThan(1));
@@ -256,14 +256,25 @@ describe('the default theme', () => {
     await vi.waitFor(() => expect(card.hidden).toBe(true), { timeout: 2000 });
   });
 
-  it('shows what is coming later, and says so rather than opening it', async () => {
-    const { press, text } = await start();
-    await vi.waitFor(() => expect(text('.shortcut').length).toBe(4));
-    expect(text('.shortcut.soon h2')).toEqual(['Magazines']);
-    await toShortcut(press, text, 'Magazines');
+  it('has a Magazines tile after All games, opening Forma’s reader', async () => {
+    const { press, text, backend } = await start();
+    const opened: unknown[] = [];
+    backend.listen('magazines:open', (e) => opened.push(e));
+    await vi.waitFor(() => expect(text('.categories .tile h2').at(-1)).toBe('Magazines'));
+    expect(text('.tile-magazines .tag')[0]).toMatch(/ magazines?$|^None yet$/);
+    const tiles = text('.categories .tile h2').length;
+    for (let i = 1; i < tiles; i++) await press('right');
+    expect(text('.tile.selected h2')).toEqual(['Magazines']);
     await press('confirm');
-    expect(text('.toast')).toEqual(['Magazines is coming in a later version']);
-    expect(text('.shortcut.selected h2')).toEqual(['Magazines']);
+    await vi.waitFor(() => expect(opened).toEqual([{ id: null }]));
+  });
+
+  it('has a Last played shortcut: the games played, the latest first', async () => {
+    const { press, text } = await start();
+    await vi.waitFor(() => expect(text('.shortcut-recent .tag')[0]).toMatch(/ games?$|^None yet$/));
+    await toShortcut(press, text, 'Last played');
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.crumb')).toEqual(['Last played']));
   });
 
   it('has a Recommended shortcut: games not played yet', async () => {

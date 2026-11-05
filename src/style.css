@@ -282,9 +282,9 @@ main {
   --cat-rgb: 255 227 71;
 }
 
-.shortcut-magazines {
-  --cat: #ff7a3d;
-  --cat-rgb: 255 122 61;
+.shortcut-recent {
+  --cat: #4fd1ff;
+  --cat-rgb: 79 209 255;
 }
 
 .shortcut-collections {
@@ -411,7 +411,7 @@ main {
   --cat-rgb: 255 227 71;
 }
 
-.tile-ports {
+.tile-magazines {
   --cat: #ff7a3d;
   --cat-rgb: 255 122 61;
 }

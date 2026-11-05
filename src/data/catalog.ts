@@ -2,18 +2,11 @@ import type { SystemSummary } from '@ramraiders/forma-sdk';
 
 /** Cyber's top level. Batocera's `hardware` type decides, unless a system's info says otherwise. */
 export type CategoryId =
-  | 'consoles'
-  | 'handhelds'
-  | 'computers'
-  | 'arcade'
-  | 'virtual'
-  | 'educational'
-  | 'ports'
-  | 'engines';
+  'consoles' | 'handhelds' | 'computers' | 'arcade' | 'virtual' | 'educational' | 'engines';
 
 export interface Category {
-  /** A category, or `all`: the tile after them, for every game. */
-  id: CategoryId | 'all';
+  /** A category; `all`: the tile after them, for every game; `magazines`: Forma's reader. */
+  id: CategoryId | 'all' | 'magazines';
   label: string;
   tagline: string;
 }
@@ -26,8 +19,7 @@ export const CATEGORIES: readonly Category[] = [
   { id: 'arcade', label: 'Arcade', tagline: 'Insert coin' },
   { id: 'virtual', label: 'Virtual & homebrew', tagline: 'Consoles that never needed a factory' },
   { id: 'educational', label: 'Educational', tagline: 'Learning machines' },
-  { id: 'ports', label: 'Recompiled & ports', tagline: 'Classics rebuilt to run natively' },
-  { id: 'engines', label: 'Engines', tagline: 'Runtimes that play whole libraries' }
+  { id: 'engines', label: 'Engines', tagline: 'Runtimes, ports and recompiled classics' }
 ];
 
 const BY_HARDWARE: Record<string, CategoryId> = {
@@ -35,7 +27,7 @@ const BY_HARDWARE: Record<string, CategoryId> = {
   portable: 'handhelds',
   computer: 'computers',
   arcade: 'arcade',
-  port: 'ports',
+  port: 'engines',
   library: 'engines',
   virtual: 'virtual',
   educational: 'educational'
@@ -44,8 +36,8 @@ const BY_HARDWARE: Record<string, CategoryId> = {
 /**
  * Systems Batocera types as `port` (or not at all) that Cyber files elsewhere, so they land right
  * even without an info.json. Batocera's `port` covers both one game rebuilt natively (a
- * decompilation, recompilation or source port: Cyber's "Recompiled & ports") and runtimes that
- * play whole libraries made with them (Cyber's "Engines").
+ * decompilation, recompilation or source port) and runtimes that play whole libraries made with
+ * them: Cyber's "Engines" holds both, each still its own system.
  */
 const BY_SYSTEM: Record<string, CategoryId> = {
   scummvm: 'engines',
@@ -67,7 +59,8 @@ const HIDDEN = new Set(['imageviewer', 'moonlight', 'flatpak', 'steam', 'odcomma
 
 export interface SystemInfo {
   name?: string;
-  category?: CategoryId;
+  /** `ports`: Cyber's old category for rebuilt games, now part of Engines. */
+  category?: CategoryId | 'ports';
   description?: string;
   specs?: Partial<
     Record<
@@ -112,9 +105,8 @@ export interface CyberSystem {
 
 function categoryOf(system: SystemSummary, info?: SystemInfo): CategoryId | null {
   if (HIDDEN.has(system.name)) return null;
-  return (
-    info?.category ?? BY_SYSTEM[system.name] ?? BY_HARDWARE[system.hardware ?? ''] ?? 'consoles'
-  );
+  const own = info?.category === 'ports' ? 'engines' : info?.category;
+  return own ?? BY_SYSTEM[system.name] ?? BY_HARDWARE[system.hardware ?? ''] ?? 'consoles';
 }
 
 const art = (system: string, file: string) => `./systems/${encodeURIComponent(system)}/${file}`;
@@ -155,6 +147,13 @@ export function group(
     systems: by.get(category.id)!
   }));
 }
+
+/** The tile after All games: Forma's magazine reader. */
+export const MAGAZINES: Category = {
+  id: 'magazines',
+  label: 'Magazines',
+  tagline: 'The classics, scanned'
+};
 
 /** The tile after the categories: every system, the biggest first, for its picture and logos. */
 export const ALL_GAMES: Category = {

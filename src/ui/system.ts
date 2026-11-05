@@ -51,7 +51,6 @@ const CATEGORY_RGB: Record<CategoryId, string> = {
   arcade: '255 46 136',
   virtual: '182 255 61',
   educational: '255 227 71',
-  ports: '255 122 61',
   engines: '167 123 255'
 };
 
