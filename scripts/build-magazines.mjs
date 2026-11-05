@@ -67,49 +67,83 @@ async function cover(item) {
 /** `ONLY=snes,psx`: just these systems, the others kept as they are. */
 const only = process.env.ONLY ? new Set(process.env.ONLY.split(',')) : null;
 
-const picks = JSON.parse(readFileSync(join(ROOT, 'scripts', 'magazines.json'), 'utf8'));
+/** `WHAT=magazines` or `WHAT=manuals`: only those; both by default. */
+const what = process.env.WHAT ?? 'both';
+
 const art = JSON.parse(readFileSync(ART, 'utf8'));
 const credits = [
-  '# Magazine covers',
+  '# Magazines and manuals',
   '',
-  'Front pages of magazines about each system, from the Internet Archive, shown small behind',
-  'the console on the systems screen. Built by `scripts/build-magazines.mjs`.',
+  "Front pages of magazines about each system, and of its owner's manual, from the Internet",
+  'Archive, shown on the systems screen. Built by `scripts/build-magazines.mjs`.',
   ''
 ];
-for (const [id, items] of Object.entries(picks)) {
-  if (only && !only.has(id)) {
-    for (const m of art[id]?.magazines ?? []) {
-      credits.push(`- **${id}**: ${m.title}`);
+
+/** An item's front page, written into the system's folder as `file`; its title. */
+async function fetchCover(id, item, file) {
+  const meta = await (await get(`https://archive.org/metadata/${item}/metadata`)).json();
+  const title = tidy(String(meta.result?.title ?? item));
+  const jpg = Buffer.from(await (await cover(item)).arrayBuffer());
+  await sharp(jpg)
+    .resize({ height: HEIGHT, withoutEnlargement: true })
+    .webp({ quality: 78 })
+    .toFile(join(SYSTEMS, id, file));
+  credits.push(`- **${id}**: [${title}](https://archive.org/details/${item})`);
+  console.log(`${id}: ${title}`);
+  return { file, title };
+}
+
+/** The system's entry in art.json, made if it has no art of its own (no logo, no photo). */
+function entryOf(id) {
+  mkdirSync(join(SYSTEMS, id), { recursive: true });
+  return (art[id] ??= { logo: null, picture: null });
+}
+
+const keep = (id) => only && !only.has(id);
+
+if (what !== 'manuals') {
+  const picks = JSON.parse(readFileSync(join(ROOT, 'scripts', 'magazines.json'), 'utf8'));
+  for (const [id, items] of Object.entries(picks)) {
+    if (keep(id)) continue;
+    const entry = entryOf(id);
+    const dir = join(SYSTEMS, id);
+    for (const old of readdirSync(dir).filter((f) => /^mag-\d+\.webp$/.test(f))) {
+      rmSync(join(dir, old));
     }
-    continue;
+    const magazines = [];
+    for (const item of items) {
+      try {
+        magazines.push(await fetchCover(id, item, `mag-${magazines.length + 1}.webp`));
+      } catch (e) {
+        console.warn(`${id}: ${item} skipped (${e.message})`);
+      }
+    }
+    if (magazines.length) entry.magazines = magazines;
+    else delete entry.magazines;
   }
-  // A system without art of its own (no logo, no photo) can still have its press.
-  const entry = (art[id] ??= { logo: null, picture: null });
-  const dir = join(SYSTEMS, id);
-  mkdirSync(dir, { recursive: true });
-  for (const old of readdirSync(dir).filter((f) => /^mag-\d+\.webp$/.test(f))) {
-    rmSync(join(dir, old));
-  }
-  const magazines = [];
-  for (const item of items) {
+}
+
+if (what !== 'magazines') {
+  const manuals = JSON.parse(readFileSync(join(ROOT, 'scripts', 'manuals.json'), 'utf8'));
+  for (const [id, item] of Object.entries(manuals)) {
+    if (keep(id)) continue;
+    const entry = entryOf(id);
     try {
-      const meta = await (await get(`https://archive.org/metadata/${item}/metadata`)).json();
-      const title = tidy(String(meta.result?.title ?? item));
-      const jpg = Buffer.from(await (await cover(item)).arrayBuffer());
-      const file = `mag-${magazines.length + 1}.webp`;
-      await sharp(jpg)
-        .resize({ height: HEIGHT, withoutEnlargement: true })
-        .webp({ quality: 78 })
-        .toFile(join(dir, file));
-      magazines.push({ file, title });
-      credits.push(`- **${id}**: [${title}](https://archive.org/details/${item})`);
-      console.log(`${id}: ${title}`);
+      entry.manual = await fetchCover(id, item, 'manual.webp');
     } catch (e) {
-      console.warn(`${id}: ${item} skipped (${e.message})`);
+      delete entry.manual;
+      console.warn(`${id}: manual ${item} skipped (${e.message})`);
     }
   }
-  if (magazines.length) entry.magazines = magazines;
-  else delete entry.magazines;
+}
+
+// Those not fetched this time keep their line.
+for (const [id, entry] of Object.entries(art)) {
+  if (!keep(id) && what === 'both') continue;
+  for (const m of [...(entry.magazines ?? []), ...(entry.manual ? [entry.manual] : [])]) {
+    const line = `- **${id}**: ${m.title}`;
+    if (!credits.some((c) => c.startsWith(`- **${id}**: [${m.title}]`))) credits.push(line);
+  }
 }
 writeFileSync(ART, JSON.stringify(art, null, 2) + '\n');
 writeFileSync(join(SYSTEMS, 'MAGAZINES.md'), credits.join('\n') + '\n');

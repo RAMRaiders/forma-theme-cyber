@@ -26,6 +26,8 @@ const LEAVE_MS = 220;
  * rail alone, without the stage flickering through every system on the way.
  */
 const REST_MS = 170;
+/** After this long resting on a system, the rail gives way to its shelf. */
+const SHELF_REST_MS = 2400;
 /**
  * Holding a direction: the stage waits this long after the last step, so only the rail moves
  * while the list runs (a Pi takes about a frame and a half to draw a new stage).
@@ -155,7 +157,7 @@ function makerRgb(maker: string): string | null {
 }
 
 /** The parts of the stage that change together when the selection moves. */
-type Slot = 'intro' | 'tally' | 'showcase' | 'fact';
+type Slot = 'intro' | 'tally' | 'showcase' | 'fact' | 'shelf';
 
 /**
  * A category's systems: a rail of logos on the left, kept centred on the selection, and the
@@ -184,6 +186,7 @@ export class SystemView {
   #factTimer: ReturnType<typeof setInterval> | undefined;
   #boardTimer: ReturnType<typeof setTimeout> | undefined;
   #restTimer: ReturnType<typeof setTimeout> | undefined;
+  #shelfTimer: ReturnType<typeof setTimeout> | undefined;
   /** Curiosities move on by themselves; Interface → Rotate curiosities. */
   rotateFacts = true;
   /** What is behind the screen (Look → Systems background); `board`: each system's own. */
@@ -247,6 +250,7 @@ export class SystemView {
     if (!r || !system) return;
     r.classList.add('selected');
     this.#centre(r);
+    this.#wake();
     this.#preload(index);
     const ticket = ++this.#ticket;
     const show = (info: SystemInfo | null) => {
@@ -288,9 +292,24 @@ export class SystemView {
     this.#scheduleFact();
   }
 
+  /**
+   * The rail back, and, after a rest on a system with a shelf (its manual, its magazines, its
+   * peripherals), away again: the shelf shows in its place. Only fades: the stage under it
+   * was laid out for both all along, so nothing moves.
+   */
+  #wake(): void {
+    this.root.classList.remove('resting');
+    clearTimeout(this.#shelfTimer);
+    this.#shelfTimer = setTimeout(() => {
+      if (this.#slots.has('shelf')) this.root.classList.add('resting');
+    }, SHELF_REST_MS);
+  }
+
   /** Stops the curiosity timer when the screen goes away. */
   hide(): void {
     this.#drawnFor = null;
+    clearTimeout(this.#shelfTimer);
+    this.root.classList.remove('resting');
     clearInterval(this.#factTimer);
     clearTimeout(this.#boardTimer);
     clearTimeout(this.#restTimer);
@@ -446,6 +465,7 @@ export class SystemView {
       )
     ]);
     parts.push(['fact', this.#factStrip()]);
+    parts.push(['shelf', shelf(system)]);
     const apply = () => {
       if (ticket !== this.#ticket) return;
       // The system's own colours, on the page root: the backdrop, outside this view, takes
@@ -623,13 +643,12 @@ function logoImage(system: CyberSystem, cls: string, big = false): HTMLImageElem
 }
 
 /**
- * The middle of the stage, its magazines behind it: the console cut out, standing on the floor; else a photo of it in a
+ * The middle of the stage: the console cut out, standing on the floor; else a photo of it in a
  * neon frame; else, for what has no hardware to show (a port, an engine), its logo large over
  * Cyber's drawing for its category; else its name, in lights.
  */
 function stage(system: CyberSystem, name: string): HTMLElement {
   const box = el('div', { class: 'console' });
-  const press = pressStand(system);
   const fallback = () => {
     box.className = 'console hero';
     const art = el('div', { class: 'art', 'aria-hidden': 'true' });
@@ -637,7 +656,7 @@ function stage(system: CyberSystem, name: string): HTMLElement {
     const nameplate = () => el('span', { class: 'hero-name' }, name);
     const logo = logoImage(system, 'hero-logo', true);
     logo?.addEventListener('error', () => box.append(nameplate()));
-    box.replaceChildren(...(press ? [press] : []), art, logo ?? nameplate());
+    box.replaceChildren(art, logo ?? nameplate());
   };
   if (!system.photo) {
     fallback();
@@ -646,34 +665,58 @@ function stage(system: CyberSystem, name: string): HTMLElement {
   box.classList.add(system.photoKind);
   const photo = el('img', { class: 'photo', src: system.photo, alt: '' });
   photo.addEventListener('error', fallback);
-  if (press) box.append(press);
   box.append(photo);
   return box;
 }
 
 /**
- * Magazines about the system, standing fanned behind its console like a shop's display: up to
- * three covers, the first in the middle. A cover that will not load is taken away; `null` for a
- * system with none.
+ * What came with the system and what was written about it, set out in the stage where the rail
+ * was, once it fades after a rest: magazines about it fanned on a stand, its owner's manual
+ * leaning in front of them, its peripherals lying on the floor before them, each named. Lit as
+ * the console is: on the same floor, its glow under them. A picture that will not load is taken
+ * away; `null` for a system with none of them.
  */
-export function pressStand(system: Pick<CyberSystem, 'magazines'>): HTMLElement | null {
-  const covers = system.magazines.slice(0, 3);
-  if (!covers.length) return null;
-  // The first in the middle: [2, 1, 3] across, as on a stand.
-  const order = covers.length === 3 ? [covers[1], covers[0], covers[2]] : covers;
-  const stand = el('div', {
-    class: `press n${order.length}`,
-    role: 'img',
-    'aria-label': `On the cover: ${covers.map((c) => c.title).join('; ')}`
-  });
-  for (const cover of order) {
-    if (!cover) continue;
-    const img = el('img', { src: cover.src, alt: '', decoding: 'async' });
-    const fig = el('figure', { class: cover === covers[0] ? 'cover lead' : 'cover' }, img);
-    img.addEventListener('error', () => fig.remove(), { once: true });
-    stand.append(fig);
-  }
-  return stand;
+export function shelf(
+  system: Pick<CyberSystem, 'manual' | 'magazines' | 'peripherals'>
+): HTMLElement | null {
+  const figure = (cls: string, src: string, alt: string, caption?: string) => {
+    const fig = el(
+      'figure',
+      { class: cls },
+      el('img', { src, alt, decoding: 'async' }),
+      caption ? el('figcaption', {}, caption) : null
+    );
+    fig.querySelector('img')?.addEventListener('error', () => fig.remove(), { once: true });
+    return fig;
+  };
+  // The first magazine in the middle of the fan: [2, 1, 3] across.
+  const mags = system.magazines.slice(0, 3);
+  const fan = mags.length === 3 ? [mags[1]!, mags[0]!, mags[2]!] : mags;
+  const stand =
+    fan.length || system.manual
+      ? el(
+          'div',
+          { class: `stand n${fan.length}` },
+          ...fan.map((m) => figure(m === mags[0] ? 'cover lead' : 'cover', m.src, m.title)),
+          system.manual
+            ? figure('manual', system.manual.src, `Owner's manual: ${system.manual.title}`)
+            : null
+        )
+      : null;
+  const gear = system.peripherals.length
+    ? el(
+        'div',
+        { class: `gear n${Math.min(3, system.peripherals.length)}` },
+        ...system.peripherals.slice(0, 3).map((p) => figure('item', p.src, p.name, p.name))
+      )
+    : null;
+  if (!stand && !gear) return null;
+  return el(
+    'aside',
+    { class: 'shelf', 'aria-label': 'Its manual, press and peripherals' },
+    stand,
+    gear
+  );
 }
 
 function row(system: CyberSystem): HTMLElement {

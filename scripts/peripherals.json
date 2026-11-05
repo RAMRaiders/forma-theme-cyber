@@ -1,0 +1,322 @@
+{
+  "nes": [
+    {
+      "file": "Nintendo-Entertainment-System-NES-Zapper-Orange-R.jpg",
+      "name": "Zapper light gun"
+    },
+    {
+      "file": "NES-ROB.jpg",
+      "name": "R.O.B. robot"
+    },
+    {
+      "file": "NES-power-pad.jpg",
+      "name": "Power Pad"
+    },
+    {
+      "file": "Nintendo-NES-Advantage-Controller.jpg",
+      "name": "NES Advantage"
+    }
+  ],
+  "snes": [
+    {
+      "file": "Nintendo-SNES-Super-Scope-R.jpg",
+      "name": "Super Scope"
+    },
+    {
+      "file": "SNES-Mouse-and-Pad.jpg",
+      "name": "Super NES Mouse"
+    },
+    {
+      "file": "Nintendo-Super-NES-Controller.jpg",
+      "name": "Controller"
+    }
+  ],
+  "n64": [
+    {
+      "file": "N64-Rumble-Pak.jpg",
+      "name": "Rumble Pak"
+    },
+    {
+      "file": "Nintendo-64-Controller-Pak.jpg",
+      "name": "Controller Pak"
+    },
+    {
+      "file": "Nintendo-64-GB-Transfer-Pak.jpg",
+      "name": "Transfer Pak"
+    },
+    {
+      "file": "Nintendo-64-Memory-Expansion-Pak.jpg",
+      "name": "Expansion Pak"
+    }
+  ],
+  "gamecube": [
+    {
+      "file": "Nintendo-GameCube-Wavebird-Silver.jpg",
+      "name": "WaveBird wireless controller"
+    },
+    {
+      "file": "Hori-Nintendo-GameCube-Controller-FL.jpg",
+      "name": "Hori controller"
+    }
+  ],
+  "megadrive": [
+    {
+      "file": "Sega-Genesis-6But-Cont.jpg",
+      "name": "Six-button pad"
+    },
+    {
+      "file": "Sega-Genesis-Arcade-Stick.jpg",
+      "name": "Arcade Power Stick"
+    },
+    {
+      "file": "Konami-Justifiers-Genesis-Light-Gun.jpg",
+      "name": "Justifier light gun"
+    }
+  ],
+  "mastersystem": [
+    {
+      "file": "Sega-Master-System-Controllers.jpg",
+      "name": "Control Pads"
+    },
+    {
+      "file": "Sega-Master-System-Control-Stick.jpg",
+      "name": "Control Stick"
+    }
+  ],
+  "saturn": [
+    {
+      "file": "Sega-Saturn-3D-Controller.jpg",
+      "name": "3D Control Pad"
+    },
+    {
+      "file": "Sega-Saturn-Controller-NA-Mk-II-FL.jpg",
+      "name": "Control Pad"
+    },
+    {
+      "file": "Sega-Saturn-Net-Link-US-Keyboard.jpg",
+      "name": "Net Link keyboard"
+    }
+  ],
+  "dreamcast": [
+    {
+      "file": "Sega-Dreamcast-Controller-wVMU-FL.jpg",
+      "name": "Controller with VMU"
+    },
+    {
+      "file": "Sega-Dreamcast-VMU.jpg",
+      "name": "Visual Memory Unit"
+    },
+    {
+      "file": "Sega-Dreamcast-Keyboard.jpg",
+      "name": "Keyboard"
+    }
+  ],
+  "psx": [
+    {
+      "file": "PSX-DualShock-Controller.jpg",
+      "name": "DualShock"
+    },
+    {
+      "file": "PSX-Original-Controller.jpg",
+      "name": "Original controller"
+    },
+    {
+      "file": "PSX-Memory-Card.jpg",
+      "name": "Memory Card"
+    }
+  ],
+  "ps2": [
+    {
+      "file": "PS2-DualShock2.jpg",
+      "name": "DualShock 2"
+    },
+    {
+      "file": "PS2-Eyetoy.jpg",
+      "name": "EyeToy"
+    },
+    {
+      "file": "PS2-8MB-Mem-Card.jpg",
+      "name": "8 MB Memory Card"
+    }
+  ],
+  "gb": [
+    {
+      "file": "Game-Boy-Camera.jpg",
+      "name": "Game Boy Camera"
+    },
+    {
+      "file": "Nintendo-Game-Boy-Link-Cable-Dual.jpg",
+      "name": "Link Cable"
+    }
+  ],
+  "gba": [
+    {
+      "file": "GameBoyAdvance-with-eReader.jpg",
+      "name": "e-Reader"
+    },
+    {
+      "file": "Game-Boy-Advance-Wireless-Adapter.jpg",
+      "name": "Wireless Adapter"
+    },
+    {
+      "file": "Game-Boy-Advance-Player.jpg",
+      "name": "Game Boy Player"
+    }
+  ],
+  "virtualboy": [
+    {
+      "file": "Virtual-Boy-Controller.jpg",
+      "name": "Controller"
+    },
+    {
+      "file": "Nintendo-Virtual-Boy-Stand-FL.jpg",
+      "name": "Stand"
+    },
+    {
+      "file": "Nintendo-Virtual-Boy-AC-Adapter-Pack.jpg",
+      "name": "AC adapter pack"
+    }
+  ],
+  "gamegear": [
+    {
+      "file": "Sega-Game-Gear-wTv-Tuner.jpg",
+      "name": "TV Tuner"
+    }
+  ],
+  "atari2600": [
+    {
+      "file": "Atari-2600-Joystick.jpg",
+      "name": "CX40 Joystick"
+    },
+    {
+      "file": "Atari-2600-Paddle-Controller-FR.jpg",
+      "name": "Paddles"
+    },
+    {
+      "file": "Atari-2600-Driving-Controller.jpg",
+      "name": "Driving Controller"
+    },
+    {
+      "file": "Atari-2600-Keyboard-Controller-FL.jpg",
+      "name": "Keyboard Controller"
+    }
+  ],
+  "jaguar": [
+    {
+      "file": "Atari-Jaguar-Controller-Flat.jpg",
+      "name": "Controller"
+    },
+    {
+      "file": "Atari-Jaguar-Pro-Controller-Flat.jpg",
+      "name": "Pro Controller"
+    },
+    {
+      "file": "Atari-Jaguar-CD-Add-On.jpg",
+      "name": "Jaguar CD"
+    },
+    {
+      "file": "Atari-Jaguar-CD-Memory-Track-Cart.jpg",
+      "name": "Memory Track"
+    }
+  ],
+  "neogeo": [
+    {
+      "file": "Neo-Geo-AES-Controller-FL.jpg",
+      "name": "AES joystick"
+    },
+    {
+      "file": "Neo-Geo-CD-Controller-FL.jpg",
+      "name": "CD controller"
+    },
+    {
+      "file": "Neo-Geo-Memory-Card.jpg",
+      "name": "Memory Card"
+    }
+  ],
+  "neogeocd": [
+    {
+      "file": "Neo-Geo-CD-Controller-FL.jpg",
+      "name": "CD controller"
+    },
+    {
+      "file": "Neo-Geo-AES-Controller-FL.jpg",
+      "name": "AES joystick"
+    }
+  ],
+  "3do": [
+    {
+      "file": "Panasonic-3DO-Controller.jpg",
+      "name": "Controller"
+    },
+    {
+      "file": "Capcom-3DO-Fighting-Controller.jpg",
+      "name": "Capcom fighting pad"
+    }
+  ],
+  "pcengine": [
+    {
+      "file": "NEC-TurboGrafx-16-Controller-FL.jpg",
+      "name": "TurboPad"
+    },
+    {
+      "file": "NEC-TurboGrafx-16-TurboTap.jpg",
+      "name": "TurboTap"
+    },
+    {
+      "file": "NEC-TurboGrafx-16-CD-Add-on-FL.jpg",
+      "name": "CD-ROM² unit"
+    }
+  ],
+  "pcenginecd": [
+    {
+      "file": "NEC-TurboGrafx-16-CD-Add-on-FL.jpg",
+      "name": "CD-ROM² unit"
+    },
+    {
+      "file": "NEC-TurboGrafx-16-Controller-FL.jpg",
+      "name": "TurboPad"
+    }
+  ],
+  "intellivision": [
+    {
+      "file": "Intellivision-Controller.jpg",
+      "name": "Controller"
+    }
+  ],
+  "colecovision": [
+    {
+      "file": "ColecoVision-Controller-FL.jpg",
+      "name": "Controller"
+    },
+    {
+      "file": "ColecoVision-Expansion1-Front.jpg",
+      "name": "Expansion Module #1"
+    },
+    {
+      "file": "ColecoVision-Expansion2.jpg",
+      "name": "Expansion Module #2"
+    }
+  ],
+  "vectrex": [
+    {
+      "file": "GCE-Vectrex-Controller-FL.jpg",
+      "name": "Control panel"
+    }
+  ],
+  "c64": [
+    {
+      "file": "Commodore-Datasette-C2N-Mk1-Front.jpg",
+      "name": "Datasette"
+    },
+    {
+      "file": "Commodore-64-1541-Floppy-Drive-03.jpg",
+      "name": "1541 disk drive"
+    }
+  ],
+  "zxspectrum": [
+    {
+      "file": "Sinclair.zx.thermal.printer.jpg",
+      "name": "ZX Printer"
+    }
+  ]
+}

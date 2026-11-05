@@ -276,7 +276,7 @@ for (const system of systems) {
     ...(p ? { kind: p.kind } : {}),
     // Kept from the last run: what build-colours.mjs and build-magazines.mjs added.
     ...Object.fromEntries(
-      ['hues', 'consoleHues', 'magazines'].flatMap((k) =>
+      ['hues', 'consoleHues', 'magazines', 'manual', 'peripherals'].flatMap((k) =>
         before[system.id]?.[k] ? [[k, before[system.id][k]]] : []
       )
     )

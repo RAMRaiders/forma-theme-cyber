@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
 
-import { pressStand, systemColours } from './system.js';
+import { shelf, systemColours } from './system.js';
 
 const hueOf = (rgb: string) => {
   const [r, g, b] = rgb.split(' ').map((v) => Number(v) / 255) as [number, number, number];
@@ -70,22 +70,29 @@ describe('more of a system’s colours', () => {
   });
 });
 
-describe('the magazine stand', () => {
+describe('the shelf', () => {
   const mag = (n: number) => ({ src: `./systems/x/mag-${n}.webp`, title: `Issue ${n}` });
+  const none = { manual: null, magazines: [], peripherals: [] };
 
-  it('puts the first cover in the middle, the others either side', () => {
-    const stand = pressStand({ magazines: [mag(1), mag(2), mag(3), mag(4)] })!;
-    const covers = [...stand.querySelectorAll('figure')];
-    expect(covers.map((f) => f.querySelector('img')?.getAttribute('src'))).toEqual([
-      './systems/x/mag-2.webp',
-      './systems/x/mag-1.webp',
-      './systems/x/mag-3.webp'
-    ]);
-    expect(covers[1]?.classList.contains('lead')).toBe(true);
-    expect(stand.getAttribute('aria-label')).toBe('On the cover: Issue 1; Issue 2; Issue 3');
+  it('fans the magazines, the first in the middle, the manual before them, the peripherals named', () => {
+    const box = shelf({
+      manual: { src: './systems/x/manual.webp', title: 'Control Deck' },
+      magazines: [mag(1), mag(2), mag(3), mag(4)],
+      peripherals: [{ src: './systems/x/gear-1.webp', name: 'Light gun' }]
+    })!;
+    const covers = [...box.querySelectorAll('.stand .cover img')].map((i) => i.getAttribute('alt'));
+    expect(covers).toEqual(['Issue 2', 'Issue 1', 'Issue 3']);
+    expect(box.querySelector('.cover.lead img')?.getAttribute('alt')).toBe('Issue 1');
+    expect(box.querySelector('.manual img')?.getAttribute('alt')).toBe(
+      "Owner's manual: Control Deck"
+    );
+    expect(box.querySelector('.gear figcaption')?.textContent).toBe('Light gun');
   });
 
-  it('is nothing for a system without magazines', () => {
-    expect(pressStand({ magazines: [] })).toBeNull();
+  it('leaves out what a system has none of, and is nothing for one with none', () => {
+    const box = shelf({ ...none, magazines: [mag(1)] })!;
+    expect(box.querySelector('.gear')).toBeNull();
+    expect(box.querySelectorAll('.cover')).toHaveLength(1);
+    expect(shelf(none)).toBeNull();
   });
 });

@@ -1,0 +1,74 @@
+# Peripherals
+
+Photos of each system's controllers and add-ons, from Wikimedia Commons, on the systems
+screen. Built by `scripts/build-peripherals.mjs`.
+
+- **nes**: Zapper light gun, [Nintendo-Entertainment-System-NES-Zapper-Orange-R.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Entertainment-System-NES-Zapper-Orange-R.jpg), by Evan-Amos, Public domain.
+- **nes**: R.O.B. robot, [NES-ROB.jpg](https://commons.wikimedia.org/wiki/File:NES-ROB.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **nes**: Power Pad, [NES-power-pad.jpg](https://commons.wikimedia.org/wiki/File:NES-power-pad.jpg), by Evan-Amos, Public domain.
+- **nes**: NES Advantage, [Nintendo-NES-Advantage-Controller.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-NES-Advantage-Controller.jpg), by Evan-Amos, Public domain.
+- **snes**: Super Scope, [Nintendo-SNES-Super-Scope-R.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-SNES-Super-Scope-R.jpg), by Evan-Amos, Public domain.
+- **snes**: Super NES Mouse, [SNES-Mouse-and-Pad.jpg](https://commons.wikimedia.org/wiki/File:SNES-Mouse-and-Pad.jpg), by Evan-Amos, Public domain.
+- **snes**: Controller, [Nintendo-Super-NES-Controller.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Super-NES-Controller.jpg), by Evan-Amos, Public domain.
+- **n64**: Rumble Pak, [N64-Rumble-Pak.jpg](https://commons.wikimedia.org/wiki/File:N64-Rumble-Pak.jpg), by Evan-Amos, Public domain.
+- **n64**: Controller Pak, [Nintendo-64-Controller-Pak.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-64-Controller-Pak.jpg), by Evan-Amos, Public domain.
+- **n64**: Transfer Pak, [Nintendo-64-GB-Transfer-Pak.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-64-GB-Transfer-Pak.jpg), by Evan-Amos, Public domain.
+- **n64**: Expansion Pak, [Nintendo-64-Memory-Expansion-Pak.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-64-Memory-Expansion-Pak.jpg), by Evan-Amos, Public domain.
+- **gamecube**: WaveBird wireless controller, [Nintendo-GameCube-Wavebird-Silver.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-GameCube-Wavebird-Silver.jpg), by Evan-Amos, Public domain.
+- **gamecube**: Hori controller, [Hori-Nintendo-GameCube-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Hori-Nintendo-GameCube-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **megadrive**: Six-button pad, [Sega-Genesis-6But-Cont.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-6But-Cont.jpg), by Evan-Amos, Public domain.
+- **megadrive**: Arcade Power Stick, [Sega-Genesis-Arcade-Stick.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-Arcade-Stick.jpg), by Evan-Amos, Public domain.
+- **megadrive**: Justifier light gun, [Konami-Justifiers-Genesis-Light-Gun.jpg](https://commons.wikimedia.org/wiki/File:Konami-Justifiers-Genesis-Light-Gun.jpg), by Evan-Amos, Public domain.
+- **mastersystem**: Control Pads, [Sega-Master-System-Controllers.jpg](https://commons.wikimedia.org/wiki/File:Sega-Master-System-Controllers.jpg), by Evan-Amos, Public domain.
+- **mastersystem**: Control Stick, [Sega-Master-System-Control-Stick.jpg](https://commons.wikimedia.org/wiki/File:Sega-Master-System-Control-Stick.jpg), by Evan-Amos, Public domain.
+- **saturn**: 3D Control Pad, [Sega-Saturn-3D-Controller.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-3D-Controller.jpg), by Evan-Amos, Public domain.
+- **saturn**: Control Pad, [Sega-Saturn-Controller-NA-Mk-II-FL.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-Controller-NA-Mk-II-FL.jpg), by Evan-Amos, Public domain.
+- **saturn**: Net Link keyboard, [Sega-Saturn-Net-Link-US-Keyboard.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-Net-Link-US-Keyboard.jpg), by Evan-Amos, Public domain.
+- **dreamcast**: Controller with VMU, [Sega-Dreamcast-Controller-wVMU-FL.jpg](https://commons.wikimedia.org/wiki/File:Sega-Dreamcast-Controller-wVMU-FL.jpg), by Evan-Amos, Public domain.
+- **dreamcast**: Visual Memory Unit, [Sega-Dreamcast-VMU.jpg](https://commons.wikimedia.org/wiki/File:Sega-Dreamcast-VMU.jpg), by Evan-Amos, Public domain.
+- **dreamcast**: Keyboard, [Sega-Dreamcast-Keyboard.jpg](https://commons.wikimedia.org/wiki/File:Sega-Dreamcast-Keyboard.jpg), by Evan-Amos, Public domain.
+- **psx**: DualShock, [PSX-DualShock-Controller.jpg](https://commons.wikimedia.org/wiki/File:PSX-DualShock-Controller.jpg), by Evan-Amos, Public domain.
+- **psx**: Original controller, [PSX-Original-Controller.jpg](https://commons.wikimedia.org/wiki/File:PSX-Original-Controller.jpg), by Evan-Amos, Public domain.
+- **psx**: Memory Card, [PSX-Memory-Card.jpg](https://commons.wikimedia.org/wiki/File:PSX-Memory-Card.jpg), by Evan-Amos, Public domain.
+- **ps2**: DualShock 2, [PS2-DualShock2.jpg](https://commons.wikimedia.org/wiki/File:PS2-DualShock2.jpg), by Evan-Amos, Public domain.
+- **ps2**: EyeToy, [PS2-Eyetoy.jpg](https://commons.wikimedia.org/wiki/File:PS2-Eyetoy.jpg), by Evan-Amos, Public domain.
+- **ps2**: 8 MB Memory Card, [PS2-8MB-Mem-Card.jpg](https://commons.wikimedia.org/wiki/File:PS2-8MB-Mem-Card.jpg), by Evan-Amos, Public domain.
+- **gb**: Game Boy Camera, [Game-Boy-Camera.jpg](https://commons.wikimedia.org/wiki/File:Game-Boy-Camera.jpg), by Evan-Amos, Public domain.
+- **gb**: Link Cable, [Nintendo-Game-Boy-Link-Cable-Dual.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Game-Boy-Link-Cable-Dual.jpg), by Evan-Amos, Public domain.
+- **gba**: e-Reader, [GameBoyAdvance-with-eReader.jpg](https://commons.wikimedia.org/wiki/File:GameBoyAdvance-with-eReader.jpg), by Gameboyadvance_gbacart_by_zeartul.JPG: Zeartul
+Nintendo_E-Reader.jpg: Synyster Zombie
+derivative work: Hic et nunc, CC BY-SA 3.0.
+- **gba**: Wireless Adapter, [Game-Boy-Advance-Wireless-Adapter.jpg](https://commons.wikimedia.org/wiki/File:Game-Boy-Advance-Wireless-Adapter.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **gba**: Game Boy Player, [Game-Boy-Advance-Player.jpg](https://commons.wikimedia.org/wiki/File:Game-Boy-Advance-Player.jpg), by Evan-Amos, Public domain.
+- **virtualboy**: Controller, [Virtual-Boy-Controller.jpg](https://commons.wikimedia.org/wiki/File:Virtual-Boy-Controller.jpg), by Evan-Amos, Public domain.
+- **virtualboy**: Stand, [Nintendo-Virtual-Boy-Stand-FL.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Virtual-Boy-Stand-FL.jpg), by Evan-Amos, Public domain.
+- **virtualboy**: AC adapter pack, [Nintendo-Virtual-Boy-AC-Adapter-Pack.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Virtual-Boy-AC-Adapter-Pack.jpg), by Evan-Amos, Public domain.
+- **gamegear**: TV Tuner, [Sega-Game-Gear-wTv-Tuner.jpg](https://commons.wikimedia.org/wiki/File:Sega-Game-Gear-wTv-Tuner.jpg), by Evan-Amos, Public domain.
+- **atari2600**: CX40 Joystick, [Atari-2600-Joystick.jpg](https://commons.wikimedia.org/wiki/File:Atari-2600-Joystick.jpg), by Evan-Amos, Public domain.
+- **atari2600**: Paddles, [Atari-2600-Paddle-Controller-FR.jpg](https://commons.wikimedia.org/wiki/File:Atari-2600-Paddle-Controller-FR.jpg), by Evan-Amos, Public domain.
+- **atari2600**: Driving Controller, [Atari-2600-Driving-Controller.jpg](https://commons.wikimedia.org/wiki/File:Atari-2600-Driving-Controller.jpg), by Evan-Amos, Public domain.
+- **atari2600**: Keyboard Controller, [Atari-2600-Keyboard-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Atari-2600-Keyboard-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **jaguar**: Controller, [Atari-Jaguar-Controller-Flat.jpg](https://commons.wikimedia.org/wiki/File:Atari-Jaguar-Controller-Flat.jpg), by Evan-Amos, Public domain.
+- **jaguar**: Pro Controller, [Atari-Jaguar-Pro-Controller-Flat.jpg](https://commons.wikimedia.org/wiki/File:Atari-Jaguar-Pro-Controller-Flat.jpg), by Evan-Amos, Public domain.
+- **jaguar**: Jaguar CD, [Atari-Jaguar-CD-Add-On.jpg](https://commons.wikimedia.org/wiki/File:Atari-Jaguar-CD-Add-On.jpg), by Evan-Amos, Public domain.
+- **jaguar**: Memory Track, [Atari-Jaguar-CD-Memory-Track-Cart.jpg](https://commons.wikimedia.org/wiki/File:Atari-Jaguar-CD-Memory-Track-Cart.jpg), by Evan-Amos, Public domain.
+- **neogeo**: AES joystick, [Neo-Geo-AES-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-AES-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **neogeo**: CD controller, [Neo-Geo-CD-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-CD-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **neogeo**: Memory Card, [Neo-Geo-Memory-Card.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-Memory-Card.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **neogeocd**: CD controller, [Neo-Geo-CD-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-CD-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **neogeocd**: AES joystick, [Neo-Geo-AES-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-AES-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **3do**: Controller, [Panasonic-3DO-Controller.jpg](https://commons.wikimedia.org/wiki/File:Panasonic-3DO-Controller.jpg), by WikiRami12, CC0.
+- **3do**: Capcom fighting pad, [Capcom-3DO-Fighting-Controller.jpg](https://commons.wikimedia.org/wiki/File:Capcom-3DO-Fighting-Controller.jpg), by Evan-Amos, Public domain.
+- **pcengine**: TurboPad, [NEC-TurboGrafx-16-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx-16-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **pcengine**: TurboTap, [NEC-TurboGrafx-16-TurboTap.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx-16-TurboTap.jpg), by Evan-Amos, Public domain.
+- **pcengine**: CD-ROM² unit, [NEC-TurboGrafx-16-CD-Add-on-FL.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx-16-CD-Add-on-FL.jpg), by Evan-Amos, Public domain.
+- **pcenginecd**: CD-ROM² unit, [NEC-TurboGrafx-16-CD-Add-on-FL.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx-16-CD-Add-on-FL.jpg), by Evan-Amos, Public domain.
+- **pcenginecd**: TurboPad, [NEC-TurboGrafx-16-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx-16-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **intellivision**: Controller, [Intellivision-Controller.jpg](https://commons.wikimedia.org/wiki/File:Intellivision-Controller.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **colecovision**: Controller, [ColecoVision-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:ColecoVision-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **colecovision**: Expansion Module #1, [ColecoVision-Expansion1-Front.jpg](https://commons.wikimedia.org/wiki/File:ColecoVision-Expansion1-Front.jpg), by Evan-Amos, Public domain.
+- **colecovision**: Expansion Module #2, [ColecoVision-Expansion2.jpg](https://commons.wikimedia.org/wiki/File:ColecoVision-Expansion2.jpg), by Evan-Amos, Public domain.
+- **vectrex**: Control panel, [GCE-Vectrex-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:GCE-Vectrex-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **c64**: Datasette, [Commodore-Datasette-C2N-Mk1-Front.jpg](https://commons.wikimedia.org/wiki/File:Commodore-Datasette-C2N-Mk1-Front.jpg), by Evan-Amos, Public domain.
+- **c64**: 1541 disk drive, [Commodore-64-1541-Floppy-Drive-03.jpg](https://commons.wikimedia.org/wiki/File:Commodore-64-1541-Floppy-Drive-03.jpg), by Evan-Amos, Public domain.
+- **zxspectrum**: ZX Printer, [Sinclair.zx.thermal.printer.jpg](https://commons.wikimedia.org/wiki/File:Sinclair.zx.thermal.printer.jpg), by Jbattersby, Public domain.

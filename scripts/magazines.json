@@ -74,7 +74,7 @@
     "OfficialSegaGenesisGameGearStrategies3rdEdition",
     "magicknightrayearth2gamegearhiresscans"
   ],
-  "megacd": ["beepmega-cdappendix-booklet-march-1992", "mega-cd-sega-cd-game-booklets"],
+  "megacd": ["beepmega-cdappendix-booklet-march-1992"],
   "sg1000": ["beep-1986-04"],
   "gb": [
     "kirklands-manual-labor-nintendo-game-boy-usa-4k-version",
@@ -83,32 +83,16 @@
   ],
   "fds": ["famimaga-1992-apr-17", "famimagajune1987", "famimaga5111990"],
   "virtualboy": ["VirtualBoy_201903", "NintendoVirtualBoyManuals"],
-  "intellivision": [
-    "Intellivision_II_Service_Manual_1982_Mattel_US",
-    "advanced-dungeons-and-dragons-intellivision",
-    "Astrosmash_1981_Mattel"
-  ],
+  "intellivision": ["advanced-dungeons-and-dragons-intellivision", "Astrosmash_1981_Mattel"],
   "colecovision": [
     "1980-coleco-catalog",
     "manuals-handheld-games-Coleco-DonkeyKongJr",
     "manuals-handheld-games-Coleco-PacMan"
   ],
   "atari5200": ["AtariAgeIssues1-7", "AtariAgeVol02num03", "Atari5200Manuals_201812"],
-  "atari7800": [
-    "Atari_7800_Pro_System_Owners_Manual_1987_Atari_US_Rev_A",
-    "ImpossibleMissionUSA",
-    "Asteroids_1987_Atari"
-  ],
-  "vectrex": [
-    "vectrex-service_manual-hp-3000-140024-1_field_service_manual_1983",
-    "vectrex-french",
-    "vectrex_instruction_manual_collection"
-  ],
-  "odyssey2": [
-    "odyssey2ownersmanual1980",
-    "Odyssey_Installation_and_Game_Rules_1972_Magnavox_US",
-    "MagnavoxOdyssey"
-  ],
+  "atari7800": ["ImpossibleMissionUSA", "Asteroids_1987_Atari"],
+  "vectrex": ["vectrex-french", "vectrex_instruction_manual_collection"],
+  "odyssey2": ["Odyssey_Installation_and_Game_Rules_1972_Magnavox_US", "MagnavoxOdyssey"],
   "ngpc": ["ngpc_20211014", "softv2"],
   "wswan": [
     "superrobottaisencompactwshiresscans",
@@ -134,11 +118,7 @@
     "mean-machines-sega-magazine-04",
     "mean-machines-sega-magazine-03"
   ],
-  "pcenginecd": [
-    "nec-pc-engine-core-grafx-cd-rom2",
-    "ysivthedawnofyspcenginehirescans",
-    "legendofxanaduthepcenginehiresscans"
-  ],
+  "pcenginecd": ["ysivthedawnofyspcenginehirescans", "legendofxanaduthepcenginehiresscans"],
   "supergrafx": ["nec-supergrafx", "DaimakaimuraSuperGrafxHiResScans"],
   "neogeocd": ["NeoGeoCDSoftCatalogue", "ngcd_20211014", "013-neo-geo-cd"],
   "naomi": ["arcadia-magazine-32-Jan-HOD", "gamest-199"],
@@ -148,11 +128,7 @@
     "SpaceAce",
     "DragonsLairDragonsLairIISpaceAce20thAnniversaryManual"
   ],
-  "gameandwatch": [
-    "GameAndWatchPerfectCatalogue",
-    "mario-bros-multi-screen-manual",
-    "donkeykongiicautionshowtoplay_201909"
-  ],
+  "gameandwatch": ["GameAndWatchPerfectCatalogue", "donkeykongiicautionshowtoplay_201909"],
   "gamecom": [
     "tiger-game-com-sonic-jam-scans",
     "tiger-game-com-resident-evil-2-scans",
@@ -160,21 +136,15 @@
   ],
   "satellaview": [
     "satellaview-tsuushin-1995-05-monthly-famicom-tsushin-may-extra-issue_202107",
-    "satellaview-tsushin-1995-09-images",
-    "SatellaviewHiRes"
+    "satellaview-tsushin-1995-09-images"
   ],
-  "pokemini": ["nintendo-pokemon-mini"],
-  "arcadia": [
-    "Arcadia2001OwnersManual",
-    "AlienInvadersEmersonArcadia2001",
-    "SpaceAttackforEmersonArcadia2001"
-  ],
+  "pokemini": [],
+  "arcadia": ["AlienInvadersEmersonArcadia2001", "SpaceAttackforEmersonArcadia2001"],
   "astrocade": [
     "CursorBASICExpressNewsletterAstrocadeAltColorScans",
     "BallyAstrocadeManuals_201812"
   ],
   "videopacplus": [
-    "Videopac_Computer_PLUS_G7400_Instructions_For_Use_1978_Philips_en-de",
     "Videopac_Computer_G7000_Instructions_For_Use_1978_Philips_en-de",
     "videopacphilips"
   ],

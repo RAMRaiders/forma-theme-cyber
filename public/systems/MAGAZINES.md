@@ -1,121 +1,117 @@
-# Magazine covers
+# Magazines and manuals
 
-Front pages of magazines about each system, from the Internet Archive, shown small behind
-the console on the systems screen. Built by `scripts/build-magazines.mjs`.
+Front pages of magazines about each system, and of its owner's manual, from the Internet
+Archive, shown on the systems screen. Built by `scripts/build-magazines.mjs`.
 
-- **sega32x**: SEGA Magazine Issue 12 Supplement - Megadrive 32X Guide
-- **megadrive**: Game Players Sega Genesis Strategy Guide Vol 01 Issue 01
-- **megadrive**: Beep! Megadrive 1994 01
-- **megadrive**: Megadrive Fan 1994 01
-- **snes**: [Super Play Super Nintendo Magazine (medium resolution) Complete Set](https://archive.org/details/sup01)
-- **snes**: [The Super Famicom - 1990-11-30 - Number 1 - Volume 1 - Issue 1](https://archive.org/details/the-super-famicom-1990-11-30-number-1-volume-1-issue-1)
-- **snes**: [The Super Famicom - 1991-01-25 - Number 4 - Volume 2 - Issue 1](https://archive.org/details/the-super-famicom-1991-01-25-number-4-volume-2-issue-1)
-- **nes**: Nintendo Power Issue #1(July/August 1988)
-- **nes**: Nintendo Power Issue 002 September October 1988
-- **nes**: Nintendo Power Issue #3 November December 1988
-- **n64**: Nintendo Official Magazine Nintendo 64 THE GUIDE
-- **n64**: EGM's Player's Guide To Video Games For The Nintendo 64 - June 1998
-- **n64**: N64 Gamer - Issue 23
-- **gamecube**: Cube Issue 01
-- **gamecube**: EGM's Unofficial Game Cube Guide - March 2002
-- **gbc**: Total Game Boy Issue 01
-- **gbc**: Total Game Boy Issue 03
-- **gba**: GBA Master Guide Issue 01
-- **gba**: Nintendo Accion 110 Locos por Game Boy Advance
-- **gba**: Game Boy Advance - La rivista ufficiale 1
-- **psx**: Official US PlayStation Magazine - Volume 1 Issue 1
-- **psx**: Official UK Playstation Magazine (1999)
-- **psx**: Official US PlayStation Magazine - Volume 3 Issue 1
-- **ps2**: Official Playstation 2 Magazine UK Special - Buyer's Guide
-- **ps2**: Official Playstation 2 Magazine Special Edition: The A-Z
-- **ps2**: Official UK Playstation 2 Magazine - Issue 003
-- **saturn**: Supplement Issue 53 SEGA MegaZone Saturn Guide
-- **saturn**: Official Sega Saturn Magazine Issue 1
-- **saturn**: Sega Saturn Magazine - 1994-01
-- **dreamcast**: EDGE #067 (1999) - Supplement: Dreamcast
-- **dreamcast**: Official Dreamcast Magazine, The - Special Issue
-- **dreamcast**: Official Dreamcast Magazine, The - Issue 01
-- **pcengine**: Super PC Engine Fan Vol. 1
-- **pcengine**: PC Engine Fan - September 1992
-- **pcengine**: Turbo Play
-- **neogeo**: Neo Geo Freak 0001
-- **neogeo**: Neo Geo Freak 0030
-- **neogeo**: Neo Geo Freak 0033
-- **jaguar**: EDGE #022 (1995) - Supplement: Atari Jaguar
-- **lynx**: Atari Lynx II Launch Promo Special (EGM)
-- **lynx**: Atari Lynx Grey Matters Vol 3 1992
-- **atari2600**: Atari VCS Owners Club Bulletin - AB 23 (Atari International)
-- **atari2600**: Atari VCS Owners Club Bulletin - AB 22 (Atari International)
-- **atari2600**: Atari VCS Owners Club Bulletin - AB 21 (Atari International)
+- **snes**: [Super Nintendo Instruction Booklet (1991)(Nintendo)](https://archive.org/details/Super_Nintendo_Instruction_Booklet_1991_Nintendo_US)
 - **3do**: 3DO Magazine
 - **3do**: 3DO Magazine - Issue 12
 - **3do**: 3DO Magazine (Japan) Issue 09 May/June 1995
-- **zxspectrum**: Your Sinclair 01-93
-- **zxspectrum**: Sinclair User Magazine Issue 045
-- **zxspectrum**: Sinclair User Magazine Issue 058
-- **c64**: Zzap!64 001-107 (May85 - Mar 02)
-- **c64**: ZZap!64 Magazine Issue 044
-- **c64**: ZZap!64 Magazine Issue 006
-- **amstradcpc**: Amstrad Computer User 01-90 (Aug 84 - May 92)
-- **amstradcpc**: Amstrad Action 001-117
-- **amstradcpc**: Amstrad Action Issue 064
-- **atarist**: Atari ST User - Issue 067 (Europress)
-- **atarist**: Atari ST User - Issue 099 (Europress)
-- **atarist**: Atari ST User - Issue 088 (Europress)
+- **3do**: Panasonic 3DO FZ-1 manual
 - **amiga1200**: CU Amiga Magazine Issue 027
 - **amiga1200**: CU Amiga Magazine Issue 025
 - **amiga1200**: CU Amiga Magazine Issue 046
-- **msx1**: MSX Magazine
-- **msx1**: Archive of MSX Computer Magazine (Dutch)
-- **msx1**: MSX Magazine Revival Vol. 3 - MSX MAGAZINE 永久保存版3
-- **x68000**: Oh! X 1990 - 1995
-- **x68000**: Oh!X 1991 08
-- **x68000**: Oh!X 1993 05
-- **c20**: Personal Computing On The VIC-20 (1982)(Commodore)
-- **c20**: Compute!s VIC-20 Collection Book - Compute Computes
-- **c20**: VIC-20 Programmers Reference Guide 1st Edition 6th Printing
-- **cplus4**: Commodore C16 Plus4 Reference Book
-- **cplus4**: Videobasic per Commodore 16
-- **cplus4**: C16-MSX
-- **gamegear**: Official Sega Genesis & Game Gear Strategies ( 3rd Edition)
-- **gamegear**: Magic Knight Rayearth 2 - Making Of Magic Knight (Sega Game Gear) - Box, Cart, Manual Scans
-- **megacd**: BEEP Mega CD Appendix Booklet (March 1992)
-- **megacd**: Mega-CD / Sega CD and Sega CD 32X Game Manuals
-- **sg1000**: Beep 1986 04
-- **gb**: Kirkland's Manual Labor - Nintendo Game Boy - USA - 4K version
-- **gb**: Pokemon - Blue Version (Nintendo Game Boy) - Box, Manual Scans
-- **gb**: Pokémon Rot / Blau - Nintendo Game Boy - Offizieller Spieleberater
-- **fds**: Famimaga April 17 1992
-- **fds**: Famimaga June 5 1987
-- **fds**: Famimaga May 11 1990
-- **virtualboy**: Virtual Boy PIX
-- **virtualboy**: Nintendo Virtual Boy Manuals
-- **intellivision**: Mattel Intellivision: Intellivision II Service Manual (1982)(Mattel)
-- **intellivision**: Advanced Dungeons And Dragons Intellivision
-- **intellivision**: Mattel Intellivision: Astrosmash (1981)(Mattel)
-- **colecovision**: 1980 Coleco Toys and Games Catalog
-- **colecovision**: Handheld Game Manual: Donkey Kong Jr (Coleco)
-- **colecovision**: Handheld Game Manual: Pac Man (Coleco)
+- **amiga1200**: Amiga Manual: Amiga A1200 (1995)(Escom)
+- **amstradcpc**: Amstrad Computer User 01-90 (Aug 84 - May 92)
+- **amstradcpc**: Amstrad Action 001-117
+- **amstradcpc**: Amstrad Action Issue 064
+- **amstradcpc**: Amstrad CPC464 Manual del Usuario (1987)(Amstrad)
+- **arcadia**: Alien Invaders Emerson Arcadia 2001
+- **arcadia**: Space Attack for Emerson Arcadia 2001
+- **arcadia**: Emerson Arcadia 2001 User's Manual
+- **astrocade**: Cursor / BASIC Express Newsletter for Bally Arcade / Astrocade Alternative ColorScans
+- **astrocade**: Bally Astrocade Manuals
+- **atari2600**: Atari VCS Owners Club Bulletin - AB 23 (Atari International)
+- **atari2600**: Atari VCS Owners Club Bulletin - AB 22 (Atari International)
+- **atari2600**: Atari VCS Owners Club Bulletin - AB 21 (Atari International)
+- **atari2600**: Atari 2600 Manual: Atari 2600 Owner's Manual (1982)(Atari)
 - **atari5200**: Atari Age Volumes 1 & 2
 - **atari5200**: Atari Age Vol 02num 03
 - **atari5200**: Atari 5200 Manuals
-- **atari7800**: Atari 7800 Manual: Atari 7800 Pro System Owner's Manual (1987)(Atari)
 - **atari7800**: Atari 7800 Manuals
 - **atari7800**: Atari 7800 Manual: Asteroids (1987)(Atari)
-- **vectrex**: Vectrex Service Manual HP-3000, 140024-1, Field Service Manual
-- **vectrex**: Livrets d'instruction Vectrex en français (Vectrex manuals in French)
-- **vectrex**: Vectrex Instruction Manual Collection
-- **odyssey2**: [Magnavox Odyssey 2 Owner's Manual (1980)](https://archive.org/details/odyssey2ownersmanual1980)
-- **odyssey2**: [Odyssey Installation and Game Rules (1972)(Magnavox)](https://archive.org/details/Odyssey_Installation_and_Game_Rules_1972_Magnavox_US)
-- **ngpc**: SNK Neo-Geo Pocket Color WW Magazine Advertisements & Reviews
-- **ngpc**: NeoGeo Pocket Soft Information Vol. 2
-- **wswan**: Super Robot Taisen Compact (Bandai WonderSwan) - Manual Scans
-- **wswan**: Digimon Adventure 02 - D1 Tamers (Bandai WonderSwan Color) - Manual Scans
-- **wswan**: Shaman King - Asu E No Ishi (Bandai WonderSwan Color) - Manual Scans
-- **sgb**: Nintendo Player's Guide Super Game Boy
+- **atari7800**: Atari 7800 Manual: Atari 7800 Pro System Owner's Manual (1987)(Atari)
+- **atarist**: Atari ST User - Issue 067 (Europress)
+- **atarist**: Atari ST User - Issue 099 (Europress)
+- **atarist**: Atari ST User - Issue 088 (Europress)
+- **atarist**: Atari 520ST Owner's Manual (Rev. B)
+- **atomiswave**: Gamest 0200
+- **c20**: Personal Computing On The VIC-20 (1982)(Commodore)
+- **c20**: Compute!s VIC-20 Collection Book - Compute Computes
+- **c20**: VIC-20 Programmers Reference Guide 1st Edition 6th Printing
+- **c64**: Zzap!64 001-107 (May85 - Mar 02)
+- **c64**: ZZap!64 Magazine Issue 044
+- **c64**: ZZap!64 Magazine Issue 006
+- **c64**: Commodore 64 User's Guide
+- **colecovision**: 1980 Coleco Toys and Games Catalog
+- **colecovision**: Handheld Game Manual: Donkey Kong Jr (Coleco)
+- **colecovision**: Handheld Game Manual: Pac Man (Coleco)
+- **colecovision**: Coleco ColecoVision Manual: Colecovision Owner's Manual (1982)(Coleco)
+- **cplus4**: Commodore C16 Plus4 Reference Book
+- **cplus4**: Videobasic per Commodore 16
+- **cplus4**: C16-MSX
+- **daphne**: Dragon's Lair II Timewarp (Digital Leisure DVD Version)
+- **daphne**: Space Ace (Digital Leisure DVD Version)
+- **daphne**: Dragon's Lair Dragon's Lair II Space Ace 20th Anniversary Manual
+- **dreamcast**: EDGE #067 (1999) - Supplement: Dreamcast
+- **dreamcast**: Official Dreamcast Magazine, The - Special Issue
+- **dreamcast**: Official Dreamcast Magazine, The - Issue 01
+- **dreamcast**: Sega Dreamcast Manual: DreamCast Instruction Manual (2000)(Sega)
+- **fbneo**: Gamest 183
+- **fbneo**: Gamest 0260
+- **fbneo**: Gamest 0068
+- **fds**: Famimaga April 17 1992
+- **fds**: Famimaga June 5 1987
+- **fds**: Famimaga May 11 1990
+- **gameandwatch**: Game And Watch Perfect Catalogue - ゲーム&ウオッチパーフェクトカタログ
+- **gameandwatch**: Mario Bros Multi Screen Game & Watch instruction booklet
+- **gamecom**: Tiger Game.com Sonic Jam scans
+- **gamecom**: Tiger Game.com Resident Evil 2 scans
+- **gamecom**: Tiger Game.com Fighters Megamix scans
+- **gamecube**: Cube Issue 01
+- **gamecube**: EGM's Unofficial Game Cube Guide - March 2002
+- **gamecube**: Nintendo GameCube Console
+- **gamegear**: Official Sega Genesis & Game Gear Strategies ( 3rd Edition)
+- **gamegear**: Magic Knight Rayearth 2 - Making Of Magic Knight (Sega Game Gear) - Box, Cart, Manual Scans
+- **gamegear**: Sega Game Gear User Manual
+- **gb**: Kirkland's Manual Labor - Nintendo Game Boy - USA - 4K version
+- **gb**: Pokemon - Blue Version (Nintendo Game Boy) - Box, Manual Scans
+- **gb**: Pokémon Rot / Blau - Nintendo Game Boy - Offizieller Spieleberater
 - **gb2players**: Kirkland's Manual Labor - Nintendo Game Boy - USA - 4K version
 - **gb2players**: Pokemon - Blue Version (Nintendo Game Boy) - Box, Manual Scans
 - **gb2players**: Pokémon Rot / Blau - Nintendo Game Boy - Offizieller Spieleberater
+- **gba**: GBA Master Guide Issue 01
+- **gba**: Nintendo Accion 110 Locos por Game Boy Advance
+- **gba**: Game Boy Advance - La rivista ufficiale 1
+- **gba**: Game Boy Advance Instruction Booklet (2003)(Nintendo)
+- **gbc**: Total Game Boy Issue 01
+- **gbc**: Total Game Boy Issue 03
+- **gbc**: Nintendo Game Boy Color manual
+- **gbc2players**: Total Game Boy Issue 01
+- **gbc2players**: Total Game Boy Issue 03
+- **intellivision**: Advanced Dungeons And Dragons Intellivision
+- **intellivision**: Mattel Intellivision: Astrosmash (1981)(Mattel)
+- **intellivision**: Mattel Intellivision: Intellivision II Service Manual (1982)(Mattel)
+- **jaguar**: EDGE #022 (1995) - Supplement: Atari Jaguar
+- **jaguar**: Atari Jaguar CD manual
+- **lynx**: Atari Lynx II Launch Promo Special (EGM)
+- **lynx**: Atari Lynx Grey Matters Vol 3 1992
+- **mastersystem**: Mean Machines Sega Issues 1-53
+- **mastersystem**: Mean Machines Sega Magazine Issue 04
+- **mastersystem**: Mean Machines Sega Magazine Issue 03
+- **mastersystem**: Sega Master System II Instruction Manual (1991)(E)(8L)
+- **megacd**: BEEP Mega CD Appendix Booklet (March 1992)
+- **megacd**: Mega-CD / Sega CD and Sega CD 32X Game Manuals
+- **megadrive**: Game Players Sega Genesis Strategy Guide Vol 01 Issue 01
+- **megadrive**: Beep! Megadrive 1994 01
+- **megadrive**: Megadrive Fan 1994 01
+- **megadrive**: Sega Genesis Manual: Genesis Instruction Manual (1991)(Sega)
+- **mrboom**: Super Bomberman 3 ( PAL )
+- **mrboom**: Super Bomberman 3 (Nintendo Super Famicom) - Box, Manual, Cart Scans
+- **mrboom**: Super Bomberman 2 (Nintendo Super Famicom) - Box, Manual, Cart Scans
+- **msx1**: MSX Magazine
+- **msx1**: Archive of MSX Computer Magazine (Dutch)
+- **msx1**: MSX Magazine Revival Vol. 3 - MSX MAGAZINE 永久保存版3
 - **msx2**: MSX Magazine Revival Vol. 2 - MSX MAGAZINE 永久保存版2
 - **msx2**: MSX Magazine Revival Vol. 1 - MSX MAGAZINE 永久保存版
 - **msx2**: Archive of MSX Computer Magazine (Dutch)
@@ -123,61 +119,91 @@ the console on the systems screen. Built by `scripts/build-magazines.mjs`.
 - **msx2+**: MSX Magazine Revival Vol. 2 - MSX MAGAZINE 永久保存版2
 - **msxturbor**: MSX Magazine Revival Vol. 3 - MSX MAGAZINE 永久保存版3
 - **msxturbor**: MSX Magazine Revival Vol. 1 - MSX MAGAZINE 永久保存版
-- **ngp**: NeoGeo Pocket Soft Information Vol. 2
-- **ngp**: SNK Neo-Geo Pocket Color WW Magazine Advertisements & Reviews
-- **wswanc**: Digimon Tamers - Digimon Medley (Bandai WonderSwan Color) - Manual Scans
-- **wswanc**: Digimon Adventure 02 - Tag Tamers (Bandai WonderSwan) - Manual Scans
-- **mastersystem**: Mean Machines Sega Issues 1-53
-- **mastersystem**: Mean Machines Sega Magazine Issue 04
-- **mastersystem**: Mean Machines Sega Magazine Issue 03
-- **pcenginecd**: NEC PC Engine CD-ROM2 manual
-- **pcenginecd**: Ys IV - The Dawn Of Ys (PC Engine CD) - Box, Disc, Manual Scans
-- **pcenginecd**: Legend Of Xanadu, The (PC Engine CD) - Box, Disc, Manual Scans
-- **supergrafx**: [NEC Super Grafx JAP Magazine Advertisements](https://archive.org/details/nec-supergrafx)
-- **supergrafx**: [Daimakaimura (NEC Supergrafx) - Box, Manual and Card Scans](https://archive.org/details/DaimakaimuraSuperGrafxHiResScans)
+- **n64**: Nintendo Official Magazine Nintendo 64 THE GUIDE
+- **n64**: EGM's Player's Guide To Video Games For The Nintendo 64 - June 1998
+- **n64**: N64 Gamer - Issue 23
+- **n64**: Nintendo 64 Instruction Booklet (1996)(Nintendo)
+- **naomi**: Arcadia Magazine No 32 January 01 2003 The House of the Dead III pages
+- **naomi**: Gamest 199
+- **naomi2**: Gamest 0052
+- **naomi2**: Gamest 0066
+- **neogeo**: Neo Geo Freak 0001
+- **neogeo**: Neo Geo Freak 0030
+- **neogeo**: Neo Geo Freak 0033
+- **neogeo**: Neo Geo AES Manual (1990)(SNK)
 - **neogeocd**: Neo Geo CD Software Catalogue
 - **neogeocd**: SNK Neo-Geo CD WW Magazine Advertisements & Reviews
 - **neogeocd**: 電玩玩味叢書 013 NEO GEO CD特辑
-- **naomi**: [Arcadia Magazine No 32 January 01 2003 The House of the Dead III pages](https://archive.org/details/arcadia-magazine-32-Jan-HOD)
-- **naomi**: [Gamest 199](https://archive.org/details/gamest-199)
-- **fbneo**: Gamest 183
-- **fbneo**: Gamest 0260
-- **fbneo**: Gamest 0068
-- **daphne**: Dragon's Lair II Timewarp (Digital Leisure DVD Version)
-- **daphne**: Space Ace (Digital Leisure DVD Version)
-- **daphne**: Dragon's Lair Dragon's Lair II Space Ace 20th Anniversary Manual
-- **gameandwatch**: [Game And Watch Perfect Catalogue - ゲーム&ウオッチパーフェクトカタログ](https://archive.org/details/GameAndWatchPerfectCatalogue)
-- **gameandwatch**: [Mario Bros Multi Screen Game & Watch instruction booklet](https://archive.org/details/mario-bros-multi-screen-manual)
-- **gameandwatch**: [Game & Watch - Manual Scans](https://archive.org/details/donkeykongiicautionshowtoplay_201909)
-- **gamecom**: Tiger Game.com Sonic Jam scans
-- **gamecom**: Tiger Game.com Resident Evil 2 scans
-- **gamecom**: Tiger Game.com Fighters Megamix scans
-- **satellaview**: [Satellaview Tsushin Monthly FamicomTsushin May extra issue](https://archive.org/details/satellaview-tsuushin-1995-05-monthly-famicom-tsushin-may-extra-issue_202107)
-- **satellaview**: [Satellaview Tsushin サテラビュー通信 1995年9月号](https://archive.org/details/satellaview-tsushin-1995-09-images)
-- **satellaview**: [Satellaview HiRes](https://archive.org/details/SatellaviewHiRes)
+- **nes**: Nintendo Power Issue #1(July/August 1988)
+- **nes**: Nintendo Power Issue 002 September October 1988
+- **nes**: Nintendo Power Issue #3 November December 1988
+- **nes**: Control Deck - Nintendo Entertainment System (1986)(Nintendo)
+- **ngp**: NeoGeo Pocket Soft Information Vol. 2
+- **ngp**: SNK Neo-Geo Pocket Color WW Magazine Advertisements & Reviews
+- **ngpc**: SNK Neo-Geo Pocket Color WW Magazine Advertisements & Reviews
+- **ngpc**: NeoGeo Pocket Soft Information Vol. 2
+- **odyssey2**: Odyssey Installation and Game Rules (1972)(Magnavox)
+- **odyssey2**: Magnavox Odyssey 2 Owner's Manual (1980)
+- **pcengine**: Super PC Engine Fan Vol. 1
+- **pcengine**: PC Engine Fan - September 1992
+- **pcengine**: Turbo Play
+- **pcengine**: NEC PC Engine DUO-RX manual
+- **pcenginecd**: NEC PC Engine CD-ROM2 manual
+- **pcenginecd**: Ys IV - The Dawn Of Ys (PC Engine CD) - Box, Disc, Manual Scans
+- **pcenginecd**: Legend Of Xanadu, The (PC Engine CD) - Box, Disc, Manual Scans
+- **pcenginecd**: NEC PC Engine CD-ROM2 manual
 - **pokemini**: Nintendo Pokemon mini User Guide
-- **arcadia**: Emerson Arcadia 2001 User's Manual
-- **arcadia**: Alien Invaders Emerson Arcadia 2001
-- **arcadia**: Space Attack for Emerson Arcadia 2001
-- **astrocade**: Cursor / BASIC Express Newsletter for Bally Arcade / Astrocade Alternative ColorScans
-- **astrocade**: Bally Astrocade Manuals
-- **videopacplus**: Videopac Computer PLUS G7400 Instructions For Use (1978)(Philips)(en-de)
-- **videopacplus**: Videopac Computer G7000 Instructions For Use (1978)(Philips)(en-de)
-- **videopacplus**: Videopac Philips
 - **prboom**: DOOM II Official Strategy Guide
 - **prboom**: Ultimate Future Games Issue 14 - Supplement Playstation Doom Guide
 - **prboom**: Doom III Gamespot Guide
-- **sdlpop**: [Prince Of Persia (1990)(Broderbund Software)](https://archive.org/details/Prince_Of_Persia_1990_Broderbund_Software)
-- **xrick**: Rick Dangerous comic
-- **xrick**: Commodore C64 Manual: Rick Dangerous (1989)(Core Design)
+- **psx**: Official US PlayStation Magazine - Volume 1 Issue 1
+- **psx**: Official UK Playstation Magazine (1999)
+- **psx**: Official US PlayStation Magazine - Volume 3 Issue 1
+- **psx**: playstation (scph 5501)
+- **satellaview**: Satellaview Tsushin Monthly FamicomTsushin May extra issue
+- **satellaview**: Satellaview Tsushin サテラビュー通信 1995年9月号
+- **satellaview**: Satellaview HiRes
+- **saturn**: Supplement Issue 53 SEGA MegaZone Saturn Guide
+- **saturn**: Official Sega Saturn Magazine Issue 1
+- **saturn**: Sega Saturn Magazine - 1994-01
+- **saturn**: Sega Saturn Manual: Sega Saturn Instruction Manual (1995)(Sega)
 - **scummvm**: LucasArts "The Adventurer" Magazine Complete 13 Issues
 - **scummvm**: Curse of Monkey Island, The Prima
 - **scummvm**: The Adventurer magazine
-- **mrboom**: Super Bomberman 3 ( PAL )
-- **mrboom**: Super Bomberman 3 (Nintendo Super Famicom) - Box, Manual, Cart Scans
-- **mrboom**: Super Bomberman 2 (Nintendo Super Famicom) - Box, Manual, Cart Scans
-- **naomi2**: Gamest 0052
-- **naomi2**: Gamest 0066
-- **atomiswave**: Gamest 0200
-- **gbc2players**: Total Game Boy Issue 01
-- **gbc2players**: Total Game Boy Issue 03
+- **sdlpop**: Prince Of Persia (1990)(Broderbund Software)
+- **sega32x**: SEGA Magazine Issue 12 Supplement - Megadrive 32X Guide
+- **sega32x**: Sega Service Manual Genesis 32X, Mega Drive 32X (1995)(U)
+- **sg1000**: Beep 1986 04
+- **sg1000**: SG 1000 II User's Manual (1984)(J)
+- **sgb**: Nintendo Player's Guide Super Game Boy
+- **snes**: Super Play Super Nintendo Magazine (medium resolution) Complete Set
+- **snes**: The Super Famicom - 1990-11-30 - Number 1 - Volume 1 - Issue 1
+- **snes**: The Super Famicom - 1991-01-25 - Number 4 - Volume 2 - Issue 1
+- **supergrafx**: NEC Super Grafx JAP Magazine Advertisements
+- **supergrafx**: Daimakaimura (NEC Supergrafx) - Box, Manual and Card Scans
+- **vectrex**: Livrets d'instruction Vectrex en français (Vectrex manuals in French)
+- **vectrex**: Vectrex Instruction Manual Collection
+- **vectrex**: Vectrex Service Manual HP-3000, 140024-1, Field Service Manual
+- **videopacplus**: Videopac Computer G7000 Instructions For Use (1978)(Philips)(en-de)
+- **videopacplus**: Videopac Philips
+- **videopacplus**: Videopac Computer PLUS G7400 Instructions For Use (1978)(Philips)(en-de)
+- **virtualboy**: Virtual Boy PIX
+- **virtualboy**: Nintendo Virtual Boy Manuals
+- **wswan**: Super Robot Taisen Compact (Bandai WonderSwan) - Manual Scans
+- **wswan**: Digimon Adventure 02 - D1 Tamers (Bandai WonderSwan Color) - Manual Scans
+- **wswan**: Shaman King - Asu E No Ishi (Bandai WonderSwan Color) - Manual Scans
+- **wswanc**: Digimon Tamers - Digimon Medley (Bandai WonderSwan Color) - Manual Scans
+- **wswanc**: Digimon Adventure 02 - Tag Tamers (Bandai WonderSwan) - Manual Scans
+- **x68000**: Oh! X 1990 - 1995
+- **x68000**: Oh!X 1991 08
+- **x68000**: Oh!X 1993 05
+- **xrick**: Rick Dangerous comic
+- **xrick**: Commodore C64 Manual: Rick Dangerous (1989)(Core Design)
+- **zxspectrum**: Your Sinclair 01-93
+- **zxspectrum**: Sinclair User Magazine Issue 045
+- **zxspectrum**: Sinclair User Magazine Issue 058
+- **zxspectrum**: Sinclair ZX Spectrum +2 Manual
+- **ps2**: Official Playstation 2 Magazine UK Special - Buyer's Guide
+- **ps2**: Official Playstation 2 Magazine Special Edition: The A-Z
+- **ps2**: Official UK Playstation 2 Magazine - Issue 003
+- **ps2**: Sony PlayStation 2 SCPH-50000 Series Service Manual (2nd Edition) for GH-023 Board (H-chassis)
