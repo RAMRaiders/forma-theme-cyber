@@ -184,7 +184,7 @@ export class CollectorView {
         this.#shelf.append(node);
         this.#rows.set(i, node);
       }
-      const key = game ? `${game.id}:${game.favorite ? 1 : 0}` : '';
+      const key = game ? String(game.id) : '';
       if (node.dataset.key !== key) {
         node.dataset.key = key;
         node.replaceChildren(...(game ? shelfRow(game) : [el('span', { class: 'title' }, '…')]));
@@ -202,7 +202,8 @@ export class CollectorView {
     if (this.#game?.id === game.id) {
       this.#game = game;
       const name = this.#dossier.querySelector('.head h2');
-      if (name) name.textContent = game.favorite ? `★ ${game.name}` : game.name;
+      this.#dossier.querySelector('.head .favourite')?.remove();
+      if (game.favorite) name?.after(favouriteTag());
     } else {
       this.#showSelected();
     }
@@ -500,7 +501,8 @@ export class CollectorView {
       img.addEventListener('error', () => img.remove(), { once: true });
       head.append(img);
     }
-    head.append(el('h2', {}, game.favorite ? `★ ${game.name}` : game.name));
+    head.append(el('h2', {}, game.name));
+    if (game.favorite) head.append(favouriteTag());
 
     const specs = el('dl', { class: 'specs' });
     const add = (label: string, value: string | null | undefined) => {
@@ -619,9 +621,13 @@ function clamp(n: number, min: number, max: number): number {
 function shelfRow(game: Game): HTMLElement[] {
   return [
     el('span', { class: 'band', 'aria-hidden': 'true' }),
-    el('span', { class: 'title' }, game.favorite ? `★ ${game.name}` : game.name),
+    el('span', { class: 'title' }, game.name),
     el('span', { class: 'year' }, game.releaseDate?.slice(0, 4) ?? '')
   ];
+}
+
+function favouriteTag(): HTMLElement {
+  return el('span', { class: 'favourite' }, '★ Favourite');
 }
 
 /** A colour of its own for each game's spine on the shelf, from its name. */

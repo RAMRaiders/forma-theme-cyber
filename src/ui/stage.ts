@@ -68,6 +68,8 @@ export interface StageOptions {
  */
 export const STAGE_PICTURES: readonly (readonly [Kind, number])[] = [
   ['fanart', 1280],
+  // The list's rows: the logos of the games around the selection.
+  ['wheel', 360],
   ['wheel', 720],
   ['marquee', 720],
   ['thumbnail', 520],
@@ -313,9 +315,11 @@ export class Stage {
       block.classList.add('has-logo');
       block.append(img);
     }
-    block.append(el('h2', {}, game.favorite ? `★ ${game.name}` : game.name));
+    block.append(el('h2', {}, game.name));
 
+    // Marks first (a favourite), then the score and what kind of game it is.
     const line = el('div', { class: 'tagline' });
+    if (game.favorite) line.append(el('span', { class: 'tag favourite' }, '★ Favourite'));
     if (game.rating !== null) {
       const score = Math.round(game.rating * 100) / 10;
       const stars = el('span', { class: 'stars', role: 'img', 'aria-label': `${score} of 10` });
@@ -329,7 +333,6 @@ export class Stage {
     ]) {
       if (text) line.append(el('span', { class: 'tag' }, text));
     }
-    if (game.favorite) line.append(el('span', { class: 'tag favourite' }, '★ Favourite'));
     block.append(line);
     return block;
   }

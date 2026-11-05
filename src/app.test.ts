@@ -150,11 +150,13 @@ describe('the default theme', () => {
     // Breadcrumbs: the step you are on is the lit one.
     expect(text('.trail .crumb.current')).toEqual(['Nintendo Entertainment System']);
     expect(text('h1.current')).toEqual([]);
-    await vi.waitFor(() => expect(text('.row')).toContain('★ Super Mario Bros.'));
+    // Names only: a favourite is marked on its stage, not in the list.
+    await vi.waitFor(() => expect(text('.row')).toContain('Super Mario Bros.'));
     expect(text('.row.selected')).toEqual(['Homebrew Demo']);
     await press('down');
-    expect(text('.row.selected')).toEqual(['★ Super Mario Bros.']);
-    await vi.waitFor(() => expect(text('.detail h2')).toEqual(['★ Super Mario Bros.']));
+    expect(text('.row.selected')).toEqual(['Super Mario Bros.']);
+    await vi.waitFor(() => expect(text('.detail h2')).toEqual(['Super Mario Bros.']));
+    expect(text('.detail .tag.favourite')).toEqual(['★ Favourite']);
     expect(text('.detail .facts')[0]).toContain('1985');
     expect(text('.hint')).toContain('YFavourite');
     // In the default look nothing is behind its games either.
@@ -183,8 +185,10 @@ describe('the default theme', () => {
     await press('confirm');
     await press('confirm');
     await vi.waitFor(() => expect(text('.row.selected')).toEqual(['Homebrew Demo']));
+    expect(text('.detail .tag.favourite')).toEqual([]);
     await press('north');
-    expect(text('.row.selected')).toEqual(['★ Homebrew Demo']);
+    expect(text('.row.selected')).toEqual(['Homebrew Demo']);
+    expect(text('.detail .tag.favourite')).toEqual(['★ Favourite']);
     expect(text('.toast')).toEqual(['Added Homebrew Demo to favourites']);
   });
 
@@ -235,7 +239,7 @@ describe('the default theme', () => {
     expect(text('.shortcut-favorites .tag')).toEqual(['1 game']);
     await toShortcut(press, text, 'Favourites');
     await press('confirm');
-    await vi.waitFor(() => expect(text('.row')).toEqual(['★ Super Mario Bros.']));
+    await vi.waitFor(() => expect(text('.row')).toEqual(['Super Mario Bros.']));
     expect(text('.crumb')).toEqual(['Favourites']);
     await press('back');
     await vi.waitFor(() => expect(text('.shortcut.selected h2')).toEqual(['Favourites']));
@@ -262,7 +266,7 @@ describe('the default theme', () => {
     expect(text('.tile.selected h2')).toEqual(['All games']);
     await press('confirm');
     await vi.waitFor(() => expect(text('.games .row').length).toBeGreaterThan(1));
-    const names = text('.games .row').map((n) => n.replace(/^★ /, ''));
+    const names = text('.games .row');
     expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b)));
     expect(text('.crumb')).toEqual(['All games']);
   });

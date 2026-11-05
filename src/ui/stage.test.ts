@@ -85,9 +85,10 @@ describe('the game stage', () => {
     // Act 1: the title over the fan art.
     expect(s.act).toBe(1);
     expect(srcs('.logo')).toEqual(['forma://media/1/wheel?w=720']);
-    expect(text('h2')).toEqual(['★ Super Metroid']);
+    expect(text('h2')).toEqual(['Super Metroid']);
     expect(text('.score')).toEqual(['9.5']);
-    expect(text('.tag')).toEqual(['1994', 'Action', '1 player', '★ Favourite']);
+    // A favourite's mark comes first.
+    expect(text('.tag')).toEqual(['★ Favourite', '1994', 'Action', '1 player']);
     expect(srcs('.stage-backdrop .fanart img')).toEqual(['forma://media/1/fanart?w=1280']);
 
     // Act 2: the collection and the facts.

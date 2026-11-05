@@ -5,7 +5,9 @@ import { el, remPx } from './dom.js';
 import { STAGE_PICTURES, Stage, type StageOptions } from './stage.js';
 
 /** Row height in rem; rows are positioned by index, so only visible ones exist. */
-const ROW_REM = 2.6;
+const ROW_REM = 3.4;
+/** The width asked of a game's logo for its row. */
+export const ROW_LOGO_WIDTH = 360;
 /** Rows rendered beyond the viewport, so fast scrolling does not show gaps. */
 const OVERSCAN = 6;
 /**
@@ -133,12 +135,34 @@ export class GamesView {
         this.#list.append(node);
         this.#rows.set(i, node);
       }
-      const label = game ? `${game.favorite ? '★ ' : ''}${game.name}` : '…';
-      if (node.textContent !== label) node.textContent = label;
+      const key = game ? String(game.id) : '';
+      if (node.dataset.key !== key) {
+        node.dataset.key = key;
+        this.#fill(node, game);
+      }
       node.classList.toggle('selected', i === this.#selected);
       node.setAttribute('aria-selected', String(i === this.#selected));
     }
     if (this.#pending && this.selected) this.#showDetail();
+  }
+
+  /**
+   * A row: the game's logo, its name kept for screen readers; the name itself when it has no
+   * logo, or the logo will not load.
+   */
+  #fill(row: HTMLElement, game: Game | undefined): void {
+    row.classList.remove('has-logo');
+    const name = el('span', { class: 'name' }, game?.name ?? '…');
+    row.replaceChildren(name);
+    const src = game ? this.#options.media(game, 'wheel', ROW_LOGO_WIDTH) : null;
+    if (!src) return;
+    const logo = el('img', { class: 'logo', src, alt: '', decoding: 'async' });
+    logo.addEventListener('error', () => {
+      logo.remove();
+      row.classList.remove('has-logo');
+    });
+    row.classList.add('has-logo');
+    row.prepend(logo);
   }
 
   /** Redraws the selected game after it changed, e.g. a favourite toggled. */
