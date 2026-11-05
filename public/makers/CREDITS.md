@@ -36,3 +36,5 @@ derivative work: MagentaGreen, Public domain.
 - **fairchild**: [Fairchild Semiconductor Logo.svg](https://commons.wikimedia.org/wiki/File:Fairchild_Semiconductor_Logo.svg), by Fairchild Semiconductor, Public domain.
 - **interton**: [Logo INTERTON ELECTRONIC (horizontal).svg](https://commons.wikimedia.org/wiki/File:Logo_INTERTON_ELECTRONIC_(horizontal).svg), by UnknownUnknown 
 Vectorization:  MagentaGreen, Public domain.
+- **3do**: [3DO Logo.svg](https://commons.wikimedia.org/wiki/File:3DO_Logo.svg), by unbekannt3DO/Panasonic, Public domain.
+- **midway**: [Midway Games logo.svg](https://commons.wikimedia.org/wiki/File:Midway_Games_logo.svg), by Midway Games Inc., Public domain.

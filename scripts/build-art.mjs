@@ -274,7 +274,12 @@ for (const system of systems) {
     ...(l?.dark ? { logoDark: true } : {}),
     picture: p ? 'photo.webp' : null,
     ...(p ? { kind: p.kind } : {}),
-    ...(before[system.id]?.hues ? { hues: before[system.id].hues } : {})
+    // Kept from the last run: what build-colours.mjs and build-magazines.mjs added.
+    ...Object.fromEntries(
+      ['hues', 'consoleHues', 'magazines'].flatMap((k) =>
+        before[system.id]?.[k] ? [[k, before[system.id][k]]] : []
+      )
+    )
   };
   for (const [what, c] of [
     ['picture', p?.credit],

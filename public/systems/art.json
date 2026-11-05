@@ -3,7 +3,26 @@
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "3DO Magazine"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "3DO Magazine - Issue 12"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "3DO Magazine (Japan) Issue 09 May/June 1995"
+      }
+    ],
+    "hues": [
+      5,
+      55,
+      245
+    ]
   },
   "abuse": {
     "logo": "logo.webp",
@@ -72,7 +91,8 @@
     ],
     "consoleHues": [
       15,
-      55
+      55,
+      225
     ]
   },
   "amigacdtv": {
@@ -81,7 +101,8 @@
     "kind": "cutout",
     "consoleHues": [
       247,
-      281
+      281,
+      332
     ]
   },
   "amstradcpc": {
@@ -110,7 +131,9 @@
     "kind": "cutout",
     "hues": [
       5,
-      65
+      65,
+      245,
+      304
     ],
     "consoleHues": [
       36
@@ -122,7 +145,9 @@
     "kind": "cutout",
     "hues": [
       5,
-      66
+      66,
+      245,
+      125
     ]
   },
   "arcadia": {
@@ -176,6 +201,20 @@
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Atari VCS Owners Club Bulletin - AB 23 (Atari International)"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Atari VCS Owners Club Bulletin - AB 22 (Atari International)"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Atari VCS Owners Club Bulletin - AB 21 (Atari International)"
+      }
+    ],
     "hues": [
       5
     ],
@@ -254,7 +293,8 @@
     "picture": null,
     "hues": [
       255,
-      35
+      35,
+      285
     ]
   },
   "bk": {
@@ -275,7 +315,9 @@
     "kind": "cutout",
     "hues": [
       10,
-      195
+      195,
+      45,
+      115
     ],
     "consoleHues": [
       7
@@ -287,7 +329,9 @@
     "kind": "cutout",
     "hues": [
       10,
-      195
+      195,
+      45,
+      115
     ],
     "consoleHues": [
       6
@@ -299,7 +343,9 @@
     "kind": "cutout",
     "hues": [
       10,
-      195
+      195,
+      45,
+      115
     ],
     "consoleHues": [
       5
@@ -311,7 +357,9 @@
     "kind": "cutout",
     "hues": [
       235,
-      55
+      55,
+      355,
+      135
     ]
   },
   "cannonball": {
@@ -320,7 +368,8 @@
     "kind": "cutout",
     "hues": [
       55,
-      195
+      195,
+      5
     ],
     "consoleHues": [
       10
@@ -362,7 +411,9 @@
     "kind": "cutout",
     "hues": [
       214,
-      355
+      355,
+      155,
+      55
     ]
   },
   "cgenius": {
@@ -375,7 +426,8 @@
     ],
     "consoleHues": [
       305,
-      44
+      44,
+      124
     ]
   },
   "channelf": {
@@ -392,7 +444,8 @@
     "kind": "cutout",
     "hues": [
       5,
-      205
+      205,
+      125
     ]
   },
   "colecovision": {
@@ -411,7 +464,9 @@
     "kind": "cutout",
     "hues": [
       196,
-      44
+      44,
+      10,
+      80
     ]
   },
   "corsixth": {
@@ -431,7 +486,9 @@
     "kind": "cutout",
     "hues": [
       7,
-      192
+      192,
+      44,
+      143
     ]
   },
   "crvision": {
@@ -463,7 +520,9 @@
     ],
     "consoleHues": [
       14,
-      54
+      54,
+      208,
+      91
     ]
   },
   "devilutionx": {
@@ -502,19 +561,36 @@
     "kind": "cutout",
     "consoleHues": [
       6,
-      55
+      55,
+      214
     ]
   },
   "dreamcast": {
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "EDGE #067 (1999) - Supplement: Dreamcast"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Official Dreamcast Magazine, The - Special Issue"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Official Dreamcast Magazine, The - Issue 01"
+      }
+    ],
     "hues": [
       215
     ],
     "consoleHues": [
       53,
-      216
+      216,
+      5,
+      135
     ]
   },
   "dxx-rebirth": {
@@ -528,6 +604,9 @@
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
+    "hues": [
+      102
+    ],
     "consoleHues": [
       27,
       278
@@ -573,11 +652,14 @@
     "kind": "cutout",
     "hues": [
       50,
-      195
+      195,
+      355,
+      155
     ],
     "consoleHues": [
       162,
-      220
+      220,
+      5
     ]
   },
   "etlegacy": {
@@ -625,7 +707,9 @@
     ],
     "consoleHues": [
       5,
-      226
+      226,
+      47,
+      105
     ]
   },
   "fds": {
@@ -718,9 +802,21 @@
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Cube Issue 01"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "EGM's Unofficial Game Cube Guide - March 2002"
+      }
+    ],
     "consoleHues": [
       255,
-      44
+      44,
+      175,
+      351
     ]
   },
   "gamegear": {
@@ -729,7 +825,8 @@
     "kind": "cutout",
     "hues": [
       245,
-      5
+      5,
+      125
     ]
   },
   "gamepock": {
@@ -770,6 +867,20 @@
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "GBA Master Guide Issue 01"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Nintendo Accion 110 Locos por Game Boy Advance"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Game Boy Advance - La rivista ufficiale 1"
+      }
+    ],
     "hues": [
       245
     ]
@@ -779,9 +890,21 @@
     "logoDark": true,
     "picture": "photo.webp",
     "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Total Game Boy Issue 01"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Total Game Boy Issue 03"
+      }
+    ],
     "hues": [
       236,
-      45
+      45,
+      175,
+      345
     ]
   },
   "gbc2players": {
@@ -790,7 +913,9 @@
     "kind": "cutout",
     "hues": [
       235,
-      345
+      345,
+      75,
+      265
     ],
     "consoleHues": [
       186
@@ -854,7 +979,9 @@
     ],
     "consoleHues": [
       5,
-      44
+      44,
+      195,
+      75
     ]
   },
   "hurrican": {
@@ -879,7 +1006,9 @@
     ],
     "consoleHues": [
       296,
-      18
+      18,
+      218,
+      164
     ]
   },
   "intellivision": {
@@ -891,6 +1020,12 @@
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "EDGE #022 (1995) - Supplement: Atari Jaguar"
+      }
+    ],
     "hues": [
       355
     ],
@@ -928,9 +1063,14 @@
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
+    "hues": [
+      355
+    ],
     "consoleHues": [
       5,
-      56
+      56,
+      207,
+      265
     ]
   },
   "library": {
@@ -943,7 +1083,8 @@
     ],
     "consoleHues": [
       8,
-      43
+      43,
+      216
     ]
   },
   "loopy": {
@@ -982,6 +1123,16 @@
     "logoDark": true,
     "picture": "photo.webp",
     "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Atari Lynx II Launch Promo Special (EGM)"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Atari Lynx Grey Matters Vol 3 1992"
+      }
+    ],
     "hues": [
       45,
       5
@@ -993,7 +1144,9 @@
     "kind": "cutout",
     "hues": [
       5,
-      65
+      65,
+      245,
+      125
     ]
   },
   "mame": {
@@ -1005,7 +1158,8 @@
     ],
     "consoleHues": [
       54,
-      203
+      203,
+      358
     ]
   },
   "mastersystem": {
@@ -1038,6 +1192,20 @@
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Game Players Sega Genesis Strategy Guide Vol 01 Issue 01"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Beep! Megadrive 1994 01"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Megadrive Fan 1994 01"
+      }
+    ],
     "hues": [
       216
     ]
@@ -1085,11 +1253,14 @@
     "kind": "cutout",
     "hues": [
       243,
-      55
+      55,
+      25
     ],
     "consoleHues": [
       5,
-      325
+      325,
+      195,
+      36
     ]
   },
   "msx1": {
@@ -1165,12 +1336,28 @@
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Nintendo Official Magazine Nintendo 64 THE GUIDE"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "EGM's Player's Guide To Video Games For The Nintendo 64 - June 1998"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "N64 Gamer - Issue 23"
+      }
+    ],
     "hues": [
       225
     ],
     "consoleHues": [
       47,
-      5
+      5,
+      219,
+      143
     ]
   },
   "n64dd": {
@@ -1179,7 +1366,9 @@
     "kind": "cutout",
     "hues": [
       225,
-      135
+      135,
+      45,
+      5
     ]
   },
   "namco22": {
@@ -1220,7 +1409,21 @@
   "neogeo": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Neo Geo Freak 0001"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Neo Geo Freak 0030"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Neo Geo Freak 0033"
+      }
+    ]
   },
   "neogeocd": {
     "logo": "logo.webp",
@@ -1231,13 +1434,29 @@
     ],
     "consoleHues": [
       35,
-      355
+      355,
+      195,
+      154
     ]
   },
   "nes": {
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Nintendo Power Issue #1(July/August 1988)"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Nintendo Power Issue 002 September October 1988"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Nintendo Power Issue #3 November December 1988"
+      }
+    ],
     "hues": [
       5
     ]
@@ -1289,7 +1508,8 @@
     ],
     "consoleHues": [
       26,
-      197
+      197,
+      343
     ]
   },
   "openjazz": {
@@ -1338,6 +1558,20 @@
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Super PC Engine Fan Vol. 1"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "PC Engine Fan - September 1992"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Turbo Play"
+      }
+    ],
     "hues": [
       5
     ],
@@ -1363,7 +1597,8 @@
     "kind": "cutout",
     "hues": [
       45,
-      245
+      245,
+      355
     ]
   },
   "pcw": {
@@ -1387,20 +1622,30 @@
     "kind": "cutout",
     "hues": [
       55,
-      215
+      215,
+      356
     ],
     "consoleHues": [
       55,
-      184
+      184,
+      248
     ]
   },
   "pico8": {
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
+    "hues": [
+      33,
+      342,
+      145,
+      205
+    ],
     "consoleHues": [
       45,
-      337
+      337,
+      85,
+      186
     ]
   },
   "pokemini": {
@@ -1413,7 +1658,8 @@
     ],
     "consoleHues": [
       92,
-      27
+      27,
+      208
     ]
   },
   "ports": {
@@ -1425,7 +1671,8 @@
     ],
     "consoleHues": [
       345,
-      95
+      95,
+      45
     ]
   },
   "prboom": {
@@ -1451,9 +1698,25 @@
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Official US PlayStation Magazine - Volume 1 Issue 1"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Official UK Playstation Magazine (1999)"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Official US PlayStation Magazine - Volume 3 Issue 1"
+      }
+    ],
     "hues": [
       345,
-      45
+      45,
+      175,
+      215
     ]
   },
   "pv1000": {
@@ -1475,7 +1738,8 @@
     "kind": "cutout",
     "hues": [
       185,
-      55
+      55,
+      305
     ],
     "consoleHues": [
       147,
@@ -1520,7 +1784,8 @@
     ],
     "consoleHues": [
       245,
-      26
+      26,
+      341
     ]
   },
   "rott": {
@@ -1550,17 +1815,35 @@
     "kind": "cutout",
     "hues": [
       195,
-      55
+      55,
+      355,
+      85
     ],
     "consoleHues": [
       61,
-      358
+      358,
+      211,
+      155
     ]
   },
   "saturn": {
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Supplement Issue 53 SEGA MegaZone Saturn Guide"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Official Sega Saturn Magazine Issue 1"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Sega Saturn Magazine - 1994-01"
+      }
+    ],
     "hues": [
       236
     ]
@@ -1587,7 +1870,8 @@
     ],
     "consoleHues": [
       33,
-      84
+      84,
+      187
     ]
   },
   "scv": {
@@ -1617,6 +1901,12 @@
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "SEGA Magazine Issue 12 Supplement - Megadrive 32X Guide"
+      }
+    ],
     "hues": [
       215
     ],
@@ -1673,12 +1963,24 @@
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "The Super Famicom - 1990-11-30 - Number 1 - Volume 1 - Issue 1"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "The Super Famicom - 1991-01-25 - Number 4 - Volume 2 - Issue 1"
+      }
+    ],
     "hues": [
       355
     ],
     "consoleHues": [
       53,
-      5
+      5,
+      209,
+      155
     ]
   },
   "snes-msu1": {
@@ -1707,7 +2009,9 @@
     ],
     "consoleHues": [
       43,
-      124
+      124,
+      5,
+      295
     ]
   },
   "sonic-mania": {
@@ -1716,11 +2020,13 @@
     "kind": "cutout",
     "hues": [
       52,
-      213
+      213,
+      5
     ],
     "consoleHues": [
       355,
-      35
+      35,
+      213
     ]
   },
   "sonic3-air": {
@@ -1729,11 +2035,13 @@
     "kind": "cutout",
     "hues": [
       44,
-      223
+      223,
+      345
     ],
     "consoleHues": [
       356,
-      32
+      32,
+      225
     ]
   },
   "sonicretro": {
@@ -1742,11 +2050,13 @@
     "kind": "cutout",
     "hues": [
       45,
-      245
+      245,
+      215
     ],
     "consoleHues": [
       114,
-      244
+      244,
+      34
     ]
   },
   "spectravideo": {
@@ -1755,7 +2065,8 @@
     "kind": "cutout",
     "hues": [
       25,
-      355
+      355,
+      55
     ],
     "consoleHues": [
       5
@@ -1777,11 +2088,14 @@
     "kind": "cutout",
     "hues": [
       5,
-      45
+      45,
+      195,
+      115
     ],
     "consoleHues": [
       358,
-      27
+      27,
+      230
     ]
   },
   "supergrafx": {
@@ -1816,7 +2130,9 @@
     ],
     "consoleHues": [
       156,
-      52
+      52,
+      4,
+      214
     ]
   },
   "sv8000": {
@@ -1834,11 +2150,15 @@
     "kind": "cutout",
     "hues": [
       221,
-      135
+      135,
+      25,
+      344
     ],
     "consoleHues": [
       356,
-      88
+      88,
+      28,
+      208
     ]
   },
   "thomson": {
@@ -1907,7 +2227,8 @@
     ],
     "consoleHues": [
       53,
-      356
+      356,
+      213
     ]
   },
   "tyrian": {
@@ -1943,7 +2264,8 @@
     "kind": "cutout",
     "consoleHues": [
       54,
-      215
+      215,
+      355
     ]
   },
   "vgmplay": {
@@ -2058,7 +2380,8 @@
     "kind": "cutout",
     "hues": [
       5,
-      225
+      225,
+      54
     ]
   },
   "xrick": {
@@ -2081,7 +2404,8 @@
     ],
     "consoleHues": [
       5,
-      225
+      225,
+      55
     ]
   },
   "zx81": {
@@ -2090,7 +2414,9 @@
     "kind": "cutout",
     "hues": [
       45,
-      5
+      5,
+      205,
+      145
     ]
   },
   "zxspectrum": {
@@ -2099,11 +2425,32 @@
     "kind": "cutout",
     "hues": [
       45,
-      5
+      5,
+      145,
+      205
     ],
     "consoleHues": [
       357,
-      55
+      55,
+      193
+    ]
+  },
+  "ps2": {
+    "logo": null,
+    "picture": null,
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Official Playstation 2 Magazine UK Special - Buyer's Guide"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Official Playstation 2 Magazine Special Edition: The A-Z"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Official UK Playstation 2 Magazine - Issue 003"
+      }
     ]
   }
 }

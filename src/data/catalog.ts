@@ -92,6 +92,8 @@ export interface SystemArt {
   hues?: number[];
   /** The colours of its console (its buttons, its stripes), from its cut-out picture. */
   consoleHues?: number[];
+  /** Magazines about it (scripts/build-magazines.mjs): their covers, in its folder. */
+  magazines?: { file: string; title: string }[];
 }
 
 /** A maker's logo (public/makers/makers.json): for a maker whose name `match` finds. */
@@ -133,6 +135,8 @@ export interface CyberSystem {
   hues: number[];
   /** Its console's hues, main first; none for a grey one, or a framed photo. */
   consoleHues: number[];
+  /** Covers of magazines about it, the best first. */
+  magazines: { src: string; title: string }[];
 }
 
 function categoryOf(system: SystemSummary, info?: SystemInfo): CategoryId | null {
@@ -157,7 +161,11 @@ function cyberSystem(
     photo: own?.picture ? art(summary.name, own.picture) : null,
     photoKind: own?.kind ?? 'cutout',
     hues: own?.hues ?? [],
-    consoleHues: own?.consoleHues ?? []
+    consoleHues: own?.consoleHues ?? [],
+    magazines: (own?.magazines ?? []).map((m) => ({
+      src: art(summary.name, m.file),
+      title: m.title
+    }))
   };
 }
 

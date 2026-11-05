@@ -1,6 +1,7 @@
+// @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
 
-import { systemColours } from './system.js';
+import { pressStand, systemColours } from './system.js';
 
 const hueOf = (rgb: string) => {
   const [r, g, b] = rgb.split(' ').map((v) => Number(v) / 255) as [number, number, number];
@@ -50,5 +51,41 @@ describe('the colours a system lights its screen with', () => {
     );
     expect(new Set(mains).size).toBe(5);
     for (const c of mains) expect(c).toMatch(/^\d{1,3} \d{1,3} \d{1,3}$/);
+  });
+});
+
+describe('more of a system’s colours', () => {
+  it('takes up to four, all its logo’s: 3DO’s red, yellow and blue', () => {
+    const colours = systemColours({ hues: [5, 55, 245], maker: null, category: 'consoles' }, 0);
+    expect(colours).toHaveLength(3);
+    colours.forEach((c, i) => expect(Math.abs(hueOf(c) - [5, 55, 245][i]!)).toBeLessThan(6));
+  });
+
+  it('never two alike', () => {
+    const colours = systemColours(
+      { hues: [355, 10], consoleHues: [53, 50, 209], maker: null, category: 'consoles' },
+      0
+    );
+    expect(colours).toHaveLength(3);
+  });
+});
+
+describe('the magazine stand', () => {
+  const mag = (n: number) => ({ src: `./systems/x/mag-${n}.webp`, title: `Issue ${n}` });
+
+  it('puts the first cover in the middle, the others either side', () => {
+    const stand = pressStand({ magazines: [mag(1), mag(2), mag(3), mag(4)] })!;
+    const covers = [...stand.querySelectorAll('figure')];
+    expect(covers.map((f) => f.querySelector('img')?.getAttribute('src'))).toEqual([
+      './systems/x/mag-2.webp',
+      './systems/x/mag-1.webp',
+      './systems/x/mag-3.webp'
+    ]);
+    expect(covers[1]?.classList.contains('lead')).toBe(true);
+    expect(stand.getAttribute('aria-label')).toBe('On the cover: Issue 1; Issue 2; Issue 3');
+  });
+
+  it('is nothing for a system without magazines', () => {
+    expect(pressStand({ magazines: [] })).toBeNull();
   });
 });

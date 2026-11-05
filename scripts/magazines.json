@@ -1,0 +1,56 @@
+{
+  "sega32x": ["sega-magazine-uk-12-supplement-megadrive-32-x-guide"],
+  "megadrive": [
+    "Game_Players_Sega_Genesis_Strategy_Guide_Vol_01_Issue_01",
+    "beep-megadrive-1994-01",
+    "megadrive-fan-1994-01"
+  ],
+  "snes": [
+    "sup01",
+    "the-super-famicom-1990-11-30-number-1-volume-1-issue-1",
+    "the-super-famicom-1991-01-25-number-4-volume-2-issue-1"
+  ],
+  "nes": [
+    "nintendo_power_issue1",
+    "NintendoPowerIssue002SeptemberOctober1988",
+    "nintendopowerissue003novemberdecember1988"
+  ],
+  "n64": [
+    "NintendoOfficialMagazineNintendo64THEGUIDE",
+    "egms-players-guide-to-video-games-for-the-nintendo-64-june-1998",
+    "N64_Gamer_Issue_23_2000_01_Next_Publishing_AU"
+  ],
+  "gamecube": ["cube-01", "egms-unofficial-game-cube-guide-march-2002"],
+  "gbc": ["Total_Game_Boy_Issue_01", "Total_Game_Boy_Issue_03"],
+  "gba": ["gba-master-guide-01", "Nintendo_Accion_110_Locos_por_Game_Boy_Advance", "GBALRU1"],
+  "psx": [
+    "Official_US_PlayStation_Magazine_Volume_1_Issue_1_1997-10_Ziff_Davis_US",
+    "Official_UK_Playstation_Magazine_1999_Future_Publishing_GB_platinum_special",
+    "Official_US_PlayStation_Magazine_Volume_3_Issue_1_1999-10_Ziff_Davis_US"
+  ],
+  "ps2": [
+    "official-playstation-2-magazine-uk-special-buyers-guide",
+    "ops2specialeditiontheaz",
+    "Official_UK_Playstation_2_Magazine_Issue_003_2001_01_Future_Publishing_GB"
+  ],
+  "saturn": ["sup53saturnguide", "Official_Sega_Saturn_Magazine_001", "SSMJP199401941201"],
+  "dreamcast": [
+    "EDGE.N067.1999.01.Supplement.Dreamcast",
+    "Official_Dreamcast_Magazine_The_Special_Issue_1999-10_Dennis_Publishing_GB",
+    "Official_Dreamcast_Magazine_The_Issue_01_1999-09_Imagine_Publishing_US"
+  ],
+  "pcengine": ["super-pc-engine-fan-1", "pc-engine-fan-september-1992", "turbo-play"],
+  "neogeo": ["neogeofreak0001", "neogeofreak0030", "neogeofreak0033"],
+  "jaguar": ["EDGE.N022.1995.07.Supplement.Atari.Jaguar"],
+  "lynx": ["AtariLynxMarketingEGM", "atari-lynx-grey-matters-vol-3-1992"],
+  "atari2600": [
+    "Atari_VCS_Owners_Club_Bulletin_AB_23_1982-12_Atari_International_GB",
+    "Atari_VCS_Owners_Club_Bulletin_AB_22_1982-09_Atari_International_GB",
+    "Atari_VCS_Owners_Club_Bulletin_AB_21_1982-06_Atari_International_GB"
+  ],
+  "3do": [
+    "3DOMagazineIssue10199605ParagonPublishingGB",
+    "3DO_Magazine_Issue_12_1996-07_Paragon_Publishing_GB",
+    "3do-magazine-japan-issue-09-may-june-1995"
+  ]
+}

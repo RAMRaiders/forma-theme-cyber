@@ -114,7 +114,7 @@ export function systemColours(
     category: CategoryId;
   },
   index: number
-): [string, string] {
+): [string, string, ...string[]] {
   const maker = system.maker ? makerRgb(system.maker) : null;
   const makerHue = maker ? rgbToHue(maker) : undefined;
   const consoleHues = system.consoleHues ?? [];
@@ -124,14 +124,26 @@ export function systemColours(
     consoleHues[0] ??
     (rgbToHue(CATEGORY_RGB[system.category]) + index * 137.508) % 360;
   const mainRgb = system.hues[0] === undefined && maker ? maker : neon(main);
-  const accent = [
-    ...consoleHues,
+  // The accent: the console's first colour, then the logo's others, then the maker's; then what
+  // else the console has. Up to four colours, none within 30° of one before.
+  const candidates = [
+    consoleHues[0],
     ...system.hues.slice(1),
-    ...(makerHue === undefined ? [] : [makerHue])
-  ].find((h) => hueApart(h, main) > 30);
-  if (accent === undefined) return [mainRgb, neon((main + 45) % 360)];
-  return [mainRgb, accent === makerHue && maker ? maker : neon(accent)];
+    makerHue,
+    ...consoleHues.slice(1)
+  ].filter((h): h is number => h !== undefined);
+  const chosen = [main];
+  for (const h of candidates) {
+    if (chosen.length >= PALETTE_SIZE) break;
+    if (chosen.every((c) => hueApart(h, c) > 30)) chosen.push(h);
+  }
+  const rgb = (h: number) => (h === makerHue && maker ? maker : neon(h));
+  const [, accent, ...more] = chosen;
+  return [mainRgb, accent === undefined ? neon((main + 45) % 360) : rgb(accent), ...more.map(rgb)];
 }
+
+/** At most this many colours for a system: its main one, its accent and two more. */
+const PALETTE_SIZE = 4;
 
 function hueApart(a: number, b: number): number {
   const d = Math.abs(a - b) % 360;
@@ -439,7 +451,7 @@ export class SystemView {
       // The system's own colours, on the page root: the backdrop, outside this view, takes
       // them too.
       // Every look: the logo's colours, the console's and the maker's.
-      const [rgb, accent] = systemColours(
+      const [rgb, accent, third, fourth] = systemColours(
         {
           hues: system.hues,
           consoleHues: system.consoleHues,
@@ -452,6 +464,9 @@ export class SystemView {
       root.setProperty('--sys', `rgb(${rgb})`);
       root.setProperty('--sys-rgb', rgb);
       root.setProperty('--sys2-rgb', accent);
+      // A third and fourth where it has them; else its two again, the other way round.
+      root.setProperty('--sys3-rgb', third ?? accent);
+      root.setProperty('--sys4-rgb', fourth ?? rgb);
       this.#shown = this.#selected;
       this.#turnPage(parts, animate);
       this.#scrollOverflow();
@@ -602,12 +617,13 @@ function logoImage(system: CyberSystem, cls: string, big = false): HTMLImageElem
 }
 
 /**
- * The middle of the stage: the console cut out, standing on the floor; else a photo of it in a
+ * The middle of the stage, its magazines behind it: the console cut out, standing on the floor; else a photo of it in a
  * neon frame; else, for what has no hardware to show (a port, an engine), its logo large over
  * Cyber's drawing for its category; else its name, in lights.
  */
 function stage(system: CyberSystem, name: string): HTMLElement {
   const box = el('div', { class: 'console' });
+  const press = pressStand(system);
   const fallback = () => {
     box.className = 'console hero';
     const art = el('div', { class: 'art', 'aria-hidden': 'true' });
@@ -615,7 +631,7 @@ function stage(system: CyberSystem, name: string): HTMLElement {
     const nameplate = () => el('span', { class: 'hero-name' }, name);
     const logo = logoImage(system, 'hero-logo', true);
     logo?.addEventListener('error', () => box.append(nameplate()));
-    box.replaceChildren(art, logo ?? nameplate());
+    box.replaceChildren(...(press ? [press] : []), art, logo ?? nameplate());
   };
   if (!system.photo) {
     fallback();
@@ -624,8 +640,34 @@ function stage(system: CyberSystem, name: string): HTMLElement {
   box.classList.add(system.photoKind);
   const photo = el('img', { class: 'photo', src: system.photo, alt: '' });
   photo.addEventListener('error', fallback);
+  if (press) box.append(press);
   box.append(photo);
   return box;
+}
+
+/**
+ * Magazines about the system, standing fanned behind its console like a shop's display: up to
+ * three covers, the first in the middle. A cover that will not load is taken away; `null` for a
+ * system with none.
+ */
+export function pressStand(system: Pick<CyberSystem, 'magazines'>): HTMLElement | null {
+  const covers = system.magazines.slice(0, 3);
+  if (!covers.length) return null;
+  // The first in the middle: [2, 1, 3] across, as on a stand.
+  const order = covers.length === 3 ? [covers[1], covers[0], covers[2]] : covers;
+  const stand = el('div', {
+    class: `press n${order.length}`,
+    role: 'img',
+    'aria-label': `On the cover: ${covers.map((c) => c.title).join('; ')}`
+  });
+  for (const cover of order) {
+    if (!cover) continue;
+    const img = el('img', { src: cover.src, alt: '', decoding: 'async' });
+    const fig = el('figure', { class: cover === covers[0] ? 'cover lead' : 'cover' }, img);
+    img.addEventListener('error', () => fig.remove(), { once: true });
+    stand.append(fig);
+  }
+  return stand;
 }
 
 function row(system: CyberSystem): HTMLElement {

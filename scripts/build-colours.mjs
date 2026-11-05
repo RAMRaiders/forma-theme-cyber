@@ -18,11 +18,15 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ART = join(ROOT, 'public', 'systems', 'art.json');
 /** Hue bins of this many degrees. */
 const BIN = 10;
-/** A second hue counts if it is this far from the first and this strong beside it. */
+/** Another hue counts if it is this far from each one before and this strong beside the first. */
 const APART = 40;
 const SECOND_SHARE = 0.18;
+/** A third and fourth: a logo's small marks count (3DO's red, blue and yellow shapes). */
+const MORE_SHARE = 0.08;
+/** Up to this many hues. */
+const MAX_HUES = 4;
 /** Vivid pixels must be at least this share of the logo's opaque ones for any colour. */
-const VIVID_SHARE = 0.04;
+const VIVID_SHARE = 0.015;
 
 /** A console picture needs less: most of it is grey plastic. */
 const CONSOLE_VIVID_SHARE = 0.006;
@@ -52,7 +56,7 @@ const systems = readFileSync(join(ROOT, 'scripts', 'batocera-systems.tsv'), 'utf
   });
 const aliases = JSON.parse(readFileSync(join(ROOT, 'scripts', 'art-sources.json'), 'utf8')).aliases;
 
-/** The logo's hues, strongest first: one or two, or none. */
+/** The logo's hues, strongest first: up to four, or none. */
 function huesOf(rgba, vividShare = VIVID_SHARE) {
   const bins = new Array(360 / BIN).fill(0);
   let opaque = 0;
@@ -94,15 +98,21 @@ function huesOf(rgba, vividShare = VIVID_SHARE) {
     return Math.round(((Math.atan2(y, x) * 180) / Math.PI + 360) % 360);
   };
   const first = smooth.indexOf(Math.max(...smooth));
-  const hues = [centre(first)];
-  let second = -1;
-  for (let i = 0; i < n; i++) {
-    const apart = Math.min(Math.abs(i - first), n - Math.abs(i - first)) * BIN;
-    if (apart < APART || smooth[i] < smooth[first] * SECOND_SHARE) continue;
-    if (second < 0 || smooth[i] > smooth[second]) second = i;
+  const chosen = [first];
+  while (chosen.length < MAX_HUES) {
+    const share = chosen.length === 1 ? SECOND_SHARE : MORE_SHARE;
+    let next = -1;
+    for (let i = 0; i < n; i++) {
+      const far = chosen.every(
+        (c) => Math.min(Math.abs(i - c), n - Math.abs(i - c)) * BIN >= APART
+      );
+      if (!far || smooth[i] < smooth[first] * share) continue;
+      if (next < 0 || smooth[i] > smooth[next]) next = i;
+    }
+    if (next < 0) break;
+    chosen.push(next);
   }
-  if (second >= 0) hues.push(centre(second));
-  return hues;
+  return chosen.map(centre);
 }
 
 const art = JSON.parse(readFileSync(ART, 'utf8'));
