@@ -126,7 +126,7 @@ describe('the default theme', () => {
     expect(text('.system-panel > :not(.leaving) dd')).toEqual(['Ricoh 2A03']);
     // The stage: its games as a readout, its place in the rail, a callout on the left.
     expect(text('.system-panel > :not(.leaving) .tally .count')).toEqual(['3']);
-    expect(text('.system-panel > :not(.leaving) .specs-left dt')).toEqual(['CPU']);
+    expect(text('.system-panel > :not(.leaving) .specs dt')).toEqual(['CPU']);
     expect(text('.system-panel > :not(.leaving) > .fact:not(.leaving) p')).toEqual(['First fact.']);
     await press('north');
     expect(text('.system-panel > :not(.leaving) > .fact:not(.leaving) p')).toEqual([

@@ -157,7 +157,7 @@ function makerRgb(maker: string): string | null {
 }
 
 /** The parts of the stage that change together when the selection moves. */
-type Slot = 'intro' | 'tally' | 'showcase' | 'fact' | 'shelf';
+type Slot = 'intro' | 'about' | 'tally' | 'showcase' | 'fact';
 
 /**
  * A category's systems: a strip of logos over the middle while moving, kept centred on the
@@ -402,8 +402,6 @@ export class SystemView {
       page.append(part);
       this.#slots.set(slot, part);
     }
-    // Without magazines or peripherals, the story and the console take the shelf's column.
-    page.classList.toggle('bare', !this.#slots.has('shelf'));
     this.#panel.append(page);
     this.#page = page;
     if (!old) return;
@@ -424,7 +422,7 @@ export class SystemView {
     const released = info?.specs?.released ?? year;
     const byline = bylineOf(maker, released, makerLogos(maker, this.#makers));
 
-    const callouts = (side: 'left' | 'right', specs: [Spec, string][]) => {
+    const sheet = (specs: [Spec, string][]) => {
       const items = specs.flatMap(([key, label], n) => {
         const value = info?.specs?.[key];
         return value
@@ -438,7 +436,7 @@ export class SystemView {
             ]
           : [];
       });
-      return items.length ? el('dl', { class: `specs specs-${side}` }, ...items) : null;
+      return items.length ? el('dl', { class: 'specs' }, ...items) : null;
     };
 
     const parts: [Slot, HTMLElement | null][] = [];
@@ -448,10 +446,16 @@ export class SystemView {
         'div',
         { class: 'intro' },
         el('div', { class: 'heading' }, logoImage(system, 'logo'), title),
-        byline,
-        info?.description ? scroller('p', info.description, 'description') : null
+        byline
       )
     ]);
+    const about = el(
+      'div',
+      { class: 'about' },
+      info?.description ? scroller('p', info.description, 'description') : null,
+      sheet([...LEFT, ...RIGHT])
+    );
+    parts.push(['about', about.childElementCount ? about : null]);
     parts.push([
       'tally',
       el(
@@ -459,21 +463,15 @@ export class SystemView {
         { class: 'tally' },
         el('span', { class: 'count' }, s.gameCount.toLocaleString('en')),
         el('span', { class: 'unit' }, s.gameCount === 1 ? 'game' : 'games'),
-        bestsellerShelf(bestsellers(s.name, info?.bestsellers), info?.bestsellersBy !== 'classics')
+        bestsellerShelf(bestsellers(s.name, info?.bestsellers), info?.bestsellersBy !== 'classics'),
+        gear(system)
       )
     ]);
     parts.push([
       'showcase',
-      el(
-        'div',
-        { class: 'showcase' },
-        callouts('left', LEFT),
-        stage(system, title.textContent ?? ''),
-        callouts('right', RIGHT)
-      )
+      el('div', { class: 'showcase' }, stage(system, title.textContent ?? ''), press(system))
     ]);
     parts.push(['fact', this.#factStrip()]);
-    parts.push(['shelf', shelf(system)]);
     const apply = () => {
       if (ticket !== this.#ticket) return;
       // The system's own colours, on the page root: the backdrop, outside this view, takes
@@ -677,47 +675,44 @@ function stage(system: CyberSystem, name: string): HTMLElement {
   return box;
 }
 
+/** A figure for the press or the gear: taken away if its picture will not load. */
+function shelfFigure(cls: string, src: string, alt: string, caption?: string): HTMLElement {
+  const fig = el(
+    'figure',
+    { class: cls },
+    el('img', { src, alt, decoding: 'async' }),
+    caption ? el('figcaption', {}, caption) : null
+  );
+  fig.querySelector('img')?.addEventListener('error', () => fig.remove(), { once: true });
+  return fig;
+}
+
 /**
- * What was written about the system and what plugged into it, in their own column on the
- * stage: magazines about it on a stand, each cover whole, and its peripherals lying on the
- * floor before them, each named. Lit as the console
- * is: on the same floor, its glow under them. A picture that will not load is taken away;
- * `null` for a system with neither.
+ * Magazines about the system, standing before its console: three covers side by side, the
+ * first in the middle, each whole. `null` for a system with none.
  */
-export function shelf(system: Pick<CyberSystem, 'magazines' | 'peripherals'>): HTMLElement | null {
-  const figure = (cls: string, src: string, alt: string, caption?: string) => {
-    const fig = el(
-      'figure',
-      { class: cls },
-      el('img', { src, alt, decoding: 'async' }),
-      caption ? el('figcaption', {}, caption) : null
-    );
-    fig.querySelector('img')?.addEventListener('error', () => fig.remove(), { once: true });
-    return fig;
-  };
-  // The first magazine in the middle, the biggest: [2, 1, 3] across.
+export function press(system: Pick<CyberSystem, 'magazines'>): HTMLElement | null {
   const mags = system.magazines.slice(0, 3);
+  if (!mags.length) return null;
   const row = mags.length === 3 ? [mags[1]!, mags[0]!, mags[2]!] : mags;
-  const stand = row.length
-    ? el(
-        'div',
-        { class: `stand n${row.length}` },
-        ...row.map((m) => figure(m === mags[0] ? 'cover lead' : 'cover', m.src, m.title))
-      )
-    : null;
-  const gear = system.peripherals.length
-    ? el(
-        'div',
-        { class: `gear n${Math.min(4, system.peripherals.length)}` },
-        ...system.peripherals.slice(0, 4).map((p) => figure('item', p.src, p.name, p.name))
-      )
-    : null;
-  if (!stand && !gear) return null;
   return el(
-    'aside',
-    { class: 'shelf', 'aria-label': 'In the press, and its peripherals' },
-    stand,
-    gear
+    'div',
+    { class: `stand n${row.length}`, 'aria-label': 'In the press' },
+    ...row.map((m) => shelfFigure(m === mags[0] ? 'cover lead' : 'cover', m.src, m.title))
+  );
+}
+
+/**
+ * The system's peripherals, up to four, two by two, each on its lit spot of floor and named.
+ * `null` for a system with none.
+ */
+export function gear(system: Pick<CyberSystem, 'peripherals'>): HTMLElement | null {
+  const items = system.peripherals.slice(0, 4);
+  if (!items.length) return null;
+  return el(
+    'div',
+    { class: `gear n${items.length}`, 'aria-label': 'Peripherals' },
+    ...items.map((p) => shelfFigure('item', p.src, p.name, p.name))
   );
 }
 

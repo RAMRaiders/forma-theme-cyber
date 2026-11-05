@@ -845,58 +845,39 @@ main {
   display: grid;
   /* Fixed rows and columns: a longer story, a bigger count or a two-line curiosity never moves
      the console; what does not fit scrolls in its own box. */
-  grid-template-columns: 18rem minmax(0, 1fr) 18.5rem;
-  grid-template-rows: 12.4rem minmax(0, 1fr) 3.4rem;
+  /* From the logo, top left: the story and the specs under it, the console in the middle
+     with the press before it, the count, best sellers and peripherals down the right. */
+  grid-template-columns: 26rem minmax(0, 1fr) 18.5rem;
+  grid-template-rows: auto minmax(0, 1fr) 3.4rem;
   grid-template-areas:
-    'shelf intro tally'
-    'shelf showcase showcase'
+    'intro intro tally'
+    'about showcase tally'
     'fact fact fact';
   gap: 0.6rem 2rem;
   padding: 1.1rem 1.6rem 1rem;
   will-change: opacity;
 }
 
-/* A system with neither magazines nor peripherals: the story and the console take the column. */
-.system-panel .stage-page.bare {
-  grid-template-areas:
-    'intro intro tally'
-    'showcase showcase showcase'
-    'fact fact fact';
-}
-
-/* The press and the peripherals, in their own column beside the story and the console, on
-   its floor and in its light: magazines on a stand, the peripherals lying in front. */
-.system-panel .shelf {
-  grid-area: shelf;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 2.2rem;
-  min-height: 0;
-  /* Not a box that scrolls, as the other parts are: shadows and glow reach past it. */
-  overflow: visible;
-}
-
-.system-panel .shelf figure {
+.system-panel figure {
   position: relative;
   margin: 0;
 }
 
-.system-panel .shelf img {
+.system-panel img {
   display: block;
 }
 
 /* The press: three covers the same size standing side by side, a little over one another
    and turned toward the middle, the first in front there. Every cover whole, in its own
    shape, a little darker only at the foot. */
-.system-panel .shelf .stand {
+.system-panel .stand {
   display: flex;
   align-items: flex-end;
   justify-content: center;
   padding: 0 1rem;
 }
 
-.system-panel .shelf .cover {
+.system-panel .cover {
   flex: none;
   margin: 0 -0.7rem;
   border-radius: 0.2rem;
@@ -908,11 +889,11 @@ main {
   transform-origin: 50% 100%;
 }
 
-.system-panel .shelf .cover.lead ~ .cover {
+.system-panel .cover.lead ~ .cover {
   transform: rotate(6deg);
 }
 
-.system-panel .shelf .cover.lead {
+.system-panel .cover.lead {
   z-index: 1;
   transform: translateY(-0.5rem) scale(1.08);
   box-shadow:
@@ -921,31 +902,31 @@ main {
     0 1rem 2rem rgb(0 0 0 / 75%);
 }
 
-.system-panel .shelf .stand.n1 .cover {
+.system-panel .stand.n1 .cover {
   transform: rotate(-3deg);
 }
 
-.system-panel .shelf .cover::after {
+.system-panel .cover::after {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(transparent 65%, rgb(4 6 12 / 30%));
 }
 
-.system-panel .shelf .cover img {
+.system-panel .cover img {
   width: auto;
   height: auto;
   max-width: 6.2rem;
   max-height: 8.6rem;
 }
 
-.system-panel .shelf .stand.n1 img {
+.system-panel .stand.n1 img {
   max-width: 9rem;
   max-height: 12rem;
 }
 
 /* The peripherals, big enough to see: two by two, each on its lit spot of floor, named. */
-.system-panel .shelf .gear {
+.system-panel .gear {
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -954,34 +935,34 @@ main {
 }
 
 /* An odd last one centred under the others. */
-.system-panel .shelf .gear .item:last-child:nth-child(odd) {
+.system-panel .gear .item:last-child:nth-child(odd) {
   grid-column: 1 / -1;
 }
 
-.system-panel .shelf .gear.n1 {
+.system-panel .gear.n1 {
   grid-template-columns: 1fr;
 }
 
-.system-panel .shelf .item {
+.system-panel .item {
   position: relative;
   display: grid;
   justify-items: center;
   width: 100%;
 }
 
-.system-panel .shelf .item img {
+.system-panel .item img {
   width: auto;
   height: auto;
   max-width: 100%;
   max-height: 5.6rem;
 }
 
-.system-panel .shelf .gear.n1 .item img {
+.system-panel .gear.n1 .item img {
   max-height: 8rem;
 }
 
 /* The floor under each lit in the system's colour, as under the console, its shadow on it. */
-.system-panel .shelf .item::before {
+.system-panel .item::before {
   content: '';
   position: absolute;
   z-index: -1;
@@ -998,7 +979,7 @@ main {
   );
 }
 
-.system-panel .shelf figcaption {
+.system-panel figcaption {
   max-width: 100%;
   margin-top: 0.35rem;
   overflow: hidden;
@@ -1009,6 +990,15 @@ main {
   white-space: nowrap;
   color: var(--muted);
   text-shadow: 0 0 0.4rem #000;
+}
+
+.system-panel .about {
+  grid-area: about;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .system-panel .intro {
@@ -1084,14 +1074,14 @@ main {
 }
 
 .system-panel .description {
-  max-width: 46rem;
-  margin: 0.6rem 0 0;
+  flex: none;
+  margin: 0;
   overflow: hidden;
   color: rgb(223 246 255 / 86%);
   font-size: 0.86rem;
   line-height: 1.45;
-  /* Four lines; a longer story scrolls through them. */
-  max-height: calc(4 * 1.45em);
+  /* Six lines; a longer story scrolls through them. */
+  max-height: calc(6 * 1.45em);
   text-shadow:
     0 0 0.3rem #000,
     0 0 1rem #000;
@@ -1100,6 +1090,8 @@ main {
 /* How many games, as a big readout, and where this system is in the rail. */
 .system-panel .tally {
   grid-area: tally;
+  row-gap: 0.4rem;
+  min-height: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   justify-items: end;
@@ -1109,9 +1101,16 @@ main {
   font-family: var(--mono);
 }
 
-/* The count and its unit on one line, the best sellers under both. */
-.system-panel .tally .bestsellers {
+/* The count and its unit on one line, the best sellers and the peripherals under both. */
+.system-panel .tally .bestsellers,
+.system-panel .tally .gear {
   grid-column: 1 / -1;
+  justify-self: stretch;
+}
+
+.system-panel .tally .gear {
+  margin-top: 1.6rem;
+  font-family: 'Inter', 'DejaVu Sans', system-ui, sans-serif;
 }
 
 .system-panel .tally .count {
@@ -1221,15 +1220,15 @@ main {
 .system-panel .showcase {
   grid-area: showcase;
   display: grid;
-  grid-template-columns: minmax(0, 11.5rem) minmax(0, 1fr) minmax(0, 11.5rem);
-  align-items: center;
+  grid-template-rows: minmax(0, 1fr) auto;
+  justify-items: center;
   gap: 1rem;
   min-height: 0;
+  padding-bottom: 0.8rem;
 }
 
 .system-panel .console {
   position: relative;
-  grid-column: 2;
   display: grid;
   place-items: center;
   height: 100%;
@@ -1345,64 +1344,31 @@ main {
 
 .system-panel .specs {
   display: grid;
-  gap: 1.3rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem 1.6rem;
   margin: 0;
-  padding: 0.8rem 0;
-  position: relative;
 }
 
-/* A soft shade behind the callouts, wider than them, so the board's own labels never cross.
-   Its soft edge is kept small: a wide blur took a Pi most of a frame to draw. */
-.system-panel .specs::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: -1.4rem -1.8rem;
-  border-radius: 2.4rem;
-  background: rgb(4 6 12 / 80%);
-  box-shadow: 0 0 1.2rem 0.8rem rgb(4 6 12 / 80%);
-}
-
-.system-panel .specs-left {
-  grid-column: 1;
-  text-align: right;
-}
-
-.system-panel .specs-right {
-  grid-column: 3;
-}
-
-/* A callout: a label, a value, a rule and a lead with a dot toward the console. */
+/* A spec: its label after a dot in the next of the system's colours, its value, a rule. */
 .system-panel .spec {
   position: relative;
-  padding: 0.35rem 0;
-  border-bottom: 1px solid var(--sys-45);
-}
-
-.system-panel .spec::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  width: 2.6rem;
-  height: 1px;
-  background: linear-gradient(90deg, var(--sys-70), var(--sys-10));
+  min-width: 0;
+  padding: 0 0 0.45rem 0.95rem;
+  border-bottom: 1px solid var(--sys-30);
 }
 
 .system-panel .spec::before {
   content: '';
   position: absolute;
-  bottom: -0.2rem;
+  left: 0;
+  top: 0.2rem;
   width: 0.4rem;
   height: 0.4rem;
   border-radius: 50%;
-  background: var(--sys);
+  background: var(--dot, var(--sys));
+  box-shadow: 0 0 0.5rem var(--dot, var(--sys));
 }
 
-.system-panel .specs-left .spec::after {
-  left: 100%;
-}
-
-/* Each callout in the next of the system's colours. */
 .system-panel .spec:nth-child(4n + 2) {
   --dot: rgb(var(--sys2-rgb));
 }
@@ -1415,26 +1381,8 @@ main {
   --dot: rgb(var(--sys4-rgb));
 }
 
-.system-panel .spec::before {
-  background: var(--dot, var(--sys));
-  box-shadow: 0 0 0.5rem var(--dot, var(--sys));
-}
-
 .system-panel .spec dt {
   color: var(--dot, var(--sys));
-}
-
-.system-panel .specs-left .spec::before {
-  left: calc(100% + 2.6rem);
-}
-
-.system-panel .specs-right .spec::after {
-  right: 100%;
-  transform: scaleX(-1);
-}
-
-.system-panel .specs-right .spec::before {
-  right: calc(100% + 2.6rem);
 }
 
 .system-panel dt {
@@ -2850,28 +2798,18 @@ kbd {
     --strip-item: 8.5rem;
   }
 
-  /* No room for the press column: the story and the console take it. */
-  .system-panel .shelf {
-    display: none;
-  }
-
+  /* Narrower: the story and specs take less, the press and peripherals go. */
   .system-panel .stage-page {
-    grid-template-areas:
-      'intro intro tally'
-      'showcase showcase showcase'
-      'fact fact fact';
+    grid-template-columns: 15rem minmax(0, 1fr) 11rem;
   }
 
   .system-panel .specs {
+    grid-template-columns: 1fr;
+  }
+
+  .system-panel .stand,
+  .system-panel .gear {
     display: none;
-  }
-
-  .system-panel .showcase {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .system-panel .console {
-    grid-column: 1;
   }
 
   .system-panel .tally .count {

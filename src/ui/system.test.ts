@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
 
-import { shelf, systemColours } from './system.js';
+import { gear, press, systemColours } from './system.js';
 
 const hueOf = (rgb: string) => {
   const [r, g, b] = rgb.split(' ').map((v) => Number(v) / 255) as [number, number, number];
@@ -70,25 +70,29 @@ describe('more of a system’s colours', () => {
   });
 });
 
-describe('the shelf', () => {
+describe('the press and the gear', () => {
   const mag = (n: number) => ({ src: `./systems/x/mag-${n}.webp`, title: `Issue ${n}` });
-  const none = { magazines: [], peripherals: [] };
 
-  it('stands three magazines, the first in the middle, and names the peripherals', () => {
-    const box = shelf({
-      magazines: [mag(1), mag(2), mag(3), mag(4)],
-      peripherals: [{ src: './systems/x/gear-1.webp', name: 'Light gun' }]
-    })!;
-    const covers = [...box.querySelectorAll('.stand .cover img')].map((i) => i.getAttribute('alt'));
+  it('stands three magazines, the first in the middle', () => {
+    const stand = press({ magazines: [mag(1), mag(2), mag(3), mag(4)] })!;
+    const covers = [...stand.querySelectorAll('.cover img')].map((i) => i.getAttribute('alt'));
     expect(covers).toEqual(['Issue 2', 'Issue 1', 'Issue 3']);
-    expect(box.querySelector('.cover.lead img')?.getAttribute('alt')).toBe('Issue 1');
-    expect(box.querySelector('.gear figcaption')?.textContent).toBe('Light gun');
+    expect(stand.querySelector('.cover.lead img')?.getAttribute('alt')).toBe('Issue 1');
   });
 
-  it('leaves out what a system has none of, and is nothing for one with neither', () => {
-    const box = shelf({ ...none, magazines: [mag(1)] })!;
-    expect(box.querySelector('.gear')).toBeNull();
-    expect(box.querySelectorAll('.cover')).toHaveLength(1);
-    expect(shelf(none)).toBeNull();
+  it('names up to four peripherals', () => {
+    const p = (n: number) => ({ src: `./systems/x/gear-${n}.webp`, name: `Pad ${n}` });
+    const box = gear({ peripherals: [p(1), p(2), p(3), p(4), p(5)] })!;
+    expect([...box.querySelectorAll('figcaption')].map((c) => c.textContent)).toEqual([
+      'Pad 1',
+      'Pad 2',
+      'Pad 3',
+      'Pad 4'
+    ]);
+  });
+
+  it('is nothing for a system with none', () => {
+    expect(press({ magazines: [] })).toBeNull();
+    expect(gear({ peripherals: [] })).toBeNull();
   });
 });
