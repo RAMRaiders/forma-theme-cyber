@@ -596,17 +596,12 @@ main {
 
 .systems {
   display: grid;
-  grid-template-columns: 15rem minmax(0, 1fr);
-  gap: 1.4rem;
-  /* The stage reaches under the rail, where the shelf shows once the rail fades after a rest:
-     laid out for both all along, so resting only fades. */
-  --under-rail: 16.4rem;
-  /* Going to rest is slow and calm; coming back, on a move, quick, out of the next system's
-     way. Every part that changes uses these. */
-  --wake: 260ms ease-out;
-  --rest: 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
-  /* One row of the rail, and the selection bar over it. */
-  --rail-row: 3.6rem;
+  /* The strip of logos along the top, the stage the whole width under it. */
+  grid-template-rows: var(--strip) minmax(0, 1fr);
+  gap: 0.8rem;
+  /* The strip's height, and one logo's place in it, under the selection frame. */
+  --strip: 4.2rem;
+  --strip-item: 11rem;
   height: 100%;
   min-height: 0;
 }
@@ -620,47 +615,41 @@ main {
   --sys-70: color-mix(in srgb, var(--sys) 70%, transparent);
 }
 
-/* The rail: logos straight on the board, a shade behind them only toward the screen's edge. */
+/* The strip: logos in a row along the top, fading toward its ends. */
 .system-rail {
   position: relative;
   z-index: 2;
-  grid-area: 1 / 1;
-  transition:
-    opacity var(--wake),
-    transform var(--wake);
-  will-change: opacity, transform;
-  min-height: 0;
+  min-width: 0;
   overflow: hidden;
-  background: linear-gradient(90deg, rgb(4 6 12 / 82%), rgb(4 6 12 / 45%) 70%, transparent);
-  -webkit-mask-image: linear-gradient(transparent, #000 16%, #000 84%, transparent);
-  mask-image: linear-gradient(transparent, #000 16%, #000 84%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
 }
 
-/* The selection: a bar fixed in the rail's middle, the logos sliding under it. Moving is then
-   only the list's slide, which the Pi's compositor does by itself; no row is redrawn. */
+/* The selection: a frame fixed in the strip's middle, the logos sliding under it. Moving is
+   then only the strip's slide, which the Pi's compositor does by itself. */
 .system-rail::before {
   content: '';
   position: absolute;
   z-index: 0;
-  left: 0.6rem;
-  right: 0.6rem;
-  top: 50%;
-  height: var(--rail-row);
-  translate: 0 -50%;
+  left: 50%;
+  top: 0.35rem;
+  bottom: 0.35rem;
+  width: var(--strip-item);
+  translate: -50% 0;
   border: 1px solid var(--sys-70);
   border-radius: calc(var(--radius) * 1.6);
-  background: linear-gradient(90deg, var(--sys-10), var(--sys-30), var(--sys-10));
+  background: linear-gradient(var(--sys-10), var(--sys-30));
   box-shadow: 0 0 1.4rem var(--sys-30);
 }
 
 .system-rail::after {
   content: '';
   position: absolute;
-  left: 0;
-  top: 50%;
-  height: 1.8rem;
-  width: 0.22rem;
-  translate: 0 -50%;
+  left: 50%;
+  bottom: 0.35rem;
+  width: 2.6rem;
+  height: 0.2rem;
+  translate: -50% 0;
   border-radius: 1rem;
   background: var(--sys);
 }
@@ -668,30 +657,49 @@ main {
 .system-list {
   position: relative;
   z-index: 1;
+  display: flex;
+  height: 100%;
   margin: 0;
-  padding: 0 0.6rem;
+  padding: 0;
   list-style: none;
-  transition: transform 180ms ease-out;
+  transition: transform 200ms ease-out;
   will-change: transform;
 }
 
 .system-list li {
   position: relative;
   display: grid;
+  flex: none;
   place-items: center;
-  /* Every row the same height: the list's slide is all that moves. */
-  height: var(--rail-row);
-  padding: 0 1.2rem;
+  /* Every logo the same width: the strip's slide is all that moves. */
+  width: var(--strip-item);
+  height: 100%;
+  padding: 0 1.3rem;
+  opacity: 0.2;
+}
+
+/* Fainter the further from the selection. */
+.system-list li[data-near='3'] {
+  opacity: 0.3;
+}
+
+.system-list li[data-near='2'] {
   opacity: 0.45;
 }
 
-/* Each logo centred in the same small box, as large as it fits in it: wide ones fill its
-   width, tall ones its height. */
+.system-list li[data-near='1'] {
+  opacity: 0.65;
+}
+
+/* Each logo centred in the same small box, as large as it fits in it. */
 .system-list .logo {
   width: 100%;
-  max-width: 10rem;
-  height: 1.6rem;
+  height: 1.7rem;
   object-fit: contain;
+}
+
+.system-list li.selected .logo {
+  transform: scale(1.18);
 }
 
 /* A logo too dark for the background, lit from behind. */
@@ -735,17 +743,8 @@ main {
 
 /* The stage: open, no box; a soft shade behind the middle keeps the words readable while the
    board shows round it. */
-.systems.resting .system-rail {
-  opacity: 0;
-  transform: translateX(-2rem);
-  transition:
-    opacity 600ms ease,
-    transform var(--rest);
-}
-
 .system-panel {
   position: relative;
-  grid-area: 1 / 1 / 2 / 3;
   min-height: 0;
   overflow: hidden;
   isolation: isolate;
@@ -788,53 +787,36 @@ main {
   display: grid;
   /* Fixed rows and columns: a longer story, a bigger count or a two-line curiosity never moves
      the console; what does not fit scrolls in its own box. */
-  grid-template-columns: calc(var(--under-rail) - 2rem) minmax(0, 1fr) 18.5rem;
-  grid-template-rows: 14rem minmax(0, 1fr) 3.6rem;
+  grid-template-columns: 15rem minmax(0, 1fr) 18.5rem;
+  grid-template-rows: 12.4rem minmax(0, 1fr) 3.4rem;
   grid-template-areas:
-    '. intro tally'
-    '. showcase showcase'
+    'shelf intro tally'
+    'shelf showcase showcase'
     'fact fact fact';
   gap: 0.6rem 2rem;
   padding: 1.1rem 1.6rem 1rem;
   will-change: opacity;
 }
 
-/* Where the rail was, once it fades after a rest: a little display in the stage itself, on the
-   console's floor and in its light. Magazines on a stand, the peripherals lying in front. Hidden until then; then it fades in. Still: drawn once
-   with the page. */
+/* A system with neither magazines nor peripherals: the story and the console take the column. */
+.system-panel .stage-page.bare {
+  grid-template-areas:
+    'intro intro tally'
+    'showcase showcase showcase'
+    'fact fact fact';
+}
+
+/* The press and the peripherals, in their own column beside the story and the console, on
+   its floor and in its light: magazines on a stand, the peripherals lying in front. */
 .system-panel .shelf {
-  position: relative;
-  grid-area: 2 / 1 / 3 / 2;
+  grid-area: shelf;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.6rem;
   min-height: 0;
-  /* Not a box that scrolls, as the other parts are: the fan and the gear reach past it. */
+  /* Not a box that scrolls, as the other parts are: shadows and glow reach past it. */
   overflow: visible;
-  visibility: hidden;
-  opacity: 0;
-  transition:
-    opacity 200ms ease-out,
-    visibility 0s linear 200ms;
-  will-change: opacity;
-}
-
-.systems.resting .system-panel .shelf {
-  visibility: visible;
-  opacity: 1;
-  transition:
-    opacity 700ms ease 200ms,
-    visibility 0s;
-}
-
-/* The floor under it lit in the system's colour, as under the console. */
-.system-panel .shelf::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  left: -15%;
-  right: -15%;
-  bottom: 0.6rem;
-  height: 9rem;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgb(var(--sys-rgb) / 34%), transparent);
 }
 
 .system-panel .shelf figure {
@@ -850,10 +832,6 @@ main {
    one over the other, as on a newsstand rack. Lit as the console is, a little darker only at
    the foot. */
 .system-panel .shelf .stand {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 5.8rem;
   display: grid;
   grid-auto-flow: column;
   grid-template-rows: auto auto;
@@ -914,15 +892,24 @@ main {
 
 /* The peripherals, lying on the floor in front, each with its shadow and its name. */
 .system-panel .shelf .gear {
-  position: absolute;
-  z-index: 3;
-  left: -0.4rem;
-  right: -0.4rem;
-  bottom: 0.8rem;
+  position: relative;
   display: flex;
   align-items: flex-end;
   justify-content: center;
   gap: 0.6rem;
+}
+
+/* The floor under them lit in the system's colour, as under the console. */
+.system-panel .shelf .gear::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: -20%;
+  right: -20%;
+  bottom: -1.6rem;
+  height: 8rem;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(var(--sys-rgb) / 30%), transparent);
 }
 
 .system-panel .shelf .item {
@@ -966,16 +953,6 @@ main {
   grid-area: intro;
   min-width: 0;
   overflow: hidden;
-  transition: transform var(--wake);
-  will-change: transform;
-}
-
-/* Once the rail has gone the section takes its place, as the games view's stage does: the
-   heading and story move to the card's edge, the curiosity strip reaches it, and the display
-   stands under them where the rail was. Moved, not laid out again. */
-.systems.resting .system-panel .intro {
-  transform: translateX(calc(-1 * var(--under-rail)));
-  transition: transform var(--rest);
 }
 
 .system-panel .heading {
@@ -1062,9 +1039,17 @@ main {
 .system-panel .tally {
   grid-area: tally;
   display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   justify-items: end;
   align-content: start;
+  align-items: baseline;
+  column-gap: 0.6rem;
   font-family: var(--mono);
+}
+
+/* The count and its unit on one line, the best sellers under both. */
+.system-panel .tally .bestsellers {
+  grid-column: 1 / -1;
 }
 
 .system-panel .tally .count {
@@ -1105,7 +1090,7 @@ main {
   padding: 0;
   list-style: none;
   /* The cases are sized in em: this one size scales them all. */
-  font-size: 1.4rem;
+  font-size: 1.2rem;
 }
 
 .system-panel .bestsellers li {
@@ -1413,57 +1398,11 @@ main {
   display: flex;
   align-items: center;
   gap: 1.2rem;
-  /* The whole row, under the rail too: its box starts beside the rail, and reaches the card's
-     edge once the rail has gone. */
-  padding: 0.7rem 1rem 0.7rem calc(var(--under-rail) + 1rem);
+  padding: 0.7rem 1rem;
   overflow: hidden;
-  isolation: isolate;
-}
-
-/* Its box twice: beside the rail, and the whole width, which fades in over it at rest. Only
-   opacity changes: a box whose edge moved was drawn again every frame. */
-.system-panel .fact::before,
-.system-panel .fact::after {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: 0 0 0 var(--under-rail);
   border: 1px solid var(--sys-30);
   border-radius: var(--radius);
   background: linear-gradient(90deg, var(--sys-20), rgb(4 8 16 / 72%) 45%, rgb(4 8 16 / 55%));
-  transition: opacity 0s;
-}
-
-.system-panel .fact::after {
-  left: 0;
-  opacity: 0;
-  transition: opacity var(--wake);
-  will-change: opacity;
-}
-
-.systems.resting .system-panel .fact::after {
-  opacity: 1;
-  transition: opacity var(--rest);
-}
-
-/* The narrow box goes once the wide one is in, so the two never show at once. */
-.systems.resting .system-panel .fact::before {
-  opacity: 0;
-  transition: opacity 0s 700ms;
-}
-
-.system-panel .fact > :not(.timer) {
-  transition: transform var(--wake);
-  will-change: transform;
-}
-
-.systems.resting .system-panel .fact > :not(.timer) {
-  transform: translateX(calc(-1 * var(--under-rail)));
-  transition: transform var(--rest);
-}
-
-.systems.resting .system-panel .fact .timer {
-  left: 0;
 }
 
 .system-panel .fact .label {
@@ -1518,7 +1457,7 @@ main {
 
 .system-panel .fact .timer {
   position: absolute;
-  left: var(--under-rail);
+  left: 0;
   right: 0;
   bottom: 0;
   height: 2px;
@@ -2468,14 +2407,11 @@ kbd {
 }
 
 /* The card, beside the rail; under the shelf too once the rail has faded. */
-:root[data-systems-look='neon'] .system-panel::before,
-:root[data-systems-look='neon'] .system-panel::after {
+:root[data-systems-look='neon'] .system-panel::before {
   content: '';
   position: absolute;
   z-index: -2;
-  top: 0.4rem;
-  right: 0.4rem;
-  bottom: 0.4rem;
+  inset: 0.4rem;
   border: 1px solid rgb(var(--sys-rgb) / 45%);
   border-radius: calc(var(--radius) * 3);
   background:
@@ -2488,29 +2424,6 @@ kbd {
     0 0 0 1px rgb(0 0 0 / 40%),
     0 0 1.2rem rgb(var(--sys-rgb) / 30%),
     inset 0 0 2.4rem rgb(var(--sys2-rgb) / 9%);
-}
-
-/* The card beside the rail, and the card the whole width, which fades in over it at rest:
-   only opacity changes, never an edge, which had the Pi draw the whole card every frame. */
-:root[data-systems-look='neon'] .system-panel::before {
-  left: var(--under-rail);
-}
-
-:root[data-systems-look='neon'] .system-panel::after {
-  left: 0.4rem;
-  opacity: 0;
-  transition: opacity var(--wake);
-  will-change: opacity;
-}
-
-:root[data-systems-look='neon'] .systems.resting .system-panel::after {
-  opacity: 1;
-  transition: opacity var(--rest);
-}
-
-:root[data-systems-look='neon'] .systems.resting .system-panel::before {
-  opacity: 0;
-  transition: opacity 0s 700ms;
 }
 
 :root[data-systems-look='neon'] .system-rail {
@@ -2880,9 +2793,19 @@ kbd {
 /* A narrow screen: the list gives way to the system, and secondary details go. */
 @media (max-width: 960px), (max-aspect-ratio: 4/3) {
   .systems {
-    grid-template-columns: 11rem minmax(0, 1fr);
-    gap: 1rem;
-    --under-rail: 12rem;
+    --strip-item: 8.5rem;
+  }
+
+  /* No room for the press column: the story and the console take it. */
+  .system-panel .shelf {
+    display: none;
+  }
+
+  .system-panel .stage-page {
+    grid-template-areas:
+      'intro intro tally'
+      'showcase showcase showcase'
+      'fact fact fact';
   }
 
   .system-panel .specs {

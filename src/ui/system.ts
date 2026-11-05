@@ -26,8 +26,6 @@ const LEAVE_MS = 220;
  * rail alone, without the stage flickering through every system on the way.
  */
 const REST_MS = 170;
-/** After this long resting on a system, the rail gives way to its shelf. */
-const SHELF_REST_MS = 2400;
 /**
  * Holding a direction: the stage waits this long after the last step, so only the rail moves
  * while the list runs (a Pi takes about a frame and a half to draw a new stage).
@@ -160,7 +158,7 @@ function makerRgb(maker: string): string | null {
 type Slot = 'intro' | 'tally' | 'showcase' | 'fact' | 'shelf';
 
 /**
- * A category's systems: a rail of logos on the left, kept centred on the selection, and the
+ * A category's systems: a strip of logos along the top, kept centred on the selection, and the
  * selected system on a stage: its console, lit and reflected on a neon floor (a photo in a frame,
  * or its logo, when there is no cut-out), its specs as callouts round it, its story above and its curiosities on a strip below. Moving on, the last system slides
  * away as the next comes in from the side it is moved toward, and the screen's colour (its
@@ -186,7 +184,6 @@ export class SystemView {
   #factTimer: ReturnType<typeof setInterval> | undefined;
   #boardTimer: ReturnType<typeof setTimeout> | undefined;
   #restTimer: ReturnType<typeof setTimeout> | undefined;
-  #shelfTimer: ReturnType<typeof setTimeout> | undefined;
   /** Curiosities move on by themselves; Interface → Rotate curiosities. */
   rotateFacts = true;
   /** What is behind the screen (Look → Systems background); `board`: each system's own. */
@@ -250,7 +247,6 @@ export class SystemView {
     if (!r || !system) return;
     r.classList.add('selected');
     this.#centre(r);
-    this.#wake();
     this.#preload(index);
     const ticket = ++this.#ticket;
     const show = (info: SystemInfo | null) => {
@@ -292,37 +288,28 @@ export class SystemView {
     this.#scheduleFact();
   }
 
-  /**
-   * The rail back, and, after a rest on a system with a shelf (its magazines, its peripherals), away again: the shelf shows in its place. Only fades: the stage under it
-   * was laid out for both all along, so nothing moves.
-   */
-  #wake(): void {
-    this.root.classList.remove('resting');
-    clearTimeout(this.#shelfTimer);
-    this.#shelfTimer = setTimeout(() => {
-      if (this.#slots.has('shelf')) this.root.classList.add('resting');
-    }, SHELF_REST_MS);
-  }
-
   /** Stops the curiosity timer when the screen goes away. */
   hide(): void {
     this.#drawnFor = null;
-    clearTimeout(this.#shelfTimer);
-    this.root.classList.remove('resting');
     clearInterval(this.#factTimer);
     clearTimeout(this.#boardTimer);
     clearTimeout(this.#restTimer);
   }
 
   /**
-   * The rail slides so the selected logo sits in its middle, under the selection bar, at the
-   * ends of the list too (a transform: the compositor's work, cheap on a Pi).
+   * The strip slides so the selected logo sits in its middle, under the selection frame, at the
+   * ends of the list too (a transform: the compositor's work, cheap on a Pi). Its neighbours
+   * fade with their distance from it.
    */
   #centre(row: HTMLElement): void {
-    const rail = this.#rail.clientHeight;
-    if (rail === 0) return;
-    const y = row.offsetTop + row.offsetHeight / 2 - rail / 2;
-    this.#list.style.transform = `translateY(${-y}px)`;
+    for (const [n, r] of this.#rows.entries()) {
+      const d = Math.abs(n - this.#selected);
+      r.dataset.near = d <= 3 ? String(d) : '';
+    }
+    const strip = this.#rail.clientWidth;
+    if (strip === 0) return;
+    const x = row.offsetLeft + row.offsetWidth / 2 - strip / 2;
+    this.#list.style.transform = `translateX(${-x}px)`;
   }
 
   #drawBoard(system: CyberSystem, delay: number): void {
@@ -395,6 +382,8 @@ export class SystemView {
       page.append(part);
       this.#slots.set(slot, part);
     }
+    // Without magazines or peripherals, the story and the console take the shelf's column.
+    page.classList.toggle('bare', !this.#slots.has('shelf'));
     this.#panel.append(page);
     this.#page = page;
     if (!old) return;
@@ -669,9 +658,9 @@ function stage(system: CyberSystem, name: string): HTMLElement {
 }
 
 /**
- * What was written about the system and what plugged into it, set out in the stage where the
- * rail was, once it fades after a rest: magazines about it standing side by side, each cover
- * whole, and its peripherals lying on the floor before them, each named. Lit as the console
+ * What was written about the system and what plugged into it, in their own column on the
+ * stage: magazines about it on a stand, each cover whole, and its peripherals lying on the
+ * floor before them, each named. Lit as the console
  * is: on the same floor, its glow under them. A picture that will not load is taken away;
  * `null` for a system with neither.
  */

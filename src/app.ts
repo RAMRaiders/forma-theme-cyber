@@ -613,7 +613,10 @@ export class App {
       home.select(level.index);
       this.#renderChrome();
     } else if (this.#mode === 'systems') {
-      level.index = moveList(level.index, this.#systemView.count, move, 5, repeat);
+      // The systems run along a strip: left and right step through them, as up and down do;
+      // the shoulders jump five.
+      const step = move === 'left' ? 'up' : move === 'right' ? 'down' : move;
+      level.index = moveList(level.index, this.#systemView.count, step, 5, repeat);
       this.#systemView.select(level.index, false, repeat);
     } else if (
       this.#list &&
