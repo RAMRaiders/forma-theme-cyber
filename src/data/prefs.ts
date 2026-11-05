@@ -16,7 +16,16 @@ export interface Prefs {
   previews: boolean;
   /** Curiosities move on by themselves on a system's page. */
   rotateFacts: boolean;
+  /**
+   * How a game list shows its games, picked on Select over the list. Immersive: the game on a
+   * stage of its own, in acts, the list a rail that rests away. More to come.
+   */
+  gamesView: GamesView;
 }
+
+/** The game list's views, in the order Select offers them. */
+const GAMES_VIEWS = ['immersive'] as const;
+export type GamesView = (typeof GAMES_VIEWS)[number];
 
 export const DEFAULT_PREFS: Prefs = {
   textSize: 'normal',
@@ -24,7 +33,8 @@ export const DEFAULT_PREFS: Prefs = {
   systemsLook: 'neon',
   motion: true,
   previews: true,
-  rotateFacts: true
+  rotateFacts: true,
+  gamesView: 'immersive'
 };
 
 /**
@@ -62,6 +72,8 @@ export function prefUpdate(key: string, value: unknown): Partial<Prefs> | null {
   const k = key as keyof Prefs;
   // A look no longer offered (Plain, folded into Neon) is the default.
   if (k === 'systemsLook' && !['neon', 'grid', 'board'].includes(value as string)) return null;
+  // A view no longer offered is the default.
+  if (k === 'gamesView' && !(GAMES_VIEWS as readonly unknown[]).includes(value)) return null;
   return typeof value === typeof DEFAULT_PREFS[k] ? { [k]: value } : null;
 }
 
@@ -89,4 +101,5 @@ export function applyPrefs(prefs: Prefs, root: HTMLElement = document.documentEl
   root.dataset.board = prefs.board;
   root.dataset.systemsLook = prefs.systemsLook;
   root.dataset.motion = prefs.motion ? 'on' : 'off';
+  root.dataset.gamesView = prefs.gamesView;
 }
