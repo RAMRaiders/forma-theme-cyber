@@ -157,7 +157,7 @@ function makerRgb(maker: string): string | null {
 }
 
 /** The parts of the stage that change together when the selection moves. */
-type Slot = 'intro' | 'about' | 'tally' | 'showcase' | 'fact';
+type Slot = 'intro' | 'tally' | 'showcase' | 'press' | 'gear' | 'fact';
 
 /**
  * A category's systems: a strip of logos over the middle while moving, kept centred on the
@@ -422,7 +422,7 @@ export class SystemView {
     const released = info?.specs?.released ?? year;
     const byline = bylineOf(maker, released, makerLogos(maker, this.#makers));
 
-    const sheet = (specs: [Spec, string][]) => {
+    const callouts = (side: 'left' | 'right', specs: [Spec, string][]) => {
       const items = specs.flatMap(([key, label], n) => {
         const value = info?.specs?.[key];
         return value
@@ -436,7 +436,7 @@ export class SystemView {
             ]
           : [];
       });
-      return items.length ? el('dl', { class: 'specs' }, ...items) : null;
+      return items.length ? el('dl', { class: `specs specs-${side}` }, ...items) : null;
     };
 
     const parts: [Slot, HTMLElement | null][] = [];
@@ -446,16 +446,10 @@ export class SystemView {
         'div',
         { class: 'intro' },
         el('div', { class: 'heading' }, logoImage(system, 'logo'), title),
-        byline
+        byline,
+        info?.description ? scroller('p', info.description, 'description') : null
       )
     ]);
-    const about = el(
-      'div',
-      { class: 'about' },
-      info?.description ? scroller('p', info.description, 'description') : null,
-      sheet([...LEFT, ...RIGHT])
-    );
-    parts.push(['about', about.childElementCount ? about : null]);
     parts.push([
       'tally',
       el(
@@ -463,14 +457,21 @@ export class SystemView {
         { class: 'tally' },
         el('span', { class: 'count' }, s.gameCount.toLocaleString('en')),
         el('span', { class: 'unit' }, s.gameCount === 1 ? 'game' : 'games'),
-        bestsellerShelf(bestsellers(s.name, info?.bestsellers), info?.bestsellersBy !== 'classics'),
-        gear(system)
+        bestsellerShelf(bestsellers(s.name, info?.bestsellers), info?.bestsellersBy !== 'classics')
       )
     ]);
     parts.push([
       'showcase',
-      el('div', { class: 'showcase' }, stage(system, title.textContent ?? ''), press(system))
+      el(
+        'div',
+        { class: 'showcase' },
+        callouts('left', LEFT),
+        stage(system, title.textContent ?? ''),
+        callouts('right', RIGHT)
+      )
     ]);
+    parts.push(['press', press(system)]);
+    parts.push(['gear', gear(system)]);
     parts.push(['fact', this.#factStrip()]);
     const apply = () => {
       if (ticket !== this.#ticket) return;

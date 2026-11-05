@@ -845,13 +845,14 @@ main {
   display: grid;
   /* Fixed rows and columns: a longer story, a bigger count or a two-line curiosity never moves
      the console; what does not fit scrolls in its own box. */
-  /* From the logo, top left: the story and the specs under it, the console in the middle
-     with the press before it, the count, best sellers and peripherals down the right. */
-  grid-template-columns: 26rem minmax(0, 1fr) 18.5rem;
+  /* From the logo, top left, with its story; the count and best sellers top right. In the
+     middle the console with its hardware round it, the press to its left, the peripherals
+     to its right. */
+  grid-template-columns: 13.5rem minmax(0, 1fr) 13.5rem;
   grid-template-rows: auto minmax(0, 1fr) 3.4rem;
   grid-template-areas:
     'intro intro tally'
-    'about showcase tally'
+    'press showcase gear'
     'fact fact fact';
   gap: 0.6rem 2rem;
   padding: 1.1rem 1.6rem 1rem;
@@ -871,10 +872,12 @@ main {
    and turned toward the middle, the first in front there. Every cover whole, in its own
    shape, a little darker only at the foot. */
 .system-panel .stand {
+  grid-area: press;
+  align-self: center;
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding: 0 1rem;
+  padding: 0 0.7rem;
 }
 
 .system-panel .cover {
@@ -916,8 +919,8 @@ main {
 .system-panel .cover img {
   width: auto;
   height: auto;
-  max-width: 6.2rem;
-  max-height: 8.6rem;
+  max-width: 5rem;
+  max-height: 7rem;
 }
 
 .system-panel .stand.n1 img {
@@ -927,6 +930,8 @@ main {
 
 /* The peripherals, big enough to see: two by two, each on its lit spot of floor, named. */
 .system-panel .gear {
+  grid-area: gear;
+  align-self: center;
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -954,7 +959,7 @@ main {
   width: auto;
   height: auto;
   max-width: 100%;
-  max-height: 5.6rem;
+  max-height: 4.6rem;
 }
 
 .system-panel .gear.n1 .item img {
@@ -979,7 +984,7 @@ main {
   );
 }
 
-.system-panel figcaption {
+.system-panel .gear figcaption {
   max-width: 100%;
   margin-top: 0.35rem;
   overflow: hidden;
@@ -990,15 +995,6 @@ main {
   white-space: nowrap;
   color: var(--muted);
   text-shadow: 0 0 0.4rem #000;
-}
-
-.system-panel .about {
-  grid-area: about;
-  display: flex;
-  flex-direction: column;
-  gap: 1.4rem;
-  min-height: 0;
-  overflow: hidden;
 }
 
 .system-panel .intro {
@@ -1074,14 +1070,14 @@ main {
 }
 
 .system-panel .description {
-  flex: none;
-  margin: 0;
+  max-width: 52rem;
+  margin: 0.6rem 0 0;
   overflow: hidden;
   color: rgb(223 246 255 / 86%);
   font-size: 0.86rem;
   line-height: 1.45;
-  /* Six lines; a longer story scrolls through them. */
-  max-height: calc(6 * 1.45em);
+  /* Four lines; a longer story scrolls through them. */
+  max-height: calc(4 * 1.45em);
   text-shadow:
     0 0 0.3rem #000,
     0 0 1rem #000;
@@ -1101,16 +1097,9 @@ main {
   font-family: var(--mono);
 }
 
-/* The count and its unit on one line, the best sellers and the peripherals under both. */
-.system-panel .tally .bestsellers,
-.system-panel .tally .gear {
+/* The count and its unit on one line, the best sellers under both. */
+.system-panel .tally .bestsellers {
   grid-column: 1 / -1;
-  justify-self: stretch;
-}
-
-.system-panel .tally .gear {
-  margin-top: 1.6rem;
-  font-family: 'Inter', 'DejaVu Sans', system-ui, sans-serif;
 }
 
 .system-panel .tally .count {
@@ -1151,7 +1140,7 @@ main {
   padding: 0;
   list-style: none;
   /* The cases are sized in em: this one size scales them all. */
-  font-size: 1.2rem;
+  font-size: 1.05rem;
 }
 
 .system-panel .bestsellers li {
@@ -1220,15 +1209,15 @@ main {
 .system-panel .showcase {
   grid-area: showcase;
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-  justify-items: center;
+  grid-template-columns: minmax(0, 11.5rem) minmax(0, 1fr) minmax(0, 11.5rem);
+  align-items: center;
   gap: 1rem;
   min-height: 0;
-  padding-bottom: 0.8rem;
 }
 
 .system-panel .console {
   position: relative;
+  grid-column: 2;
   display: grid;
   place-items: center;
   height: 100%;
@@ -1344,31 +1333,64 @@ main {
 
 .system-panel .specs {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.9rem 1.6rem;
+  gap: 1.3rem;
   margin: 0;
+  padding: 0.8rem 0;
+  position: relative;
 }
 
-/* A spec: its label after a dot in the next of the system's colours, its value, a rule. */
+/* A soft shade behind the callouts, wider than them, so the board's own labels never cross.
+   Its soft edge is kept small: a wide blur took a Pi most of a frame to draw. */
+.system-panel .specs::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -1.4rem -1.8rem;
+  border-radius: 2.4rem;
+  background: rgb(4 6 12 / 80%);
+  box-shadow: 0 0 1.2rem 0.8rem rgb(4 6 12 / 80%);
+}
+
+.system-panel .specs-left {
+  grid-column: 1;
+  text-align: right;
+}
+
+.system-panel .specs-right {
+  grid-column: 3;
+}
+
+/* A callout: a label, a value, a rule and a lead with a dot toward the console. */
 .system-panel .spec {
   position: relative;
-  min-width: 0;
-  padding: 0 0 0.45rem 0.95rem;
-  border-bottom: 1px solid var(--sys-30);
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--sys-45);
+}
+
+.system-panel .spec::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  width: 2.6rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--sys-70), var(--sys-10));
 }
 
 .system-panel .spec::before {
   content: '';
   position: absolute;
-  left: 0;
-  top: 0.2rem;
+  bottom: -0.2rem;
   width: 0.4rem;
   height: 0.4rem;
   border-radius: 50%;
-  background: var(--dot, var(--sys));
-  box-shadow: 0 0 0.5rem var(--dot, var(--sys));
+  background: var(--sys);
 }
 
+.system-panel .specs-left .spec::after {
+  left: 100%;
+}
+
+/* Each callout in the next of the system's colours. */
 .system-panel .spec:nth-child(4n + 2) {
   --dot: rgb(var(--sys2-rgb));
 }
@@ -1381,8 +1403,26 @@ main {
   --dot: rgb(var(--sys4-rgb));
 }
 
+.system-panel .spec::before {
+  background: var(--dot, var(--sys));
+  box-shadow: 0 0 0.5rem var(--dot, var(--sys));
+}
+
 .system-panel .spec dt {
   color: var(--dot, var(--sys));
+}
+
+.system-panel .specs-left .spec::before {
+  left: calc(100% + 2.6rem);
+}
+
+.system-panel .specs-right .spec::after {
+  right: 100%;
+  transform: scaleX(-1);
+}
+
+.system-panel .specs-right .spec::before {
+  right: calc(100% + 2.6rem);
 }
 
 .system-panel dt {
