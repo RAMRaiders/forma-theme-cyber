@@ -26,6 +26,8 @@ const LEAVE_MS = 220;
  * rail alone, without the stage flickering through every system on the way.
  */
 const REST_MS = 170;
+/** The strip of logos shows while moving, over the stage; this long after the last move, it goes. */
+const DROP_MS = 1000;
 /**
  * Holding a direction: the stage waits this long after the last step, so only the rail moves
  * while the list runs (a Pi takes about a frame and a half to draw a new stage).
@@ -158,7 +160,8 @@ function makerRgb(maker: string): string | null {
 type Slot = 'intro' | 'tally' | 'showcase' | 'fact' | 'shelf';
 
 /**
- * A category's systems: a strip of logos along the top, kept centred on the selection, and the
+ * A category's systems: a strip of logos over the middle while moving, kept centred on the
+ * selection, gone a moment after the last move; and the
  * selected system on a stage: its console, lit and reflected on a neon floor (a photo in a frame,
  * or its logo, when there is no cut-out), its specs as callouts round it, its story above and its curiosities on a strip below. Moving on, the last system slides
  * away as the next comes in from the side it is moved toward, and the screen's colour (its
@@ -168,6 +171,8 @@ export class SystemView {
   readonly root = el('div', { class: 'systems' });
   readonly #rail = el('div', { class: 'system-rail' });
   readonly #list = el('ul', { class: 'system-list', role: 'listbox' });
+  /** Where the selection is in the list: "4 / 23". */
+  readonly #where = el('span', { class: 'where' });
   readonly #panel = el('section', { class: 'system-panel', 'aria-live': 'polite' });
   readonly #slots = new Map<Slot, HTMLElement>();
   /** The stage showing: the slots' parent. */
@@ -184,6 +189,7 @@ export class SystemView {
   #factTimer: ReturnType<typeof setInterval> | undefined;
   #boardTimer: ReturnType<typeof setTimeout> | undefined;
   #restTimer: ReturnType<typeof setTimeout> | undefined;
+  #dropTimer: ReturnType<typeof setTimeout> | undefined;
   /** Curiosities move on by themselves; Interface → Rotate curiosities. */
   rotateFacts = true;
   /** What is behind the screen (Look → Systems background); `board`: each system's own. */
@@ -198,7 +204,7 @@ export class SystemView {
     /** Shows a board behind the whole screen (the app's backdrop). */
     private readonly backdrop: (svg: string) => void
   ) {
-    this.#rail.append(this.#list);
+    this.#rail.append(this.#list, this.#where);
     this.root.append(this.#rail, this.#panel);
     void infos.makers().then((makers) => {
       this.#makers = makers;
@@ -247,6 +253,7 @@ export class SystemView {
     if (!r || !system) return;
     r.classList.add('selected');
     this.#centre(r);
+    this.#browse();
     this.#preload(index);
     const ticket = ++this.#ticket;
     const show = (info: SystemInfo | null) => {
@@ -288,9 +295,21 @@ export class SystemView {
     this.#scheduleFact();
   }
 
+  /**
+   * The strip of logos over the middle of the stage while moving; a moment after the last
+   * move it fades, and the system's page is the screen. Only opacity changes.
+   */
+  #browse(): void {
+    this.root.classList.add('browsing');
+    clearTimeout(this.#dropTimer);
+    this.#dropTimer = setTimeout(() => this.root.classList.remove('browsing'), DROP_MS);
+  }
+
   /** Stops the curiosity timer when the screen goes away. */
   hide(): void {
     this.#drawnFor = null;
+    clearTimeout(this.#dropTimer);
+    this.root.classList.remove('browsing');
     clearInterval(this.#factTimer);
     clearTimeout(this.#boardTimer);
     clearTimeout(this.#restTimer);
@@ -306,6 +325,7 @@ export class SystemView {
       const d = Math.abs(n - this.#selected);
       r.dataset.near = d <= 3 ? String(d) : '';
     }
+    this.#where.textContent = `${this.#selected + 1} / ${this.#rows.length}`;
     const strip = this.#rail.clientWidth;
     if (strip === 0) return;
     const x = row.offsetLeft + row.offsetWidth / 2 - strip / 2;
@@ -688,8 +708,8 @@ export function shelf(system: Pick<CyberSystem, 'magazines' | 'peripherals'>): H
   const gear = system.peripherals.length
     ? el(
         'div',
-        { class: `gear n${Math.min(3, system.peripherals.length)}` },
-        ...system.peripherals.slice(0, 3).map((p) => figure('item', p.src, p.name, p.name))
+        { class: `gear n${Math.min(4, system.peripherals.length)}` },
+        ...system.peripherals.slice(0, 4).map((p) => figure('item', p.src, p.name, p.name))
       )
     : null;
   if (!stand && !gear) return null;

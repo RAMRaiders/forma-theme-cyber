@@ -595,13 +595,13 @@ main {
 }
 
 .systems {
+  position: relative;
   display: grid;
-  /* The strip of logos along the top, the stage the whole width under it. */
-  grid-template-rows: var(--strip) minmax(0, 1fr);
-  gap: 0.8rem;
+  /* The stage, the whole screen; the strip of logos over its middle while moving. */
+  grid-template-rows: minmax(0, 1fr);
   /* The strip's height, and one logo's place in it, under the selection frame. */
-  --strip: 4.2rem;
-  --strip-item: 11rem;
+  --strip: 6.4rem;
+  --strip-item: 15rem;
   height: 100%;
   min-height: 0;
 }
@@ -615,14 +615,59 @@ main {
   --sys-70: color-mix(in srgb, var(--sys) 70%, transparent);
 }
 
-/* The strip: logos in a row along the top, fading toward its ends. */
-.system-rail {
-  position: relative;
+/* While moving, the stage darkens under the strip; a moment after the last move both fade
+   away and the system's page is the screen. Only opacity changes, each on its own layer. */
+.systems::after {
+  content: '';
+  position: absolute;
   z-index: 2;
-  min-width: 0;
+  inset: 0;
+  background: rgb(2 4 10 / 62%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 450ms ease;
+  will-change: opacity;
+}
+
+.systems.browsing::after {
+  opacity: 1;
+  transition-duration: 120ms;
+}
+
+/* The strip: a band of logos across the middle, fading toward its ends. */
+.system-rail {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: var(--strip);
+  translate: 0 -50%;
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 450ms ease,
+    visibility 0s linear 450ms;
+  will-change: opacity;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(4 6 14 / 92%) 18%,
+    rgb(4 6 14 / 92%) 82%,
+    transparent
+  );
+  box-shadow:
+    0 -1px 0 var(--sys-30),
+    0 1px 0 var(--sys-30);
+}
+
+.systems.browsing .system-rail {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 120ms ease,
+    visibility 0s;
 }
 
 /* The selection: a frame fixed in the strip's middle, the logos sliding under it. Moving is
@@ -632,26 +677,39 @@ main {
   position: absolute;
   z-index: 0;
   left: 50%;
-  top: 0.35rem;
-  bottom: 0.35rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
   width: var(--strip-item);
   translate: -50% 0;
   border: 1px solid var(--sys-70);
   border-radius: calc(var(--radius) * 1.6);
   background: linear-gradient(var(--sys-10), var(--sys-30));
-  box-shadow: 0 0 1.4rem var(--sys-30);
+  box-shadow: 0 0 1.6rem var(--sys-30);
 }
 
 .system-rail::after {
   content: '';
   position: absolute;
   left: 50%;
-  bottom: 0.35rem;
-  width: 2.6rem;
-  height: 0.2rem;
+  bottom: 0.5rem;
+  width: 3rem;
+  height: 0.22rem;
   translate: -50% 0;
   border-radius: 1rem;
   background: var(--sys);
+}
+
+/* Where the selection is in the list, under the frame. */
+.system-rail .where {
+  position: absolute;
+  z-index: 1;
+  right: 50%;
+  bottom: 0.75rem;
+  translate: calc(var(--strip-item) / 2 - 0.8rem) 0;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
 }
 
 .system-list {
@@ -674,7 +732,7 @@ main {
   /* Every logo the same width: the strip's slide is all that moves. */
   width: var(--strip-item);
   height: 100%;
-  padding: 0 1.3rem;
+  padding: 0 1.8rem;
   opacity: 0.2;
 }
 
@@ -694,7 +752,7 @@ main {
 /* Each logo centred in the same small box, as large as it fits in it. */
 .system-list .logo {
   width: 100%;
-  height: 1.7rem;
+  height: 2.4rem;
   object-fit: contain;
 }
 
@@ -787,7 +845,7 @@ main {
   display: grid;
   /* Fixed rows and columns: a longer story, a bigger count or a two-line curiosity never moves
      the console; what does not fit scrolls in its own box. */
-  grid-template-columns: 15rem minmax(0, 1fr) 18.5rem;
+  grid-template-columns: 18rem minmax(0, 1fr) 18.5rem;
   grid-template-rows: 12.4rem minmax(0, 1fr) 3.4rem;
   grid-template-areas:
     'shelf intro tally'
@@ -813,7 +871,7 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 1.6rem;
+  gap: 2.2rem;
   min-height: 0;
   /* Not a box that scrolls, as the other parts are: shadows and glow reach past it. */
   overflow: visible;
@@ -828,119 +886,123 @@ main {
   display: block;
 }
 
-/* The press on its stand, every cover whole: the first big, the other two smaller beside it,
-   one over the other, as on a newsstand rack. Lit as the console is, a little darker only at
-   the foot. */
+/* The press: three covers the same size standing side by side, a little over one another
+   and turned toward the middle, the first in front there. Every cover whole, in its own
+   shape, a little darker only at the foot. */
 .system-panel .shelf .stand {
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-rows: auto auto;
-  align-items: end;
+  display: flex;
+  align-items: flex-end;
   justify-content: center;
-  gap: 0.7rem 0.8rem;
+  padding: 0 1rem;
 }
 
 .system-panel .shelf .cover {
-  justify-self: center;
+  flex: none;
+  margin: 0 -0.7rem;
   border-radius: 0.2rem;
   overflow: hidden;
   box-shadow:
     0 0 0 1px rgb(255 255 255 / 14%),
-    0 0.6rem 1.2rem rgb(0 0 0 / 65%);
-  transform: rotate(3deg);
+    0 0.8rem 1.6rem rgb(0 0 0 / 70%);
+  transform: rotate(-6deg);
+  transform-origin: 50% 100%;
+}
+
+.system-panel .shelf .cover.lead ~ .cover {
+  transform: rotate(6deg);
+}
+
+.system-panel .shelf .cover.lead {
+  z-index: 1;
+  transform: translateY(-0.5rem) scale(1.08);
+  box-shadow:
+    0 0 0 1px rgb(var(--sys-rgb) / 55%),
+    0 0 1.6rem rgb(var(--sys-rgb) / 30%),
+    0 1rem 2rem rgb(0 0 0 / 75%);
+}
+
+.system-panel .shelf .stand.n1 .cover {
+  transform: rotate(-3deg);
 }
 
 .system-panel .shelf .cover::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(transparent 60%, rgb(4 6 12 / 35%));
+  background: linear-gradient(transparent 65%, rgb(4 6 12 / 30%));
 }
 
-.system-panel .shelf .cover.lead {
-  order: -1;
-  grid-row: span 2;
-  transform: rotate(-3deg);
-  box-shadow:
-    0 0 0 1px rgb(var(--sys-rgb) / 50%),
-    0 0 1.6rem rgb(var(--sys-rgb) / 30%),
-    0 1rem 2rem rgb(0 0 0 / 70%);
-}
-
-/* Two: side by side, the second a little smaller. */
-.system-panel .shelf .stand.n2 .cover:not(.lead) {
-  grid-row: span 2;
-}
-
-/* Never cut: each cover whole, in its own shape, as big as its place allows. */
 .system-panel .shelf .cover img {
   width: auto;
   height: auto;
-  max-width: 4.6rem;
-  max-height: 5.6rem;
+  max-width: 6.2rem;
+  max-height: 8.6rem;
 }
 
-.system-panel .shelf .cover.lead img {
+.system-panel .shelf .stand.n1 img {
   max-width: 9rem;
-  max-height: 11.9rem;
+  max-height: 12rem;
 }
 
-.system-panel .shelf .stand.n2 .cover:not(.lead) img {
-  max-width: 6.4rem;
-  max-height: 9.6rem;
-}
-
-/* The peripherals, lying on the floor in front, each with its shadow and its name. */
+/* The peripherals, big enough to see: two by two, each on its lit spot of floor, named. */
 .system-panel .shelf .gear {
   position: relative;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 0.6rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.1rem 1rem;
+  justify-items: center;
 }
 
-/* The floor under them lit in the system's colour, as under the console. */
-.system-panel .shelf .gear::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  left: -20%;
-  right: -20%;
-  bottom: -1.6rem;
-  height: 8rem;
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgb(var(--sys-rgb) / 30%), transparent);
+/* An odd last one centred under the others. */
+.system-panel .shelf .gear .item:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.system-panel .shelf .gear.n1 {
+  grid-template-columns: 1fr;
 }
 
 .system-panel .shelf .item {
-  flex: 1 1 0;
-  min-width: 0;
-  max-width: 7rem;
+  position: relative;
+  display: grid;
+  justify-items: center;
+  width: 100%;
 }
 
 .system-panel .shelf .item img {
-  width: 100%;
-  height: 3.8rem;
-  object-fit: contain;
-  object-position: 50% 100%;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 5.6rem;
 }
 
+.system-panel .shelf .gear.n1 .item img {
+  max-height: 8rem;
+}
+
+/* The floor under each lit in the system's colour, as under the console, its shadow on it. */
 .system-panel .shelf .item::before {
   content: '';
   position: absolute;
   z-index: -1;
-  left: 8%;
-  right: 8%;
-  top: 2.9rem;
-  height: 1.2rem;
+  left: 0;
+  right: 0;
+  bottom: 0.6rem;
+  height: 3rem;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgb(0 0 0 / 70%), transparent);
+  background: radial-gradient(
+    closest-side,
+    rgb(0 0 0 / 55%),
+    rgb(var(--sys-rgb) / 22%) 45%,
+    transparent
+  );
 }
 
 .system-panel .shelf figcaption {
-  margin-top: 0.3rem;
+  max-width: 100%;
+  margin-top: 0.35rem;
   overflow: hidden;
-  font-size: 0.5rem;
+  font-size: 0.62rem;
   line-height: 1.2;
   text-align: center;
   text-overflow: ellipsis;
@@ -2424,14 +2486,6 @@ kbd {
     0 0 0 1px rgb(0 0 0 / 40%),
     0 0 1.2rem rgb(var(--sys-rgb) / 30%),
     inset 0 0 2.4rem rgb(var(--sys2-rgb) / 9%);
-}
-
-:root[data-systems-look='neon'] .system-rail {
-  border: 1px solid rgb(var(--sys-rgb) / 25%);
-  border-radius: calc(var(--radius) * 3);
-  background:
-    radial-gradient(ellipse at 50% 50%, rgb(var(--sys2-rgb) / 8%), transparent 70%),
-    linear-gradient(160deg, rgb(10 16 30 / 88%), rgb(4 6 12 / 94%));
 }
 
 /* In a card the floor grid only crowds it; the console stands on its halo, as on a tile. */
