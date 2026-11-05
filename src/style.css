@@ -565,10 +565,18 @@ main {
   background: linear-gradient(270deg, rgb(5 7 13), transparent);
 }
 
-/* A row that runs never stops: started and stopped with the selection, it jumped on the Pi. */
+/*
+ * Only the selected tile's row runs, from its first logo after a moment's rest; the others rest
+ * on their first logos. Never paused and resumed (that jumped ahead on the Pi): the animation
+ * is there or not. Every such row keeps its own layer either way, so selecting one does not
+ * rebuild it.
+ */
 .tile .logos-track[data-looped] {
-  animation: marquee var(--marquee-s, 20s) linear infinite;
   will-change: transform;
+}
+
+.tile.selected .logos-track[data-looped] {
+  animation: marquee var(--marquee-s, 20s) linear 1s infinite;
 }
 
 /* The track holds the logos twice, so half its width is one copy, whatever the text size. */
