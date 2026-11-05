@@ -10,7 +10,14 @@ import type {
 } from '@ramraiders/forma-sdk';
 import { FormaError } from '@ramraiders/forma-sdk';
 
-import { ALL_GAMES, CATEGORIES, InfoStore, allGames, group } from './data/catalog.js';
+import {
+  ALL_GAMES,
+  CATEGORIES,
+  type CyberSystem,
+  InfoStore,
+  allGames,
+  group
+} from './data/catalog.js';
 import {
   DEFAULT_PREFS,
   MARGINS_SETTING,
@@ -107,6 +114,10 @@ export class App {
       return { earned: data.earned, total: data.achievementCount };
     },
     accent: accentOf,
+    systemLogo: (name) => {
+      const system = this.#systemsByName.get(name);
+      return system?.logoSmall ? { src: system.logoSmall, dark: system.logoDark } : null;
+    },
     play: (game) => this.forma.video.play(game.id),
     stopVideo: () => void this.forma.video.stop().catch(() => {}),
     prepare: (items) => void this.forma.library.prepareMedia(items as never).catch(() => {})
@@ -138,6 +149,8 @@ export class App {
   /** Which screen the current level is: Cyber's own two, or Forma's views as they come. */
   #mode: 'home' | 'systems' | 'browse' = 'browse';
   #groups: Tile[] = [];
+  /** Every system Cyber shows, by name: for a game's system logo. */
+  #systemsByName = new Map<string, CyberSystem>();
   #shortcuts: Shortcut[] = SHORTCUTS;
 
   #views: ViewInfo[] = [];
@@ -312,6 +325,9 @@ export class App {
         this.infos.art()
       ]);
       this.#groups = group(systems, infos, arts);
+      this.#systemsByName = new Map(
+        this.#groups.flatMap((g) => g.systems).map((s) => [s.summary.name, s])
+      );
       // Every system's logo and picture, decoded in the background, ready for the rail.
       preload(this.#groups.flatMap((g) => g.systems.flatMap((s) => [s.logoSmall, s.photo])));
       const level = this.#level;

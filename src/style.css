@@ -1580,6 +1580,23 @@ main {
   transform-origin: left top;
 }
 
+/* The game's system, small, above its title: the right one in lists of every system too. */
+.stage .system-logo {
+  display: block;
+  height: 2.6rem;
+  max-width: 14rem;
+  margin-bottom: 1rem;
+  object-fit: contain;
+  object-position: left center;
+}
+
+/* Too dark for the background: on a light plate (no glow filter: the title block moves). */
+.stage .system-logo.dark {
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.3rem;
+  background: rgb(255 255 255 / 82%);
+}
+
 .stage .logo {
   display: block;
   max-width: min(100%, 30rem);
