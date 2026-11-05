@@ -1807,7 +1807,7 @@ main {
   max-height: 12rem;
   max-width: 40%;
   object-fit: contain;
-  filter: drop-shadow(0 1rem 1.4rem rgb(0 0 0 / 75%));
+  /* No drop-shadow: a filter on something that moves in makes the Pi's WebKit stutter. */
   transform: rotate(8deg);
 }
 

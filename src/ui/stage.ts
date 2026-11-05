@@ -247,11 +247,11 @@ export class Stage {
     }
     this.#later(() => {
       this.root.dataset.act = '2';
-      this.#startVideo(game, true);
     }, ACT_TWO_MS);
+    // The video starts only now, not while act 2 moves in (starting the player then made the
+    // Pi stutter): act 3 waits for it to show. Without one, the screenshots take over.
     this.#later(() => {
-      // With a video, act 3 waits for it to really play; without, the screenshots take over.
-      if (!this.#preview) this.#actThree(game);
+      if (!this.#startVideo(game, true)) this.#actThree(game);
     }, ACT_THREE_MS);
   }
 
@@ -481,19 +481,21 @@ export class Stage {
     }
   }
 
-  #startVideo(game: Game, actThree: boolean): void {
+  /** Asks Forma to play the game's video: `false` if there is none to ask for. */
+  #startVideo(game: Game, actThree: boolean): boolean {
     const play = this.options.play;
-    if (!this.previews || !play || !this.options.media(game, 'video')) return;
+    if (!this.previews || !play || !this.options.media(game, 'video')) return false;
     const preview: Preview = { shown: false };
     this.#preview = preview;
+    const without = () => {
+      if (this.#preview !== preview) return;
+      this.#preview = null;
+      if (actThree) this.#actThree(game);
+    };
     play(game)
       .then(({ playing }) => {
         if (this.#preview !== preview) return;
-        if (!playing) {
-          this.#preview = null;
-          if (actThree && this.act === 3) this.#actThree(game);
-          return;
-        }
+        if (!playing) return without();
         // Shown no sooner than act 3 would have been.
         const wait = actThree ? Math.max(0, this.#shownAt + ACT_THREE_MS - Date.now()) : 0;
         this.#later(() => {
@@ -502,9 +504,8 @@ export class Stage {
           if (actThree) this.#actThree(game);
         }, wait);
       })
-      .catch(() => {
-        if (this.#preview === preview) this.#preview = null;
-      });
+      .catch(without);
+    return true;
   }
 
   /**

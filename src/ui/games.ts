@@ -17,11 +17,11 @@ const DETAIL_SETTLE_MS = 150;
 /** After this long resting on a game, the list fades away and leaves the game the screen. */
 const RAIL_REST_MS = 2400;
 /**
- * After this long on a game, the pictures of the games around it are made ahead (by Forma, in
- * the background, after what the screen waits for), this many either side: the next moves show
- * at once.
+ * After this long on a game, once its stage has moved in (not during: it made the Pi stutter),
+ * the pictures of the games around it are made ahead (by Forma, in the background, after what
+ * the screen waits for), this many either side: the next moves show at once.
  */
-const PREPARE_AFTER_MS = 400;
+const PREPARE_AFTER_MS = 3500;
 const PREPARE_AROUND = 3;
 
 /**

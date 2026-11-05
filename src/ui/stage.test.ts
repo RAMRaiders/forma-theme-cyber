@@ -137,11 +137,16 @@ describe('the game stage', () => {
     document.body.replaceChildren(s.backdrop, s.root);
 
     s.show(game({}, { video: 'v', fanart: 'f' }));
+    // Not while act 2 moves in.
     await vi.advanceTimersByTimeAsync(ACT_TWO_MS);
+    expect(play).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(ACT_THREE_MS - ACT_TWO_MS - 1);
+    expect(play).not.toHaveBeenCalled();
+    expect(s.act).toBe(2);
+    // Act 3 comes with the video, once it shows.
+    await vi.advanceTimersByTimeAsync(2);
     expect(play).toHaveBeenCalledTimes(1);
-    expect(s.backdrop.classList.contains('through')).toBe(false);
-    // Seen from act 3, not before.
-    await vi.advanceTimersByTimeAsync(ACT_THREE_MS);
+    expect(s.act).toBe(3);
     expect(s.backdrop.classList.contains('through')).toBe(true);
     expect(document.documentElement.classList.contains('video-through')).toBe(true);
     expect(document.querySelector('.still')).toBeNull();
