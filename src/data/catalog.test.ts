@@ -1,7 +1,7 @@
 import type { SystemSummary } from '@ramraiders/forma-sdk';
 import { describe, expect, it } from 'vitest';
 
-import { InfoStore, group } from './catalog.js';
+import { InfoStore, group, makerLogo } from './catalog.js';
 
 const system = (name: string, hardware: string | null, gameCount: number): SystemSummary => ({
   name,
@@ -63,5 +63,22 @@ describe('catalog', () => {
     expect(await store.get('x68000')).toBeNull();
     expect([...(await store.all(['nes', 'x68000'])).keys()]).toEqual(['nes']);
     expect(asked).toEqual(['./systems/nes/info.json', './systems/x68000/info.json']);
+  });
+});
+
+describe('makerLogo', () => {
+  const makers = [
+    { id: 'sega', match: '^sega', logo: 'sega.webp' },
+    { id: 'nec', match: '^nec\\b', logo: 'nec.webp' },
+    { id: 'bad', match: '(', logo: 'bad.webp' }
+  ];
+  it('finds the maker a name starts with, whatever its case', () => {
+    expect(makerLogo('SEGA Enterprises', makers)).toBe('./makers/sega.webp');
+    expect(makerLogo('NEC Home Electronics', makers)).toBe('./makers/nec.webp');
+  });
+  it('is null for a maker without one, no maker, or a word that only starts the same', () => {
+    expect(makerLogo('Necrosoft', makers)).toBeNull();
+    expect(makerLogo('Watara', makers)).toBeNull();
+    expect(makerLogo(null, makers)).toBeNull();
   });
 });

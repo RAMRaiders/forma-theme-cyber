@@ -21,6 +21,15 @@ describe('the colours a system lights its screen with', () => {
     expect(Math.abs(hueOf(accent) - 45)).toBeLessThan(4);
   });
 
+  it('with its console’s own colour as the accent: a PAL Super Nintendo’s yellow button', () => {
+    const [main, accent] = systemColours(
+      { hues: [355], consoleHues: [53, 5], maker: 'Nintendo', category: 'consoles' },
+      0
+    );
+    expect(hueOf(main)).toBeGreaterThan(350);
+    expect(Math.abs(hueOf(accent) - 53)).toBeLessThan(4);
+  });
+
   it('with its maker’s as the accent when the logo has one colour', () => {
     // Super Nintendo's red, Nintendo's red too: a step round instead.
     const snes = systemColours({ hues: [355], maker: 'Nintendo', category: 'consoles' }, 0);

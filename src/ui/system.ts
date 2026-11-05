@@ -1,5 +1,12 @@
 import { type Bestseller, bestsellers } from '../data/bestsellers.js';
-import type { CategoryId, CyberSystem, InfoStore, SystemInfo } from '../data/catalog.js';
+import {
+  type CategoryId,
+  type CyberSystem,
+  type InfoStore,
+  type MakerLogo,
+  type SystemInfo,
+  makerLogo
+} from '../data/catalog.js';
 import { categoryArt } from './art.js';
 import { circuitSvg } from './circuit.js';
 import { el } from './dom.js';
@@ -92,28 +99,38 @@ function neon(hue: number): string {
 }
 
 /**
- * A system's own neon colours, `[main, accent]`: its logo's colours (Cyber found them in the
- * logo in colour), then its maker's. A logo with one colour has its maker's as the accent; a
- * logo with none (black, white, grey) takes its maker's colour. Without either, a colour by
- * its place in the list: a golden angle (about 137°) round the wheel from the last, so
- * neighbours are never alike.
+ * A system's own neon colours, `[main, accent]`: its logo's main colour, and its console's
+ * (its buttons, its stripes) as the accent; else the logo's second colour, else its maker's.
+ * A logo with no colour (black, white, grey) gives way to its maker's colour, then its
+ * console's. Without any of them, a colour by its place in the list: a golden angle (about
+ * 137°) round the wheel from the last, so neighbours are never alike. An accent too close to
+ * the main colour is passed over for the next.
  */
 export function systemColours(
-  system: { hues: readonly number[]; maker?: string | null; category: CategoryId },
+  system: {
+    hues: readonly number[];
+    consoleHues?: readonly number[];
+    maker?: string | null;
+    category: CategoryId;
+  },
   index: number
 ): [string, string] {
   const maker = system.maker ? makerRgb(system.maker) : null;
-  const [first, second] = system.hues;
-  if (first !== undefined) {
-    const main = neon(first);
-    if (second !== undefined) return [main, neon(second)];
-    // The maker's colour as the accent, unless it is the logo's own again.
-    if (maker && hueApart(rgbToHue(maker), first) > 30) return [main, maker];
-    return [main, neon((first + 45) % 360)];
-  }
-  if (maker) return [maker, neon((rgbToHue(maker) + 45) % 360)];
-  const main = (rgbToHue(CATEGORY_RGB[system.category]) + index * 137.508) % 360;
-  return [neon(main), neon((main + 50) % 360)];
+  const makerHue = maker ? rgbToHue(maker) : undefined;
+  const consoleHues = system.consoleHues ?? [];
+  const main =
+    system.hues[0] ??
+    makerHue ??
+    consoleHues[0] ??
+    (rgbToHue(CATEGORY_RGB[system.category]) + index * 137.508) % 360;
+  const mainRgb = system.hues[0] === undefined && maker ? maker : neon(main);
+  const accent = [
+    ...consoleHues,
+    ...system.hues.slice(1),
+    ...(makerHue === undefined ? [] : [makerHue])
+  ].find((h) => hueApart(h, main) > 30);
+  if (accent === undefined) return [mainRgb, neon((main + 45) % 360)];
+  return [mainRgb, accent === makerHue && maker ? maker : neon(accent)];
 }
 
 function hueApart(a: number, b: number): number {
@@ -149,6 +166,8 @@ export class SystemView {
   /** Which system the stage shows. */
   #shown = -1;
   #info: SystemInfo | null = null;
+  /** The makers' logos, once loaded: until then, the maker's name. */
+  #makers: MakerLogo[] = [];
   #fact = 0;
   #factTimer: ReturnType<typeof setInterval> | undefined;
   #boardTimer: ReturnType<typeof setTimeout> | undefined;
@@ -169,6 +188,9 @@ export class SystemView {
   ) {
     this.#rail.append(this.#list);
     this.root.append(this.#rail, this.#panel);
+    void infos.makers().then((makers) => {
+      this.#makers = makers;
+    });
   }
 
   get selected(): CyberSystem | undefined {
@@ -360,7 +382,8 @@ export class SystemView {
 
     const title = el('h2', { class: 'name' }, info?.name ?? s.fullname ?? s.name);
     const year = s.releaseYear ? String(s.releaseYear) : null;
-    const byline = [maker, info?.specs?.released ?? year].filter(Boolean).join(' · ');
+    const released = info?.specs?.released ?? year;
+    const byline = bylineOf(maker, released, makerLogo(maker, this.#makers));
 
     const callouts = (side: 'left' | 'right', specs: [Spec, string][]) => {
       const items = specs.flatMap(([key, label], n) => {
@@ -386,7 +409,7 @@ export class SystemView {
         'div',
         { class: 'intro' },
         el('div', { class: 'heading' }, logoImage(system, 'logo'), title),
-        byline ? el('p', { class: 'byline' }, byline) : null,
+        byline,
         info?.description ? scroller('p', info.description, 'description') : null
       )
     ]);
@@ -415,9 +438,14 @@ export class SystemView {
       if (ticket !== this.#ticket) return;
       // The system's own colours, on the page root: the backdrop, outside this view, takes
       // them too.
-      // Every look: the logo's colours and the maker's.
+      // Every look: the logo's colours, the console's and the maker's.
       const [rgb, accent] = systemColours(
-        { hues: system.hues, maker, category: system.category },
+        {
+          hues: system.hues,
+          consoleHues: system.consoleHues,
+          maker,
+          category: system.category
+        },
         this.#selected
       );
       const root = document.documentElement.style;
@@ -535,6 +563,28 @@ function settle(images: HTMLImageElement[]): Promise<void> {
     Promise.all(decoded).then(() => undefined),
     new Promise<void>((done) => setTimeout(done, DECODE_MS))
   ]);
+}
+
+/**
+ * Who made it and when: the maker as its logo where Cyber has it (its name for screen readers,
+ * and in its place if the logo will not load), then the year. `null` when neither is known.
+ */
+function bylineOf(
+  maker: string | null | undefined,
+  released: string | null | undefined,
+  logo: string | null
+): HTMLElement | null {
+  if (!maker && !released) return null;
+  const line = el('p', { class: 'byline' });
+  if (maker && logo) {
+    const img = el('img', { class: 'maker-logo', src: logo, alt: maker, decoding: 'async' });
+    img.addEventListener('error', () => img.replaceWith(maker), { once: true });
+    line.append(img);
+  } else if (maker) {
+    line.append(maker);
+  }
+  if (released) line.append(el('span', { class: 'year' }, maker ? ` · ${released}` : released));
+  return line;
 }
 
 /** A system's logo; a dark one gets a light halo; none (or a broken file) leaves nothing. */

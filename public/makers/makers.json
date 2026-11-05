@@ -1,0 +1,162 @@
+[
+  {
+    "id": "sega",
+    "match": "^sega",
+    "logo": "sega.webp"
+  },
+  {
+    "id": "nintendo",
+    "match": "^nintendo",
+    "logo": "nintendo.webp"
+  },
+  {
+    "id": "sony",
+    "match": "^sony",
+    "logo": "sony.webp"
+  },
+  {
+    "id": "microsoft",
+    "match": "^microsoft",
+    "logo": "microsoft.webp"
+  },
+  {
+    "id": "atari",
+    "match": "^atari",
+    "logo": "atari.webp"
+  },
+  {
+    "id": "commodore",
+    "match": "^commodore",
+    "logo": "commodore.webp"
+  },
+  {
+    "id": "nec",
+    "match": "^nec\\b",
+    "logo": "nec.webp"
+  },
+  {
+    "id": "snk",
+    "match": "^snk",
+    "logo": "snk.webp"
+  },
+  {
+    "id": "sharp",
+    "match": "^sharp",
+    "logo": "sharp.webp"
+  },
+  {
+    "id": "vtech",
+    "match": "^vtech",
+    "logo": "vtech.webp"
+  },
+  {
+    "id": "tandy",
+    "match": "^tandy",
+    "logo": "tandy.webp"
+  },
+  {
+    "id": "epoch",
+    "match": "^epoch",
+    "logo": "epoch.webp"
+  },
+  {
+    "id": "casio",
+    "match": "^casio",
+    "logo": "casio.webp"
+  },
+  {
+    "id": "apple",
+    "match": "^apple",
+    "logo": "apple.webp"
+  },
+  {
+    "id": "amstrad",
+    "match": "^amstrad",
+    "logo": "amstrad.webp"
+  },
+  {
+    "id": "philips",
+    "match": "^philips",
+    "logo": "philips.webp"
+  },
+  {
+    "id": "fujitsu",
+    "match": "^fujitsu",
+    "logo": "fujitsu.webp"
+  },
+  {
+    "id": "coleco",
+    "match": "^coleco",
+    "logo": "coleco.webp"
+  },
+  {
+    "id": "tomy",
+    "match": "^tomy",
+    "logo": "tomy.webp"
+  },
+  {
+    "id": "tiger",
+    "match": "^tiger",
+    "logo": "tiger.webp"
+  },
+  {
+    "id": "thomson",
+    "match": "^thomson",
+    "logo": "thomson.webp"
+  },
+  {
+    "id": "ti",
+    "match": "^texas instruments",
+    "logo": "ti.webp"
+  },
+  {
+    "id": "spectravideo",
+    "match": "^spectravideo",
+    "logo": "spectravideo.webp"
+  },
+  {
+    "id": "sammy",
+    "match": "^sammy",
+    "logo": "sammy.webp"
+  },
+  {
+    "id": "panasonic",
+    "match": "^panasonic",
+    "logo": "panasonic.webp"
+  },
+  {
+    "id": "namco",
+    "match": "^namco",
+    "logo": "namco.webp"
+  },
+  {
+    "id": "mattel",
+    "match": "^mattel",
+    "logo": "mattel.webp"
+  },
+  {
+    "id": "magnavox",
+    "match": "^magnavox",
+    "logo": "magnavox.webp"
+  },
+  {
+    "id": "mb",
+    "match": "^(mb|milton bradley)$",
+    "logo": "mb.webp"
+  },
+  {
+    "id": "gakken",
+    "match": "^gakken",
+    "logo": "gakken.webp"
+  },
+  {
+    "id": "fairchild",
+    "match": "^fairchild",
+    "logo": "fairchild.webp"
+  },
+  {
+    "id": "interton",
+    "match": "^interton",
+    "logo": "interton.webp"
+  }
+]

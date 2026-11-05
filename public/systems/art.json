@@ -12,6 +12,9 @@
     "hues": [
       17,
       213
+    ],
+    "consoleHues": [
+      25
     ]
   },
   "adam": {
@@ -20,6 +23,9 @@
     "kind": "cutout",
     "hues": [
       355
+    ],
+    "consoleHues": [
+      44
     ]
   },
   "advision": {
@@ -28,6 +34,9 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "consoleHues": [
+      7
     ]
   },
   "amiga1200": {
@@ -37,6 +46,9 @@
     "hues": [
       215,
       5
+    ],
+    "consoleHues": [
+      3
     ]
   },
   "amiga500": {
@@ -46,6 +58,9 @@
     "hues": [
       5,
       215
+    ],
+    "consoleHues": [
+      205
     ]
   },
   "amigacd32": {
@@ -54,12 +69,20 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "consoleHues": [
+      15,
+      55
     ]
   },
   "amigacdtv": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      247,
+      281
+    ]
   },
   "amstradcpc": {
     "logo": "logo.webp",
@@ -67,6 +90,10 @@
     "kind": "cutout",
     "hues": [
       345
+    ],
+    "consoleHues": [
+      5,
+      135
     ]
   },
   "apfm1000": {
@@ -84,6 +111,9 @@
     "hues": [
       5,
       65
+    ],
+    "consoleHues": [
+      36
     ]
   },
   "apple2gs": {
@@ -102,6 +132,10 @@
     "hues": [
       5,
       225
+    ],
+    "consoleHues": [
+      39,
+      355
     ]
   },
   "archimedes": {
@@ -110,6 +144,9 @@
     "kind": "cutout",
     "hues": [
       35
+    ],
+    "consoleHues": [
+      153
     ]
   },
   "arduboy": {
@@ -118,6 +155,9 @@
     "kind": "cutout",
     "hues": [
       285
+    ],
+    "consoleHues": [
+      4
     ]
   },
   "astrocade": {
@@ -126,6 +166,10 @@
     "kind": "cutout",
     "hues": [
       45
+    ],
+    "consoleHues": [
+      39,
+      1
     ]
   },
   "atari2600": {
@@ -134,6 +178,9 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "consoleHues": [
+      25
     ]
   },
   "atari5200": {
@@ -150,17 +197,26 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "consoleHues": [
+      15
     ]
   },
   "atari800": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      45
+    ]
   },
   "atarist": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      355
+    ]
   },
   "atom": {
     "logo": "logo.webp",
@@ -176,12 +232,18 @@
     "kind": "cutout",
     "hues": [
       20
+    ],
+    "consoleHues": [
+      5
     ]
   },
   "bbcmicro": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      6
+    ]
   },
   "beena": {
     "logo": "logo.webp",
@@ -214,6 +276,9 @@
     "hues": [
       10,
       195
+    ],
+    "consoleHues": [
+      7
     ]
   },
   "c20": {
@@ -223,6 +288,9 @@
     "hues": [
       10,
       195
+    ],
+    "consoleHues": [
+      6
     ]
   },
   "c64": {
@@ -232,6 +300,9 @@
     "hues": [
       10,
       195
+    ],
+    "consoleHues": [
+      5
     ]
   },
   "camplynx": {
@@ -250,6 +321,9 @@
     "hues": [
       55,
       195
+    ],
+    "consoleHues": [
+      10
     ]
   },
   "cassettevision": {
@@ -260,7 +334,11 @@
   "cavestory": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      225,
+      5
+    ]
   },
   "cdi": {
     "logo": "logo.webp",
@@ -273,7 +351,10 @@
   "cdogs": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      25
+    ]
   },
   "cgenie": {
     "logo": "logo.webp",
@@ -291,6 +372,10 @@
     "hues": [
       65,
       16
+    ],
+    "consoleHues": [
+      305,
+      44
     ]
   },
   "channelf": {
@@ -335,6 +420,9 @@
     "kind": "cutout",
     "hues": [
       125
+    ],
+    "consoleHues": [
+      124
     ]
   },
   "cplus4": {
@@ -352,12 +440,19 @@
     "kind": "cutout",
     "hues": [
       44
+    ],
+    "consoleHues": [
+      35
     ]
   },
   "ctvboy": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      218,
+      4
+    ]
   },
   "daphne": {
     "logo": "logo.webp",
@@ -365,6 +460,10 @@
     "kind": "cutout",
     "hues": [
       43
+    ],
+    "consoleHues": [
+      14,
+      54
     ]
   },
   "devilutionx": {
@@ -374,6 +473,9 @@
     "hues": [
       13,
       46
+    ],
+    "consoleHues": [
+      358
     ]
   },
   "dice": {
@@ -397,7 +499,11 @@
   "dragon64": {
     "logo": null,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      6,
+      55
+    ]
   },
   "dreamcast": {
     "logo": "logo.webp",
@@ -405,6 +511,10 @@
     "kind": "cutout",
     "hues": [
       215
+    ],
+    "consoleHues": [
+      53,
+      216
     ]
   },
   "dxx-rebirth": {
@@ -417,7 +527,11 @@
   "easyrpg": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      27,
+      278
+    ]
   },
   "ecwolf": {
     "logo": "logo.webp",
@@ -425,6 +539,9 @@
     "kind": "cutout",
     "hues": [
       355
+    ],
+    "consoleHues": [
+      14
     ]
   },
   "eduke32": {
@@ -433,6 +550,9 @@
     "kind": "cutout",
     "hues": [
       215
+    ],
+    "consoleHues": [
+      11
     ]
   },
   "electron": {
@@ -441,6 +561,9 @@
     "kind": "cutout",
     "hues": [
       125
+    ],
+    "consoleHues": [
+      45
     ]
   },
   "enterprise": {
@@ -451,6 +574,10 @@
     "hues": [
       50,
       195
+    ],
+    "consoleHues": [
+      162,
+      220
     ]
   },
   "etlegacy": {
@@ -460,6 +587,9 @@
     "kind": "cutout",
     "hues": [
       357
+    ],
+    "consoleHues": [
+      5
     ]
   },
   "fallout1-ce": {
@@ -468,6 +598,10 @@
     "kind": "cutout",
     "hues": [
       35
+    ],
+    "consoleHues": [
+      215,
+      55
     ]
   },
   "fallout2-ce": {
@@ -476,6 +610,10 @@
     "kind": "cutout",
     "hues": [
       35
+    ],
+    "consoleHues": [
+      215,
+      55
     ]
   },
   "fbneo": {
@@ -484,6 +622,10 @@
     "kind": "cutout",
     "hues": [
       7
+    ],
+    "consoleHues": [
+      5,
+      226
     ]
   },
   "fds": {
@@ -492,6 +634,9 @@
     "kind": "cutout",
     "hues": [
       45
+    ],
+    "consoleHues": [
+      356
     ]
   },
   "flash": {
@@ -500,6 +645,9 @@
     "kind": "cutout",
     "hues": [
       355
+    ],
+    "consoleHues": [
+      6
     ]
   },
   "fm7": {
@@ -508,6 +656,9 @@
     "kind": "cutout",
     "hues": [
       355
+    ],
+    "consoleHues": [
+      35
     ]
   },
   "fmtowns": {
@@ -517,6 +668,10 @@
     "hues": [
       165,
       355
+    ],
+    "consoleHues": [
+      189,
+      96
     ]
   },
   "fury": {
@@ -535,6 +690,9 @@
     "kind": "cutout",
     "hues": [
       55
+    ],
+    "consoleHues": [
+      55
     ]
   },
   "gameandwatch": {
@@ -542,6 +700,9 @@
     "picture": "photo.webp",
     "kind": "cutout",
     "hues": [
+      5
+    ],
+    "consoleHues": [
       5
     ]
   },
@@ -556,7 +717,11 @@
   "gamecube": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      255,
+      44
+    ]
   },
   "gamegear": {
     "logo": "logo.webp",
@@ -573,6 +738,9 @@
     "kind": "cutout",
     "hues": [
       45
+    ],
+    "consoleHues": [
+      15
     ]
   },
   "gb": {
@@ -581,6 +749,9 @@
     "kind": "cutout",
     "hues": [
       225
+    ],
+    "consoleHues": [
+      85
     ]
   },
   "gb2players": {
@@ -590,6 +761,9 @@
     "kind": "cutout",
     "hues": [
       235
+    ],
+    "consoleHues": [
+      85
     ]
   },
   "gba": {
@@ -617,6 +791,9 @@
     "hues": [
       235,
       345
+    ],
+    "consoleHues": [
+      186
     ]
   },
   "gmaster": {
@@ -625,6 +802,9 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "consoleHues": [
+      12
     ]
   },
   "gp32": {
@@ -642,6 +822,9 @@
     "kind": "cutout",
     "hues": [
       46
+    ],
+    "consoleHues": [
+      344
     ]
   },
   "gzdoom": {
@@ -651,6 +834,9 @@
     "kind": "cutout",
     "hues": [
       215
+    ],
+    "consoleHues": [
+      16
     ]
   },
   "halflife": {
@@ -665,6 +851,10 @@
     "hues": [
       316,
       27
+    ],
+    "consoleHues": [
+      5,
+      44
     ]
   },
   "hurrican": {
@@ -675,6 +865,9 @@
     "hues": [
       16,
       226
+    ],
+    "consoleHues": [
+      359
     ]
   },
   "imageviewer": {
@@ -683,6 +876,10 @@
     "kind": "cutout",
     "hues": [
       355
+    ],
+    "consoleHues": [
+      296,
+      18
     ]
   },
   "intellivision": {
@@ -696,6 +893,9 @@
     "kind": "cutout",
     "hues": [
       355
+    ],
+    "consoleHues": [
+      1
     ]
   },
   "jaguarcd": {
@@ -703,6 +903,9 @@
     "picture": "photo.webp",
     "kind": "cutout",
     "hues": [
+      5
+    ],
+    "consoleHues": [
       5
     ]
   },
@@ -716,12 +919,19 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "consoleHues": [
+      26
     ]
   },
   "lcdgames": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      5,
+      56
+    ]
   },
   "library": {
     "logo": "logo.webp",
@@ -730,6 +940,10 @@
     "hues": [
       215,
       35
+    ],
+    "consoleHues": [
+      8,
+      43
     ]
   },
   "loopy": {
@@ -747,6 +961,9 @@
     "kind": "cutout",
     "hues": [
       25
+    ],
+    "consoleHues": [
+      185
     ]
   },
   "lutro": {
@@ -755,6 +972,9 @@
     "kind": "cutout",
     "hues": [
       245
+    ],
+    "consoleHues": [
+      66
     ]
   },
   "lynx": {
@@ -782,6 +1002,10 @@
     "kind": "cutout",
     "hues": [
       204
+    ],
+    "consoleHues": [
+      54,
+      203
     ]
   },
   "mastersystem": {
@@ -791,6 +1015,9 @@
     "hues": [
       5,
       215
+    ],
+    "consoleHues": [
+      2
     ]
   },
   "mc10": {
@@ -829,6 +1056,9 @@
     "kind": "cutout",
     "hues": [
       185
+    ],
+    "consoleHues": [
+      184
     ]
   },
   "model3": {
@@ -838,6 +1068,10 @@
     "hues": [
       254,
       197
+    ],
+    "consoleHues": [
+      226,
+      26
     ]
   },
   "moonlight": {
@@ -852,12 +1086,19 @@
     "hues": [
       243,
       55
+    ],
+    "consoleHues": [
+      5,
+      325
     ]
   },
   "msx1": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      5
+    ]
   },
   "msx2": {
     "logo": "logo.webp",
@@ -867,7 +1108,10 @@
   "msx2+": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      356
+    ]
   },
   "msxturbor": {
     "logo": "logo.webp",
@@ -881,6 +1125,9 @@
     "hues": [
       205,
       55
+    ],
+    "consoleHues": [
+      338
     ]
   },
   "mz2000": {
@@ -895,7 +1142,10 @@
   "mz700": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      25
+    ]
   },
   "mz800": {
     "logo": "logo.webp",
@@ -905,7 +1155,11 @@
   "mz80k": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      205,
+      49
+    ]
   },
   "n64": {
     "logo": "logo.webp",
@@ -913,6 +1167,10 @@
     "kind": "cutout",
     "hues": [
       225
+    ],
+    "consoleHues": [
+      47,
+      5
     ]
   },
   "n64dd": {
@@ -945,6 +1203,10 @@
     "kind": "cutout",
     "hues": [
       25
+    ],
+    "consoleHues": [
+      115,
+      27
     ]
   },
   "nds": {
@@ -966,6 +1228,10 @@
     "kind": "cutout",
     "hues": [
       55
+    ],
+    "consoleHues": [
+      35,
+      355
     ]
   },
   "nes": {
@@ -998,6 +1264,9 @@
     "kind": "cutout",
     "hues": [
       35
+    ],
+    "consoleHues": [
+      47
     ]
   },
   "odyssey2": {
@@ -1006,6 +1275,9 @@
     "kind": "cutout",
     "hues": [
       27
+    ],
+    "consoleHues": [
+      355
     ]
   },
   "openbor": {
@@ -1014,6 +1286,10 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "consoleHues": [
+      26,
+      197
     ]
   },
   "openjazz": {
@@ -1029,6 +1305,9 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "consoleHues": [
+      4
     ]
   },
   "pc60": {
@@ -1061,6 +1340,10 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "consoleHues": [
+      204,
+      56
     ]
   },
   "pcenginecd": {
@@ -1069,6 +1352,9 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "consoleHues": [
+      20
     ]
   },
   "pcfx": {
@@ -1102,12 +1388,20 @@
     "hues": [
       55,
       215
+    ],
+    "consoleHues": [
+      55,
+      184
     ]
   },
   "pico8": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      45,
+      337
+    ]
   },
   "pokemini": {
     "logo": "logo.webp",
@@ -1116,6 +1410,10 @@
     "kind": "cutout",
     "hues": [
       55
+    ],
+    "consoleHues": [
+      92,
+      27
     ]
   },
   "ports": {
@@ -1124,6 +1422,10 @@
     "kind": "cutout",
     "hues": [
       30
+    ],
+    "consoleHues": [
+      345,
+      95
     ]
   },
   "prboom": {
@@ -1132,6 +1434,9 @@
     "kind": "cutout",
     "hues": [
       15
+    ],
+    "consoleHues": [
+      25
     ]
   },
   "psp": {
@@ -1171,6 +1476,10 @@
     "hues": [
       185,
       55
+    ],
+    "consoleHues": [
+      147,
+      61
     ]
   },
   "quake": {
@@ -1189,7 +1498,10 @@
   "raze": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      20
+    ]
   },
   "recordings": {
     "logo": "logo.webp",
@@ -1205,6 +1517,10 @@
     "hues": [
       222,
       186
+    ],
+    "consoleHues": [
+      245,
+      26
     ]
   },
   "rott": {
@@ -1235,6 +1551,10 @@
     "hues": [
       195,
       55
+    ],
+    "consoleHues": [
+      61,
+      358
     ]
   },
   "saturn": {
@@ -1252,6 +1572,10 @@
     "hues": [
       5,
       215
+    ],
+    "consoleHues": [
+      45,
+      205
     ]
   },
   "scummvm": {
@@ -1260,6 +1584,10 @@
     "kind": "cutout",
     "hues": [
       85
+    ],
+    "consoleHues": [
+      33,
+      84
     ]
   },
   "scv": {
@@ -1268,6 +1596,10 @@
     "kind": "cutout",
     "hues": [
       35
+    ],
+    "consoleHues": [
+      16,
+      99
     ]
   },
   "sdlpop": {
@@ -1276,6 +1608,9 @@
     "kind": "cutout",
     "hues": [
       45
+    ],
+    "consoleHues": [
+      27
     ]
   },
   "sega32x": {
@@ -1284,6 +1619,9 @@
     "kind": "cutout",
     "hues": [
       215
+    ],
+    "consoleHues": [
+      355
     ]
   },
   "segaai": {
@@ -1297,6 +1635,10 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "consoleHues": [
+      224,
+      11
     ]
   },
   "sgb": {
@@ -1333,6 +1675,10 @@
     "kind": "cutout",
     "hues": [
       355
+    ],
+    "consoleHues": [
+      53,
+      5
     ]
   },
   "snes-msu1": {
@@ -1346,7 +1692,11 @@
   "socrates": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      214,
+      5
+    ]
   },
   "solarus": {
     "logo": "logo.webp",
@@ -1354,6 +1704,10 @@
     "kind": "cutout",
     "hues": [
       45
+    ],
+    "consoleHues": [
+      43,
+      124
     ]
   },
   "sonic-mania": {
@@ -1363,6 +1717,10 @@
     "hues": [
       52,
       213
+    ],
+    "consoleHues": [
+      355,
+      35
     ]
   },
   "sonic3-air": {
@@ -1372,6 +1730,10 @@
     "hues": [
       44,
       223
+    ],
+    "consoleHues": [
+      356,
+      32
     ]
   },
   "sonicretro": {
@@ -1381,6 +1743,10 @@
     "hues": [
       45,
       245
+    ],
+    "consoleHues": [
+      114,
+      244
     ]
   },
   "spectravideo": {
@@ -1390,6 +1756,9 @@
     "hues": [
       25,
       355
+    ],
+    "consoleHues": [
+      5
     ]
   },
   "sufami": {
@@ -1409,6 +1778,10 @@
     "hues": [
       5,
       45
+    ],
+    "consoleHues": [
+      358,
+      27
     ]
   },
   "supergrafx": {
@@ -1417,6 +1790,9 @@
     "kind": "cutout",
     "hues": [
       185
+    ],
+    "consoleHues": [
+      198
     ]
   },
   "supervision": {
@@ -1426,6 +1802,9 @@
     "hues": [
       344,
       115
+    ],
+    "consoleHues": [
+      82
     ]
   },
   "supracan": {
@@ -1434,6 +1813,10 @@
     "kind": "cutout",
     "hues": [
       355
+    ],
+    "consoleHues": [
+      156,
+      52
     ]
   },
   "sv8000": {
@@ -1452,6 +1835,10 @@
     "hues": [
       221,
       135
+    ],
+    "consoleHues": [
+      356,
+      88
     ]
   },
   "thomson": {
@@ -1467,7 +1854,10 @@
   "tic80": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      225
+    ]
   },
   "traider1": {
     "logo": null,
@@ -1480,7 +1870,10 @@
   "triforce": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      245
+    ]
   },
   "trs80": {
     "logo": "logo.webp",
@@ -1494,6 +1887,9 @@
     "kind": "cutout",
     "hues": [
       355
+    ],
+    "consoleHues": [
+      205
     ]
   },
   "tvc": {
@@ -1508,6 +1904,10 @@
     "hues": [
       201,
       44
+    ],
+    "consoleHues": [
+      53,
+      356
     ]
   },
   "tyrian": {
@@ -1516,12 +1916,18 @@
     "kind": "cutout",
     "hues": [
       47
+    ],
+    "consoleHues": [
+      7
     ]
   },
   "uzebox": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      19
+    ]
   },
   "vc4000": {
     "logo": "logo.webp",
@@ -1534,7 +1940,11 @@
   "vectrex": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      54,
+      215
+    ]
   },
   "vgmplay": {
     "logo": "logo.webp",
@@ -1542,6 +1952,9 @@
     "kind": "cutout",
     "hues": [
       215
+    ],
+    "consoleHues": [
+      211
     ]
   },
   "videopacplus": {
@@ -1550,6 +1963,9 @@
     "kind": "cutout",
     "hues": [
       5
+    ],
+    "consoleHues": [
+      10
     ]
   },
   "vircon32": {
@@ -1562,6 +1978,9 @@
     "kind": "cutout",
     "hues": [
       355
+    ],
+    "consoleHues": [
+      356
     ]
   },
   "vis": {
@@ -1570,6 +1989,10 @@
     "kind": "cutout",
     "hues": [
       15
+    ],
+    "consoleHues": [
+      206,
+      360
     ]
   },
   "vsmile": {
@@ -1579,12 +2002,19 @@
     "hues": [
       32,
       195
+    ],
+    "consoleHues": [
+      25,
+      227
     ]
   },
   "wii": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      196
+    ]
   },
   "wswan": {
     "logo": "logo.webp",
@@ -1601,12 +2031,18 @@
     "hues": [
       4,
       195
+    ],
+    "consoleHues": [
+      228
     ]
   },
   "x1": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "consoleHues": [
+      1
+    ]
   },
   "x68000": {
     "logo": "logo.webp",
@@ -1631,6 +2067,9 @@
     "kind": "cutout",
     "hues": [
       35
+    ],
+    "consoleHues": [
+      25
     ]
   },
   "zc210": {
@@ -1639,6 +2078,10 @@
     "kind": "cutout",
     "hues": [
       355
+    ],
+    "consoleHues": [
+      5,
+      225
     ]
   },
   "zx81": {
@@ -1657,6 +2100,10 @@
     "hues": [
       45,
       5
+    ],
+    "consoleHues": [
+      357,
+      55
     ]
   }
 }

@@ -866,12 +866,26 @@ main {
 }
 
 .system-panel .byline {
+  display: flex;
+  align-items: center;
   margin: 0.45rem 0 0;
   font-family: var(--mono);
   font-size: 0.85rem;
   letter-spacing: 0.06em;
   color: var(--sys);
   text-shadow: 0 0 0.5rem #000;
+}
+
+/* The maker, as its own logo, the height of a line and a half; the year after it. */
+.system-panel .byline .maker-logo {
+  height: 1.35rem;
+  max-width: 9rem;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.system-panel .byline .year {
+  white-space: pre;
 }
 
 .system-panel .description {

@@ -4,7 +4,8 @@
  * art/logos/<name>.svg: not the white `-w` ones Cyber shows), and writes them into
  * public/systems/art.json as `hues`: the logo's main hue, then a second one if it has one, in
  * degrees. Cyber's systems screen glows in them. A logo with no vivid colour (black, white,
- * grey) gets none, and the screen takes its maker's colour instead.
+ * grey) gets none, and the screen takes its maker's colour instead. Its console's colours too,
+ * from its cut-out picture, as `consoleHues`.
  *
  *   node scripts/build-colours.mjs <carbon art/logos dir>
  */
@@ -23,6 +24,18 @@ const SECOND_SHARE = 0.18;
 /** Vivid pixels must be at least this share of the logo's opaque ones for any colour. */
 const VIVID_SHARE = 0.04;
 
+/** A console picture needs less: most of it is grey plastic. */
+const CONSOLE_VIVID_SHARE = 0.006;
+
+async function pixels(file) {
+  const { data } = await sharp(file, { density: 72, limitInputPixels: false })
+    .resize({ height: 160, fit: 'inside' })
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  return data;
+}
+
 const [dir] = process.argv.slice(2);
 if (!dir || !existsSync(dir)) {
   console.error('usage: build-colours.mjs <carbon art/logos dir>');
@@ -40,7 +53,7 @@ const systems = readFileSync(join(ROOT, 'scripts', 'batocera-systems.tsv'), 'utf
 const aliases = JSON.parse(readFileSync(join(ROOT, 'scripts', 'art-sources.json'), 'utf8')).aliases;
 
 /** The logo's hues, strongest first: one or two, or none. */
-function huesOf(rgba) {
+function huesOf(rgba, vividShare = VIVID_SHARE) {
   const bins = new Array(360 / BIN).fill(0);
   let opaque = 0;
   let vivid = 0;
@@ -64,7 +77,7 @@ function huesOf(rgba) {
     bins[Math.floor(deg / BIN) % bins.length] += chroma;
     vivid++;
   }
-  if (opaque === 0 || vivid / opaque < VIVID_SHARE) return [];
+  if (opaque === 0 || vivid / opaque < vividShare) return [];
   // Each bin with its neighbours: a colour across a bin edge is still one colour.
   const n = bins.length;
   const smooth = bins.map((v, i) => v + 0.5 * (bins[(i + n - 1) % n] + bins[(i + 1) % n]));
@@ -99,14 +112,20 @@ for (const system of systems) {
   const names = [system.theme, system.id, aliases[system.id]].filter(Boolean);
   const file = names.flatMap((n) => [`${n}.svg`, `${n}.png`]).find((f) => have.has(f));
   delete entry.hues;
-  if (!file) continue;
-  const { data } = await sharp(join(dir, file), { density: 72, limitInputPixels: false })
-    .resize({ height: 160, fit: 'inside' })
-    .ensureAlpha()
-    .raw()
-    .toBuffer({ resolveWithObject: true });
-  const hues = huesOf(data);
+  delete entry.consoleHues;
+  const hues = file ? huesOf(await pixels(join(dir, file))) : [];
   if (hues.length) entry.hues = hues;
-  process.stdout.write(`${system.id}: ${hues.join(', ') || '—'}\n`);
+  // The console's own colours (its buttons, its stripes): from its cut-out picture only, a
+  // framed photo's background being no part of it. Consoles are mostly grey: a little colour
+  // is enough.
+  const photo = join(ROOT, 'public', 'systems', system.id, entry.picture ?? '');
+  const consoleHues =
+    entry.picture && entry.kind !== 'framed' && existsSync(photo)
+      ? huesOf(await pixels(photo), CONSOLE_VIVID_SHARE)
+      : [];
+  if (consoleHues.length) entry.consoleHues = consoleHues;
+  process.stdout.write(
+    `${system.id}: ${hues.join(', ') || '—'} / ${consoleHues.join(', ') || '—'}\n`
+  );
 }
 writeFileSync(ART, JSON.stringify(art, null, 2) + '\n');

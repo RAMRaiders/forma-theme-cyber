@@ -90,6 +90,32 @@ export interface SystemArt {
   kind?: 'cutout' | 'framed';
   /** The colours of its logo, in colour: hues in degrees, the main one first. */
   hues?: number[];
+  /** The colours of its console (its buttons, its stripes), from its cut-out picture. */
+  consoleHues?: number[];
+}
+
+/** A maker's logo (public/makers/makers.json): for a maker whose name `match` finds. */
+export interface MakerLogo {
+  id: string;
+  /** A regular expression, case-insensitive, run on the maker's name. */
+  match: string;
+  logo: string;
+}
+
+/** The logo of the maker `name` names (the first it starts with), as a URL; `null` if none. */
+export function makerLogo(
+  name: string | null | undefined,
+  makers: readonly MakerLogo[]
+): string | null {
+  if (!name) return null;
+  const found = makers.find((m) => {
+    try {
+      return new RegExp(m.match, 'i').test(name.trim());
+    } catch {
+      return false;
+    }
+  });
+  return found ? `./makers/${found.logo}` : null;
 }
 
 /** A system as Cyber shows it: Forma's summary, its category, and its art. */
@@ -105,6 +131,8 @@ export interface CyberSystem {
   photoKind: 'cutout' | 'framed';
   /** Its logo's hues, main first; none for a logo in black, white or grey. */
   hues: number[];
+  /** Its console's hues, main first; none for a grey one, or a framed photo. */
+  consoleHues: number[];
 }
 
 function categoryOf(system: SystemSummary, info?: SystemInfo): CategoryId | null {
@@ -128,7 +156,8 @@ function cyberSystem(
     logoDark: own?.logoDark ?? false,
     photo: own?.picture ? art(summary.name, own.picture) : null,
     photoKind: own?.kind ?? 'cutout',
-    hues: own?.hues ?? []
+    hues: own?.hues ?? [],
+    consoleHues: own?.consoleHues ?? []
   };
 }
 
@@ -192,6 +221,7 @@ export class InfoStore {
   readonly #cache = new Map<string, Promise<SystemInfo | null>>();
   readonly #loaded = new Map<string, SystemInfo | null>();
   #art: Promise<Record<string, SystemArt>> | null = null;
+  #makers: Promise<MakerLogo[]> | null = null;
 
   constructor(private readonly fetchJson: (url: string) => Promise<unknown> = defaultFetch) {}
 
@@ -213,6 +243,14 @@ export class InfoStore {
   /** A system's info if it has already loaded (`null`: it has none), else `undefined`. */
   peek(system: string): SystemInfo | null | undefined {
     return this.#loaded.get(system);
+  }
+
+  /** The makers' logos, from makers/makers.json, fetched once; none if it cannot be read. */
+  makers(): Promise<MakerLogo[]> {
+    this.#makers ??= this.fetchJson('./makers/makers.json')
+      .then((json) => (Array.isArray(json) ? (json as MakerLogo[]) : []))
+      .catch(() => []);
+    return this.#makers;
   }
 
   /** Every system's art, from art.json, fetched once; none if it cannot be read. */
