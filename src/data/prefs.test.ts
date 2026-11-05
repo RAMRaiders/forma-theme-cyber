@@ -8,6 +8,8 @@ describe('prefs', () => {
     expect(prefUpdate('motion', false)).toEqual({ motion: false });
     expect(prefUpdate('motion', 'off')).toBeNull();
     expect(prefUpdate('perf', {})).toBeNull();
+    expect(prefUpdate('gamesView', 'immersive')).toEqual({ gamesView: 'immersive' });
+    expect(prefUpdate('gamesView', 'carousel')).toBeNull();
   });
 
   it('keeps screen margins to 0–10% and shrinks the page into them', () => {
