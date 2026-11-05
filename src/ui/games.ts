@@ -2,7 +2,7 @@ import type { Game } from '@ramraiders/forma-sdk';
 
 import type { LazyList } from '../logic/pager.js';
 import { el, remPx } from './dom.js';
-import { Stage, type StageOptions } from './stage.js';
+import { STAGE_PICTURES, Stage, type StageOptions } from './stage.js';
 
 /** Row height in rem; rows are positioned by index, so only visible ones exist. */
 const ROW_REM = 2.6;
@@ -16,6 +16,13 @@ const OVERSCAN = 6;
 const DETAIL_SETTLE_MS = 150;
 /** After this long resting on a game, the list fades away and leaves the game the screen. */
 const RAIL_REST_MS = 2400;
+/**
+ * After this long on a game, the pictures of the games around it are made ahead (by Forma, in
+ * the background, after what the screen waits for), this many either side: the next moves show
+ * at once.
+ */
+const PREPARE_AFTER_MS = 400;
+const PREPARE_AROUND = 3;
 
 /**
  * A game list of any length as a thin rail at the screen's edge, over the selected game's
@@ -31,10 +38,13 @@ export class GamesView {
   #source: LazyList<Game> | null = null;
   #selected = 0;
   #detailTimer: ReturnType<typeof setTimeout> | undefined;
+  #prepareTimer: ReturnType<typeof setTimeout> | undefined;
+  readonly #options: StageOptions;
   #lastMove = 0;
   #pending = false;
 
   constructor(options: StageOptions) {
+    this.#options = options;
     this.#stage = new Stage(options);
     this.#list.append(this.#spacer);
     this.root.append(this.#stage.backdrop, this.#stage.root, this.#list);
@@ -143,5 +153,43 @@ export class GamesView {
     this.#pending = !game;
     if (game) this.#stage.show(game);
     else this.#stage.clear();
+    clearTimeout(this.#prepareTimer);
+    if (game) this.#prepareTimer = setTimeout(() => this.#prepareAround(), PREPARE_AFTER_MS);
+  }
+
+  /** The pictures of the games either side of the selection, nearest first, made ahead. */
+  #prepareAround(): void {
+    const prepare = this.#options.prepare;
+    const source = this.#source;
+    if (!prepare || !source) return;
+    const items: { gameId: number; kind: (typeof STAGE_PICTURES)[number][0]; width: number }[] = [];
+    for (let d = 1; d <= PREPARE_AROUND; d++) {
+      for (const i of [this.#selected + d, this.#selected - d]) {
+        const game = i >= 0 && i < source.total ? source.get(i) : undefined;
+        if (!game) continue;
+        const has = game.media as Partial<Record<string, string>>;
+        for (const [kind, width] of STAGE_PICTURES) {
+          if (has[kind]) items.push({ gameId: game.id, kind, width });
+        }
+      }
+    }
+    if (items.length) prepare(items);
+  }
+
+  /** The list leaves the screen (another view, or a game starts): its video stops. */
+  leave(): void {
+    clearTimeout(this.#detailTimer);
+    clearTimeout(this.#prepareTimer);
+    this.#stage.clear();
+  }
+
+  /** Back on the list after a game: the selected game's stage again. */
+  resume(): void {
+    if (this.#source) this.#showDetail();
+  }
+
+  /** Video sound was turned on or off in Forma's menu. */
+  soundChanged(): void {
+    this.#stage.soundChanged();
   }
 }

@@ -128,6 +128,42 @@ describe('the game stage', () => {
     );
   });
 
+  it('plays the video with the sound Forma says, and tells Forma when it stops', async () => {
+    const media = (g: Game, kind: Kind) =>
+      (g.media as Partial<Record<string, string>>)[kind] ? `forma://media/${g.id}/${kind}` : null;
+    const video = vi.fn((playing: boolean) => Promise.resolve({ sound: playing }));
+    const s = new Stage({ media, video });
+    document.body.replaceChildren(s.backdrop, s.root);
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.resolve({ ok: true, blob: () => Promise.resolve(new Blob(['v'])) }))
+    );
+    URL.createObjectURL = vi.fn(() => 'blob:v');
+    URL.revokeObjectURL = vi.fn();
+    HTMLMediaElement.prototype.pause = vi.fn();
+    HTMLMediaElement.prototype.load = vi.fn();
+
+    s.show(game({}, { video: 'v' }));
+    await vi.advanceTimersByTimeAsync(ACT_TWO_MS);
+    const player = document.querySelector('video')!;
+    expect(player.muted).toBe(true);
+    player.dispatchEvent(new Event('playing'));
+    await vi.advanceTimersByTimeAsync(0);
+    expect(video).toHaveBeenLastCalledWith(true);
+    expect(player.muted).toBe(false);
+
+    // Turned off in Forma's menu while it plays.
+    video.mockImplementation(() => Promise.resolve({ sound: false }));
+    s.soundChanged();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(player.muted).toBe(true);
+
+    s.clear();
+    expect(video).toHaveBeenLastCalledWith(false);
+    expect(player.pause).toHaveBeenCalled();
+    vi.unstubAllGlobals();
+  });
+
   it('takes its colour from the game', async () => {
     const { s, accent } = stage();
     s.show(game({}, EVERYTHING));

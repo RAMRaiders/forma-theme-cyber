@@ -5,7 +5,6 @@ import type {
   Game,
   GameStart,
   InputEvent,
-  MediaKind,
   SettingsChanged,
   ViewInfo
 } from '@ramraiders/forma-sdk';
@@ -17,6 +16,7 @@ import {
   MARGINS_SETTING,
   type Prefs,
   SYSTEMS_ORDER_SETTING,
+  VIDEO_SOUND_SETTING,
   applyMargins,
   applyPrefs,
   loadMargins,
@@ -98,13 +98,15 @@ export class App {
     // more kinds than this SDK's types (box back, cartridge…), hence the cast.
     media: (game, kind, width) =>
       (game.media as Partial<Record<string, string>>)[kind]
-        ? this.forma.library.mediaUrl(game.id, kind as MediaKind, width)
+        ? this.forma.library.mediaUrl(game.id, kind, width)
         : null,
     achievements: async (game) => {
       const { data } = await this.forma.ra.game(game.id);
       return { earned: data.earned, total: data.achievementCount };
     },
-    accent: accentOf
+    accent: accentOf,
+    video: (playing) => this.forma.video.playing(playing),
+    prepare: (items) => void this.forma.library.prepareMedia(items as never).catch(() => {})
   });
   /** Cyber's look and order: its settings, which Forma's menu shows (Start → Interface). */
   #prefs: Prefs = { ...DEFAULT_PREFS };
@@ -181,6 +183,7 @@ export class App {
     });
     this.forma.events.on('game:end', ({ error }) => {
       this.#playing.hidden = true;
+      if (this.#list) this.#games.resume();
       if (error) this.#notify(`The game could not run: ${error}`);
     });
 
@@ -227,6 +230,8 @@ export class App {
 
   /** Loads the current level and shows it, keeping the remembered selection. */
   async #load(): Promise<void> {
+    // Whatever shows next, the game list's video (and its sound) stops.
+    this.#games.leave();
     const target = this.#target();
     if (this.#view === CYBER_VIEW && this.#stack.length <= 2 && !target.shortcut) {
       return this.#loadCyber();
@@ -369,6 +374,7 @@ export class App {
   async #settingChanged({ scope, key, value }: SettingsChanged): Promise<void> {
     if (scope === 'system') {
       if (key === MARGINS_SETTING) applyMargins(margins(value));
+      if (key === VIDEO_SOUND_SETTING) this.#games.soundChanged();
       // A new order for the systems shows at once, behind Forma's menu.
       if (key === SYSTEMS_ORDER_SETTING && this.#mode !== 'browse') await this.#load();
       return;
@@ -561,9 +567,11 @@ export class App {
     if (this.#list) {
       const game = this.#games.selected;
       if (!game) return;
+      this.#games.leave();
       try {
         await this.forma.launch.game(game.id);
       } catch (error) {
+        this.#games.resume();
         this.#notify(FormaError.from(error).message);
       }
       return;

@@ -50,7 +50,37 @@ export interface StageOptions {
   achievements?: (game: Game) => Promise<Achievements | null>;
   /** The game's colour, from a small picture of it; `null` keeps Cyber's own. */
   accent?: (url: string) => Promise<string | null>;
+  /**
+   * A game's video starts (`true`) or stops: Forma answers whether it is heard, and lowers the
+   * music meanwhile. Without it, videos play muted.
+   */
+  video?: (playing: boolean) => Promise<{ sound: boolean }>;
+  /** Has the pictures of games about to be shown made ahead, nearest first. */
+  prepare?: (items: { gameId: number; kind: Kind; width: number }[]) => void;
 }
+
+/**
+ * Every picture the stage shows, at the width it asks: the order is what matters most first
+ * when there is not time for them all.
+ */
+export const STAGE_PICTURES: readonly (readonly [Kind, number])[] = [
+  ['fanart', 1280],
+  ['wheel', 720],
+  ['marquee', 720],
+  ['thumbnail', 520],
+  ['boxart', 520],
+  ['thumbnail', 64],
+  ['boxback', 520],
+  ['cartridge', 360],
+  ['image', 480],
+  ['image', 960],
+  ['titleshot', 480],
+  ['titleshot', 960],
+  ['mix', 480],
+  ['mix', 960],
+  ['map', 480],
+  ['map', 960]
+];
 
 /** When each act starts, after the game is chosen. */
 export const ACT_TWO_MS = 1600;
@@ -138,6 +168,14 @@ function picture(src: string, cls: string): HTMLImageElement {
   return img;
 }
 
+interface Preview {
+  abort: AbortController;
+  url?: string;
+  player?: HTMLVideoElement;
+  /** Forma was told it plays: it must hear that it stopped. */
+  told?: boolean;
+}
+
 export class Stage {
   /** The acts, over the screen. */
   readonly root = el('section', { class: 'detail stage', 'data-act': '1' });
@@ -148,7 +186,7 @@ export class Stage {
   #timers: ReturnType<typeof setTimeout>[] = [];
   #intervals: ReturnType<typeof setInterval>[] = [];
   /** The preview being fetched or shown: cancelled, and its blob freed, when the game changes. */
-  #preview: { abort: AbortController; url?: string } | null = null;
+  #preview: Preview | null = null;
   #achievements = new Map<number, Promise<Achievements | null>>();
   #accents = new Map<number, Promise<string | null>>();
   #game: ShowGame | null = null;
@@ -384,7 +422,12 @@ export class Stage {
       if (back && motion()) {
         this.#later(() => {
           box.classList.add('flipped');
-          this.#every(() => box.classList.toggle('flipped'), FLIP_MS);
+          // While the video plays, the box rests: the Pi's decoder has the time to itself.
+          this.#every(() => {
+            if (!this.backdrop.querySelector('.layer.video:not(.waiting)')) {
+              box.classList.toggle('flipped');
+            }
+          }, FLIP_MS);
         }, ACT_TWO_MS + 1800);
       }
     }
@@ -441,7 +484,7 @@ export class Stage {
   #startVideo(game: Game, actThree: boolean): void {
     const url = this.previews ? this.options.media(game, 'video') : null;
     if (!url) return;
-    const preview: { abort: AbortController; url?: string } = { abort: new AbortController() };
+    const preview: Preview = { abort: new AbortController() };
     this.#preview = preview;
     // From a blob: WebKitGTK's media player (GStreamer) loads only http(s) and blob URLs, so
     // a video straight from forma:// fails as an unsupported format.
@@ -461,12 +504,14 @@ export class Stage {
           class: 'movie'
         });
         player.muted = true;
+        preview.player = player;
         const layer = el('div', { class: 'layer video waiting' }, player);
         // Shown once it really plays: a box without a decoder for it (a Pi 5 has no H.264
         // hardware) would otherwise show an empty screen.
         player.addEventListener(
           'playing',
           () => {
+            void this.#heard(preview);
             const wait = actThree ? Math.max(0, this.#shownAt + ACT_THREE_MS - Date.now()) : 0;
             this.#later(() => {
               const old = [...this.backdrop.children].filter((n) => n !== layer);
@@ -479,7 +524,9 @@ export class Stage {
         );
         player.addEventListener('error', () => {
           layer.remove();
+          if (this.#preview !== preview) return;
           this.#preview = null;
+          if (preview.told) void this.options.video?.(false).catch(() => {});
           if (actThree && this.act === 3) this.#actThree(game);
         });
         this.backdrop.append(layer);
@@ -487,6 +534,25 @@ export class Stage {
       .catch(() => {
         if (this.#preview === preview) this.#preview = null;
       });
+  }
+
+  /** Asks Forma whether the preview is heard (the music goes down if so), and follows. */
+  async #heard(preview: Preview): Promise<void> {
+    const video = this.options.video;
+    if (!video || !preview.player) return;
+    preview.told = true;
+    try {
+      const { sound } = await video(true);
+      if (this.#preview === preview && preview.player) preview.player.muted = !sound;
+    } catch {
+      // Forma could not say: it stays muted.
+    }
+  }
+
+  /** Video sound was turned on or off in Forma's menu: the video playing follows. */
+  soundChanged(): void {
+    const preview = this.#preview;
+    if (preview?.told) void this.#heard(preview);
   }
 
   #later(work: () => void, ms: number): void {
@@ -502,9 +568,18 @@ export class Stage {
     this.#intervals.forEach(clearInterval);
     this.#timers = [];
     this.#intervals = [];
-    this.#preview?.abort.abort();
-    if (this.#preview?.url) URL.revokeObjectURL(this.#preview.url);
+    const preview = this.#preview;
     this.#preview = null;
+    if (!preview) return;
+    preview.abort.abort();
+    if (preview.player) {
+      // Off screen it would play on, and be heard.
+      preview.player.pause();
+      preview.player.removeAttribute('src');
+      preview.player.load();
+    }
+    if (preview.url) URL.revokeObjectURL(preview.url);
+    if (preview.told) void this.options.video?.(false).catch(() => {});
   }
 }
 
