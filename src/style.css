@@ -3186,6 +3186,8 @@ kbd {
   bottom: 0;
   left: 50%;
   width: 28rem;
+  /* Every spine as long: the shelf's width inside its padding. */
+  --spine-len: 26rem;
   translate: -50% 0;
   overflow: hidden;
   padding: 0 1rem;
@@ -3242,7 +3244,7 @@ kbd {
 .spine-row {
   position: absolute;
   left: 1rem;
-  right: 1rem;
+  width: var(--spine-len);
   height: 2.2rem;
   display: flex;
   align-items: center;
@@ -3285,12 +3287,9 @@ kbd {
   background: #4a5568;
 }
 
-/* Its own spine picture, whole, lying on its side: drawn upright, turned a quarter to the left
-   so its top reads first. The row is as long as the spine, in the middle, nothing round it. */
+/* Its own spine picture lying on its side: drawn upright, turned a quarter to the left so its
+   top reads first, filling the row (as long as every other), its ends trimmed if need be. */
 .spine-row.pictured {
-  left: calc(50% - var(--len, 24rem) / 2);
-  right: auto;
-  width: var(--len, 24rem);
   padding: 0;
   border-color: transparent;
   background: none;
@@ -3301,10 +3300,10 @@ kbd {
   top: 0;
   left: 0;
   width: 2.2rem;
-  height: var(--len, 24rem);
+  height: var(--spine-len);
   transform-origin: 0 0;
   transform: translateY(2.2rem) rotate(-90deg);
-  object-fit: fill;
+  object-fit: cover;
 }
 
 .spine-row.pictured .band,

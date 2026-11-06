@@ -83,9 +83,6 @@ export const COLLECTOR_PICTURES: readonly (readonly [Kind, number])[] = [
 
 /** Row height of the shelf in rem: each a box on its side. */
 const ROW_REM = 2.5;
-/** A row's own height, and the longest a spine picture lies along it. */
-const ROW_H_REM = 2.2;
-const SPINE_MAX_REM = 24;
 const OVERSCAN = 6;
 /** The shelf over the middle while moving; this long after the last move it fades. */
 const DROP_MS = 1100;
@@ -295,8 +292,9 @@ export class CollectorView {
   }
 
   /**
-   * A game on the shelf: its own spine picture, whole, lying on its side, where it has one (its
-   * name still there for screen readers); else a spine in its colour with its name.
+   * A game on the shelf: its own spine picture lying on its side, where it has one (its name
+   * still there for screen readers); else a spine in its colour with its name. Every row as long
+   * as the others, the picture filling it.
    */
   #shelfRow(game: Game, node: HTMLElement): HTMLElement[] {
     const parts = [
@@ -305,19 +303,8 @@ export class CollectorView {
     ];
     const src = this.#options.media(game, 'boxside', 160);
     node.classList.toggle('pictured', !!src);
-    node.style.removeProperty('--len');
     if (!src) return parts;
     const img = picture(src, 'spine-pic');
-    // The row as long as the spine is, at the row's height: all of it, nothing round it.
-    img.addEventListener(
-      'load',
-      () => {
-        if (!img.naturalWidth) return;
-        const len = Math.min(SPINE_MAX_REM, ROW_H_REM * (img.naturalHeight / img.naturalWidth));
-        node.style.setProperty('--len', `${len.toFixed(2)}rem`);
-      },
-      { once: true }
-    );
     img.addEventListener(
       'error',
       () => {
