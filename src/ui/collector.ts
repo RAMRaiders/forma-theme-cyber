@@ -71,8 +71,14 @@ const CAPTION_MS = 7000;
 /** After this long on a game, the pictures of the games around it are made ahead. */
 const PREPARE_AFTER_MS = 3000;
 const PREPARE_AROUND = 3;
-/** The box's height in rem; its width and depth follow its pictures. */
+/** The box's height in rem until the case is laid out; its width and depth follow its pictures. */
 const BOX_REM = 17.5;
+/** Then as tall as the case allows, between these. */
+const BOX_MIN_REM = 12;
+const BOX_MAX_REM = 26;
+/** Kept clear under the box (the plinth) and on each side of it (the cartridge, the prints). */
+const UNDER_REM = 4.6;
+const SIDE_REM = 8.5;
 /** Until its pictures say otherwise: a Mega Drive case's shape. */
 const FRONT_RATIO = 0.72;
 const SPINE_RATIO = 0.14;
@@ -113,6 +119,8 @@ export class CollectorView {
   #achievements = new Map<number, Promise<Achievements | null>>();
   #game: ShowGame | null = null;
   #box: HTMLElement | null = null;
+  /** Sizes the box to its case, once the case is laid out. */
+  #fit: (() => void) | null = null;
   #dots: HTMLElement | null = null;
   #pose = 0;
   #angle: number = POSES[0].angle;
@@ -256,6 +264,7 @@ export class CollectorView {
     this.#backdropFor(game);
     this.#showcase.replaceChildren(...this.#showcaseParts(game));
     this.#dossier.replaceChildren(...this.#dossierParts(game));
+    requestAnimationFrame(() => this.#fit?.());
     if (motion()) {
       this.#later(() => {
         this.#turnTo(1);
@@ -348,6 +357,7 @@ export class CollectorView {
       ...POSES.map((p, i) => el('span', { class: i === 0 ? 'on' : '' }, p.label))
     );
 
+    // Beside the box, on the right, as the cartridge stands on its left.
     const prints = el('div', { class: 'prints' });
     PRINTS.map((k) => media(game, k, 400))
       .filter((u): u is string => u !== null)
@@ -360,7 +370,9 @@ export class CollectorView {
         prints.append(print);
       });
 
-    return [this.#label(game), display, this.#dots, prints];
+    display.append(prints);
+    if (prints.childElementCount) display.classList.add('has-prints');
+    return [this.#label(game), display, this.#dots];
   }
 
   /** The grading label on top of the case: the game, its system, its grade, its serial. */
@@ -412,11 +424,24 @@ export class CollectorView {
     box.style.transform = boxTransform(this.#angle);
     const size = { ratio: FRONT_RATIO, depth: SPINE_RATIO };
     const resize = () => {
-      box.style.setProperty('--h', `${BOX_REM}rem`);
-      box.style.setProperty('--w', `${(BOX_REM * size.ratio).toFixed(2)}rem`);
-      box.style.setProperty('--d', `${(BOX_REM * size.depth).toFixed(2)}rem`);
+      const display = box.closest<HTMLElement>('.display');
+      const h = display?.clientHeight
+        ? boxHeight(
+            display.clientWidth / remPx() -
+              SIDE_REM *
+                (Number(display.classList.contains('has-cart')) +
+                  Number(display.classList.contains('has-prints'))),
+            display.clientHeight / remPx(),
+            size.ratio,
+            size.depth
+          )
+        : BOX_REM;
+      box.style.setProperty('--h', `${h.toFixed(2)}rem`);
+      box.style.setProperty('--w', `${(h * size.ratio).toFixed(2)}rem`);
+      box.style.setProperty('--d', `${(h * size.depth).toFixed(2)}rem`);
     };
     resize();
+    this.#fit = resize;
 
     const frontSrc = media(game, 'thumbnail', 640);
     const front = el('div', { class: 'face front' });
@@ -496,9 +521,18 @@ export class CollectorView {
     const media = this.#options.media;
     const head = el('header', { class: 'head' });
     const logo = media(game, 'wheel', 560) ?? media(game, 'marquee', 560);
+    // Its logo, where it has one, is its name here: the label over the box has it in words.
     if (logo) {
       const img = picture(logo, 'logo');
-      img.addEventListener('error', () => img.remove(), { once: true });
+      head.classList.add('has-logo');
+      img.addEventListener(
+        'error',
+        () => {
+          img.remove();
+          head.classList.remove('has-logo');
+        },
+        { once: true }
+      );
       head.append(img);
     }
     head.append(el('h2', {}, game.name));
@@ -607,6 +641,15 @@ export class CollectorView {
     }
     if (items.length) prepare(items);
   }
+}
+
+/**
+ * How tall the box stands, in rem, in `width` × `height` rem (the case, less what stands at its
+ * sides): as tall as fits above the plinth, turned too (front and spine side by side).
+ */
+export function boxHeight(width: number, height: number, ratio: number, depth: number): number {
+  const fits = Math.min(height - UNDER_REM, (width - 1) / (ratio + depth));
+  return clamp(fits, BOX_MIN_REM, BOX_MAX_REM);
 }
 
 function boxTransform(angle: number): string {

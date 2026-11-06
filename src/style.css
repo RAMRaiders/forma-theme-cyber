@@ -3005,8 +3005,8 @@ kbd {
   position: relative;
   height: 100%;
   display: grid;
-  grid-template-columns: 19rem minmax(0, 1fr) 24rem;
-  column-gap: 1.8rem;
+  grid-template-columns: 16.5rem minmax(0, 1fr) 21rem;
+  column-gap: 1.2rem;
   padding-bottom: 0.4rem;
 }
 
@@ -3064,7 +3064,7 @@ kbd {
   position: relative;
   overflow-y: auto;
   scrollbar-width: none;
-  padding-right: 1.8rem;
+  padding-right: 1.4rem;
 }
 
 .shelf::-webkit-scrollbar {
@@ -3137,13 +3137,13 @@ kbd {
   min-width: 0;
   min-height: 0;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   justify-items: center;
-  row-gap: 0.5rem;
+  row-gap: 0.3rem;
 }
 
 .slab-label {
-  width: min(100%, 36rem);
+  width: 100%;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
@@ -3191,10 +3191,12 @@ kbd {
 }
 
 .slab-label strong {
+  /* The whole name, on two lines if it needs them. */
+  display: -webkit-box;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-size: 1.02rem;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 1.1rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -3258,7 +3260,8 @@ kbd {
   width: 100%;
   min-height: 0;
   display: flex;
-  align-items: center;
+  /* Standing on its plinth, however tall. */
+  align-items: flex-end;
   justify-content: center;
 }
 
@@ -3302,13 +3305,9 @@ kbd {
 
 .display .float {
   position: relative;
-  margin-bottom: 2.2rem;
+  margin-bottom: 2.6rem;
   perspective: 60rem;
   animation: collector-float 6s ease-in-out infinite alternate;
-}
-
-.display.has-cart .float {
-  margin-right: 7rem;
 }
 
 @keyframes collector-float {
@@ -3497,14 +3496,18 @@ kbd {
 }
 
 /* The cartridge, standing in front, to the right. */
+/* The cartridge stands on the left of the box, the prints lean on the right. */
 .display .cart {
   position: absolute;
-  right: 4%;
-  bottom: 2.1rem;
-  width: 10rem;
-  max-height: 9rem;
+  z-index: 1;
+  left: 0;
+  bottom: 2.4rem;
+  width: 8rem;
+  max-height: 10rem;
   object-fit: contain;
-  transform: rotate(-5deg);
+  object-position: bottom;
+  transform: rotate(-4deg);
+  filter: drop-shadow(0 0.5rem 0.8rem rgb(0 0 0 / 60%));
 }
 
 .showcase .poses {
@@ -3525,22 +3528,28 @@ kbd {
   content: '◆ ';
 }
 
-/* Screenshots as prints, fanned a little. */
+/* Screenshots as prints, down the right of the box, each a little askew. */
 .prints {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  top: 0;
+  bottom: 2.4rem;
+  width: 8rem;
   display: flex;
-  gap: 1.1rem;
+  flex-direction: column;
   justify-content: center;
-  height: 6.6rem;
+  gap: 0.9rem;
 }
 
 .prints .print {
-  height: 100%;
+  width: 100%;
   aspect-ratio: 4 / 3;
   padding: 0.28rem 0.28rem 0.8rem;
   background: #e6edf4;
   border-radius: 0.1rem;
   box-shadow: 0 0.4rem 1rem rgb(0 0 0 / 55%);
-  transform: rotate(calc((var(--i) - 1) * 2.5deg));
+  transform: rotate(calc((1 - var(--i)) * 3deg + 1deg));
 }
 
 .prints .print img {
@@ -3564,12 +3573,16 @@ kbd {
   background: var(--panel);
 }
 
+.dossier .head.has-logo h2 {
+  display: none;
+}
+
 .dossier .head .logo {
   display: block;
   max-width: 100%;
-  max-height: 4.6rem;
+  max-height: 5.4rem;
+  margin: 0 auto;
   object-fit: contain;
-  object-position: left center;
 }
 
 .dossier .head .favourite {
@@ -3702,6 +3715,7 @@ kbd {
 }
 
 .dossier .story {
+  flex: 1;
   min-height: 0;
 }
 
@@ -3710,8 +3724,8 @@ kbd {
   margin: 0;
   overflow: hidden;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5;
-  font-size: 0.78rem;
+  -webkit-line-clamp: 9;
+  font-size: 0.8rem;
   line-height: 1.45;
   color: #b7cad8;
   transition: opacity 350ms ease;
