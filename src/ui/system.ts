@@ -230,7 +230,7 @@ export class SystemView {
     this.#systems = systems;
     this.#rows = systems.map(row);
     this.#list.replaceChildren(...this.#rows);
-    this.#panel.replaceChildren(el('div', { class: 'floor', 'aria-hidden': 'true' }));
+    this.#panel.replaceChildren(el('div', { class: 'floor', 'aria-hidden': 'true' }), floorFx());
     this.#slots.clear();
     this.#page = null;
     this.#selected = -1;
@@ -697,6 +697,19 @@ function logoImage(system: CyberSystem, cls: string, big = false): HTMLImageElem
   });
   logo.addEventListener('error', () => logo.remove());
   return logo;
+}
+
+/**
+ * What moves on the floor under the console, outside the stage pages (they fade as the
+ * selection moves): rings of light going out from under it, sparks rising round it.
+ */
+function floorFx(): HTMLElement {
+  return el(
+    'div',
+    { class: 'floor-fx', 'aria-hidden': 'true' },
+    ...[0, 1, 2].map((n) => el('span', { class: 'ping', style: `--n: ${n}` })),
+    ...[0, 1, 2, 3, 4, 5, 6, 7].map((n) => el('span', { class: 'spark', style: `--n: ${n}` }))
+  );
 }
 
 /**

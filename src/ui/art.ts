@@ -123,20 +123,30 @@ const ART: Record<Category['id'], string> = {
     <path d="M114 56h12" stroke="${PINK}"/>
     <path d="M96 22l-6-4M144 22l6-4M92 38h-7M148 38h7" stroke="${CYAN}" stroke-width="2.5"/>`),
 
-  // A cartridge turned into a program: the cartridge, an arrow, a window running it.
-  // Magazines: an issue standing, an invader on its cover, the last issue leaning behind it.
-  magazines: svg(
-    `
-    <rect x="62" y="38" width="62" height="92" rx="3" transform="rotate(-9 93 130)" fill="currentColor" fill-opacity=".08"/>
-    <path d="M70 52h36" transform="rotate(-9 93 130)" stroke-width="2.5" opacity=".6"/>
-    <rect x="100" y="30" width="64" height="98" rx="3" fill="currentColor" fill-opacity=".14"/>
-    <path d="M109 42h46" stroke="${PINK}" stroke-width="6"/>
-    <rect x="109" y="54" width="46" height="36" rx="2" stroke="${CYAN}" stroke-width="2.5"/>
-    ${invader(115.5, 60, 3, CYAN)}
-    <path d="M109 101h30M109 111h22" stroke="${WHITE}" stroke-width="2.5"/>
-    <circle cx="150" cy="111" r="7" stroke="${PINK}" stroke-width="2.5"/>`,
-    7
-  ),
+  // Magazines: a newspaper's front page, "The Invader": its masthead, the headline, an
+  // invader in the photo, columns of print; yesterday's issue behind it, invaders over them.
+  magazines: svg(`
+    <g transform="rotate(7 150 130)" opacity=".55">
+      <rect x="112" y="30" width="96" height="100" rx="2" fill="currentColor" fill-opacity=".08"/>
+      <path d="M122 42h76M122 52h60M122 60h70M122 68h52" stroke-width="2"/>
+    </g>
+    <g transform="rotate(-5 110 130)">
+      <rect x="50" y="20" width="124" height="110" rx="2" fill="#0b1020" stroke="none"/>
+      <rect x="50" y="20" width="124" height="110" rx="2" fill="currentColor" fill-opacity=".14"/>
+      <text x="112" y="37" text-anchor="middle" textLength="104" lengthAdjust="spacingAndGlyphs" fill="${WHITE}" stroke="none" font-family="DejaVu Sans Mono, monospace" font-size="14" font-weight="700">THE INVADER</text>
+      <path d="M58 42h108" stroke-width="2"/>
+      <path d="M58 46h108" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="112" y="58" text-anchor="middle" textLength="100" lengthAdjust="spacingAndGlyphs" fill="${PINK}" stroke="none" font-family="DejaVu Sans Mono, monospace" font-size="10" font-weight="700">INVADERS LAND!</text>
+      <rect x="58" y="64" width="54" height="40" rx="1" stroke="${CYAN}" stroke-width="2.5"/>
+      ${invader(68.5, 68, 3, CYAN)}
+      <path d="M85 96v-4" stroke="${PINK}" stroke-width="2"/>
+      <path d="M79 101h12v-3h-4v-2h-4v2h-4z" fill="${WHITE}" stroke="none"/>
+      <path d="M118 67h48M118 74h48M118 81h48M118 88h48M118 95h36" stroke="${WHITE}" stroke-width="2" opacity=".75"/>
+      <path d="M58 112h32M58 119h28M96 112h32M96 119h26M134 112h32M134 119h20" stroke-width="2" opacity=".75"/>
+    </g>
+    ${invader(186, 12, 2, PINK)}
+    <path d="M197 34v6" stroke="${PINK}" stroke-width="2"/>
+    ${invader(24, 30, 1.6, CYAN)}`),
 
   // A chip whose core is a gear, a second gear turning with it.
   engines: svg(

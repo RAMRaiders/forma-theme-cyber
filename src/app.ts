@@ -10,7 +10,16 @@ import type {
 } from '@ramraiders/forma-sdk';
 import { FormaError } from '@ramraiders/forma-sdk';
 
-import { ALL_GAMES, CATEGORIES, InfoStore, MAGAZINES, allGames, group } from './data/catalog.js';
+import {
+  ALL_GAMES,
+  CATEGORIES,
+  InfoStore,
+  MAGAZINES,
+  type MakerLogo,
+  allGames,
+  group,
+  makerLogos
+} from './data/catalog.js';
 import {
   DEFAULT_PREFS,
   MARGINS_SETTING,
@@ -127,11 +136,10 @@ export class App {
       const { data } = await this.forma.ra.game(game.id);
       return { earned: data.earned, total: data.achievementCount };
     },
-    // What the game's emulator can do (netplay, achievements), as Batocera's options say.
     play: (game, area) => this.forma.video.play(game.id, { area }),
     stopVideo: () => void this.forma.video.stop().catch(() => {}),
-    features: async (game) =>
-      (await this.forma.options.get({ level: 'game', game: game.id })).flags,
+    // The game companies' logos first, then the hardware makers'.
+    company: (name) => makerLogos(name, this.#companies)[0] ?? null,
     accent: accentOf,
     system: (name) => {
       const system = this.#groups.flatMap((g) => g.systems).find((s) => s.summary.name === name);
@@ -181,6 +189,8 @@ export class App {
   /** Which screen the current level is: Cyber's own two, or Forma's views as they come. */
   #mode: 'home' | 'systems' | 'browse' = 'browse';
   #groups: Tile[] = [];
+  /** Logos for the Collector's developers and publishers: game companies', then makers'. */
+  #companies: MakerLogo[] = [];
   #shortcuts: Shortcut[] = SHORTCUTS;
 
   #views: ViewInfo[] = [];
@@ -227,6 +237,9 @@ export class App {
   }
 
   async start(): Promise<void> {
+    void Promise.all([this.infos.companies(), this.infos.makers()]).then(([games, makers]) => {
+      this.#companies = [...games, ...makers];
+    });
     this.forma.input.on((e) => this.#onInput(e));
     this.forma.events.on('library:changed', () => this.#reloadSoon());
     // Views change with collections too: the shortcuts' counts follow.

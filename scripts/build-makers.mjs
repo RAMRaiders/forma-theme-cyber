@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 /**
- * Builds the makers' logos for Cyber's systems screen (scripts/makers.json says which), from
- * Wikimedia Commons, into public/makers/: `<id>.webp`, `makers.json` (each maker's pattern and
- * logo) and CREDITS.md. A logo in black or near it is made white, Cyber being dark.
+ * Builds companies' logos from Wikimedia Commons: the makers' for Cyber's systems screen
+ * (scripts/makers.json says which), or with `--set=companies` the game developers' and
+ * publishers' for the Collector view (scripts/companies.json). Into public/<set>/: `<id>.webp`,
+ * `<set>.json` (each one's pattern and logo) and CREDITS.md. A logo in black or near it is made
+ * white, Cyber being dark.
  *
- *   node scripts/build-makers.mjs [cache dir]
+ *   node scripts/build-makers.mjs [--set=makers|companies] [cache dir]
  */
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -12,15 +14,19 @@ import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const OUT = join(ROOT, 'public', 'makers');
+const args = process.argv.slice(2);
+const SET = args.find((a) => a.startsWith('--set='))?.slice(6) ?? 'makers';
+const OUT = join(ROOT, 'public', SET);
 const UA = 'FormaCyberArt/1.0 (https://github.com/RAMRaiders/forma-theme-cyber)';
 /** Twice the height the byline shows them at 1080p. */
 const HEIGHT = 96;
-const [cache = join(ROOT, 'node_modules', '.cache', 'cyber-art')] = process.argv.slice(2);
+const [cache = join(ROOT, 'node_modules', '.cache', 'cyber-art')] = args.filter(
+  (a) => !a.startsWith('--')
+);
 mkdirSync(cache, { recursive: true });
 mkdirSync(OUT, { recursive: true });
 
-const { makers } = JSON.parse(readFileSync(join(ROOT, 'scripts', 'makers.json'), 'utf8'));
+const { [SET]: makers } = JSON.parse(readFileSync(join(ROOT, 'scripts', `${SET}.json`), 'utf8'));
 
 async function commons(title) {
   const url =
@@ -130,8 +136,8 @@ for (const maker of makers) {
   );
   process.stdout.write(`${maker.id}${dark ? ' (made white)' : ''}\n`);
 }
-writeFileSync(join(OUT, 'makers.json'), JSON.stringify(out, null, 2) + '\n');
+writeFileSync(join(OUT, `${SET}.json`), JSON.stringify(out, null, 2) + '\n');
 writeFileSync(
   join(OUT, 'CREDITS.md'),
-  `# Where the makers' logos come from\n\nAll from Wikimedia Commons; built by scripts/build-makers.mjs.\n\n${credits.join('\n')}\n`
+  `# Where the ${SET}' logos come from\n\nAll from Wikimedia Commons; built by scripts/build-makers.mjs${SET === 'makers' ? '' : ` --set=${SET}`}.\n\n${credits.join('\n')}\n`
 );

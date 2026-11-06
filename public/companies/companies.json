@@ -1,0 +1,257 @@
+[
+  {
+    "id": "konami",
+    "match": "^konami",
+    "logo": "konami.webp"
+  },
+  {
+    "id": "capcom",
+    "match": "^capcom",
+    "logo": "capcom.webp"
+  },
+  {
+    "id": "taito",
+    "match": "^taito",
+    "logo": "taito.webp"
+  },
+  {
+    "id": "activision",
+    "match": "^activision",
+    "logo": "activision.webp"
+  },
+  {
+    "id": "dataeast",
+    "match": "^data east",
+    "logo": "dataeast.webp"
+  },
+  {
+    "id": "acclaim",
+    "match": "^acclaim",
+    "logo": "acclaim.webp"
+  },
+  {
+    "id": "easports",
+    "match": "^ea sports",
+    "logo": "easports.webp"
+  },
+  {
+    "id": "ea",
+    "match": "^(electronic arts|ea\\b)",
+    "logo": "ea.webp"
+  },
+  {
+    "id": "hudson",
+    "match": "^hudson",
+    "logo": "hudson.webp"
+  },
+  {
+    "id": "thq",
+    "match": "^thq",
+    "logo": "thq.webp"
+  },
+  {
+    "id": "jaleco",
+    "match": "^jaleco",
+    "logo": "jaleco.webp"
+  },
+  {
+    "id": "ubisoft",
+    "match": "^ubi ?soft",
+    "logo": "ubisoft.webp"
+  },
+  {
+    "id": "sunsoft",
+    "match": "^sun ?soft",
+    "logo": "sunsoft.webp"
+  },
+  {
+    "id": "natsume",
+    "match": "^natsume",
+    "logo": "natsume.webp"
+  },
+  {
+    "id": "koei",
+    "match": "^koei",
+    "logo": "koei.webp"
+  },
+  {
+    "id": "mattel",
+    "match": "^mattel",
+    "logo": "mattel.webp"
+  },
+  {
+    "id": "midway",
+    "match": "^(bally )?midway",
+    "logo": "midway.webp"
+  },
+  {
+    "id": "tecmo",
+    "match": "^tecmo",
+    "logo": "tecmo.webp"
+  },
+  {
+    "id": "hal",
+    "match": "^hal\\b",
+    "logo": "hal.webp"
+  },
+  {
+    "id": "titus",
+    "match": "^titus",
+    "logo": "titus.webp"
+  },
+  {
+    "id": "irem",
+    "match": "^irem",
+    "logo": "irem.webp"
+  },
+  {
+    "id": "codemasters",
+    "match": "^codemasters",
+    "logo": "codemasters.webp"
+  },
+  {
+    "id": "mindscape",
+    "match": "^mindscape",
+    "logo": "mindscape.webp"
+  },
+  {
+    "id": "kemco",
+    "match": "^kemco",
+    "logo": "kemco.webp"
+  },
+  {
+    "id": "imagineer",
+    "match": "^imagineer",
+    "logo": "imagineer.webp"
+  },
+  {
+    "id": "banpresto",
+    "match": "^banpresto",
+    "logo": "banpresto.webp"
+  },
+  {
+    "id": "virgin",
+    "match": "^virgin",
+    "logo": "virgin.webp"
+  },
+  {
+    "id": "parker",
+    "match": "^parker brothers",
+    "logo": "parker.webp"
+  },
+  {
+    "id": "accolade",
+    "match": "^accolade",
+    "logo": "accolade.webp"
+  },
+  {
+    "id": "atlus",
+    "match": "^atlus",
+    "logo": "atlus.webp"
+  },
+  {
+    "id": "microprose",
+    "match": "^micro ?prose",
+    "logo": "microprose.webp"
+  },
+  {
+    "id": "ljn",
+    "match": "^ljn",
+    "logo": "ljn.webp"
+  },
+  {
+    "id": "interplay",
+    "match": "^interplay",
+    "logo": "interplay.webp"
+  },
+  {
+    "id": "sierra",
+    "match": "^sierra",
+    "logo": "sierra.webp"
+  },
+  {
+    "id": "ponycanyon",
+    "match": "^pony canyon",
+    "logo": "ponycanyon.webp"
+  },
+  {
+    "id": "imagic",
+    "match": "^imagic",
+    "logo": "imagic.webp"
+  },
+  {
+    "id": "tengen",
+    "match": "^tengen",
+    "logo": "tengen.webp"
+  },
+  {
+    "id": "technos",
+    "match": "^techn[o\u014d]s",
+    "logo": "technos.webp"
+  },
+  {
+    "id": "kaneko",
+    "match": "^kaneko",
+    "logo": "kaneko.webp"
+  },
+  {
+    "id": "compile",
+    "match": "^compile",
+    "logo": "compile.webp"
+  },
+  {
+    "id": "majesco",
+    "match": "^majesco",
+    "logo": "majesco.webp"
+  },
+  {
+    "id": "takara",
+    "match": "^takara",
+    "logo": "takara.webp"
+  },
+  {
+    "id": "enix",
+    "match": "^enix",
+    "logo": "enix.webp"
+  },
+  {
+    "id": "squareenix",
+    "match": "^square enix",
+    "logo": "squareenix.webp"
+  },
+  {
+    "id": "infocom",
+    "match": "^infocom",
+    "logo": "infocom.webp"
+  },
+  {
+    "id": "toaplan",
+    "match": "^toaplan",
+    "logo": "toaplan.webp"
+  },
+  {
+    "id": "broderbund",
+    "match": "^br[o\u00f8]derbund",
+    "logo": "broderbund.webp"
+  },
+  {
+    "id": "intsys",
+    "match": "^intelligent systems",
+    "logo": "intsys.webp"
+  },
+  {
+    "id": "seta",
+    "match": "^seta\\b",
+    "logo": "seta.webp"
+  },
+  {
+    "id": "visco",
+    "match": "^visco",
+    "logo": "visco.webp"
+  },
+  {
+    "id": "gamefreak",
+    "match": "^game ?freak",
+    "logo": "gamefreak.webp"
+  }
+]

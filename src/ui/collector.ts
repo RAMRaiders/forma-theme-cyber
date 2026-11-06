@@ -1,7 +1,7 @@
 import type { Game } from '@ramraiders/forma-sdk';
 
 import type { LazyList } from '../logic/pager.js';
-import { ageBand, ageRatings, pickAgeRating } from '../logic/agerating.js';
+import { ageRatings, asPegi } from '../logic/agerating.js';
 import { languageFlag, regionFlag, romName } from '../logic/romname.js';
 import { el, remPx } from './dom.js';
 import {
@@ -12,11 +12,12 @@ import {
   type MediaUrl,
   REGIONS,
   type ShowGame,
+  ago,
   captions,
   date,
   names,
-  played,
-  players
+  players,
+  playtime
 } from './stage.js';
 
 /**
@@ -24,8 +25,8 @@ import {
  *
  * - The shelf, over the middle while the selection moves: every game a box lying on its side,
  *   spine out, the selected one in the middle; a moment after the last move it fades away.
- * - Then the screen, in bays framed in Cyber's style under a grading label: the case (the
- *   game's box in 3D on a lit plinth, turning from its front to its spine to its back, or as
+ * - Then the screen, over the game's fan art, in bays under a grading label: the case (the
+ *   game's box in 3D, turning from its front to its spine to its back, or as
  *   the player turns it); the footage (its screenshots in turn, then
  *   its video, played by Forma in that window); its story; and the dossier (everything known
  *   about it, what it offers, what the player has done with it), with its cartridge in a bay under it when it has one.
@@ -45,8 +46,8 @@ export interface ScreenArea {
 export interface CollectorOptions {
   media: MediaUrl;
   achievements?: (game: Game) => Promise<Achievements | null>;
-  /** What the game's emulator supports (`netplay`, `cheevos`); empty when unknown. */
-  features?: (game: Game) => Promise<string[]>;
+  /** A developer's or publisher's logo, from its name; `null` where Cyber has none. */
+  company?: (name: string) => string | null;
   /** The game's colour, from a small picture of it. */
   accent?: (url: string) => Promise<string | null>;
   /** A system's name and small logo (`dark`: it needs a light plate). */
@@ -60,11 +61,15 @@ export interface CollectorOptions {
   stopVideo?: () => void;
 }
 
+/** The fan art's width: the whole view's background, shaded, so half the screen's is enough
+ * (a quarter of the pixels to decode and hold on a Pi). */
+const BACKDROP_W = 960;
+
 /** Every picture the view shows, at the width it asks, the most needed first. */
 export const COLLECTOR_PICTURES: readonly (readonly [Kind, number])[] = [
   ['thumbnail', 640],
   ['boxside', 160],
-  ['fanart', 640],
+  ['fanart', BACKDROP_W],
   ['wheel', 560],
   ['boxback', 640],
   ['cartridge', 400],
@@ -88,10 +93,15 @@ const DROP_MS = 1100;
 const VIDEO_AFTER_MS = 2500;
 /** With no video, the footage bay shows the screenshots in turn. */
 const SHOT_MS = 4000;
-/** The story scrolls this fast when longer than its bay, px a second. */
-const STORY_PX_S = 14;
+/** This copy and the play record take turns, each this long. */
+const ALTERNATE_MS = 10_000;
+/** The story a page at a time: each this long, fading this long between. */
+const STORY_PAGE_MS = 12_000;
+const STORY_FADE_MS = 300;
 /** A held direction: the showcase waits for the selection to settle. */
 const SETTLE_MS = 150;
+/** The box and the cartridge sliding past each other, slowly (as in style.css). */
+const SLIDE_MS = 2200;
 /** On a game: the box first turns after this, then every `TURN_MS`. */
 const FIRST_TURN_MS = 3200;
 const TURN_MS = 4600;
@@ -102,20 +112,27 @@ const PREPARE_AROUND = 3;
 const BOX_REM = 17.5;
 /** Then as tall as the case allows, between these. */
 const BOX_MIN_REM = 12;
-const BOX_MAX_REM = 30;
-/** Kept clear under the box: the plinth. */
-const UNDER_REM = 4.6;
+const BOX_MAX_REM = 22;
+/** Kept clear under the box. */
+const UNDER_REM = 1.6;
 /** Until its pictures say otherwise: a Mega Drive case's shape. */
 const FRONT_RATIO = 0.72;
 const SPINE_RATIO = 0.14;
 
-/** The box's poses: how far it is turned for each, in degrees. */
-const POSES = [
+/** A pose: how far the box is turned for it, in degrees; `null`: the box away, its cartridge out. */
+interface Pose {
+  id: string;
+  label: string;
+  angle: number | null;
+}
+
+/** The box's poses. */
+const POSES: readonly Pose[] = [
   // Each face square on, flat as a picture of it; the box turns in 3D only between them.
   { id: 'front', label: 'Front', angle: 0 },
   { id: 'spine', label: 'Spine', angle: 90 },
   { id: 'back', label: 'Back', angle: 180 }
-] as const;
+];
 
 /** Screenshots, as prints. */
 const PRINTS: Kind[] = ['titleshot', 'image', 'mix', 'map'];
@@ -152,10 +169,16 @@ export class CollectorView {
   /** Sizes the box to its case, once the case is laid out. */
   #fit: (() => void) | null = null;
   #dots: HTMLElement | null = null;
+  /** The case's stage: the box and, when the game has one, its cartridge. */
+  #display: HTMLElement | null = null;
+  /** The game's poses: its cartridge's first, when it has one, then the box's. */
+  #poses: Pose[] = [...POSES];
   /** The footage bay's screen: screenshots, and the video's window once it plays. */
   #footage: HTMLElement | null = null;
   #pose = 0;
-  #angle: number = POSES[0].angle;
+  #angle = 0;
+  /** The cartridge out of sight to the right, ready to come in from the left again. */
+  #slideDone: ReturnType<typeof setTimeout> | undefined;
 
   /** The game's video behind the case after a moment; Interface → Video previews. */
   previews = true;
@@ -178,7 +201,12 @@ export class CollectorView {
     this.#selected = -1;
     // Straight to it, no glide from wherever the last list was.
     this.#track.classList.add('still');
-    this.select(selected);
+    // The same game as before (the list reloaded, after a favourite say): no shelf, the case
+    // goes on as it was, only what changed about the game is shown.
+    const now = source.get(selected);
+    const same = !!now && !!this.#box && this.#game?.id === now.id;
+    this.select(selected, same);
+    if (same && now) this.#update(now);
     requestAnimationFrame(() => this.#track.classList.remove('still'));
   }
 
@@ -206,7 +234,8 @@ export class CollectorView {
     return Math.max(1, Math.floor(this.#shelf.clientHeight / (ROW_REM * remPx())));
   }
 
-  select(index: number): void {
+  /** `quiet`: the same game again (a reload), not a move: no shelf, nothing restarted. */
+  select(index: number, quiet = false): void {
     const changed = index !== this.#selected;
     this.#selected = index;
     const row = ROW_REM * remPx();
@@ -214,7 +243,7 @@ export class CollectorView {
     // The selected row in the middle, at the ends of the list too; the rows glide there.
     this.#track.style.transform = `translateY(${this.#pad - index * row}px)`;
     this.render();
-    if (!changed) return;
+    if (!changed || quiet) return;
     this.#browse();
     this.#stopVideo();
     const now = performance.now();
@@ -303,14 +332,14 @@ export class CollectorView {
   refreshSelected(game: Game): void {
     this.#source?.set(this.#selected, game);
     this.render();
-    if (this.#game?.id === game.id) {
-      this.#game = game;
-      const name = this.#dossier.querySelector('.head h2');
-      this.#dossier.querySelector('.head .favourite')?.remove();
-      if (game.favorite) name?.after(favouriteTag());
-    } else {
-      this.#showSelected();
-    }
+    if (this.#game?.id === game.id) this.#update(game);
+    else this.#showSelected();
+  }
+
+  /** The game shown, as it is now: its star in the label. */
+  #update(game: Game): void {
+    this.#game = game;
+    this.#showcase.querySelector('.slab-label .fav')?.classList.toggle('on', game.favorite);
   }
 
   /** Turns the box to its next pose (`1`) or its last (`-1`); it stops turning by itself. */
@@ -337,6 +366,7 @@ export class CollectorView {
     this.#intervals.forEach(clearInterval);
     this.#timers = [];
     this.#intervals = [];
+    clearTimeout(this.#slideDone);
     this.#stopVideo();
   }
 
@@ -363,6 +393,16 @@ export class CollectorView {
   }
 
   #seeThrough(on: boolean): void {
+    // The fan art stays round the video's window: a hole cut where the screen is.
+    const r = on ? this.#footage?.getBoundingClientRect() : null;
+    if (r?.width) {
+      const [x0, y0, x1, y1] = [r.left, r.top, r.right, r.bottom].map((n) => `${Math.round(n)}px`);
+      this.#backdrop.style.clipPath =
+        `polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ` +
+        `${x0} ${y0}, ${x0} ${y1}, ${x1} ${y1}, ${x1} ${y0}, ${x0} ${y0})`;
+    } else {
+      this.#backdrop.style.removeProperty('clip-path');
+    }
     this.root.classList.toggle('video-on', on);
     document.documentElement.classList.toggle('video-through', on);
   }
@@ -383,8 +423,7 @@ export class CollectorView {
     this.#stop();
     if (!game) return;
     this.#game = game;
-    this.#pose = 0;
-    this.#angle = POSES[0].angle;
+    this.#angle = 0;
     this.root.style.removeProperty('--game');
     this.#tint(game);
     this.#backdropFor(game);
@@ -401,18 +440,45 @@ export class CollectorView {
     this.#later(() => this.#startVideo(game), VIDEO_AFTER_MS);
   }
 
+  /**
+   * The next pose (`1`) or the last (`-1`). Between the box's, it turns. After its back, the
+   * box slides slowly off to the right as its cartridge comes in from the left, at the same
+   * speed; then the cartridge goes on out to the right as the box comes back in from the left,
+   * already turned to its pose. Everything goes one way, left to right.
+   */
   #turnTo(direction: 1 | -1): void {
     const box = this.#box;
+    const display = this.#display;
     if (!box) return;
-    const next = (this.#pose + direction + POSES.length) % POSES.length;
-    let delta = POSES[next]!.angle - POSES[this.#pose]!.angle;
-    // Always on round the same way: never back the long way.
-    if (direction > 0 && delta <= 0) delta += 360;
-    if (direction < 0 && delta >= 0) delta -= 360;
+    const poses = this.#poses;
+    const from = poses[this.#pose];
+    const next = (this.#pose + direction + poses.length) % poses.length;
+    const to = poses[next]!;
     this.#pose = next;
-    this.#angle += delta;
-    box.style.transform = boxTransform(this.#angle);
-    box.dataset.pose = POSES[next]!.id;
+    clearTimeout(this.#slideDone);
+    if (to.angle === null) {
+      display?.classList.remove('cart-leaving');
+      display?.classList.add('cart-out');
+    } else if (!from || from.angle === null) {
+      // Out of sight: turned to its pose at once, and moved round to the left to come in.
+      this.#angle += (((to.angle - this.#angle) % 360) + 360) % 360;
+      box.style.transition = 'none';
+      box.style.transform = boxTransform(this.#angle);
+      display?.classList.add('box-from-left');
+      void box.offsetWidth;
+      box.style.removeProperty('transition');
+      display?.classList.remove('cart-out', 'box-from-left');
+      display?.classList.add('cart-leaving');
+      this.#slideDone = setTimeout(() => display?.classList.remove('cart-leaving'), SLIDE_MS + 100);
+    } else {
+      let delta = to.angle - from.angle;
+      // Always on round the same way: never back the long way.
+      if (direction > 0 && delta <= 0) delta += 360;
+      if (direction < 0 && delta >= 0) delta -= 360;
+      this.#angle += delta;
+      box.style.transform = boxTransform(this.#angle);
+    }
+    box.dataset.pose = to.id;
     this.#dots
       ?.querySelectorAll('span')
       .forEach((dot, i) => dot.classList.toggle('on', i === next));
@@ -480,14 +546,15 @@ export class CollectorView {
     });
   }
 
-  /** The fan art, small and dim behind the room: upscaled, it is its own blur. */
+  /** The fan art behind the whole view, shaded so the words over it read. */
   #backdropFor(game: Game): void {
     const old = [...this.#backdrop.children];
     const leave = () => {
       old.forEach((n) => n.classList.add('leaving'));
       setTimeout(() => old.forEach((n) => n.remove()), 900);
     };
-    const src = this.#options.media(game, 'fanart', 640) ?? this.#options.media(game, 'image', 400);
+    const src =
+      this.#options.media(game, 'fanart', BACKDROP_W) ?? this.#options.media(game, 'image', 400);
     if (!src) return leave();
     const img = picture(src, 'waiting');
     this.#backdrop.append(img);
@@ -508,18 +575,27 @@ export class CollectorView {
     this.#box = box;
     const floater = el('div', { class: 'float' }, box);
 
+    const cart = this.#cartOf(game);
     const display = el(
       'div',
       { class: 'display' },
-      el('div', { class: 'spotlight' }),
-      el('div', { class: 'plinth' }, el('div', { class: 'ring' })),
-      floater
+      ...(cart ? [cart] : []),
+      el('div', { class: 'mover' }, floater)
     );
+    this.#display = display;
+    this.#poses = cart
+      ? [
+          ...POSES,
+          { id: 'cartridge', label: ARCADE.has(game.system) ? 'Board' : 'Cartridge', angle: null }
+        ]
+      : [...POSES];
+    // On its front first; the cartridge's turn comes after its back.
+    this.#pose = 0;
 
     this.#dots = el(
       'div',
       { class: 'poses', 'aria-hidden': 'true' },
-      ...POSES.map((p, i) => el('span', { class: i === 0 ? 'on' : '' }, p.label))
+      ...this.#poses.map((p, i) => el('span', { class: i === this.#pose ? 'on' : '' }, p.label))
     );
 
     const shots = PRINTS.map((k) => media(game, k, 400)).filter((u): u is string => u !== null);
@@ -541,44 +617,67 @@ export class CollectorView {
       this.#label(game),
       bay('case', 'Case', display, this.#dots),
       bay('footage', 'Footage', this.#footage),
-      this.#storyBay(game),
-      this.#cartridgeBay(game)
-    ].filter((p): p is HTMLElement => p !== null);
+      this.#storyBay(game)
+    ];
   }
 
   /**
-   * The cartridge (an arcade game's board) in a bay of its own, under the dossier; without one
-   * the dossier has the whole column.
+   * The cartridge (an arcade game's board), hidden behind the box until its turn comes; without a
+   * picture of it, the box has the poses to itself.
    */
-  #cartridgeBay(game: ShowGame): HTMLElement | null {
+  #cartOf(game: ShowGame): HTMLElement | null {
     const src = this.#options.media(game, 'cartridge', 400);
-    this.root.classList.toggle('no-cart', !src);
     if (!src) return null;
     const img = picture(src, 'cart');
+    // Ready before its turn: decoded now, not as it slides in.
+    void img.decode?.().catch(() => {});
+    const stage = el('div', { class: 'cart-stage', 'aria-hidden': 'true' }, img);
     img.addEventListener(
       'error',
       () => {
-        img.closest('.bay')?.remove();
-        this.root.classList.add('no-cart');
+        stage.remove();
+        const at = this.#poses.findIndex((p) => p.angle === null);
+        if (at < 0) return;
+        if (this.#display?.classList.contains('cart-out')) this.#turnTo(1);
+        this.#poses.splice(at, 1);
+        if (this.#pose > at) this.#pose -= 1;
+        this.#dots?.children[at]?.remove();
       },
       { once: true }
     );
-    return bay('cartridge', ARCADE.has(game.system) ? 'Board' : 'Cartridge', img);
+    return stage;
   }
 
   /** The game's story, all of it; when longer than its bay it scrolls slowly through. */
+  /**
+   * The game's story, a page at a time: cut where it fills the bay, between sentences, each
+   * page shown in turn with its number under it (`2 / 3`).
+   */
   #storyBay(game: ShowGame): HTMLElement {
-    const text = el('div', { class: 'scroll-inner' }, game.description ?? '');
-    const box = el('div', { class: 'text' }, text);
-    const story = bay('story', ARCADE.has(game.system) ? 'History' : 'Story', box);
+    const all = game.description ?? '';
+    const box = el('div', { class: 'text' }, all);
+    const pager = el('span', { class: 'pager', 'aria-hidden': 'true' });
+    const story = bay('story', ARCADE.has(game.system) ? 'History' : 'Story', box, pager);
     // No story: the footage has its room.
-    this.root.classList.toggle('no-story', !game.description);
+    this.root.classList.toggle('no-story', !all);
+    const id = game.id;
     requestAnimationFrame(() => {
-      const over = text.scrollHeight - box.clientHeight;
-      if (over <= 2 || !motion()) return;
-      box.style.setProperty('--scroll', `${-over}px`);
-      box.style.setProperty('--scroll-s', `${Math.max(8, (over / STORY_PX_S) * 2)}s`);
-      box.classList.add('scrolling');
+      if (this.#game?.id !== id || !box.clientHeight) return;
+      const pages = paginate(all, box);
+      box.textContent = pages[0] ?? '';
+      if (pages.length < 2) return;
+      let at = 0;
+      const show = () => (pager.textContent = `${at + 1} / ${pages.length}`);
+      show();
+      this.#every(() => {
+        box.classList.add('turning');
+        this.#later(() => {
+          at = (at + 1) % pages.length;
+          box.textContent = pages[at] ?? '';
+          show();
+          box.classList.remove('turning');
+        }, STORY_FADE_MS);
+      }, STORY_PAGE_MS);
     });
     return story;
   }
@@ -612,13 +711,27 @@ export class CollectorView {
         el('span', { class: 'line' }, details.join(' · ')),
         el('span', { class: 'serial' }, serial(game))
       ),
-      ageBadge(game),
+      // The favourite's gold star, right after its name and details (only when it is one).
       el(
         'div',
-        { class: `grade${grade ? '' : ' none'}` },
-        el('strong', {}, grade?.score ?? '—'),
-        game.rating !== null ? stars(game.rating) : '',
-        el('span', {}, grade?.word ?? 'Ungraded')
+        { class: `fav${game.favorite ? ' on' : ''}`, 'aria-label': 'Favourite' },
+        el('span', { 'aria-hidden': 'true' }, '★')
+      ),
+      // The grade's seal, at the right end.
+      el(
+        'div',
+        { class: 'seals' },
+        el(
+          'div',
+          { class: `seal grade${grade ? '' : ' none'}` },
+          el('strong', {}, grade?.score ?? '—', grade ? el('small', {}, '/5') : ''),
+          el(
+            'span',
+            { class: 'foot' },
+            game.rating !== null ? stars(game.rating) : '',
+            el('span', { class: 'word' }, grade?.word ?? 'Ungraded')
+          )
+        )
       )
     );
   }
@@ -642,9 +755,12 @@ export class CollectorView {
             size.depth
           )
         : BOX_REM;
-      box.style.setProperty('--h', `${h.toFixed(2)}rem`);
-      box.style.setProperty('--w', `${(h * size.ratio).toFixed(2)}rem`);
-      box.style.setProperty('--d', `${(h * size.depth).toFixed(2)}rem`);
+      // On the case's stage too: the cartridge is never bigger than the box hiding it.
+      for (const node of display ? [box, display] : [box]) {
+        node.style.setProperty('--h', `${h.toFixed(2)}rem`);
+        node.style.setProperty('--w', `${(h * size.ratio).toFixed(2)}rem`);
+        node.style.setProperty('--d', `${(h * size.depth).toFixed(2)}rem`);
+      }
     };
     resize();
     this.#fit = resize;
@@ -742,67 +858,116 @@ export class CollectorView {
       head.append(img);
     }
     head.append(el('h2', {}, game.name));
-    if (game.favorite) head.append(favouriteTag());
 
-    const specs = el('dl', { class: 'specs' });
-    const add = (label: string, value: string | null | undefined) => {
-      if (value) specs.append(el('div', {}, el('dt', {}, label), el('dd', {}, value)));
+    const section = (title: string, ...rows: (HTMLElement | null)[]) => {
+      const kept = rows.filter((r): r is HTMLElement => r !== null);
+      return kept.length
+        ? el(
+            'section',
+            { class: 'part' },
+            el('h3', {}, title),
+            el('dl', { class: 'specs' }, ...kept)
+          )
+        : null;
     };
-    add('Released', game.releaseDate ? date(game.releaseDate) : null);
-    add('Developer', game.developer);
-    add('Publisher', game.publisher);
-    add('Genre', game.genre);
+    const row = (label: string, value: string | HTMLElement | null | undefined) =>
+      value ? el('div', {}, el('dt', {}, label), el('dd', {}, value)) : null;
     // The ROM's own name first (it is the copy at hand), the scraper's data after.
     const rom = romName(game.path);
     const regions = rom.regions.length ? rom.regions : codes(game.region);
     const languages = rom.languages.length ? rom.languages : codes(game.lang);
-    const flagged = (
-      label: string,
+    const company = (name: string | null) => {
+      if (!name) return null;
+      const src = this.#options.company?.(name);
+      if (!src) return name;
+      const img = el('img', { class: 'company', src, alt: name, title: name, decoding: 'async' });
+      img.addEventListener('error', () => img.replaceWith(name), { once: true });
+      return img;
+    };
+    const flags = (
       list: string[],
       table: Record<string, string>,
       flag: (c: string) => string | null
-    ) => {
-      if (!list.length) return;
-      specs.append(
-        el(
-          'div',
-          {},
-          el('dt', {}, label),
-          el(
-            'dd',
+    ) =>
+      list.length
+        ? el(
+            'span',
             { class: 'flags' },
             ...list.map((c) => flagChip(table[c] ?? c.toUpperCase(), flag(c)))
           )
-        )
-      );
-    };
-    flagged('Region', regions, REGIONS, regionFlag);
-    flagged('Languages', languages, LANGUAGES, languageFlag);
-    add('Version', rom.version);
+        : null;
+    const released = game.releaseDate
+      ? `${date(game.releaseDate)} · ${ago(game.releaseDate).toLowerCase()}`
+      : null;
 
-    const marks = this.#marks(game);
-
-    const record = el(
-      'section',
-      { class: 'record' },
-      el('h3', {}, 'Play record'),
-      el('p', {}, played(game) ?? 'Never yet')
+    const release = section(
+      'Release',
+      row('Released', released),
+      row('Developer', company(game.developer)),
+      row('Publisher', company(game.publisher)),
+      row('Genre', game.genre)
     );
+    const copy = section(
+      'This copy',
+      row('Region', flags(regions, REGIONS, regionFlag)),
+      row('Languages', flags(languages, LANGUAGES, languageFlag)),
+      row('Version', versionText(rom.version)),
+      row('Media', this.#archive(game))
+    );
+    const record =
+      section(
+        'Play record',
+        row('Played', game.playCount > 0 ? `${game.playCount}×` : 'Never yet'),
+        row('Time', game.gameTime > 0 ? playtime(game.gameTime) : null),
+        row('Last', game.lastPlayed ? ago(game.lastPlayed) : null)
+      ) ?? el('section', { class: 'part' });
     this.#achievementsInto(game, record);
 
-    const parts = [head, marks, specs, record];
+    // This copy and the play record take turns in one place.
+    const turns = [copy, record].filter((p): p is HTMLElement => p !== null);
+    turns[0]?.classList.add('shown');
+    const alternate = el('div', { class: 'alternate' }, ...turns);
+    if (turns.length > 1) {
+      let at = 0;
+      this.#every(() => {
+        turns[at]?.classList.remove('shown');
+        at = (at + 1) % turns.length;
+        turns[at]?.classList.add('shown');
+      }, ALTERNATE_MS);
+    }
+    const parts = [head, this.#marks(game), release, alternate].filter(
+      (p): p is HTMLElement => p !== null
+    );
 
     return parts;
   }
 
+  /** What pictures and extras the game has, in short: lit when there, faint when not. */
+  #archive(game: ShowGame): HTMLElement {
+    const has = (...kinds: Kind[]) => kinds.some((k) => this.#options.media(game, k) !== null);
+    const items: [string, boolean][] = [
+      ['Box', has('thumbnail')],
+      ['Back', has('boxback')],
+      ['Spine', has('boxside')],
+      [ARCADE.has(game.system) ? 'Board' : 'Cart', has('cartridge')],
+      ['Shots', has('titleshot', 'image')],
+      ['Video', has('video')],
+      ['Fan art', has('fanart')],
+      ['Manual', has('manual')]
+    ];
+    return el(
+      'span',
+      { class: 'archive' },
+      ...items.map(([label, on]) => el('span', { class: on ? 'on' : '' }, label))
+    );
+  }
+
   /**
-   * What the game offers, as icons: achievements, netplay, a manual, how many play. Lit when it
-   * has it, faint when not; netplay once the emulator's features are known.
+   * What the game offers and what it is, as tiles: how many play, achievements, a manual (lit
+   * when it has it, faint when not), and its age rating as PEGI's badge.
    */
   #marks(game: ShowGame): HTMLElement {
-    const has = (k: Kind) => this.#options.media(game, k) !== null;
-    const netplay = mark('netplay', ICONS.netplay, 'Netplay', false);
-    const list = el(
+    return el(
       'ul',
       { class: 'marks' },
       mark(
@@ -812,17 +977,8 @@ export class CollectorView {
         !!game.players
       ),
       mark('cheevos', ICONS.cheevos, 'Achievements', game.raGameId !== null),
-      netplay,
-      mark('manual', ICONS.manual, 'Manual', has('manual'))
+      pegiMark(game)
     );
-    const id = game.id;
-    void this.#options
-      .features?.(game)
-      .then((f) => {
-        if (this.#game?.id === id) netplay.classList.toggle('on', f.includes('netplay'));
-      })
-      .catch(() => {});
-    return list;
   }
 
   #achievementsInto(game: Game, record: HTMLElement): void {
@@ -865,11 +1021,42 @@ export class CollectorView {
 
 /**
  * How tall the box stands, in rem, in `width` × `height` rem (its case): as tall as fits above
- * the plinth, turned too (front and spine side by side).
+ * the poses, turned too (front and spine side by side).
  */
 export function boxHeight(width: number, height: number, ratio: number, depth: number): number {
   const fits = Math.min(height - UNDER_REM, (width - 1) / (ratio + depth));
   return clamp(fits, BOX_MIN_REM, BOX_MAX_REM);
+}
+
+/**
+ * `text` cut into pages that each fit `box` as it is laid out: between sentences, or between
+ * words for a sentence longer than a page. Leaves the box's text as it found it.
+ */
+export function paginate(text: string, box: HTMLElement): string[] {
+  const before = box.textContent;
+  const fits = (t: string) => {
+    box.textContent = t;
+    return box.scrollHeight <= box.clientHeight + 1;
+  };
+  const pieces = text
+    .replace(/\s+/g, ' ')
+    .trim()
+    .split(/(?<=[.!?…])\s+/)
+    .filter(Boolean)
+    .flatMap((sentence) => (fits(sentence) ? [sentence] : sentence.split(' ')));
+  const pages: string[] = [];
+  let page = '';
+  for (const piece of pieces) {
+    const next = page ? `${page} ${piece}` : piece;
+    if (!page || fits(next)) page = next;
+    else {
+      pages.push(page);
+      page = piece;
+    }
+  }
+  if (page) pages.push(page);
+  box.textContent = before;
+  return pages;
 }
 
 /** Where an element is on the screen, as fractions of it; `null` if it is not laid out. */
@@ -881,7 +1068,7 @@ function screenArea(node: HTMLElement): ScreenArea | null {
   return { left: r.left / w, top: r.top / h, width: r.width / w, height: r.height / h };
 }
 
-/** A section of the screen in Cyber's style: framed, its name in a small tag. */
+/** A section of the screen: no frame, its name in a small tag. */
 function bay(cls: string, name: string, ...content: (HTMLElement | null)[]): HTMLElement {
   return el(
     'section',
@@ -906,10 +1093,6 @@ function clamp(n: number, min: number, max: number): number {
 }
 
 /** A shelf row: the game's name down its spine, and its year. */
-function favouriteTag(): HTMLElement {
-  return el('span', { class: 'favourite' }, '★ Favourite');
-}
-
 /** The hue in an `hsl(...)` colour, in degrees; `null` if it is not one. */
 export function hueOf(colour: string): number | null {
   const m = /^hsl\(\s*(-?[\d.]+)/.exec(colour);
@@ -966,21 +1149,21 @@ export function serial(game: Game): string {
  * the board under it, coloured by how old a player it asks for. The board of the game's region
  * where it has one; all of them in its title. Empty where the game has none.
  */
-function ageBadge(game: ShowGame): HTMLElement {
+/**
+ * The age rating as PEGI gives it, among the marks as its badge alone, in PEGI's colours (green to 7, orange to 16, red at
+ * 18): its own PEGI rating, else the nearest from another board's, that one in its title.
+ */
+function pegiMark(game: ShowGame): HTMLElement {
   const all = ageRatings(game.ageRating);
-  const rom = romName(game.path).regions;
-  const shown = pickAgeRating(all, rom.length ? rom : codes(game.region ?? null));
-  if (!shown) return el('div', { class: 'age none', 'aria-hidden': 'true' });
+  const pegi = asPegi(all);
+  if (!pegi) return el('li', { class: 'mark pegi none', 'aria-hidden': 'true' });
   const words = all.map((r) => `${r.board} ${r.rating}`).join(', ');
+  const colour = pegi.age <= 7 ? 'green' : pegi.age <= 16 ? 'orange' : 'red';
+  const note = pegi.from ? `PEGI ${pegi.age}, from ${pegi.from.board} ${pegi.from.rating}` : words;
   return el(
-    'div',
-    {
-      class: `age ${ageBand(shown.age)}`,
-      title: words,
-      'aria-label': `Age rating ${words}`
-    },
-    el('strong', {}, shown.rating),
-    el('span', {}, shown.board === 'CLASSIND' ? 'ClassInd' : shown.board)
+    'li',
+    { class: `mark pegi ${colour}`, title: note, 'aria-label': `Age rating ${note}` },
+    el('strong', {}, String(pegi.age), el('span', {}, 'PEGI'))
   );
 }
 
@@ -1000,15 +1183,36 @@ function codes(list: string | null): string[] {
 }
 
 /** A region or language: its flag where there is one, its name beside. */
+/** A region or a language as its flag alone, its name for a screen reader; its name where it has no flag. */
 function flagChip(name: string, flag: string | null): HTMLElement {
-  const chip = el('span', { class: 'chip' });
-  if (flag) {
-    const img = el('img', { src: flag, alt: '', class: 'flag' });
-    img.addEventListener('error', () => img.remove(), { once: true });
-    chip.append(img);
+  const chip = el('span', { class: 'chip', title: name });
+  if (!flag) {
+    chip.append(name);
+    return chip;
   }
-  chip.append(name);
+  const img = el('img', { src: flag, alt: name, class: 'flag' });
+  img.addEventListener('error', () => img.replaceWith(name), { once: true });
+  chip.append(img);
   return chip;
+}
+
+/**
+ * The dump's version, as its file name gives it, in words: `Rev 1` → `Revision 1`, `v1.1` →
+ * `Version 1.1`, `Proto` → `Prototype`; with none, the first release as it came out.
+ */
+export function versionText(version: string | null): string {
+  if (!version) return 'Original release';
+  const rev = /^rev\s*([\w.]+)$/i.exec(version);
+  if (rev) return `Revision ${rev[1]!.toUpperCase()}`;
+  const v = /^v\s*([\d.]+\w*)$/i.exec(version);
+  if (v) return `Version ${v[1]}`;
+  const words: Record<string, string> = {
+    proto: 'Prototype',
+    beta: 'Beta',
+    demo: 'Demo',
+    sample: 'Sample'
+  };
+  return words[version.toLowerCase()] ?? version;
 }
 
 /** Line icons for the marks, in Cyber's style. */
@@ -1016,11 +1220,7 @@ const ICONS = {
   players:
     '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.2c2.8.2 5 2.3 5 5.8"/>',
   cheevos:
-    '<path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1.5A3.5 3.5 0 0 0 7.5 11M17 6h3v1.5a3.5 3.5 0 0 1-3.5 3.5"/><path d="M12 14v3M8.5 20.5h7M10 17h4v3.5h-4z"/>',
-  netplay:
-    '<rect x="2.5" y="5" width="7.5" height="5.5" rx="1"/><rect x="14" y="13.5" width="7.5" height="5.5" rx="1"/><path d="M6.2 10.5v5.2h7.8M17.8 13.5V8.3H10"/>',
-  manual:
-    '<path d="M4 5.5C6.5 4 9.5 4 12 5.5v14c-2.5-1.5-5.5-1.5-8 0z"/><path d="M20 5.5C17.5 4 14.5 4 12 5.5v14c2.5-1.5 5.5-1.5 8 0z"/>'
+    '<path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1.5A3.5 3.5 0 0 0 7.5 11M17 6h3v1.5a3.5 3.5 0 0 1-3.5 3.5"/><path d="M12 14v3M8.5 20.5h7M10 17h4v3.5h-4z"/>'
 } as const;
 
 function mark(cls: string, icon: string, label: string, on: boolean): HTMLElement {
@@ -1031,7 +1231,7 @@ function mark(cls: string, icon: string, label: string, on: boolean): HTMLElemen
 
 /** A front made up: the fan art (or a screenshot) under its logo (or its name). */
 function madeCover(game: Game, media: MediaUrl): HTMLElement[] {
-  const art = media(game, 'fanart', 640) ?? media(game, 'image', 400);
+  const art = media(game, 'fanart', BACKDROP_W) ?? media(game, 'image', 400);
   const logo = media(game, 'wheel', 560) ?? media(game, 'marquee', 560);
   return [
     el(

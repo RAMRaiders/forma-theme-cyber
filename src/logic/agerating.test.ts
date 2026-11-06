@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ageBand, ageRatings, pickAgeRating } from './agerating.js';
+import { ageRatings, asPegi } from './agerating.js';
 
 describe('age ratings', () => {
   it('reads what Forma keeps, with the age each asks for', () => {
@@ -14,22 +14,18 @@ describe('age ratings', () => {
     expect(ageRatings('nonsense,:x')).toEqual([]);
   });
 
-  it("shows the board of the game's region, else the first", () => {
-    const all = ageRatings('ESRB:T,PEGI:12,CERO:B');
-    expect(pickAgeRating(all, ['eu'])?.board).toBe('PEGI');
-    expect(pickAgeRating(all, ['Japan', 'USA'])?.board).toBe('CERO');
-    expect(pickAgeRating(all, ['de'])?.board).toBe('ESRB');
-    expect(pickAgeRating([], ['us'])).toBeNull();
-  });
-
-  it('bands ages for the colour', () => {
-    expect([0, 7, 12, 16, 18, null].map(ageBand)).toEqual([
-      'all',
-      'kids',
-      'teen',
-      'mature',
-      'adult',
-      'unknown'
-    ]);
+  it('gives the rating as PEGI: its own, else the nearest from another board', () => {
+    expect(asPegi(ageRatings('ESRB:M,PEGI:18'))).toEqual({ age: 18, from: null });
+    expect(asPegi(ageRatings('ESRB:E'))).toEqual({
+      age: 3,
+      from: { board: 'ESRB', rating: 'E', age: 0 }
+    });
+    expect(asPegi(ageRatings('ESRB:T'))?.age).toBe(12);
+    expect(asPegi(ageRatings('ESRB:E10+'))?.age).toBe(7);
+    expect(asPegi(ageRatings('CERO:C'))?.age).toBe(16);
+    expect(asPegi(ageRatings('USK:6'))?.age).toBe(7);
+    expect(asPegi(ageRatings('CERO:Z'))?.age).toBe(18);
+    expect(asPegi(ageRatings('XYZ:odd'))).toBeNull();
+    expect(asPegi([])).toBeNull();
   });
 });

@@ -63,10 +63,10 @@ body,
    are on is lit; the ones before it dim, and give way first when the screen is narrow. */
 header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0;
   min-width: 0;
-  padding: calc(var(--safe) * 0.5) var(--safe) 0.6rem;
+  padding: calc(var(--safe) * 0.5) var(--safe) 0.4rem;
 }
 
 h1 {
@@ -87,7 +87,7 @@ h1.current {
 
 .trail {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   min-width: 0;
   white-space: nowrap;
 }
@@ -113,11 +113,10 @@ h1.current {
 .trail .crumb.has-logo {
   display: inline-flex;
   align-items: center;
-  align-self: center;
 }
 
 .trail .crumb-logo {
-  height: 1.9rem;
+  height: 1.6rem;
   max-width: 12rem;
   object-fit: contain;
   object-position: left center;
@@ -848,6 +847,116 @@ main {
   pointer-events: none;
   /* Its own layer: drawn once per system, not again whenever something over it changes. */
   will-change: transform;
+}
+
+/* The floor comes alive under the console: rings of light going out, sparks rising. Its own
+   layers, outside the stage pages, moved by transform and opacity alone (the compositor's
+   work, nothing redrawn). */
+.system-panel .floor-fx {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  bottom: 4.6rem;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.system-panel .floor-fx .ping {
+  position: absolute;
+  left: -15rem;
+  top: -2.4rem;
+  width: 30rem;
+  height: 4.8rem;
+  border: 2px solid var(--sys-70);
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0.2);
+  will-change: transform, opacity;
+  animation: floor-ping 4.5s cubic-bezier(0.2, 0.6, 0.4, 1) calc(var(--n) * -1.5s) infinite;
+}
+
+@keyframes floor-ping {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  15% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.35);
+  }
+}
+
+.system-panel .floor-fx .spark {
+  position: absolute;
+  left: calc((var(--n) - 3.5) * 3.4rem);
+  top: 0;
+  width: 0.3rem;
+  height: 0.3rem;
+  background: rgb(var(--sys2-rgb));
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: floor-spark 6s linear calc(var(--n) * -0.77s) infinite;
+}
+
+.system-panel .floor-fx .spark:nth-child(odd) {
+  background: var(--sys);
+  animation-duration: 7.4s;
+}
+
+@keyframes floor-spark {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  20% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0.8rem, -16rem);
+  }
+}
+
+/* The console hovers a little over the floor, and its shadow breathes with it. */
+.system-panel .console .photo,
+.system-panel .hero .art {
+  will-change: transform;
+  animation: console-hover 5s ease-in-out infinite alternate;
+}
+
+@keyframes console-hover {
+  from {
+    translate: 0 0.15rem;
+  }
+  to {
+    translate: 0 -0.55rem;
+  }
+}
+
+.system-panel .cutout::before {
+  animation: console-shadow 5s ease-in-out infinite alternate;
+}
+
+@keyframes console-shadow {
+  to {
+    opacity: 0.7;
+    scale: 0.9 1;
+  }
+}
+
+:root[data-motion='off'] .system-panel .floor-fx,
+:root[data-motion='off'] .system-panel .console .photo,
+:root[data-motion='off'] .system-panel .hero .art,
+:root[data-motion='off'] .system-panel .cutout::before {
+  animation: none;
+}
+
+:root[data-motion='off'] .system-panel .floor-fx {
+  display: none;
 }
 
 /* One system's stage, a page over the floor. Always on its own layer: moving to the next
@@ -3012,12 +3121,13 @@ kbd {
   grid-template-areas:
     'label label label'
     'case footage dossier'
-    'case story cartridge';
+    'case story dossier';
   gap: 0.8rem 0.9rem;
   padding-bottom: 0.4rem;
 }
 
-/* The fan art, small and dim: scaled up, it is its own blur (no filter). */
+/* The game's fan art behind the whole view, shaded at the edges and under the words. No
+   filter: a blur over a full-screen picture is slow on a Pi. */
 .collector-backdrop {
   position: fixed;
   inset: 0;
@@ -3032,7 +3142,7 @@ kbd {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.2;
+  opacity: 0.85;
   transition: opacity 900ms ease;
 }
 
@@ -3041,38 +3151,31 @@ kbd {
   opacity: 0;
 }
 
-/* A showroom: dark at the edges, a neon floor grid going away under the case. */
-.collector-backdrop::before {
-  content: '';
-  position: absolute;
-  left: -20%;
-  right: -20%;
-  bottom: -8%;
-  height: 52%;
-  transform: perspective(30rem) rotateX(62deg);
-  transform-origin: 50% 100%;
-  background:
-    repeating-linear-gradient(90deg, rgb(34 228 255 / 16%) 0 1px, transparent 1px 4rem),
-    repeating-linear-gradient(0deg, rgb(34 228 255 / 16%) 0 1px, transparent 1px 4rem);
-  opacity: 0.55;
-}
-
 .collector-backdrop::after {
   content: '';
   position: absolute;
   inset: 0;
+  /* Lightest round the case, darkest under the story and the dossier. */
   background:
-    radial-gradient(ellipse 60% 55% at 52% 45%, transparent 0%, rgb(4 6 12 / 70%) 70%),
-    linear-gradient(180deg, rgb(4 6 12 / 60%) 0%, transparent 25%, transparent 70%, var(--bg) 100%);
+    linear-gradient(
+      90deg,
+      rgb(4 6 12 / 35%) 0%,
+      rgb(4 6 12 / 20%) 30%,
+      rgb(4 6 12 / 62%) 48%,
+      rgb(4 6 12 / 78%) 72%,
+      rgb(4 6 12 / 86%) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgb(4 6 12 / 70%) 0%,
+      transparent 22%,
+      transparent 60%,
+      rgb(4 6 12 / 80%) 100%
+    );
 }
 
-/* The game's video playing under the page: the room lets it through, darkened a little, its
-   floor and edges kept so the case still stands somewhere. */
-/* The game's video plays under the page, in the footage bay's window only: the room goes, so
-   nothing is drawn over it; around the window, Forma's player is black. */
-.collector.video-on .collector-backdrop {
-  visibility: hidden;
-}
+/* The game's video plays under the page, in the footage bay's window only: the fan art has a
+   hole cut there (collector.ts), so nothing is drawn over it. */
 
 /* The shelf: over the middle of the screen while the selection moves, then gone. Opacity
    only, so its rows stay laid out (and measured) underneath. */
@@ -3241,39 +3344,12 @@ kbd {
   grid-area: label;
 }
 
-/* A bay: a section framed in Cyber's style, brackets at two corners, its name in a tag. */
+/* A bay: a part of the screen, unframed over the fan art, its name in a tag. */
 .bay {
   position: relative;
   min-width: 0;
   min-height: 0;
   padding: 1.7rem 1rem 0.9rem;
-  border: 1px solid rgb(34 228 255 / 16%);
-  border-radius: 0.2rem;
-  background: linear-gradient(180deg, rgb(13 19 32 / 94%), rgb(7 11 20 / 94%));
-}
-
-.bay::before,
-.bay::after {
-  content: '';
-  position: absolute;
-  width: 1.1rem;
-  height: 1.1rem;
-  border: 2px solid var(--game);
-  pointer-events: none;
-}
-
-.bay::before {
-  top: -1px;
-  left: -1px;
-  border-right: 0;
-  border-bottom: 0;
-}
-
-.bay::after {
-  right: -1px;
-  bottom: -1px;
-  border-left: 0;
-  border-top: 0;
 }
 
 .bay-tag {
@@ -3296,26 +3372,45 @@ kbd {
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
   justify-items: center;
-  /* The box's light, not the panel's: the room shows through. */
-  background: linear-gradient(180deg, rgb(13 19 32 / 55%), rgb(7 11 20 / 80%));
 }
 
 .bay.footage {
   grid-area: footage;
   display: grid;
   place-items: center;
+  /* Room round the screen for its bezel. */
+  padding: 2.3rem 1.6rem 1.3rem;
 }
 
-/* A 4:3 screen, as tall as the bay lets it. */
+/* A 4:3 screen, as tall as the bay lets it, in a monitor's bezel: dark, a neon rim in the
+   game's colour, a soft glow round it. The bezel is drawn outside the screen, so the video's
+   window (the screen's own box) stays clear. Still: nothing here animates. */
 .bay.footage .screen {
   position: relative;
   height: 100%;
   max-width: 100%;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  border-radius: 0.15rem;
+  border-radius: 0.2rem;
   background: #000;
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 10%);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 18%),
+    0 0 0 0.55rem #070b14,
+    0 0 0 calc(0.55rem + 1px) rgb(255 255 255 / 10%),
+    0 0 0 calc(0.55rem + 3px) var(--game);
+}
+
+/* Over the screenshots: faint scanlines, the corners a little darker. Not over the video: the
+   page is see-through there, and half-see-through pixels over Forma's player went wrong. */
+.bay.footage .screen::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgb(0 0 0 / 16%) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse 75% 70% at 50% 50%, transparent 60%, rgb(0 0 0 / 45%) 100%);
 }
 
 .bay.footage .screen img {
@@ -3351,6 +3446,7 @@ kbd {
 }
 
 .collector.video-on .bay.footage .screen img,
+.collector.video-on .bay.footage .screen::after,
 .collector.video-on .bay.footage .no-signal {
   visibility: hidden;
 }
@@ -3367,24 +3463,43 @@ kbd {
   display: none;
 }
 
+/* The story a page at a time, its page number under it. */
+.bay.story {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+
 .bay.story .text {
-  height: 100%;
+  min-height: 0;
   overflow: hidden;
   font-size: 0.82rem;
   line-height: 1.5;
   color: #c3d4e1;
+  transition: opacity 300ms ease;
 }
 
-.bay.story .scrolling .scroll-inner,
-.bay.story .text.scrolling .scroll-inner {
-  will-change: transform;
-  animation: read-through var(--scroll-s, 10s) ease-in-out 1.5s infinite alternate;
+.bay.story .text.turning {
+  opacity: 0;
+}
+
+.bay.story .pager {
+  justify-self: end;
+  padding-top: 0.3rem;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--game);
+}
+
+.bay.story .pager:empty {
+  display: none;
 }
 
 .slab-label {
   width: 100%;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  /* The system, the game's name and details, its star; the seals at the right end. */
+  grid-template-columns: auto minmax(0, max-content) auto minmax(0, 1fr);
   align-items: center;
   column-gap: 0.9rem;
   padding: 0.55rem 0.9rem;
@@ -3392,69 +3507,6 @@ kbd {
   border-top: 2px solid var(--game);
   border-radius: 0.35rem;
   background: linear-gradient(180deg, rgb(20 30 48 / 92%), rgb(8 12 22 / 92%));
-  box-shadow: 0 0 1.4rem rgb(0 0 0 / 55%);
-}
-
-/* The age rating: Cyber's own badge, coloured by how old a player it asks for. */
-.slab-label .age {
-  display: grid;
-  place-items: center;
-  align-content: center;
-  min-width: 3.1rem;
-  height: 3.1rem;
-  padding: 0 0.35rem;
-  border: 2px solid var(--age);
-  border-radius: 0.3rem;
-  background: rgb(0 0 0 / 35%);
-  box-shadow: inset 0 0 0.7rem rgb(0 0 0 / 50%);
-  line-height: 1;
-  --age: #8aa0b8;
-}
-
-.slab-label .age.none {
-  display: none;
-}
-
-/* No rating: no room kept for one. */
-.slab-label:has(.age.none) {
-  grid-template-columns: auto minmax(0, 1fr) auto;
-}
-
-.slab-label .age strong {
-  display: block;
-  font-family: var(--mono);
-  font-size: 1.15rem;
-  color: var(--age);
-  letter-spacing: 0;
-  -webkit-line-clamp: none;
-}
-
-.slab-label .age span {
-  margin-top: 0.2rem;
-  font-family: var(--mono);
-  font-size: 0.5rem;
-  letter-spacing: 0.14em;
-  color: var(--muted);
-}
-
-.slab-label .age.all {
-  --age: #4ade80;
-}
-
-.slab-label .age.kids {
-  --age: #a3e635;
-}
-
-.slab-label .age.teen {
-  --age: #facc15;
-}
-
-.slab-label .age.mature {
-  --age: #fb923c;
-}
-
-.slab-label .age.adult {
-  --age: #f43f5e;
 }
 
 .slab-label .mark {
@@ -3491,7 +3543,7 @@ kbd {
   color: var(--game);
 }
 
-.slab-label strong {
+.slab-label .what strong {
   /* The whole name, on two lines if it needs them. */
   display: -webkit-box;
   overflow: hidden;
@@ -3513,103 +3565,145 @@ kbd {
   color: var(--muted);
 }
 
-.slab-label .grade {
-  display: grid;
-  justify-items: center;
-  padding-left: 0.9rem;
-  border-left: 1px solid rgb(255 255 255 / 14%);
-}
-
-.slab-label .grade strong {
-  font-family: var(--mono);
-  font-size: 1.9rem;
+/* The favourite's gold star, just after the game's name and details; only when it is one. */
+.slab-label .fav {
+  display: none;
+  font-size: 2.4rem;
   line-height: 1;
-  color: var(--game);
-  text-shadow: 0 0 0.8rem rgb(34 228 255 / 45%);
+  color: #ffd75e;
 }
 
-.slab-label .grade .stars {
-  margin-top: 0.2rem;
-  font-size: 0.8rem;
+.slab-label .fav.on {
+  display: block;
 }
 
-.slab-label .grade span {
-  margin-top: 0.15rem;
+/* The grade at the right end of the label: the score large in the game's colour, out of five;
+   beside it its stars over its word, small and dim. */
+.slab-label .seals {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+}
+
+.slab-label .seal.grade {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  line-height: 1;
+}
+
+.slab-label .seal.grade strong {
+  display: flex;
+  align-items: baseline;
   font-family: var(--mono);
-  font-size: 0.56rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #cfe0ec;
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--game);
 }
 
-.slab-label .grade.none strong {
+.slab-label .seal.grade strong small {
+  margin-left: 0.15rem;
+  font-size: 0.75rem;
+  font-weight: 400;
   color: var(--muted);
-  text-shadow: none;
 }
 
-/* The case: a spotlight from above, a plinth with a neon ring, the box floating over it. */
+.slab-label .seal.grade.none strong {
+  color: var(--muted);
+}
+
+.slab-label .seal.grade .foot {
+  display: grid;
+  gap: 0.3rem;
+  justify-items: start;
+}
+
+.slab-label .seal.grade .stars {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+}
+
+.slab-label .seal.grade .word {
+  font-family: var(--mono);
+  font-size: 0.45rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* The case: the box floating over the fan art. */
 .display {
   position: relative;
   width: 100%;
   min-height: 0;
   display: flex;
-  /* Standing on its plinth, however tall. */
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
 }
 
-.display .spotlight {
+/* The box's sled and the cartridge's, going one way, left to right, slowly and at one speed
+   (SLIDE_MS in collector.ts): after its back, the box slides off to the right as the cartridge
+   comes in from the left; then the cartridge goes on out to the right as the box comes back in
+   from the left, on its front. Out of the case's bay they are cut off: no opacity, the Pi's
+   WebKit ghosts layers under a changing one. Each on its own layer from the start: layers made
+   mid-slide flickered. Both share one middle, top to bottom. */
+.bay.case {
+  overflow: hidden;
+}
+
+.display .mover,
+.display .cart-stage {
   position: absolute;
-  inset: -0.5rem 8% 0;
-  background: radial-gradient(ellipse 45% 85% at 50% 0%, rgb(255 255 255 / 9%), transparent 72%);
-  pointer-events: none;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+  transition: transform 2.2s cubic-bezier(0.45, 0, 0.55, 1);
 }
 
-.display .plinth {
-  position: absolute;
-  left: 50%;
-  bottom: 0.2rem;
-  width: 24rem;
-  height: 4rem;
-  transform: translateX(-50%);
-  background: radial-gradient(ellipse 50% 50% at 50% 50%, #18233a 0%, #0a101c 55%, transparent 72%);
+.display .mover {
+  z-index: 1;
 }
 
-.display .ring {
-  position: absolute;
-  left: 8%;
-  right: 8%;
-  top: 26%;
-  bottom: 26%;
-  border: 2px solid var(--game);
-  border-radius: 50%;
-  box-shadow:
-    0 0 1.1rem var(--game),
-    inset 0 0 0.8rem var(--game);
-  opacity: 0.7;
-  animation: collector-ring 3.2s ease-in-out infinite alternate;
+.display.cart-out .mover {
+  transform: translateX(105%);
 }
 
-@keyframes collector-ring {
-  to {
-    opacity: 0.35;
-  }
+/* Round to the left, at once, to come in from there. */
+.display.box-from-left .mover {
+  transform: translateX(-105%);
+  transition: none;
 }
 
+/* Waiting out of sight on the left (past the bay's edge, which cuts it off); in to the middle;
+   on out to the right; then round to the left again at once, still out of sight. Never hidden:
+   a layer hidden until it moves is first drawn mid-slide on the Pi, and that showed as a jump. */
+.display .cart-stage {
+  transform: translateX(-105%);
+  transition: none;
+}
+
+.display.cart-out .cart-stage {
+  transform: none;
+  transition: transform 2.2s cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+.display.cart-leaving .cart-stage {
+  transform: translateX(105%);
+  transition: transform 2.2s cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+.display .cart-stage .cart {
+  max-width: calc(var(--w, 12rem) * 0.92);
+  max-height: calc(var(--h, 16rem) * 0.92);
+  object-fit: contain;
+}
+
+/* Still: a bob running under the slides and turns made them jump now and then on the Pi. */
 .display .float {
   position: relative;
-  margin-bottom: 2.6rem;
   perspective: 60rem;
-  animation: collector-float 6s ease-in-out infinite alternate;
-}
-
-@keyframes collector-float {
-  from {
-    transform: translateY(0.35rem);
-  }
-  to {
-    transform: translateY(-0.45rem);
-  }
 }
 
 /* The box: six faces around its middle; visibility, not opacity (that flattens 3D). */
@@ -3619,6 +3713,8 @@ kbd {
   height: var(--h);
   transform-style: preserve-3d;
   transition: transform 1.6s cubic-bezier(0.65, 0.05, 0.3, 1);
+  /* Its own layer from the start: one made as a turn begins showed as a jump. */
+  will-change: transform;
   visibility: hidden;
 }
 
@@ -3808,37 +3904,15 @@ kbd {
   content: '◆ ';
 }
 
-/* The cartridge (or board) in its own bay under the dossier; without one, the dossier has the
-   column. */
-.bay.cartridge {
-  grid-area: cartridge;
-  display: grid;
-  place-items: center;
-}
-
-.bay.cartridge .cart {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-.collector.no-cart .dossier {
-  grid-row: dossier / cartridge;
-}
-
 /* The dossier: everything known, what it offers, what was played. */
 .dossier {
   grid-area: dossier;
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.6rem;
   overflow: hidden;
   padding: 1rem 1.2rem;
-  border: 1px solid rgb(34 228 255 / 16%);
-  border-top: 2px solid var(--game);
-  border-radius: 0.4rem;
-  background: linear-gradient(180deg, rgb(13 19 32 / 96%), rgb(7 11 20 / 96%));
 }
 
 .dossier .head.has-logo h2 {
@@ -3848,19 +3922,9 @@ kbd {
 .dossier .head .logo {
   display: block;
   max-width: 100%;
-  max-height: 5.4rem;
+  max-height: 4.6rem;
   margin: 0 auto;
   object-fit: contain;
-}
-
-.dossier .head .favourite {
-  display: inline-block;
-  margin-top: 0.35rem;
-  padding: 0.1rem 0.6rem;
-  border-radius: 1rem;
-  font-size: 0.72rem;
-  color: #ffd75e;
-  box-shadow: inset 0 0 0 1px rgb(255 215 94 / 45%);
 }
 
 .dossier .head h2 {
@@ -3888,7 +3952,8 @@ kbd {
 .dossier .specs > div {
   display: grid;
   grid-template-columns: 6rem minmax(0, 1fr);
-  align-items: baseline;
+  align-items: center;
+  min-height: 1.3rem;
   font-size: 0.76rem;
 }
 
@@ -3929,7 +3994,7 @@ kbd {
 /* What the game offers, as icons in a row: lit when it has it, faint when not. */
 .dossier .marks {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.4rem;
   margin: 0;
   padding: 0;
@@ -3974,11 +4039,69 @@ kbd {
   color: var(--game);
 }
 
-/* Regions and languages: a flag and a name each. */
+/* PEGI among the marks: its badge alone, no tile round it: a square in its colour (green to
+   7, orange to 16, red at 18), the age large in white, PEGI under it. */
+.dossier .mark.pegi {
+  display: grid;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.dossier .mark.pegi.none {
+  visibility: hidden;
+}
+
+.dossier .mark.pegi strong {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.2rem;
+  /* The whole slot, as big as the tiles beside it. */
+  width: 100%;
+  height: 100%;
+  border-radius: 0.35rem;
+  background: var(--pegi);
+  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 85%);
+  font-family: var(--mono);
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+  color: #fff;
+}
+
+.dossier .mark.pegi strong span {
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+}
+
+.dossier .mark.pegi.green {
+  --pegi: #3f9b3a;
+}
+
+.dossier .mark.pegi.orange {
+  --pegi: #e88a10;
+}
+
+.dossier .mark.pegi.red {
+  --pegi: #d12c2c;
+}
+
+/* Developers and publishers as their logos, where Cyber has them. */
+.dossier .company {
+  display: block;
+  height: 1.25rem;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: left center;
+}
+
+/* Regions and languages: their flags alone. */
 .dossier .specs .flags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.2rem 0.6rem;
+  gap: 0.3rem 0.45rem;
 }
 
 .dossier .chip {
@@ -3989,16 +4112,68 @@ kbd {
 }
 
 .dossier .flag {
-  width: 1.1rem;
-  height: 0.82rem;
+  display: block;
+  width: 1.4rem;
+  height: 1.05rem;
   border-radius: 0.1rem;
   object-fit: cover;
   box-shadow: 0 0 0 1px rgb(255 255 255 / 18%);
 }
 
-.dossier .record p {
-  margin: 0;
-  font-size: 0.78rem;
+/* This copy and the play record in one place, taking turns: stacked, one shown at a time. */
+.dossier .alternate {
+  display: grid;
+}
+
+.dossier .alternate > .part {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 400ms ease,
+    visibility 0s 400ms;
+}
+
+.dossier .alternate > .part.shown {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 400ms ease;
+}
+
+:root[data-motion='off'] .dossier .alternate > .part {
+  transition: none;
+}
+
+/* Each part of the dossier: a heading in the game's colour and a rule, its rows under it. */
+.dossier .part h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dossier .part h3::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--game) 45%, transparent), transparent);
+}
+
+/* What the game has, in short words: lit when there, faint when not. */
+.dossier .archive {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.5rem;
+  white-space: normal;
+  font-size: 0.7rem;
+  color: rgb(201 219 232 / 30%);
+}
+
+.dossier .archive .on {
+  color: #e6f2fa;
+}
+
+.dossier .specs dd:has(.archive) {
+  white-space: normal;
 }
 
 .dossier .achievements {
@@ -4024,9 +4199,9 @@ kbd {
   background: var(--game);
 }
 
-:root[data-motion='off'] .display .ring,
-:root[data-motion='off'] .display .float {
-  animation: none;
+:root[data-motion='off'] .display .mover,
+:root[data-motion='off'] .display .cart-stage {
+  transition: none;
 }
 
 :root[data-motion='off'] .cbox {

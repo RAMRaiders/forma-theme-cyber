@@ -7,6 +7,8 @@ import {
   CollectorView,
   type ScreenArea,
   boxHeight,
+  paginate,
+  versionText,
   gradeOf,
   hue,
   hueOf,
@@ -81,17 +83,51 @@ afterEach(() => {
 });
 
 describe('the Collector view', () => {
-  it('puts the box in the case from its front, spine and back, the cartridge beside it', async () => {
+  it('puts the box in the case from its front, spine and back, its cartridge behind it', async () => {
     const { v, src, text } = await view([game(7, 'After Burner', BOXED)]);
     expect(src('.cbox .front img')).toBe('forma://media/7/thumbnail?w=640');
     expect(src('.cbox .spine img')).toBe('forma://media/7/boxside?w=160');
     expect(src('.cbox .back img')).toBe('forma://media/7/boxback?w=640');
-    // The cartridge in a bay of its own.
-    expect(src('.bay.cartridge img')).toBe('forma://media/7/cartridge?w=400');
+    // The cartridge behind the box, until its turn.
+    expect(src('.display .cart-stage img')).toBe('forma://media/7/cartridge?w=400');
     // Its screenshots on the footage bay's screen, the first showing.
     expect(v.root.querySelectorAll('.bay.footage .screen img')).toHaveLength(2);
     expect(v.root.querySelectorAll('.bay.footage .screen img.on')).toHaveLength(1);
+    expect(text('.poses span')).toEqual(['Front', 'Spine', 'Back', 'Cartridge']);
+    expect(text('.poses .on')).toEqual(['Front']);
+  });
+
+  it('has no cartridge turn for a game with no picture of one', async () => {
+    const { text } = await view([game(3, 'Doom', { thumbnail: 'front' })]);
     expect(text('.poses span')).toEqual(['Front', 'Spine', 'Back']);
+  });
+
+  it('after the back, slides the box out and the cartridge in, then the other way', async () => {
+    const { v } = await view([game(7, 'After Burner', BOXED)]);
+    const box = v.root.querySelector<HTMLElement>('.cbox')!;
+    const display = v.root.querySelector<HTMLElement>('.display')!;
+    v.turn(1);
+    v.turn(1);
+    expect(box.dataset.pose).toBe('back');
+    v.turn(1);
+    expect(box.dataset.pose).toBe('cartridge');
+    expect(display.classList.contains('cart-out')).toBe(true);
+    // Not turned while it goes.
+    expect(box.style.transform).toBe('rotateY(180deg)');
+    v.turn(1);
+    // The cartridge on out, the box back in already on its front.
+    expect(display.classList.contains('cart-out')).toBe(false);
+    expect(display.classList.contains('cart-leaving')).toBe(true);
+    expect(box.dataset.pose).toBe('front');
+    expect(box.style.transform).toBe('rotateY(360deg)');
+    vi.advanceTimersByTime(2400);
+    expect(display.classList.contains('cart-leaving')).toBe(false);
+    // And the other way: out on its front, back in on its back (the same face as 180°).
+    v.turn(-1);
+    expect(display.classList.contains('cart-out')).toBe(true);
+    v.turn(-1);
+    expect(box.dataset.pose).toBe('back');
+    expect(box.style.transform).toBe('rotateY(540deg)');
   });
 
   it('makes up the spine and back a game has no picture of', async () => {
@@ -101,16 +137,20 @@ describe('the Collector view', () => {
     expect(text('.cbox .back .made-back p')[0]).toMatch(/^Strap into your F-14\./);
   });
 
-  it("shows the age rating of the game's region, all of them in its title", async () => {
+  it('shows the age rating as PEGI among the marks; worked out from another board where needed', async () => {
     const rated = { ...game(8, 'Doom (Europe)'), ageRating: 'ESRB:M,PEGI:18' } as Game;
     const { v, text } = await view([rated]);
-    expect(text('.slab-label .age strong')).toEqual(['18']);
-    expect(text('.slab-label .age span')).toEqual(['PEGI']);
-    const badge = v.root.querySelector('.slab-label .age');
-    expect(badge?.classList.contains('adult')).toBe(true);
-    expect(badge?.getAttribute('aria-label')).toBe('Age rating ESRB M, PEGI 18');
-    const unrated = await view([game(9, 'Kolibri')]);
-    expect(unrated.v.root.querySelector('.slab-label .age.none')).not.toBeNull();
+    expect(text('.dossier .marks .mark:last-child.pegi strong')).toEqual(['18PEGI']);
+    const seal = v.root.querySelector('.dossier .pegi');
+    expect(seal?.classList.contains('red')).toBe(true);
+    expect(seal?.getAttribute('aria-label')).toBe('Age rating ESRB M, PEGI 18');
+    const esrb = await view([{ ...game(9, 'After Burner'), ageRating: 'ESRB:E' }]);
+    expect(esrb.text('.dossier .pegi strong')).toEqual(['3PEGI']);
+    expect(esrb.v.root.querySelector('.dossier .pegi')?.getAttribute('title')).toBe(
+      'PEGI 3, from ESRB E'
+    );
+    const unrated = await view([game(10, 'Kolibri')]);
+    expect(unrated.v.root.querySelector('.dossier .pegi.none')).not.toBeNull();
   });
 
   it('labels the case with its grade, system and serial', async () => {
@@ -118,8 +158,8 @@ describe('the Collector view', () => {
     expect(text('.slab-label .what strong')).toEqual(['After Burner']);
     expect(text('.slab-label .line')).toEqual(['1995 · Sega 32X']);
     expect(text('.slab-label .serial')).toEqual(['SEGA32X-000007']);
-    expect(text('.slab-label .grade strong')).toEqual(['3.5']);
-    expect(text('.slab-label .grade > span:last-child')).toEqual(['Excellent']);
+    expect(text('.slab-label .grade strong')).toEqual(['3.5/5']);
+    expect(text('.slab-label .grade .word')).toEqual(['Excellent']);
     expect(v.root.querySelector('.slab-label .grade .stars')?.getAttribute('aria-label')).toBe(
       '3.5 of 5'
     );
@@ -142,9 +182,10 @@ describe('the Collector view', () => {
   });
 
   it('shows the dossier: what is known, what it offers, what was played', async () => {
-    const { text } = await view([
+    const { v, text } = await view([
       { ...game(7, 'After Burner', BOXED), path: 'After Burner (USA, Japan) (En,Ja) (Rev 1).7z' }
     ]);
+    expect(text('.dossier .part h3')).toEqual(['Release', 'This copy', 'Play record']);
     expect(text('.dossier .specs dt')).toEqual([
       'Released',
       'Developer',
@@ -152,19 +193,93 @@ describe('the Collector view', () => {
       'Genre',
       'Region',
       'Languages',
-      'Version'
+      'Version',
+      'Media',
+      'Played',
+      'Time'
     ]);
-    expect(text('.dossier .specs dd').slice(0, 2)).toEqual(['13 Jan 1995', 'Rutubo Games']);
-    // From the ROM's name, before the gamelist's.
-    expect(text('.dossier .specs .flags')).toEqual(['USAJapan', 'EnglishJapanese']);
-    expect(text('.dossier .specs dd')[6]).toBe('Rev 1');
-    // What it offers: players and no manual, no achievements; netplay not known here.
+    const dd = text('.dossier .specs dd');
+    expect(dd[0]).toMatch(/^13 Jan 1995 · \d+ years ago$/);
+    expect(dd[1]).toBe('Rutubo Games');
+    // From the ROM's name, before the gamelist's: flags alone, their names for screen readers.
+    const flags = (n: number) =>
+      [...v.root.querySelectorAll('.dossier .specs .flags')][n]!.querySelectorAll('.chip');
+    expect([...flags(0)].map((c) => c.getAttribute('title'))).toEqual(['USA', 'Japan']);
+    expect([...flags(1)].map((c) => c.getAttribute('title'))).toEqual(['English', 'Japanese']);
+    expect(text('.dossier .specs .flags')).toEqual(['', '']);
+    expect(dd[6]).toBe('Revision 1');
+    // What it has, lit; what it lacks, faint.
+    expect(text('.dossier .archive .on')).toEqual([
+      'Box',
+      'Back',
+      'Spine',
+      'Cart',
+      'Shots',
+      'Fan art'
+    ]);
+    expect(dd.slice(8)).toEqual(['2×', '10 min']);
+    // What it offers: players and no manual, no achievements.
     expect(text('.dossier .mark.on')).toEqual(['1 player']);
-    expect(text('.dossier .record p')[0]).toMatch(/^2×/);
     // The bays: the case, the footage (its screenshots until the video), the story.
-    expect(text('.bay-tag')).toEqual(['Case', 'Footage', 'Story', 'Cartridge']);
+    expect(text('.bay-tag')).toEqual(['Case', 'Footage', 'Story']);
     expect(text('.bay.story .text')).toEqual([
       'Strap into your F-14. Shoot everything. Land on the carrier.'
+    ]);
+  });
+
+  it('shows this copy and the play record in turn', async () => {
+    const { text } = await view([game(7, 'After Burner', BOXED)]);
+    expect(text('.dossier .alternate .part.shown h3')).toEqual(['This copy']);
+    vi.advanceTimersByTime(10_000);
+    expect(text('.dossier .alternate .part.shown h3')).toEqual(['Play record']);
+    vi.advanceTimersByTime(10_000);
+    expect(text('.dossier .alternate .part.shown h3')).toEqual(['This copy']);
+  });
+
+  it("says the dump's version in words", () => {
+    expect(versionText(null)).toBe('Original release');
+    expect(versionText('Rev 1')).toBe('Revision 1');
+    expect(versionText('Rev a')).toBe('Revision A');
+    expect(versionText('v1.1')).toBe('Version 1.1');
+    expect(versionText('Proto')).toBe('Prototype');
+    expect(versionText('Beta 2')).toBe('Beta 2');
+  });
+
+  it('stars a favourite in the label, and a reload of the same game moves nothing', async () => {
+    const g = game(7, 'After Burner', BOXED);
+    const { v } = await view([g]);
+    const star = () => v.root.querySelector('.slab-label .fav')!;
+    expect(star().classList.contains('on')).toBe(false);
+    const box = v.root.querySelector('.cbox');
+    // The shelf gone after the first show.
+    vi.advanceTimersByTime(1200);
+    expect(v.root.classList.contains('browsing')).toBe(false);
+    // The list reloaded after the favourite was set: the same game, starred.
+    const list = new LazyList<Game>(
+      () => Promise.resolve({ items: [{ ...g, favorite: true }], total: 1 }),
+      50
+    );
+    await list.start(0);
+    v.show(list, 0);
+    expect(star().classList.contains('on')).toBe(true);
+    expect(v.root.classList.contains('browsing')).toBe(false);
+    expect(v.root.querySelector('.cbox')).toBe(box);
+  });
+
+  it('cuts a story into pages that fit, between sentences', () => {
+    const box = document.createElement('div');
+    // 40 characters a page.
+    Object.defineProperty(box, 'clientHeight', { value: 40 });
+    Object.defineProperty(box, 'scrollHeight', { get: () => box.textContent?.length ?? 0 });
+    const story = 'One short line. Another short line. A third sentence here. And a fourth.';
+    expect(paginate(story, box)).toEqual([
+      'One short line. Another short line.',
+      'A third sentence here. And a fourth.'
+    ]);
+    // A sentence longer than a page, between words.
+    expect(paginate('word '.repeat(12).trim(), box)).toEqual([
+      'word word word word word word word word',
+      'word word word word'
     ]);
   });
 
@@ -184,7 +299,7 @@ describe('the Collector view', () => {
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
     // No box picture: a cover made from what it has.
     expect(v.root.querySelector('.cbox .front .made-cover')).not.toBeNull();
-    expect(text('.dossier .mark')).toHaveLength(4);
+    expect(text('.dossier .mark')).toHaveLength(3);
   });
 });
 
@@ -235,10 +350,11 @@ describe('the shelf and the video', () => {
 describe('the box in its case', () => {
   it('stands as tall as the case allows, within bounds', () => {
     // A tall case, a narrow box: its height is what limits it.
-    expect(boxHeight(40, 24, 0.72, 0.14)).toBeCloseTo(24 - 4.6);
+    expect(boxHeight(40, 20, 0.72, 0.14)).toBeCloseTo(20 - 1.6);
     // A wide box (an N64's) in a narrow case: its width is.
     expect(boxHeight(30, 30, 1.4, 0.2)).toBeCloseTo(29 / 1.6);
-    expect(boxHeight(200, 200, 0.7, 0.1)).toBe(30);
+    // Never taller than this, however big the case.
+    expect(boxHeight(200, 200, 0.7, 0.1)).toBe(22);
     expect(boxHeight(5, 5, 1, 0.1)).toBe(12);
   });
 });

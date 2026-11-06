@@ -20,40 +20,6 @@ const AGES: Record<string, Record<string, number>> = {
   BBFC: { U: 0, PG: 8, '12A': 12 }
 };
 
-/** Boards by the regions that use them, to show the one for where the game is from. */
-const BY_REGION: Record<string, string> = {
-  us: 'ESRB',
-  usa: 'ESRB',
-  ca: 'ESRB',
-  eu: 'PEGI',
-  europe: 'PEGI',
-  uk: 'PEGI',
-  fr: 'PEGI',
-  es: 'PEGI',
-  it: 'PEGI',
-  nl: 'PEGI',
-  se: 'PEGI',
-  pt: 'PEGI',
-  dk: 'PEGI',
-  fi: 'PEGI',
-  no: 'PEGI',
-  be: 'PEGI',
-  ch: 'PEGI',
-  at: 'PEGI',
-  gr: 'PEGI',
-  pl: 'PEGI',
-  de: 'USK',
-  germany: 'USK',
-  jp: 'CERO',
-  japan: 'CERO',
-  au: 'ACB',
-  australia: 'ACB',
-  kr: 'GRAC',
-  korea: 'GRAC',
-  br: 'CLASSIND',
-  brazil: 'CLASSIND'
-};
-
 /** `ESRB:M,PEGI:18` as ratings, in the order given; nothing for an empty or odd value. */
 export function ageRatings(value: string | null | undefined): AgeRating[] {
   return (value ?? '')
@@ -70,24 +36,34 @@ function ageOf(board: string, rating: string): number | null {
   return n ? Number(n[1]) : null;
 }
 
-/** The rating to show: the board of the game's own region where it has one, else the first. */
-export function pickAgeRating(ratings: AgeRating[], regions: readonly string[]): AgeRating | null {
-  for (const region of regions) {
-    const board = BY_REGION[region.toLowerCase()];
-    const found = ratings.find((r) => r.board === board);
-    if (found) return found;
-  }
-  return ratings[0] ?? null;
-}
+/** PEGI's ages, the youngest first. */
+const PEGI_AGES = [3, 7, 12, 16, 18];
+/** ESRB's ratings as PEGI's nearest. */
+const ESRB_AS_PEGI: Record<string, number> = {
+  EC: 3,
+  E: 3,
+  'K-A': 3,
+  E10: 7,
+  'E10+': 7,
+  T: 12,
+  M: 16,
+  AO: 18
+};
 
-/** How strict the rating is, for its colour: all, kids, teen, mature or adult. */
-export function ageBand(
-  age: number | null
-): 'all' | 'kids' | 'teen' | 'mature' | 'adult' | 'unknown' {
-  if (age === null) return 'unknown';
-  if (age <= 3) return 'all';
-  if (age <= 10) return 'kids';
-  if (age <= 14) return 'teen';
-  if (age <= 16) return 'mature';
-  return 'adult';
+/**
+ * The rating as PEGI gives it: the game's own PEGI rating where it has one; else its first
+ * known rating as PEGI's nearest age (ESRB by its own table, the others by the age they ask for:
+ * the youngest PEGI age at or over it). `from`: the rating it was worked out from, if any.
+ */
+export function asPegi(ratings: AgeRating[]): { age: number; from: AgeRating | null } | null {
+  const own = ratings.find((r) => r.board === 'PEGI' && r.age !== null);
+  if (own) return { age: own.age!, from: null };
+  for (const r of ratings) {
+    const esrb = r.board === 'ESRB' ? ESRB_AS_PEGI[r.rating] : undefined;
+    if (esrb !== undefined) return { age: esrb, from: r };
+    if (r.age !== null) {
+      return { age: PEGI_AGES.find((a) => a >= r.age!) ?? 18, from: r };
+    }
+  }
+  return null;
 }

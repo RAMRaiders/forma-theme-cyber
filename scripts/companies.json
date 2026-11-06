@@ -1,0 +1,260 @@
+{
+  "about": "Game developers' and publishers' logos for the Collector view: a pattern their name (as the gamelist gives it) starts with, and the logo's file on Wikimedia Commons. First match wins; the makers' logos are tried after these.",
+  "companies": [
+    {
+      "id": "konami",
+      "match": "^konami",
+      "file": "Konami 4th logo 1.svg"
+    },
+    {
+      "id": "capcom",
+      "match": "^capcom",
+      "file": "Capcom logo.svg"
+    },
+    {
+      "id": "taito",
+      "match": "^taito",
+      "file": "Taito logo.svg"
+    },
+    {
+      "id": "activision",
+      "match": "^activision",
+      "file": "Activision.svg"
+    },
+    {
+      "id": "dataeast",
+      "match": "^data east",
+      "file": "Data East Logo clean.svg"
+    },
+    {
+      "id": "acclaim",
+      "match": "^acclaim",
+      "file": "Acclaim Entertainment logo.svg"
+    },
+    {
+      "id": "easports",
+      "match": "^ea sports",
+      "file": "EA Sports monochrome logo.svg"
+    },
+    {
+      "id": "ea",
+      "match": "^(electronic arts|ea\\b)",
+      "file": "Electronic Arts historical logo 80s.svg"
+    },
+    {
+      "id": "hudson",
+      "match": "^hudson",
+      "file": "Hudson Soft Logo.png"
+    },
+    {
+      "id": "thq",
+      "match": "^thq",
+      "file": "THQ logo.svg"
+    },
+    {
+      "id": "jaleco",
+      "match": "^jaleco",
+      "file": "Jaleco logo (2007 - present).svg"
+    },
+    {
+      "id": "ubisoft",
+      "match": "^ubi ?soft",
+      "file": "Ubisoft logo.svg"
+    },
+    {
+      "id": "sunsoft",
+      "match": "^sun ?soft",
+      "file": "Sunsoft logo.svg"
+    },
+    {
+      "id": "natsume",
+      "match": "^natsume",
+      "file": "Natsume Logo.svg"
+    },
+    {
+      "id": "koei",
+      "match": "^koei",
+      "file": "Koei logo.svg"
+    },
+    {
+      "id": "mattel",
+      "match": "^mattel",
+      "file": "Mattel Electronics logo.svg"
+    },
+    {
+      "id": "midway",
+      "match": "^(bally )?midway",
+      "file": "Midway Games logo.svg"
+    },
+    {
+      "id": "tecmo",
+      "match": "^tecmo",
+      "file": "Tecmo logo.svg"
+    },
+    {
+      "id": "hal",
+      "match": "^hal\\b",
+      "file": "HAL Laboratory Logo.png"
+    },
+    {
+      "id": "titus",
+      "match": "^titus",
+      "file": "Titus-logo.svg"
+    },
+    {
+      "id": "irem",
+      "match": "^irem",
+      "file": "Irem Corporation logo.svg"
+    },
+    {
+      "id": "codemasters",
+      "match": "^codemasters",
+      "file": "Codemasters logo 2007 text-only.svg"
+    },
+    {
+      "id": "mindscape",
+      "match": "^mindscape",
+      "file": "Mindscape-logo.png"
+    },
+    {
+      "id": "kemco",
+      "match": "^kemco",
+      "file": "Kemco logo.svg"
+    },
+    {
+      "id": "imagineer",
+      "match": "^imagineer",
+      "file": "Imagineer Logo 1992.svg"
+    },
+    {
+      "id": "banpresto",
+      "match": "^banpresto",
+      "file": "Banpresto logo.svg"
+    },
+    {
+      "id": "virgin",
+      "match": "^virgin",
+      "file": "Virgin-logo.svg"
+    },
+    {
+      "id": "parker",
+      "match": "^parker brothers",
+      "file": "Parker-Brothers-Logo.svg"
+    },
+    {
+      "id": "accolade",
+      "match": "^accolade",
+      "file": "Accolade logo 1990s.svg"
+    },
+    {
+      "id": "atlus",
+      "match": "^atlus",
+      "file": "Atlus logo (2014).svg"
+    },
+    {
+      "id": "microprose",
+      "match": "^micro ?prose",
+      "file": "Microprose-logo.svg"
+    },
+    {
+      "id": "ljn",
+      "match": "^ljn",
+      "file": "LJN Logo 1990.svg"
+    },
+    {
+      "id": "interplay",
+      "match": "^interplay",
+      "file": "Interplay Entertainment logo colored.svg"
+    },
+    {
+      "id": "sierra",
+      "match": "^sierra",
+      "file": "Sierra (On-Line Systems) logo.png"
+    },
+    {
+      "id": "ponycanyon",
+      "match": "^pony canyon",
+      "file": "Pony Canyon logo.svg"
+    },
+    {
+      "id": "imagic",
+      "match": "^imagic",
+      "file": "Imagic logo.svg"
+    },
+    {
+      "id": "tengen",
+      "match": "^tengen",
+      "file": "Tengen logo.svg"
+    },
+    {
+      "id": "technos",
+      "match": "^techn[oō]s",
+      "file": "Technōs Japan Logo.png"
+    },
+    {
+      "id": "kaneko",
+      "match": "^kaneko",
+      "file": "Kaneko logo.svg"
+    },
+    {
+      "id": "compile",
+      "match": "^compile",
+      "file": "Compile logo.png"
+    },
+    {
+      "id": "majesco",
+      "match": "^majesco",
+      "file": "Majesco Logo.png"
+    },
+    {
+      "id": "takara",
+      "match": "^takara",
+      "file": "Takara logo.svg"
+    },
+    {
+      "id": "enix",
+      "match": "^enix",
+      "file": "ENIX Logo.svg"
+    },
+    {
+      "id": "squareenix",
+      "match": "^square enix",
+      "file": "Square Enix logo.svg"
+    },
+    {
+      "id": "infocom",
+      "match": "^infocom",
+      "file": "Infocom Logo.svg"
+    },
+    {
+      "id": "toaplan",
+      "match": "^toaplan",
+      "file": "Toaplan logo.svg"
+    },
+    {
+      "id": "broderbund",
+      "match": "^br[oø]derbund",
+      "file": "Broderbund logo.svg"
+    },
+    {
+      "id": "intsys",
+      "match": "^intelligent systems",
+      "file": "Intelligent Systems Logo.svg"
+    },
+    {
+      "id": "seta",
+      "match": "^seta\\b",
+      "file": "SETA Logo.svg"
+    },
+    {
+      "id": "visco",
+      "match": "^visco",
+      "file": "Visco logo.png"
+    },
+    {
+      "id": "gamefreak",
+      "match": "^game ?freak",
+      "file": "GAME FREAK logo.svg"
+    }
+  ]
+}

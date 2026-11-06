@@ -614,7 +614,7 @@ export function players(p: string): string {
 }
 
 /** How much it has been played, in a line; `null` when never. */
-export function played(game: Game): string | null {
+function played(game: Game): string | null {
   if (game.playCount <= 0) return 'Never yet';
   const parts = [`${game.playCount}×`];
   if (game.gameTime > 0) parts.push(playtime(game.gameTime));
@@ -654,7 +654,7 @@ export function ago(iso: string, now = Date.now()): string {
   return years === 1 ? 'A year ago' : `${years} years ago`;
 }
 
-function playtime(seconds: number): string {
+export function playtime(seconds: number): string {
   const h = Math.floor(seconds / 3600);
   const m = Math.round((seconds % 3600) / 60);
   return h > 0 ? `${h} h ${m} min` : `${m} min`;
