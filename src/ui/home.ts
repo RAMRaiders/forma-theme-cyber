@@ -22,7 +22,9 @@ export interface Shortcut {
 }
 
 /** The selected tile's logos, when more than fit, turn to the next few this often. */
-const LOGO_PAGE_MS = 3000;
+/** How often the selected tile's logos glide on by one, and how long the glide takes. */
+const LOGO_STEP_MS = 1800;
+const LOGO_GLIDE_MS = 700;
 
 /**
  * Cyber's top level: one tile per category that has games, then a row of shortcuts under them.
@@ -72,7 +74,7 @@ export class HomeView {
 
   select(index: number): void {
     const before = this.#tiles[this.#selected];
-    if (before) showPage(before, 0);
+    if (before) glideTo(before, 0, false);
     before?.classList.remove('selected');
     this.#tiles[this.#selected]?.setAttribute('aria-selected', 'false');
     this.#selected = index;
@@ -85,20 +87,21 @@ export class HomeView {
   }
 
   /**
-   * The selected tile's logos, when more than fit, turn a page every few seconds; nothing moves
-   * in between. (A row running past without end kept the Pi drawing every frame, and moves
-   * stuttered behind it.)
+   * The selected tile's logos, when more than fit, glide along by one every couple of seconds,
+   * round and round; still in between. (A row running without pause kept the Pi drawing every
+   * frame, and moves stuttered behind it.)
    */
   #turnPages(): void {
     clearInterval(this.#pageTimer);
     const tile = this.#tiles[this.#selected];
-    const count = tile ? (PAGES.get(tile)?.length ?? 0) : 0;
+    const count = tile ? (ROWS.get(tile)?.starts.length ?? 0) : 0;
     if (!tile || count < 2 || document.documentElement.dataset.motion === 'off') return;
-    let page = 0;
+    let step = 0;
     this.#pageTimer = setInterval(() => {
-      page = (page + 1) % count;
-      showPage(tile, page);
-    }, LOGO_PAGE_MS);
+      step += 1;
+      glideTo(tile, step, true);
+      if (step === count) step = 0;
+    }, LOGO_STEP_MS);
   }
 
   /** Columns as laid out right now, for up/down movement. */
@@ -108,17 +111,20 @@ export class HomeView {
   }
 }
 
-/** Each tile's logos, in pages of as many as fit its row: where each starts, and its logos. */
-const PAGES = new WeakMap<HTMLElement, { start: number; logos: HTMLImageElement[] }[]>();
+/**
+ * Each tile's row of logos, when longer than its room: where each logo starts, and the length
+ * of the whole set (a copy follows it, so the row loops without a jump).
+ */
+const ROWS = new WeakMap<HTMLElement, { starts: number[]; loop: number }>();
 
 /**
- * Splits a tile's logos into pages of as many as fit its row, once they are in (at start-up
- * they may still be loading), and shows the first. One page: nothing to turn.
+ * Measures a tile's row of logos once they are in (at start-up they may still be loading). When
+ * they do not all fit, a copy of them follows, for the row to run round.
  */
 async function paginate(tile: HTMLElement): Promise<void> {
   const row = tile.querySelector<HTMLElement>('.logos');
   const track = row?.querySelector<HTMLElement>('.logos-track');
-  if (!row || !track || PAGES.has(tile)) return;
+  if (!row || !track || ROWS.has(tile)) return;
   await Promise.all(
     [...track.querySelectorAll('img')]
       .filter((img) => !img.complete)
@@ -132,34 +138,33 @@ async function paginate(tile: HTMLElement): Promise<void> {
   );
   // Not laid out (the screen is hidden): done again when it shows.
   const room = row.clientWidth;
-  if (!room || PAGES.has(tile)) return;
-  const pages: { start: number; logos: HTMLImageElement[] }[] = [];
+  if (!room || ROWS.has(tile)) return;
   const logos = [...track.querySelectorAll('img')];
-  // From the row's start: offsetLeft counts from the tile.
+  if (!logos.length || track.scrollWidth <= room) return;
   const base = logos[0]?.offsetLeft ?? 0;
-  for (const img of logos) {
-    const left = img.offsetLeft - base;
-    const page = pages[pages.length - 1];
-    if (page && left + img.offsetWidth - page.start <= room) page.logos.push(img);
-    else pages.push({ start: left, logos: [img] });
-  }
-  PAGES.set(tile, pages);
-  showPage(tile, 0);
+  const starts = logos.map((img) => img.offsetLeft - base);
+  for (const img of logos) track.append(img.cloneNode(true));
+  const loop = (logos.length ? (track.children[logos.length] as HTMLElement).offsetLeft : 0) - base;
+  ROWS.set(tile, { starts, loop });
 }
 
 /**
- * Shows a tile's page `n` of logos: the row shifted to it, the others hidden. Nothing is added
- * or taken away, so nothing is laid out again (swapping the logos cost the Pi a third of a
- * second each time); only the row is redrawn.
+ * Moves a tile's row so logo `n` is first, gliding or at once. Past the last, it glides on to the
+ * copy and then, still, jumps back to the start, which looks the same. Only a transform changes:
+ * nothing is laid out again.
  */
-function showPage(tile: HTMLElement, n: number): void {
-  const pages = PAGES.get(tile);
-  const page = pages?.[n];
+function glideTo(tile: HTMLElement, n: number, glide: boolean): void {
+  const row = ROWS.get(tile);
   const track = tile.querySelector<HTMLElement>('.logos-track');
-  if (!pages || !page || !track) return;
-  track.style.transform = page.start ? `translateX(${-page.start}px)` : '';
-  for (const [i, p] of pages.entries()) {
-    for (const logo of p.logos) logo.classList.toggle('off', i !== n);
+  if (!row || !track) return;
+  const x = n >= row.starts.length ? row.loop : (row.starts[n] ?? 0);
+  track.style.transition = glide ? `transform ${LOGO_GLIDE_MS}ms ease-in-out` : 'none';
+  track.style.transform = x ? `translateX(${-x}px)` : '';
+  if (glide && n >= row.starts.length) {
+    setTimeout(() => {
+      track.style.transition = 'none';
+      track.style.transform = '';
+    }, LOGO_GLIDE_MS + 50);
   }
 }
 
