@@ -3182,18 +3182,26 @@ kbd {
   background: #4a5568;
 }
 
-/* Its own spine picture, lying on its side: drawn upright, turned a quarter to the left so its
-   top reads first, from the row's left end; the row's colour round it. */
+/* Its own spine picture, whole, lying on its side: drawn upright, turned a quarter to the left
+   so its top reads first. The row is as long as the spine, in the middle, nothing round it. */
+.spine-row.pictured {
+  left: calc(50% - var(--len, 24rem) / 2);
+  right: auto;
+  width: var(--len, 24rem);
+  padding: 0;
+  border-color: transparent;
+  background: none;
+}
+
 .spine-row .spine-pic {
   position: absolute;
   top: 0;
   left: 0;
   width: 2.2rem;
-  height: 24rem;
+  height: var(--len, 24rem);
   transform-origin: 0 0;
   transform: translateY(2.2rem) rotate(-90deg);
-  object-fit: contain;
-  object-position: center top;
+  object-fit: fill;
 }
 
 .spine-row.pictured .band,
@@ -3201,9 +3209,8 @@ kbd {
   visibility: hidden;
 }
 
-.spine-row.pictured .year {
-  margin-left: auto;
-  position: relative;
+.spine-row.pictured.selected {
+  border-color: var(--game);
 }
 
 .spine-row .title {
@@ -3212,12 +3219,6 @@ kbd {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-
-.spine-row .year {
-  flex: none;
-  color: var(--muted);
-  font-size: 0.66rem;
 }
 
 /* The one picked slides out of the stack. */
