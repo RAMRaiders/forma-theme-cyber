@@ -128,6 +128,8 @@ export class App {
       return { earned: data.earned, total: data.achievementCount };
     },
     // What the game's emulator can do (netplay, achievements), as Batocera's options say.
+    play: (game) => this.forma.video.play(game.id),
+    stopVideo: () => void this.forma.video.stop().catch(() => {}),
     features: async (game) =>
       (await this.forma.options.get({ level: 'game', game: game.id })).flags,
     accent: accentOf,
@@ -454,6 +456,7 @@ export class App {
       this.#renderChrome();
     }
     this.#games.previews = this.#prefs.previews;
+    this.#collector.previews = this.#prefs.previews;
     this.#systemView.rotateFacts = this.#prefs.rotateFacts;
     if (this.#systemView.look !== this.#prefs.systemsLook) {
       this.#systemView.look = this.#prefs.systemsLook;

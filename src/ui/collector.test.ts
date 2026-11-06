@@ -156,6 +156,37 @@ describe('the Collector view', () => {
   });
 });
 
+describe('the shelf and the video', () => {
+  it('shows the shelf while moving, then the case; the video after a moment', async () => {
+    const play = vi.fn(() => Promise.resolve({ playing: true }));
+    const stopVideo = vi.fn();
+    const v = new CollectorView({ media, play, stopVideo });
+    document.body.replaceChildren(v.root);
+    const games = [game(1, 'A', { ...BOXED, video: 'v' }), game(2, 'B', { ...BOXED, video: 'v' })];
+    const list = new LazyList<Game>(
+      (offset, limit) =>
+        Promise.resolve({ items: games.slice(offset, offset + limit), total: games.length }),
+      50
+    );
+    await list.start(0);
+    v.show(list, 0);
+    expect(v.root.classList.contains('browsing')).toBe(true);
+    vi.advanceTimersByTime(1200);
+    expect(v.root.classList.contains('browsing')).toBe(false);
+    vi.advanceTimersByTime(1500);
+    expect(play).toHaveBeenCalledTimes(1);
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(v.root.classList.contains('video-on')).toBe(true);
+    // Moving on: the video stops at once, the shelf comes back.
+    v.select(1);
+    expect(stopVideo).toHaveBeenCalled();
+    expect(v.root.classList.contains('video-on')).toBe(false);
+    expect(v.root.classList.contains('browsing')).toBe(true);
+    v.leave();
+  });
+});
+
 describe('the box in its case', () => {
   it('stands as tall as the case allows, within bounds', () => {
     // A tall case, a narrow box: its height is what limits it.

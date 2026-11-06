@@ -21,16 +21,17 @@ import {
 /**
  * The Collector view: a game list as a collector keeps one.
  *
- * - The shelf, on the left: every game a box lying on its side, spine out; the selected one
- *   slides out of the stack.
- * - The showcase, in the middle: the game's box in 3D in a lit case, turning from its front to
+ * - The shelf, over the middle while the selection moves: every game a box lying on its side,
+ *   spine out, the selected one in the middle; a moment after the last move it fades away.
+ * - The showcase, then the screen: the game's box in 3D in a lit case, turning from its front to
  *   its spine to its back (or as the player turns it, left and right), its cartridge standing
- *   beside it, its screenshots as prints below, and a grading label on top.
- * - The dossier, on the right: everything known about it, what of it is in the collection, and
- *   what the player has done with it.
+ *   on its left, its screenshots as prints on its right, and a grading label on top; after a
+ *   moment, the game's video behind it all.
+ * - The dossier, on the right: everything known about it, what it offers, and what the player
+ *   has done with it.
  *
  * What a game lacks is made up in Cyber's style: a spine from its logo and colour, a back from
- * its screenshot and story. No videos here: the box is the show.
+ * its screenshot and story.
  */
 
 export interface CollectorOptions {
@@ -43,6 +44,12 @@ export interface CollectorOptions {
   /** A system's name and small logo (`dark`: it needs a light plate). */
   system?: (name: string) => { name: string; logo: string | null; dark: boolean } | null;
   prepare?: (items: { gameId: number; kind: Kind; width: number }[]) => void;
+  /**
+   * Plays a game's video, full screen under the page (Forma's player); `playing` once it shows.
+   * Without it, no videos.
+   */
+  play?: (game: Game) => Promise<{ playing: boolean }>;
+  stopVideo?: () => void;
 }
 
 /** Every picture the view shows, at the width it asks, the most needed first. */
@@ -64,6 +71,10 @@ export const COLLECTOR_PICTURES: readonly (readonly [Kind, number])[] = [
 /** Row height of the shelf in rem: each a box on its side. */
 const ROW_REM = 2.5;
 const OVERSCAN = 6;
+/** The shelf over the middle while moving; this long after the last move it fades. */
+const DROP_MS = 1100;
+/** On a game this long, its video plays behind the case. */
+const VIDEO_AFTER_MS = 2500;
 /** A held direction: the showcase waits for the selection to settle. */
 const SETTLE_MS = 150;
 /** On a game: the box first turns after this, then every `TURN_MS`. */
@@ -130,8 +141,13 @@ export class CollectorView {
   #pose = 0;
   #angle: number = POSES[0].angle;
 
-  /** Kept for the list views' common shape: the Collector view plays no videos. */
-  previews = false;
+  /** The game's video behind the case after a moment; Interface → Video previews. */
+  previews = true;
+  #dropTimer: ReturnType<typeof setTimeout> | undefined;
+  /** A video asked for, until it is stopped. */
+  #video = false;
+  /** Room above the first row and below the last, so any row can sit in the middle. */
+  #pad = 0;
 
   constructor(options: CollectorOptions) {
     this.#options = options;
@@ -144,9 +160,26 @@ export class CollectorView {
     this.#source = source;
     this.#rows.forEach((row) => row.remove());
     this.#rows.clear();
-    this.#spacer.style.height = `${source.total * ROW_REM}rem`;
     this.#selected = -1;
     this.select(selected);
+  }
+
+  /** The shelf's room above and below, from its height, and its length to scroll. */
+  #measure(): void {
+    const row = ROW_REM * remPx();
+    this.#pad = Math.max(0, (this.#shelf.clientHeight - row) / 2);
+    this.#shelf.style.setProperty('--pad', `${this.#pad}px`);
+    this.#spacer.style.height = `${(this.#source?.total ?? 0) * row + 2 * this.#pad}px`;
+  }
+
+  /**
+   * The shelf shows over the middle while the selection moves; a moment after the last move it
+   * fades, and the case has the screen. Only opacity changes.
+   */
+  #browse(): void {
+    this.root.classList.add('browsing');
+    clearTimeout(this.#dropTimer);
+    this.#dropTimer = setTimeout(() => this.root.classList.remove('browsing'), DROP_MS);
   }
 
   get selected(): Game | undefined {
@@ -161,9 +194,13 @@ export class CollectorView {
     const changed = index !== this.#selected;
     this.#selected = index;
     const row = ROW_REM * remPx();
-    this.#shelf.scrollTop = Math.max(0, index * row - (this.#shelf.clientHeight - row) / 2);
+    this.#measure();
+    // The selected row in the middle, at the ends of the list too.
+    this.#shelf.scrollTop = index * row;
     this.render();
     if (!changed) return;
+    this.#browse();
+    this.#stopVideo();
     const now = performance.now();
     const fast = now - this.#lastMove < SETTLE_MS;
     this.#lastMove = now;
@@ -177,10 +214,11 @@ export class CollectorView {
     const source = this.#source;
     if (!source) return;
     const row = ROW_REM * remPx();
-    const first = Math.max(0, Math.floor(this.#shelf.scrollTop / row) - OVERSCAN);
+    const top = this.#shelf.scrollTop - this.#pad;
+    const first = Math.max(0, Math.floor(top / row) - OVERSCAN);
     const last = Math.min(
       source.total - 1,
-      Math.ceil((this.#shelf.scrollTop + this.#shelf.clientHeight) / row) + OVERSCAN
+      Math.ceil((top + this.#shelf.clientHeight) / row) + OVERSCAN
     );
     for (const [i, node] of this.#rows) {
       if (i < first || i > last) {
@@ -193,7 +231,7 @@ export class CollectorView {
       let node = this.#rows.get(i);
       if (!node) {
         node = el('div', { class: 'spine-row', role: 'option' });
-        node.style.top = `${i * ROW_REM}rem`;
+        node.style.top = `calc(var(--pad) + ${i * ROW_REM}rem)`;
         this.#shelf.append(node);
         this.#rows.set(i, node);
       }
@@ -233,6 +271,8 @@ export class CollectorView {
 
   leave(): void {
     clearTimeout(this.#settle);
+    clearTimeout(this.#dropTimer);
+    this.root.classList.remove('browsing');
     this.#stop();
   }
 
@@ -245,6 +285,33 @@ export class CollectorView {
     this.#intervals.forEach(clearInterval);
     this.#timers = [];
     this.#intervals = [];
+    this.#stopVideo();
+  }
+
+  /** Asks Forma for the game's video; once it plays, the page lets it through behind the case. */
+  #startVideo(game: Game): void {
+    const play = this.#options.play;
+    if (!this.previews || !play || !this.#options.media(game, 'video')) return;
+    this.#video = true;
+    const id = game.id;
+    play(game)
+      .then(({ playing }) => {
+        if (playing && this.#video && this.#game?.id === id) this.#seeThrough(true);
+      })
+      .catch(() => {});
+  }
+
+  #stopVideo(): void {
+    if (!this.#video) return;
+    this.#video = false;
+    // Opaque again at once: the video's last picture never shows over the next game.
+    this.#seeThrough(false);
+    this.#options.stopVideo?.();
+  }
+
+  #seeThrough(on: boolean): void {
+    this.root.classList.toggle('video-on', on);
+    document.documentElement.classList.toggle('video-through', on);
   }
 
   #later(work: () => void, ms: number): void {
@@ -278,6 +345,7 @@ export class CollectorView {
       }, FIRST_TURN_MS);
     }
     this.#later(() => this.#prepareAround(), PREPARE_AFTER_MS);
+    this.#later(() => this.#startVideo(game), VIDEO_AFTER_MS);
   }
 
   #turnTo(direction: 1 | -1): void {

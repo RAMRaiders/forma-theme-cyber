@@ -3005,8 +3005,8 @@ kbd {
   position: relative;
   height: 100%;
   display: grid;
-  grid-template-columns: 16.5rem minmax(0, 1fr) 21rem;
-  column-gap: 1.2rem;
+  grid-template-columns: minmax(0, 1fr) 22rem;
+  column-gap: 1.6rem;
   padding-bottom: 0.4rem;
 }
 
@@ -3059,12 +3059,66 @@ kbd {
     linear-gradient(180deg, rgb(4 6 12 / 60%) 0%, transparent 25%, transparent 70%, var(--bg) 100%);
 }
 
-/* The shelf: boxes on their sides, spines out. */
+/* The game's video playing under the page: the room lets it through, darkened a little, its
+   floor and edges kept so the case still stands somewhere. */
+.collector.video-on .collector-backdrop {
+  background: rgb(4 6 12 / 35%);
+}
+
+.collector.video-on .collector-backdrop img {
+  visibility: hidden;
+}
+
+/* The shelf: over the middle of the screen while the selection moves, then gone. Opacity
+   only, so its rows stay laid out (and measured) underneath. */
 .shelf {
-  position: relative;
+  position: absolute;
+  z-index: 5;
+  top: -0.5rem;
+  bottom: 0;
+  left: 50%;
+  width: 28rem;
+  translate: -50% 0;
   overflow-y: auto;
   scrollbar-width: none;
-  padding-right: 1.4rem;
+  padding: 0 1rem;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(4 7 14 / 92%) 12%,
+    rgb(4 7 14 / 92%) 88%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 260ms ease,
+    visibility 0s 260ms;
+}
+
+.collector.browsing .shelf {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 160ms ease;
+}
+
+/* The case and the dossier dim behind the shelf while it shows. */
+.collector::after {
+  content: '';
+  position: absolute;
+  z-index: 4;
+  inset: -1rem -2rem;
+  background: rgb(2 4 10 / 55%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 260ms ease;
+}
+
+.collector.browsing::after {
+  opacity: 1;
+  transition-duration: 160ms;
 }
 
 .shelf::-webkit-scrollbar {
@@ -3073,8 +3127,8 @@ kbd {
 
 .spine-row {
   position: absolute;
-  left: 0;
-  right: 1.8rem;
+  left: 1rem;
+  right: 1rem;
   height: 2.2rem;
   display: flex;
   align-items: center;
@@ -3133,7 +3187,7 @@ kbd {
 
 /* The one picked slides out of the stack. */
 .spine-row.selected {
-  transform: translateX(1.6rem);
+  transform: scale(1.05);
   opacity: 1;
   color: #fff;
   border-color: var(--game);
