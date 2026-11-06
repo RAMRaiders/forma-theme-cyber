@@ -38,6 +38,7 @@ const game = (
   raGameId: 7,
   region: 'us',
   lang: 'en,fr',
+  ageRating: null,
   media,
   ...over
 });
