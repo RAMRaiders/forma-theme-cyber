@@ -1,6 +1,7 @@
 import type { Game } from '@ramraiders/forma-sdk';
 
 import type { LazyList } from '../logic/pager.js';
+import { ageBand, ageRatings, pickAgeRating } from '../logic/agerating.js';
 import { languageFlag, regionFlag, romName } from '../logic/romname.js';
 import { el, remPx } from './dom.js';
 import {
@@ -611,6 +612,7 @@ export class CollectorView {
         el('span', { class: 'line' }, details.join(' · ')),
         el('span', { class: 'serial' }, serial(game))
       ),
+      ageBadge(game),
       el(
         'div',
         { class: `grade${grade ? '' : ' none'}` },
@@ -959,7 +961,29 @@ export function serial(game: Game): string {
   return `${game.system.toUpperCase()}-${String(game.id).padStart(6, '0')}`;
 }
 
-/** What of the game the collection holds, and what that makes it, in a collector's words. */
+/**
+ * The game's age rating, as a badge of Cyber's own (not the board's logo): the rating large,
+ * the board under it, coloured by how old a player it asks for. The board of the game's region
+ * where it has one; all of them in its title. Empty where the game has none.
+ */
+function ageBadge(game: ShowGame): HTMLElement {
+  const all = ageRatings(game.ageRating);
+  const rom = romName(game.path).regions;
+  const shown = pickAgeRating(all, rom.length ? rom : codes(game.region ?? null));
+  if (!shown) return el('div', { class: 'age none', 'aria-hidden': 'true' });
+  const words = all.map((r) => `${r.board} ${r.rating}`).join(', ');
+  return el(
+    'div',
+    {
+      class: `age ${ageBand(shown.age)}`,
+      title: words,
+      'aria-label': `Age rating ${words}`
+    },
+    el('strong', {}, shown.rating),
+    el('span', {}, shown.board === 'CLASSIND' ? 'ClassInd' : shown.board)
+  );
+}
+
 /** The game's regions in words, from its ROM's name first, else the gamelist's. */
 function regionLine(game: Game): string | null {
   const rom = romName(game.path).regions;

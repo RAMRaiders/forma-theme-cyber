@@ -3384,7 +3384,7 @@ kbd {
 .slab-label {
   width: 100%;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
   column-gap: 0.9rem;
   padding: 0.55rem 0.9rem;
@@ -3393,6 +3393,68 @@ kbd {
   border-radius: 0.35rem;
   background: linear-gradient(180deg, rgb(20 30 48 / 92%), rgb(8 12 22 / 92%));
   box-shadow: 0 0 1.4rem rgb(0 0 0 / 55%);
+}
+
+/* The age rating: Cyber's own badge, coloured by how old a player it asks for. */
+.slab-label .age {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  min-width: 3.1rem;
+  height: 3.1rem;
+  padding: 0 0.35rem;
+  border: 2px solid var(--age);
+  border-radius: 0.3rem;
+  background: rgb(0 0 0 / 35%);
+  box-shadow: inset 0 0 0.7rem rgb(0 0 0 / 50%);
+  line-height: 1;
+  --age: #8aa0b8;
+}
+
+.slab-label .age.none {
+  display: none;
+}
+
+/* No rating: no room kept for one. */
+.slab-label:has(.age.none) {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.slab-label .age strong {
+  display: block;
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  color: var(--age);
+  letter-spacing: 0;
+  -webkit-line-clamp: none;
+}
+
+.slab-label .age span {
+  margin-top: 0.2rem;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.slab-label .age.all {
+  --age: #4ade80;
+}
+
+.slab-label .age.kids {
+  --age: #a3e635;
+}
+
+.slab-label .age.teen {
+  --age: #facc15;
+}
+
+.slab-label .age.mature {
+  --age: #fb923c;
+}
+
+.slab-label .age.adult {
+  --age: #f43f5e;
 }
 
 .slab-label .mark {

@@ -35,7 +35,12 @@ export type Kind =
   | 'manual';
 
 /** A game as the stage reads it: newer Formas add its region and languages. */
-export type ShowGame = Game & { region?: string | null; lang?: string | null };
+export type ShowGame = Game & {
+  region?: string | null;
+  lang?: string | null;
+  /** `ESRB:M,PEGI:18`, from Forma 1.24.0. */
+  ageRating?: string | null;
+};
 
 /** A URL for `kind` of `game` at `width` pixels, or `null` when the game has none. */
 export type MediaUrl = (game: Game, kind: Kind, width?: number) => string | null;

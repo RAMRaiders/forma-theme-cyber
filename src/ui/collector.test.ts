@@ -101,6 +101,18 @@ describe('the Collector view', () => {
     expect(text('.cbox .back .made-back p')[0]).toMatch(/^Strap into your F-14\./);
   });
 
+  it("shows the age rating of the game's region, all of them in its title", async () => {
+    const rated = { ...game(8, 'Doom (Europe)'), ageRating: 'ESRB:M,PEGI:18' } as Game;
+    const { v, text } = await view([rated]);
+    expect(text('.slab-label .age strong')).toEqual(['18']);
+    expect(text('.slab-label .age span')).toEqual(['PEGI']);
+    const badge = v.root.querySelector('.slab-label .age');
+    expect(badge?.classList.contains('adult')).toBe(true);
+    expect(badge?.getAttribute('aria-label')).toBe('Age rating ESRB M, PEGI 18');
+    const unrated = await view([game(9, 'Kolibri')]);
+    expect(unrated.v.root.querySelector('.slab-label .age.none')).not.toBeNull();
+  });
+
   it('labels the case with its grade, system and serial', async () => {
     const { v, text } = await view([game(7, 'After Burner', BOXED)]);
     expect(text('.slab-label .what strong')).toEqual(['After Burner']);
