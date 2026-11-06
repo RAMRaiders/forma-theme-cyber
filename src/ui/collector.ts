@@ -108,9 +108,10 @@ const SPINE_RATIO = 0.14;
 
 /** The box's poses: how far it is turned for each, in degrees. */
 const POSES = [
-  { id: 'front', label: 'Front', angle: -24 },
-  { id: 'spine', label: 'Spine', angle: 66 },
-  { id: 'back', label: 'Back', angle: 156 }
+  // Each face square on, flat as a picture of it; the box turns in 3D only between them.
+  { id: 'front', label: 'Front', angle: 0 },
+  { id: 'spine', label: 'Spine', angle: 90 },
+  { id: 'back', label: 'Back', angle: 180 }
 ] as const;
 
 /** Screenshots, as prints. */
@@ -850,7 +851,7 @@ function shotImage(src: string, on: boolean): HTMLImageElement {
 }
 
 function boxTransform(angle: number): string {
-  return `rotateX(-8deg) rotateY(${angle}deg)`;
+  return `rotateY(${angle}deg)`;
 }
 
 function clamp(n: number, min: number, max: number): number {

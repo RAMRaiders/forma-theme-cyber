@@ -122,7 +122,7 @@ describe('the Collector view', () => {
     expect(box.dataset.pose).toBe('back');
     v.turn(-1);
     expect(box.dataset.pose).toBe('spine');
-    expect(box.style.transform).toBe('rotateX(-8deg) rotateY(66deg)');
+    expect(box.style.transform).toBe('rotateY(90deg)');
   });
 
   it('shows the dossier: what is known, what it offers, what was played', async () => {
