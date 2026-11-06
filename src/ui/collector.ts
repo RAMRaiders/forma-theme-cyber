@@ -1,6 +1,7 @@
 import type { Game } from '@ramraiders/forma-sdk';
 
 import type { LazyList } from '../logic/pager.js';
+import { languageFlag, regionFlag, romName } from '../logic/romname.js';
 import { el, remPx } from './dom.js';
 import {
   ARCADE,
@@ -35,6 +36,8 @@ import {
 export interface CollectorOptions {
   media: MediaUrl;
   achievements?: (game: Game) => Promise<Achievements | null>;
+  /** What the game's emulator supports (`netplay`, `cheevos`); empty when unknown. */
+  features?: (game: Game) => Promise<string[]>;
   /** The game's colour, from a small picture of it. */
   accent?: (url: string) => Promise<string | null>;
   /** A system's name and small logo (`dark`: it needs a light plate). */
@@ -438,7 +441,7 @@ export class CollectorView {
     const details = [
       game.releaseDate?.slice(0, 4),
       system?.name ?? game.system,
-      game.region ? names(game.region, REGIONS) : null
+      regionLine(game)
     ].filter((t): t is string => !!t);
     return el(
       'div',
@@ -594,9 +597,33 @@ export class CollectorView {
     add('Developer', game.developer);
     add('Publisher', game.publisher);
     add('Genre', game.genre);
-    add('Players', game.players ? players(game.players) : null);
-    add('Region', game.region ? names(game.region, REGIONS) : null);
-    add('Languages', game.lang ? names(game.lang, LANGUAGES) : null);
+    // The ROM's own name first (it is the copy at hand), the scraper's data after.
+    const rom = romName(game.path);
+    const regions = rom.regions.length ? rom.regions : codes(game.region);
+    const languages = rom.languages.length ? rom.languages : codes(game.lang);
+    const flagged = (
+      label: string,
+      list: string[],
+      table: Record<string, string>,
+      flag: (c: string) => string | null
+    ) => {
+      if (!list.length) return;
+      specs.append(
+        el(
+          'div',
+          {},
+          el('dt', {}, label),
+          el(
+            'dd',
+            { class: 'flags' },
+            ...list.map((c) => flagChip(table[c] ?? c.toUpperCase(), flag(c)))
+          )
+        )
+      );
+    };
+    flagged('Region', regions, REGIONS, regionFlag);
+    flagged('Languages', languages, LANGUAGES, languageFlag);
+    add('Version', rom.version);
     if (game.rating !== null) {
       const stars = el('span', {
         class: 'stars',
@@ -607,20 +634,7 @@ export class CollectorView {
       specs.append(el('div', {}, el('dt', {}, 'Rating'), el('dd', {}, stars)));
     }
 
-    const kept = inventory(game, media);
-    const inv = el(
-      'section',
-      { class: 'inventory' },
-      el('h3', {}, 'In the collection'),
-      el('p', { class: 'status' }, kept.status),
-      el(
-        'ul',
-        {},
-        ...kept.items.map(([label, has]) =>
-          el('li', { class: has ? 'has' : 'missing' }, `${has ? '✓' : '·'} ${label}`)
-        )
-      )
-    );
+    const marks = this.#marks(game);
 
     const record = el(
       'section',
@@ -650,7 +664,37 @@ export class CollectorView {
         }, 350);
       }, CAPTION_MS);
     }
-    return [head, specs, inv, record, story];
+    return [head, marks, specs, record, story];
+  }
+
+  /**
+   * What the game offers, as icons: achievements, netplay, a manual, how many play. Lit when it
+   * has it, faint when not; netplay once the emulator's features are known.
+   */
+  #marks(game: ShowGame): HTMLElement {
+    const has = (k: Kind) => this.#options.media(game, k) !== null;
+    const netplay = mark('netplay', ICONS.netplay, 'Netplay', false);
+    const list = el(
+      'ul',
+      { class: 'marks' },
+      mark(
+        'players',
+        ICONS.players,
+        game.players ? players(game.players) : 'Players ?',
+        !!game.players
+      ),
+      mark('cheevos', ICONS.cheevos, 'Achievements', game.raGameId !== null),
+      netplay,
+      mark('manual', ICONS.manual, 'Manual', has('manual'))
+    );
+    const id = game.id;
+    void this.#options
+      .features?.(game)
+      .then((f) => {
+        if (this.#game?.id === id) netplay.classList.toggle('on', f.includes('netplay'));
+      })
+      .catch(() => {});
+    return list;
   }
 
   #achievementsInto(game: Game, record: HTMLElement): void {
@@ -775,36 +819,49 @@ function barcode(game: Game): HTMLElement {
 }
 
 /** What of the game the collection holds, and what that makes it, in a collector's words. */
-export function inventory(
-  game: Game,
-  media: MediaUrl
-): { status: string; items: [string, boolean][] } {
-  const has = (k: Kind) => media(game, k) !== null;
-  const box = has('thumbnail');
-  const cart = has('cartridge');
-  const manual = has('manual');
-  const status =
-    box && cart && manual
-      ? 'Complete in box'
-      : box && cart
-        ? 'Boxed, no manual'
-        : box
-          ? 'Box only'
-          : cart
-            ? 'Loose'
-            : 'Digital copy';
-  return {
-    status,
-    items: [
-      ['Box', box],
-      ['Back', has('boxback')],
-      ['Spine', has('boxside')],
-      [ARCADE.has(game.system) ? 'Board' : 'Cartridge', cart],
-      ['Manual', manual],
-      ['Video', has('video')],
-      ['Fan art', has('fanart')]
-    ]
-  };
+/** The game's regions in words, from its ROM's name first, else the gamelist's. */
+function regionLine(game: Game): string | null {
+  const rom = romName(game.path).regions;
+  const list = rom.length ? rom : codes(game.region);
+  return list.length ? names(list.join(','), REGIONS) : null;
+}
+
+/** Region or language codes as the gamelist gives them (`us,eu`), lower-case. */
+function codes(list: string | null): string[] {
+  return (list ?? '')
+    .split(/[,;/ ]+/)
+    .filter(Boolean)
+    .map((c) => c.toLowerCase());
+}
+
+/** A region or language: its flag where there is one, its name beside. */
+function flagChip(name: string, flag: string | null): HTMLElement {
+  const chip = el('span', { class: 'chip' });
+  if (flag) {
+    const img = el('img', { src: flag, alt: '', class: 'flag' });
+    img.addEventListener('error', () => img.remove(), { once: true });
+    chip.append(img);
+  }
+  chip.append(name);
+  return chip;
+}
+
+/** Line icons for the marks, in Cyber's style. */
+const ICONS = {
+  players:
+    '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.2c2.8.2 5 2.3 5 5.8"/>',
+  cheevos:
+    '<path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1.5A3.5 3.5 0 0 0 7.5 11M17 6h3v1.5a3.5 3.5 0 0 1-3.5 3.5"/><path d="M12 14v3M8.5 20.5h7M10 17h4v3.5h-4z"/>',
+  netplay:
+    '<rect x="2.5" y="5" width="7.5" height="5.5" rx="1"/><rect x="14" y="13.5" width="7.5" height="5.5" rx="1"/><path d="M6.2 10.5v5.2h7.8M17.8 13.5V8.3H10"/>',
+  manual:
+    '<path d="M4 5.5C6.5 4 9.5 4 12 5.5v14c-2.5-1.5-5.5-1.5-8 0z"/><path d="M20 5.5C17.5 4 14.5 4 12 5.5v14c2.5-1.5 5.5-1.5 8 0z"/>'
+} as const;
+
+function mark(cls: string, icon: string, label: string, on: boolean): HTMLElement {
+  const glyph = el('span', { class: 'glyph', 'aria-hidden': 'true' });
+  glyph.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">${icon}</svg>`;
+  return el('li', { class: `mark ${cls}${on ? ' on' : ''}` }, glyph, el('span', {}, label));
 }
 
 /** A front made up: the fan art (or a screenshot) under its logo (or its name). */

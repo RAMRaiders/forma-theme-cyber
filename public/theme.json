@@ -5,7 +5,7 @@
   "entry": "index.html",
   "logo": "logo.svg",
   "sdk": "^1.23",
-  "permissions": ["settings.system"],
+  "permissions": ["settings.system", "settings.emulators"],
   "resolutions": ["1280x720", "1920x1080"],
   "views": ["systems"],
   "draws": ["nowPlaying"],

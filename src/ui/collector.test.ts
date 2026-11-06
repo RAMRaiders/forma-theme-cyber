@@ -3,7 +3,7 @@ import type { Game } from '@ramraiders/forma-sdk';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LazyList } from '../logic/pager.js';
-import { CollectorView, boxHeight, gradeOf, hue, hueOf, inventory, serial } from './collector.js';
+import { CollectorView, boxHeight, gradeOf, hue, hueOf, serial } from './collector.js';
 import type { Kind } from './stage.js';
 
 const game = (id: number, name: string, media: Partial<Record<Kind, string>> = {}): Game =>
@@ -115,19 +115,26 @@ describe('the Collector view', () => {
     expect(box.style.transform).toBe('rotateX(-8deg) rotateY(66deg)');
   });
 
-  it('shows the dossier: what is known, what is kept, what was played', async () => {
-    const { text } = await view([game(7, 'After Burner', BOXED)]);
+  it('shows the dossier: what is known, what it offers, what was played', async () => {
+    const { text } = await view([
+      { ...game(7, 'After Burner', BOXED), path: 'After Burner (USA, Japan) (En,Ja) (Rev 1).7z' }
+    ]);
     expect(text('.dossier .specs dt')).toEqual([
       'Released',
       'Developer',
       'Publisher',
       'Genre',
-      'Players',
+      'Region',
+      'Languages',
+      'Version',
       'Rating'
     ]);
     expect(text('.dossier .specs dd').slice(0, 2)).toEqual(['13 Jan 1995', 'Rutubo Games']);
-    expect(text('.dossier .status')).toEqual(['Boxed, no manual']);
-    expect(text('.dossier .inventory li.missing')).toEqual(['· Manual', '· Video']);
+    // From the ROM's name, before the gamelist's.
+    expect(text('.dossier .specs .flags')).toEqual(['USAJapan', 'EnglishJapanese']);
+    expect(text('.dossier .specs dd')[6]).toBe('Rev 1');
+    // What it offers: players and no manual, no achievements; netplay not known here.
+    expect(text('.dossier .mark.on')).toEqual(['1 player']);
     expect(text('.dossier .record p')[0]).toMatch(/^2×/);
   });
 
@@ -145,7 +152,7 @@ describe('the Collector view', () => {
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
     // No box picture: a cover made from what it has.
     expect(v.root.querySelector('.cbox .front .made-cover')).not.toBeNull();
-    expect(text('.dossier .status')).toEqual(['Digital copy']);
+    expect(text('.dossier .mark')).toHaveLength(4);
   });
 });
 
@@ -173,12 +180,6 @@ describe('collector words', () => {
     expect(gradeOf(0.99)).toEqual({ score: '9.9', word: 'Gem mint' });
     expect(gradeOf(0.85)).toEqual({ score: '8.5', word: 'Near mint' });
     expect(gradeOf(0.3)).toEqual({ score: '3.0', word: 'Fair' });
-  });
-
-  it('says how complete a copy is', () => {
-    const cib = game(1, 'A', { thumbnail: 't', cartridge: 'c', manual: 'm' });
-    expect(inventory(cib, media).status).toBe('Complete in box');
-    expect(inventory(game(1, 'A', { cartridge: 'c' }), media).status).toBe('Loose');
   });
 
   it('gives each game the same serial and colour every time', () => {

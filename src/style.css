@@ -3668,32 +3668,74 @@ kbd {
   clip-path: inset(0 calc(100% - var(--rating) * 100%) 0 0);
 }
 
-.dossier .status {
-  margin: 0 0 0.35rem;
-  font-weight: 700;
-}
-
-.dossier .inventory ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
+/* What the game offers, as icons in a row: lit when it has it, faint when not. */
+.dossier .marks {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.4rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.dossier .inventory li {
-  padding: 0.1rem 0.45rem;
-  border: 1px solid rgb(255 255 255 / 12%);
-  border-radius: 1rem;
+.dossier .mark {
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  padding: 0.45rem 0.2rem 0.35rem;
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 0.35rem;
+  overflow: hidden;
   font-family: var(--mono);
-  font-size: 0.62rem;
-  color: rgb(255 255 255 / 32%);
+  font-size: 0.52rem;
+  letter-spacing: 0.01em;
+  text-align: center;
+  white-space: nowrap;
+  text-transform: uppercase;
+  color: rgb(201 219 232 / 32%);
 }
 
-.dossier .inventory li.has {
+.dossier .mark .glyph {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.dossier .mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.dossier .mark.on {
   border-color: var(--game);
-  color: var(--fg);
+  background: rgb(255 255 255 / 4%);
+  color: #e6f2fa;
+}
+
+.dossier .mark.on .glyph {
+  color: var(--game);
+}
+
+/* Regions and languages: a flag and a name each. */
+.dossier .specs .flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.6rem;
+}
+
+.dossier .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+.dossier .flag {
+  width: 1.1rem;
+  height: 0.82rem;
+  border-radius: 0.1rem;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 18%);
 }
 
 .dossier .record p {

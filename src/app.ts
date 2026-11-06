@@ -127,6 +127,9 @@ export class App {
       const { data } = await this.forma.ra.game(game.id);
       return { earned: data.earned, total: data.achievementCount };
     },
+    // What the game's emulator can do (netplay, achievements), as Batocera's options say.
+    features: async (game) =>
+      (await this.forma.options.get({ level: 'game', game: game.id })).flags,
     accent: accentOf,
     system: (name) => {
       const system = this.#groups.flatMap((g) => g.systems).find((s) => s.summary.name === name);
