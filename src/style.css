@@ -3084,8 +3084,7 @@ kbd {
   left: 50%;
   width: 28rem;
   translate: -50% 0;
-  overflow-y: auto;
-  scrollbar-width: none;
+  overflow: hidden;
   padding: 0 1rem;
   background: linear-gradient(
     90deg,
@@ -3101,6 +3100,17 @@ kbd {
   transition:
     opacity 260ms ease,
     visibility 0s 260ms;
+}
+
+/* The rows glide as one to bring the selected to the middle: the compositor's work. */
+.shelf .track {
+  position: relative;
+  transition: transform 170ms ease-out;
+  will-change: transform;
+}
+
+.shelf .track.still {
+  transition: none;
 }
 
 .collector.browsing .shelf {
@@ -3124,10 +3134,6 @@ kbd {
 .collector.browsing::after {
   opacity: 1;
   transition-duration: 160ms;
-}
-
-.shelf::-webkit-scrollbar {
-  display: none;
 }
 
 .spine-row {
@@ -3174,6 +3180,30 @@ kbd {
 
 .spine-row:not(.tinted) .band {
   background: #4a5568;
+}
+
+/* Its own spine picture, lying on its side: drawn upright, turned a quarter to the left so its
+   top reads first, from the row's left end; the row's colour round it. */
+.spine-row .spine-pic {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2.2rem;
+  height: 24rem;
+  transform-origin: 0 0;
+  transform: translateY(2.2rem) rotate(-90deg);
+  object-fit: contain;
+  object-position: center top;
+}
+
+.spine-row.pictured .band,
+.spine-row.pictured .title {
+  visibility: hidden;
+}
+
+.spine-row.pictured .year {
+  margin-left: auto;
+  position: relative;
 }
 
 .spine-row .title {

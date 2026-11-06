@@ -164,6 +164,8 @@ describe('the Collector view', () => {
       game(3, 'Kolibri')
     ]);
     expect(text('.spine-row .title')).toEqual(['After Burner', 'Doom', 'Kolibri']);
+    // Its own spine picture where it has one; Doom and Kolibri have none.
+    expect(v.root.querySelectorAll('.spine-row.pictured .spine-pic')).toHaveLength(1);
     vi.advanceTimersByTime(500);
     v.select(1);
     expect(text('.spine-row.selected .title')).toEqual(['Doom']);

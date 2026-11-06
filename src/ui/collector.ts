@@ -126,7 +126,8 @@ export class CollectorView {
   readonly root = el('div', { class: 'collector' });
   readonly #backdrop = el('div', { class: 'collector-backdrop', 'aria-hidden': 'true' });
   readonly #shelf = el('div', { class: 'shelf', role: 'listbox' });
-  readonly #spacer = el('div', { class: 'spacer' });
+  /** The rows, moved as one so the selected sits in the middle: a transform, gliding. */
+  readonly #track = el('div', { class: 'track' });
   readonly #showcase = el('section', { class: 'showcase' });
   readonly #dossier = el('aside', { class: 'dossier' });
   readonly #options: CollectorOptions;
@@ -162,9 +163,8 @@ export class CollectorView {
 
   constructor(options: CollectorOptions) {
     this.#options = options;
-    this.#shelf.append(this.#spacer);
+    this.#shelf.append(this.#track);
     this.root.append(this.#backdrop, this.#shelf, this.#showcase, this.#dossier);
-    this.#shelf.addEventListener('scroll', () => this.render(), { passive: true });
   }
 
   show(source: LazyList<Game>, selected: number): void {
@@ -172,15 +172,16 @@ export class CollectorView {
     this.#rows.forEach((row) => row.remove());
     this.#rows.clear();
     this.#selected = -1;
+    // Straight to it, no glide from wherever the last list was.
+    this.#track.classList.add('still');
     this.select(selected);
+    requestAnimationFrame(() => this.#track.classList.remove('still'));
   }
 
-  /** The shelf's room above and below, from its height, and its length to scroll. */
+  /** The shelf's room above the first row, so any row can sit in the middle. */
   #measure(): void {
     const row = ROW_REM * remPx();
     this.#pad = Math.max(0, (this.#shelf.clientHeight - row) / 2);
-    this.#shelf.style.setProperty('--pad', `${this.#pad}px`);
-    this.#spacer.style.height = `${(this.#source?.total ?? 0) * row + 2 * this.#pad}px`;
   }
 
   /**
@@ -206,8 +207,8 @@ export class CollectorView {
     this.#selected = index;
     const row = ROW_REM * remPx();
     this.#measure();
-    // The selected row in the middle, at the ends of the list too.
-    this.#shelf.scrollTop = index * row;
+    // The selected row in the middle, at the ends of the list too; the rows glide there.
+    this.#track.style.transform = `translateY(${this.#pad - index * row}px)`;
     this.render();
     if (!changed) return;
     this.#browse();
@@ -225,12 +226,11 @@ export class CollectorView {
     const source = this.#source;
     if (!source) return;
     const row = ROW_REM * remPx();
-    const top = this.#shelf.scrollTop - this.#pad;
-    const first = Math.max(0, Math.floor(top / row) - OVERSCAN);
-    const last = Math.min(
-      source.total - 1,
-      Math.ceil((top + this.#shelf.clientHeight) / row) + OVERSCAN
-    );
+    // Those in sight round the selected one, and a few more for the glide.
+    const half = Math.ceil(this.#shelf.clientHeight / row / 2) + OVERSCAN;
+    const at = Math.max(0, this.#selected);
+    const first = Math.max(0, at - half);
+    const last = Math.min(source.total - 1, at + half);
     for (const [i, node] of this.#rows) {
       if (i < first || i > last) {
         node.remove();
@@ -242,14 +242,16 @@ export class CollectorView {
       let node = this.#rows.get(i);
       if (!node) {
         node = el('div', { class: 'spine-row', role: 'option' });
-        node.style.top = `calc(var(--pad) + ${i * ROW_REM}rem)`;
-        this.#shelf.append(node);
+        node.style.top = `${i * ROW_REM}rem`;
+        this.#track.append(node);
         this.#rows.set(i, node);
       }
       const key = game ? String(game.id) : '';
       if (node.dataset.key !== key) {
         node.dataset.key = key;
-        node.replaceChildren(...(game ? shelfRow(game) : [el('span', { class: 'title' }, '…')]));
+        node.replaceChildren(
+          ...(game ? this.#shelfRow(game, node) : [el('span', { class: 'title' }, '…')])
+        );
         node.classList.remove('tinted');
         if (game) this.#spineColour(game, node);
       }
@@ -257,6 +259,31 @@ export class CollectorView {
       node.setAttribute('aria-selected', String(i === this.#selected));
     }
     if (this.#pending && this.selected) this.#showSelected();
+  }
+
+  /**
+   * A game on the shelf: its own spine picture, lying on its side, where it has one (its name
+   * still there for screen readers); else a spine in its colour with its name and year.
+   */
+  #shelfRow(game: Game, node: HTMLElement): HTMLElement[] {
+    const parts = [
+      el('span', { class: 'band', 'aria-hidden': 'true' }),
+      el('span', { class: 'title' }, game.name),
+      el('span', { class: 'year' }, game.releaseDate?.slice(0, 4) ?? '')
+    ];
+    const src = this.#options.media(game, 'boxside', 160);
+    node.classList.toggle('pictured', !!src);
+    if (!src) return parts;
+    const img = picture(src, 'spine-pic');
+    img.addEventListener(
+      'error',
+      () => {
+        img.remove();
+        node.classList.remove('pictured');
+      },
+      { once: true }
+    );
+    return [img, ...parts];
   }
 
   refreshSelected(game: Game): void {
@@ -859,14 +886,6 @@ function clamp(n: number, min: number, max: number): number {
 }
 
 /** A shelf row: the game's name down its spine, and its year. */
-function shelfRow(game: Game): HTMLElement[] {
-  return [
-    el('span', { class: 'band', 'aria-hidden': 'true' }),
-    el('span', { class: 'title' }, game.name),
-    el('span', { class: 'year' }, game.releaseDate?.slice(0, 4) ?? '')
-  ];
-}
-
 function favouriteTag(): HTMLElement {
   return el('span', { class: 'favourite' }, '★ Favourite');
 }
