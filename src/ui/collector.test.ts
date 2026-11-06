@@ -86,7 +86,8 @@ describe('the Collector view', () => {
     expect(src('.cbox .front img')).toBe('forma://media/7/thumbnail?w=640');
     expect(src('.cbox .spine img')).toBe('forma://media/7/boxside?w=160');
     expect(src('.cbox .back img')).toBe('forma://media/7/boxback?w=640');
-    expect(src('.display .cart')).toBe('forma://media/7/cartridge?w=400');
+    // The cartridge at the foot of the dossier.
+    expect(src('.dossier .cartridge img')).toBe('forma://media/7/cartridge?w=400');
     // Its screenshots on the footage bay's screen, the first showing.
     expect(v.root.querySelectorAll('.bay.footage .screen img')).toHaveLength(2);
     expect(v.root.querySelectorAll('.bay.footage .screen img.on')).toHaveLength(1);
@@ -101,12 +102,15 @@ describe('the Collector view', () => {
   });
 
   it('labels the case with its grade, system and serial', async () => {
-    const { text } = await view([game(7, 'After Burner', BOXED)]);
+    const { v, text } = await view([game(7, 'After Burner', BOXED)]);
     expect(text('.slab-label .what strong')).toEqual(['After Burner']);
     expect(text('.slab-label .line')).toEqual(['1995 · Sega 32X']);
     expect(text('.slab-label .serial')).toEqual(['SEGA32X-000007']);
-    expect(text('.slab-label .grade strong')).toEqual(['7.0']);
-    expect(text('.slab-label .grade span')).toEqual(['Excellent']);
+    expect(text('.slab-label .grade strong')).toEqual(['3.5/5']);
+    expect(text('.slab-label .grade > span:last-child')).toEqual(['Excellent']);
+    expect(v.root.querySelector('.slab-label .grade .stars')?.getAttribute('aria-label')).toBe(
+      '3.5 of 5'
+    );
   });
 
   it('turns the box by itself, and the way the player turns it', async () => {
@@ -221,7 +225,7 @@ describe('the box in its case', () => {
     expect(boxHeight(40, 24, 0.72, 0.14)).toBeCloseTo(24 - 4.6);
     // A wide box (an N64's) in a narrow case: its width is.
     expect(boxHeight(30, 30, 1.4, 0.2)).toBeCloseTo(29 / 1.6);
-    expect(boxHeight(200, 200, 0.7, 0.1)).toBe(26);
+    expect(boxHeight(200, 200, 0.7, 0.1)).toBe(30);
     expect(boxHeight(5, 5, 1, 0.1)).toBe(12);
   });
 });
@@ -236,9 +240,9 @@ describe('a spine’s colour', () => {
 describe('collector words', () => {
   it('grades a rating', () => {
     expect(gradeOf(null)).toBeNull();
-    expect(gradeOf(0.99)).toEqual({ score: '9.9', word: 'Gem mint' });
-    expect(gradeOf(0.85)).toEqual({ score: '8.5', word: 'Near mint' });
-    expect(gradeOf(0.3)).toEqual({ score: '3.0', word: 'Fair' });
+    expect(gradeOf(0.99)).toEqual({ score: '5.0', word: 'Gem mint' });
+    expect(gradeOf(0.85)).toEqual({ score: '4.3', word: 'Near mint' });
+    expect(gradeOf(0.3)).toEqual({ score: '1.5', word: 'Fair' });
   });
 
   it('gives each game the same serial and colour every time', () => {

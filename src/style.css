@@ -3353,7 +3353,7 @@ kbd {
 .slab-label {
   width: 100%;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   column-gap: 0.9rem;
   padding: 0.55rem 0.9rem;
@@ -3420,19 +3420,6 @@ kbd {
   color: var(--muted);
 }
 
-.barcode {
-  display: flex;
-  height: 2.1rem;
-  padding: 0.2rem 0.3rem;
-  border-radius: 0.15rem;
-  background: #e8f1f8;
-}
-
-.barcode i {
-  display: block;
-  background: #0b1220;
-}
-
 .slab-label .grade {
   display: grid;
   justify-items: center;
@@ -3446,6 +3433,18 @@ kbd {
   line-height: 1;
   color: var(--game);
   text-shadow: 0 0 0.8rem rgb(34 228 255 / 45%);
+}
+
+.slab-label .grade small {
+  margin-left: 0.15rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-shadow: none;
+}
+
+.slab-label .grade .stars {
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
 }
 
 .slab-label .grade span {
@@ -3704,19 +3703,6 @@ kbd {
 }
 
 /* The cartridge, standing in front, to the right. */
-/* The cartridge stands on the left of the box, the prints lean on the right. */
-.display .cart {
-  position: absolute;
-  z-index: 1;
-  left: 0;
-  bottom: 2.4rem;
-  width: 8rem;
-  max-height: 10rem;
-  object-fit: contain;
-  object-position: bottom;
-  transform: rotate(-4deg);
-  filter: drop-shadow(0 0.5rem 0.8rem rgb(0 0 0 / 60%));
-}
 
 .showcase .poses {
   display: flex;
@@ -3734,6 +3720,22 @@ kbd {
 
 .showcase .poses .on::before {
   content: '◆ ';
+}
+
+/* The cartridge at the foot of the dossier, as large as the room left lets it. */
+.dossier .cartridge {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.dossier .cartridge img {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  object-fit: contain;
+  object-position: center bottom;
 }
 
 /* The dossier: everything known, what it offers, what was played. */
@@ -3817,18 +3819,18 @@ kbd {
   text-overflow: ellipsis;
 }
 
-.dossier .stars {
+.collector .stars {
   position: relative;
   font-size: 0.9rem;
   letter-spacing: 0.15em;
   color: rgb(255 255 255 / 18%);
 }
 
-.dossier .stars::before {
+.collector .stars::before {
   content: '★★★★★';
 }
 
-.dossier .stars::after {
+.collector .stars::after {
   content: '★★★★★';
   position: absolute;
   inset: 0;

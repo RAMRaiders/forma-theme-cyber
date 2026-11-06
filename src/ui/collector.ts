@@ -25,9 +25,9 @@ import {
  *   spine out, the selected one in the middle; a moment after the last move it fades away.
  * - Then the screen, in bays framed in Cyber's style under a grading label: the case (the
  *   game's box in 3D on a lit plinth, turning from its front to its spine to its back, or as
- *   the player turns it, its cartridge beside it); the footage (its screenshots in turn, then
+ *   the player turns it); the footage (its screenshots in turn, then
  *   its video, played by Forma in that window); its story; and the dossier (everything known
- *   about it, what it offers, what the player has done with it).
+ *   about it, what it offers, what the player has done with it, its cartridge at its foot).
  *
  * What a game lacks is made up in Cyber's style: a spine from its logo and colour, a back from
  * its screenshot and story.
@@ -98,10 +98,9 @@ const PREPARE_AROUND = 3;
 const BOX_REM = 17.5;
 /** Then as tall as the case allows, between these. */
 const BOX_MIN_REM = 12;
-const BOX_MAX_REM = 26;
-/** Kept clear under the box (the plinth) and on its left (the cartridge). */
+const BOX_MAX_REM = 30;
+/** Kept clear under the box: the plinth. */
 const UNDER_REM = 4.6;
-const SIDE_REM = 8.5;
 /** Until its pictures say otherwise: a Mega Drive case's shape. */
 const FRONT_RATIO = 0.72;
 const SPINE_RATIO = 0.14;
@@ -475,13 +474,6 @@ export class CollectorView {
       el('div', { class: 'plinth' }, el('div', { class: 'ring' })),
       floater
     );
-    const cartridge = media(game, 'cartridge', 400);
-    if (cartridge) {
-      const cart = picture(cartridge, 'cart');
-      cart.addEventListener('error', () => cart.remove(), { once: true });
-      display.append(cart);
-      display.classList.add('has-cart');
-    }
 
     this.#dots = el(
       'div',
@@ -558,11 +550,11 @@ export class CollectorView {
         el('span', { class: 'line' }, details.join(' · ')),
         el('span', { class: 'serial' }, serial(game))
       ),
-      barcode(game),
       el(
         'div',
         { class: `grade${grade ? '' : ' none'}` },
-        el('strong', {}, grade?.score ?? '—'),
+        el('strong', {}, grade?.score ?? '—', grade ? el('small', {}, '/5') : ''),
+        game.rating !== null ? stars(game.rating) : '',
         el('span', {}, grade?.word ?? 'Ungraded')
       )
     );
@@ -581,8 +573,7 @@ export class CollectorView {
       const display = box.closest<HTMLElement>('.display');
       const h = display?.clientHeight
         ? boxHeight(
-            display.clientWidth / remPx() -
-              SIDE_REM * Number(display.classList.contains('has-cart')),
+            display.clientWidth / remPx(),
             display.clientHeight / remPx(),
             size.ratio,
             size.depth
@@ -726,13 +717,7 @@ export class CollectorView {
     flagged('Languages', languages, LANGUAGES, languageFlag);
     add('Version', rom.version);
     if (game.rating !== null) {
-      const stars = el('span', {
-        class: 'stars',
-        role: 'img',
-        'aria-label': `${(game.rating * 10).toFixed(1)} of 10`
-      });
-      stars.style.setProperty('--rating', String(game.rating));
-      specs.append(el('div', {}, el('dt', {}, 'Rating'), el('dd', {}, stars)));
+      specs.append(el('div', {}, el('dt', {}, 'Rating'), el('dd', {}, stars(game.rating))));
     }
 
     const marks = this.#marks(game);
@@ -745,7 +730,22 @@ export class CollectorView {
     );
     this.#achievementsInto(game, record);
 
-    return [head, marks, specs, record];
+    // The cartridge (an arcade game's board), standing at the foot of the dossier.
+    const parts = [head, marks, specs, record];
+    const cartridge = media(game, 'cartridge', 400);
+    if (cartridge) {
+      const img = picture(cartridge, 'cart');
+      const shelf = el(
+        'section',
+        { class: 'cartridge' },
+        el('h3', {}, ARCADE.has(game.system) ? 'Board' : 'Cartridge'),
+        img
+      );
+      img.addEventListener('error', () => shelf.remove(), { once: true });
+      parts.push(shelf);
+    }
+
+    return parts;
   }
 
   /**
@@ -817,8 +817,8 @@ export class CollectorView {
 }
 
 /**
- * How tall the box stands, in rem, in `width` × `height` rem (the case, less what stands at its
- * sides): as tall as fits above the plinth, turned too (front and spine side by side).
+ * How tall the box stands, in rem, in `width` × `height` rem (its case): as tall as fits above
+ * the plinth, turned too (front and spine side by side).
  */
 export function boxHeight(width: number, height: number, ratio: number, depth: number): number {
   const fits = Math.min(height - UNDER_REM, (width - 1) / (ratio + depth));
@@ -884,9 +884,21 @@ export function hue(name: string): number {
   return h % 360;
 }
 
-/** A rating (0–1) as a collector's grade: `7.0`, "Excellent". */
+/** A rating (0–1) as a collector's grade: `3.5` (of 5, as the stars), "Excellent". */
+/** A rating (0–1) as five stars, the part of each lit. */
+function stars(rating: number): HTMLElement {
+  const node = el('span', {
+    class: 'stars',
+    role: 'img',
+    'aria-label': `${(rating * 5).toFixed(1)} of 5`
+  });
+  node.style.setProperty('--rating', String(rating));
+  return node;
+}
+
 export function gradeOf(rating: number | null): { score: string; word: string } | null {
   if (rating === null) return null;
+  // Out of 5, as the stars show it; the words from the same rating out of 10.
   const score = Math.round(rating * 100) / 10;
   const word =
     score >= 9.8
@@ -902,26 +914,12 @@ export function gradeOf(rating: number | null): { score: string; word: string } 
               : score >= 5
                 ? 'Good'
                 : 'Fair';
-  return { score: score.toFixed(1), word };
+  return { score: (Math.round(rating * 50) / 10).toFixed(1), word };
 }
 
 /** The case's serial: the system and the game's number in the library. */
 export function serial(game: Game): string {
   return `${game.system.toUpperCase()}-${String(game.id).padStart(6, '0')}`;
-}
-
-/** A barcode, the same for the same game. */
-function barcode(game: Game): HTMLElement {
-  const code = el('div', { class: 'barcode', 'aria-hidden': 'true' });
-  let seed = hue(serial(game)) + game.id * 7919;
-  for (let i = 0; i < 26; i++) {
-    seed = (seed * 1103515245 + 12345) >>> 0;
-    const bar = el('i', {});
-    bar.style.width = `${1 + (seed % 3)}px`;
-    bar.style.marginRight = `${1 + ((seed >> 4) % 3)}px`;
-    code.append(bar);
-  }
-  return code;
 }
 
 /** What of the game the collection holds, and what that makes it, in a collector's words. */
