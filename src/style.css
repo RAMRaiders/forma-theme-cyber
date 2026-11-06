@@ -3012,7 +3012,7 @@ kbd {
   grid-template-areas:
     'label label label'
     'case footage dossier'
-    'case story dossier';
+    'case story cartridge';
   gap: 0.8rem 0.9rem;
   padding-bottom: 0.4rem;
 }
@@ -3466,13 +3466,6 @@ kbd {
   text-shadow: 0 0 0.8rem rgb(34 228 255 / 45%);
 }
 
-.slab-label .grade small {
-  margin-left: 0.15rem;
-  font-size: 0.8rem;
-  color: var(--muted);
-  text-shadow: none;
-}
-
 .slab-label .grade .stars {
   margin-top: 0.2rem;
   font-size: 0.8rem;
@@ -3753,20 +3746,22 @@ kbd {
   content: '◆ ';
 }
 
-/* The cartridge at the foot of the dossier, as large as the room left lets it. */
-.dossier .cartridge {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
+/* The cartridge (or board) in its own bay under the dossier; without one, the dossier has the
+   column. */
+.bay.cartridge {
+  grid-area: cartridge;
+  display: grid;
+  place-items: center;
 }
 
-.dossier .cartridge img {
-  flex: 1;
-  min-height: 0;
-  width: 100%;
+.bay.cartridge .cart {
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
-  object-position: center bottom;
+}
+
+.collector.no-cart .dossier {
+  grid-row: dossier / cartridge;
 }
 
 /* The dossier: everything known, what it offers, what was played. */

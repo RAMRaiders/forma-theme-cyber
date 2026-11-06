@@ -27,7 +27,7 @@ import {
  *   game's box in 3D on a lit plinth, turning from its front to its spine to its back, or as
  *   the player turns it); the footage (its screenshots in turn, then
  *   its video, played by Forma in that window); its story; and the dossier (everything known
- *   about it, what it offers, what the player has done with it, its cartridge at its foot).
+ *   about it, what it offers, what the player has done with it), with its cartridge in a bay under it when it has one.
  *
  * What a game lacks is made up in Cyber's style: a spine from its logo and colour, a back from
  * its screenshot and story.
@@ -540,8 +540,29 @@ export class CollectorView {
       this.#label(game),
       bay('case', 'Case', display, this.#dots),
       bay('footage', 'Footage', this.#footage),
-      this.#storyBay(game)
-    ];
+      this.#storyBay(game),
+      this.#cartridgeBay(game)
+    ].filter((p): p is HTMLElement => p !== null);
+  }
+
+  /**
+   * The cartridge (an arcade game's board) in a bay of its own, under the dossier; without one
+   * the dossier has the whole column.
+   */
+  #cartridgeBay(game: ShowGame): HTMLElement | null {
+    const src = this.#options.media(game, 'cartridge', 400);
+    this.root.classList.toggle('no-cart', !src);
+    if (!src) return null;
+    const img = picture(src, 'cart');
+    img.addEventListener(
+      'error',
+      () => {
+        img.closest('.bay')?.remove();
+        this.root.classList.add('no-cart');
+      },
+      { once: true }
+    );
+    return bay('cartridge', ARCADE.has(game.system) ? 'Board' : 'Cartridge', img);
   }
 
   /** The game's story, all of it; when longer than its bay it scrolls slowly through. */
@@ -593,7 +614,7 @@ export class CollectorView {
       el(
         'div',
         { class: `grade${grade ? '' : ' none'}` },
-        el('strong', {}, grade?.score ?? '—', grade ? el('small', {}, '/5') : ''),
+        el('strong', {}, grade?.score ?? '—'),
         game.rating !== null ? stars(game.rating) : '',
         el('span', {}, grade?.word ?? 'Ungraded')
       )
@@ -756,9 +777,6 @@ export class CollectorView {
     flagged('Region', regions, REGIONS, regionFlag);
     flagged('Languages', languages, LANGUAGES, languageFlag);
     add('Version', rom.version);
-    if (game.rating !== null) {
-      specs.append(el('div', {}, el('dt', {}, 'Rating'), el('dd', {}, stars(game.rating))));
-    }
 
     const marks = this.#marks(game);
 
@@ -770,20 +788,7 @@ export class CollectorView {
     );
     this.#achievementsInto(game, record);
 
-    // The cartridge (an arcade game's board), standing at the foot of the dossier.
     const parts = [head, marks, specs, record];
-    const cartridge = media(game, 'cartridge', 400);
-    if (cartridge) {
-      const img = picture(cartridge, 'cart');
-      const shelf = el(
-        'section',
-        { class: 'cartridge' },
-        el('h3', {}, ARCADE.has(game.system) ? 'Board' : 'Cartridge'),
-        img
-      );
-      img.addEventListener('error', () => shelf.remove(), { once: true });
-      parts.push(shelf);
-    }
 
     return parts;
   }

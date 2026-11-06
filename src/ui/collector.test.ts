@@ -86,8 +86,8 @@ describe('the Collector view', () => {
     expect(src('.cbox .front img')).toBe('forma://media/7/thumbnail?w=640');
     expect(src('.cbox .spine img')).toBe('forma://media/7/boxside?w=160');
     expect(src('.cbox .back img')).toBe('forma://media/7/boxback?w=640');
-    // The cartridge at the foot of the dossier.
-    expect(src('.dossier .cartridge img')).toBe('forma://media/7/cartridge?w=400');
+    // The cartridge in a bay of its own.
+    expect(src('.bay.cartridge img')).toBe('forma://media/7/cartridge?w=400');
     // Its screenshots on the footage bay's screen, the first showing.
     expect(v.root.querySelectorAll('.bay.footage .screen img')).toHaveLength(2);
     expect(v.root.querySelectorAll('.bay.footage .screen img.on')).toHaveLength(1);
@@ -106,7 +106,7 @@ describe('the Collector view', () => {
     expect(text('.slab-label .what strong')).toEqual(['After Burner']);
     expect(text('.slab-label .line')).toEqual(['1995 · Sega 32X']);
     expect(text('.slab-label .serial')).toEqual(['SEGA32X-000007']);
-    expect(text('.slab-label .grade strong')).toEqual(['3.5/5']);
+    expect(text('.slab-label .grade strong')).toEqual(['3.5']);
     expect(text('.slab-label .grade > span:last-child')).toEqual(['Excellent']);
     expect(v.root.querySelector('.slab-label .grade .stars')?.getAttribute('aria-label')).toBe(
       '3.5 of 5'
@@ -140,8 +140,7 @@ describe('the Collector view', () => {
       'Genre',
       'Region',
       'Languages',
-      'Version',
-      'Rating'
+      'Version'
     ]);
     expect(text('.dossier .specs dd').slice(0, 2)).toEqual(['13 Jan 1995', 'Rutubo Games']);
     // From the ROM's name, before the gamelist's.
@@ -151,7 +150,7 @@ describe('the Collector view', () => {
     expect(text('.dossier .mark.on')).toEqual(['1 player']);
     expect(text('.dossier .record p')[0]).toMatch(/^2×/);
     // The bays: the case, the footage (its screenshots until the video), the story.
-    expect(text('.bay-tag')).toEqual(['Case', 'Footage', 'Story']);
+    expect(text('.bay-tag')).toEqual(['Case', 'Footage', 'Story', 'Cartridge']);
     expect(text('.bay.story .text')).toEqual([
       'Strap into your F-14. Shoot everything. Land on the carrier.'
     ]);
