@@ -4,7 +4,7 @@
   "version": "0.7.12",
   "entry": "index.html",
   "logo": "logo.svg",
-  "sdk": "^1.23",
+  "sdk": "^1.24",
   "permissions": ["settings.system", "settings.emulators"],
   "resolutions": ["1280x720", "1920x1080"],
   "views": ["systems"],
@@ -118,5 +118,9 @@
       "type": "toggle",
       "default": true
     }
-  ]
+  ],
+  "scraper": {
+    "media": ["boxside", "boxback", "cartridge", "fanart", "manual"],
+    "fields": ["ageRating"]
+  }
 }
