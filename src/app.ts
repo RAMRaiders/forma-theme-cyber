@@ -128,7 +128,7 @@ export class App {
       return { earned: data.earned, total: data.achievementCount };
     },
     // What the game's emulator can do (netplay, achievements), as Batocera's options say.
-    play: (game) => this.forma.video.play(game.id),
+    play: (game, area) => this.forma.video.play(game.id, { area }),
     stopVideo: () => void this.forma.video.stop().catch(() => {}),
     features: async (game) =>
       (await this.forma.options.get({ level: 'game', game: game.id })).flags,

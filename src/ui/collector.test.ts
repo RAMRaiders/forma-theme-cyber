@@ -3,7 +3,15 @@ import type { Game } from '@ramraiders/forma-sdk';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LazyList } from '../logic/pager.js';
-import { CollectorView, boxHeight, gradeOf, hue, hueOf, serial } from './collector.js';
+import {
+  CollectorView,
+  type ScreenArea,
+  boxHeight,
+  gradeOf,
+  hue,
+  hueOf,
+  serial
+} from './collector.js';
 import type { Kind } from './stage.js';
 
 const game = (id: number, name: string, media: Partial<Record<Kind, string>> = {}): Game =>
@@ -74,12 +82,14 @@ afterEach(() => {
 
 describe('the Collector view', () => {
   it('puts the box in the case from its front, spine and back, the cartridge beside it', async () => {
-    const { src, text } = await view([game(7, 'After Burner', BOXED)]);
+    const { v, src, text } = await view([game(7, 'After Burner', BOXED)]);
     expect(src('.cbox .front img')).toBe('forma://media/7/thumbnail?w=640');
     expect(src('.cbox .spine img')).toBe('forma://media/7/boxside?w=160');
     expect(src('.cbox .back img')).toBe('forma://media/7/boxback?w=640');
     expect(src('.display .cart')).toBe('forma://media/7/cartridge?w=400');
-    expect(text('.prints .print')).toHaveLength(2);
+    // Its screenshots on the footage bay's screen, the first showing.
+    expect(v.root.querySelectorAll('.bay.footage .screen img')).toHaveLength(2);
+    expect(v.root.querySelectorAll('.bay.footage .screen img.on')).toHaveLength(1);
     expect(text('.poses span')).toEqual(['Front', 'Spine', 'Back']);
   });
 
@@ -136,6 +146,11 @@ describe('the Collector view', () => {
     // What it offers: players and no manual, no achievements; netplay not known here.
     expect(text('.dossier .mark.on')).toEqual(['1 player']);
     expect(text('.dossier .record p')[0]).toMatch(/^2×/);
+    // The bays: the case, the footage (its screenshots until the video), the story.
+    expect(text('.bay-tag')).toEqual(['Case', 'Footage', 'Story']);
+    expect(text('.bay.story .text')).toEqual([
+      'Strap into your F-14. Shoot everything. Land on the carrier.'
+    ]);
   });
 
   it('keeps every game on the shelf, the selected one pulled out', async () => {
@@ -158,9 +173,18 @@ describe('the Collector view', () => {
 
 describe('the shelf and the video', () => {
   it('shows the shelf while moving, then the case; the video after a moment', async () => {
-    const play = vi.fn(() => Promise.resolve({ playing: true }));
+    const play = vi.fn((_game: Game, _area: ScreenArea) => Promise.resolve({ playing: true }));
     const stopVideo = vi.fn();
     const v = new CollectorView({ media, play, stopVideo });
+    // jsdom lays nothing out: the footage screen stands in the middle of a 1000 × 500 screen.
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+      left: 250,
+      top: 100,
+      width: 500,
+      height: 300
+    } as DOMRect);
+    vi.stubGlobal('innerWidth', 1000);
+    vi.stubGlobal('innerHeight', 500);
     document.body.replaceChildren(v.root);
     const games = [game(1, 'A', { ...BOXED, video: 'v' }), game(2, 'B', { ...BOXED, video: 'v' })];
     const list = new LazyList<Game>(
@@ -175,15 +199,19 @@ describe('the shelf and the video', () => {
     expect(v.root.classList.contains('browsing')).toBe(false);
     vi.advanceTimersByTime(1500);
     expect(play).toHaveBeenCalledTimes(1);
+    expect(play.mock.calls[0]?.[1]).toEqual({ left: 0.25, top: 0.2, width: 0.5, height: 0.6 });
     await Promise.resolve();
     await Promise.resolve();
     expect(v.root.classList.contains('video-on')).toBe(true);
+
     // Moving on: the video stops at once, the shelf comes back.
     v.select(1);
     expect(stopVideo).toHaveBeenCalled();
     expect(v.root.classList.contains('video-on')).toBe(false);
     expect(v.root.classList.contains('browsing')).toBe(true);
     v.leave();
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
   });
 });
 

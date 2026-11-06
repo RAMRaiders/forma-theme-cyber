@@ -23,16 +23,23 @@ import {
  *
  * - The shelf, over the middle while the selection moves: every game a box lying on its side,
  *   spine out, the selected one in the middle; a moment after the last move it fades away.
- * - The showcase, then the screen: the game's box in 3D in a lit case, turning from its front to
- *   its spine to its back (or as the player turns it, left and right), its cartridge standing
- *   on its left, its screenshots as prints on its right, and a grading label on top; after a
- *   moment, the game's video behind it all.
- * - The dossier, on the right: everything known about it, what it offers, and what the player
- *   has done with it.
+ * - Then the screen, in bays framed in Cyber's style under a grading label: the case (the
+ *   game's box in 3D on a lit plinth, turning from its front to its spine to its back, or as
+ *   the player turns it, its cartridge beside it); the footage (its screenshots in turn, then
+ *   its video, played by Forma in that window); its story; and the dossier (everything known
+ *   about it, what it offers, what the player has done with it).
  *
  * What a game lacks is made up in Cyber's style: a spine from its logo and colour, a back from
  * its screenshot and story.
  */
+
+/** Part of the screen, as fractions of it (0–1) from its top left. */
+export interface ScreenArea {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
 
 export interface CollectorOptions {
   media: MediaUrl;
@@ -48,7 +55,7 @@ export interface CollectorOptions {
    * Plays a game's video, full screen under the page (Forma's player); `playing` once it shows.
    * Without it, no videos.
    */
-  play?: (game: Game) => Promise<{ playing: boolean }>;
+  play?: (game: Game, area: ScreenArea) => Promise<{ playing: boolean }>;
   stopVideo?: () => void;
 }
 
@@ -73,15 +80,17 @@ const ROW_REM = 2.5;
 const OVERSCAN = 6;
 /** The shelf over the middle while moving; this long after the last move it fades. */
 const DROP_MS = 1100;
-/** On a game this long, its video plays behind the case. */
+/** On a game this long, its video plays in the footage bay. */
 const VIDEO_AFTER_MS = 2500;
+/** With no video, the footage bay shows the screenshots in turn. */
+const SHOT_MS = 4000;
+/** The story scrolls this fast when longer than its bay, px a second. */
+const STORY_PX_S = 14;
 /** A held direction: the showcase waits for the selection to settle. */
 const SETTLE_MS = 150;
 /** On a game: the box first turns after this, then every `TURN_MS`. */
 const FIRST_TURN_MS = 3200;
 const TURN_MS = 4600;
-/** The story, a caption at a time. */
-const CAPTION_MS = 7000;
 /** After this long on a game, the pictures of the games around it are made ahead. */
 const PREPARE_AFTER_MS = 3000;
 const PREPARE_AROUND = 3;
@@ -90,7 +99,7 @@ const BOX_REM = 17.5;
 /** Then as tall as the case allows, between these. */
 const BOX_MIN_REM = 12;
 const BOX_MAX_REM = 26;
-/** Kept clear under the box (the plinth) and on each side of it (the cartridge, the prints). */
+/** Kept clear under the box (the plinth) and on its left (the cartridge). */
 const UNDER_REM = 4.6;
 const SIDE_REM = 8.5;
 /** Until its pictures say otherwise: a Mega Drive case's shape. */
@@ -138,6 +147,8 @@ export class CollectorView {
   /** Sizes the box to its case, once the case is laid out. */
   #fit: (() => void) | null = null;
   #dots: HTMLElement | null = null;
+  /** The footage bay's screen: screenshots, and the video's window once it plays. */
+  #footage: HTMLElement | null = null;
   #pose = 0;
   #angle: number = POSES[0].angle;
 
@@ -291,10 +302,11 @@ export class CollectorView {
   /** Asks Forma for the game's video; once it plays, the page lets it through behind the case. */
   #startVideo(game: Game): void {
     const play = this.#options.play;
-    if (!this.previews || !play || !this.#options.media(game, 'video')) return;
+    const area = this.#footage ? screenArea(this.#footage) : null;
+    if (!this.previews || !play || !area || !this.#options.media(game, 'video')) return;
     this.#video = true;
     const id = game.id;
-    play(game)
+    play(game, area)
       .then(({ playing }) => {
         if (playing && this.#video && this.#game?.id === id) this.#seeThrough(true);
       })
@@ -476,22 +488,44 @@ export class CollectorView {
       ...POSES.map((p, i) => el('span', { class: i === 0 ? 'on' : '' }, p.label))
     );
 
-    // Beside the box, on the right, as the cartridge stands on its left.
-    const prints = el('div', { class: 'prints' });
-    PRINTS.map((k) => media(game, k, 400))
-      .filter((u): u is string => u !== null)
-      .slice(0, 3)
-      .forEach((src, i) => {
-        const img = picture(src, '');
-        const print = el('div', { class: 'print' }, img);
-        print.style.setProperty('--i', String(i));
-        img.addEventListener('error', () => print.remove(), { once: true });
-        prints.append(print);
-      });
+    const shots = PRINTS.map((k) => media(game, k, 400)).filter((u): u is string => u !== null);
+    this.#footage = el('div', { class: 'screen' });
+    this.#footage.append(...shots.map((src, i) => shotImage(src, i === 0)));
+    if (!shots.length) this.#footage.append(el('span', { class: 'no-signal' }, 'No signal'));
+    if (shots.length > 1 && motion()) {
+      let at = 0;
+      this.#every(() => {
+        const all = [...(this.#footage?.querySelectorAll('img') ?? [])];
+        if (all.length < 2) return;
+        all[at % all.length]?.classList.remove('on');
+        at += 1;
+        all[at % all.length]?.classList.add('on');
+      }, SHOT_MS);
+    }
 
-    display.append(prints);
-    if (prints.childElementCount) display.classList.add('has-prints');
-    return [this.#label(game), display, this.#dots];
+    return [
+      this.#label(game),
+      bay('case', 'Case', display, this.#dots),
+      bay('footage', 'Footage', this.#footage),
+      this.#storyBay(game)
+    ];
+  }
+
+  /** The game's story, all of it; when longer than its bay it scrolls slowly through. */
+  #storyBay(game: ShowGame): HTMLElement {
+    const text = el('div', { class: 'scroll-inner' }, game.description ?? '');
+    const box = el('div', { class: 'text' }, text);
+    const story = bay('story', ARCADE.has(game.system) ? 'History' : 'Story', box);
+    // No story: the footage has its room.
+    this.root.classList.toggle('no-story', !game.description);
+    requestAnimationFrame(() => {
+      const over = text.scrollHeight - box.clientHeight;
+      if (over <= 2 || !motion()) return;
+      box.style.setProperty('--scroll', `${-over}px`);
+      box.style.setProperty('--scroll-s', `${Math.max(8, (over / STORY_PX_S) * 2)}s`);
+      box.classList.add('scrolling');
+    });
+    return story;
   }
 
   /** The grading label on top of the case: the game, its system, its grade, its serial. */
@@ -547,9 +581,7 @@ export class CollectorView {
       const h = display?.clientHeight
         ? boxHeight(
             display.clientWidth / remPx() -
-              SIDE_REM *
-                (Number(display.classList.contains('has-cart')) +
-                  Number(display.classList.contains('has-prints'))),
+              SIDE_REM * Number(display.classList.contains('has-cart')),
             display.clientHeight / remPx(),
             size.ratio,
             size.depth
@@ -712,27 +744,7 @@ export class CollectorView {
     );
     this.#achievementsInto(game, record);
 
-    const chunks = captions(game.description ?? '');
-    const line = el('p', { class: 'line' }, chunks[0] ?? '');
-    const story = el(
-      'section',
-      { class: 'story' },
-      el('h3', {}, ARCADE.has(game.system) ? 'History' : 'Story'),
-      line
-    );
-    if (chunks.length === 0) story.hidden = true;
-    if (chunks.length > 1 && motion()) {
-      let at = 0;
-      this.#every(() => {
-        at = (at + 1) % chunks.length;
-        line.classList.add('turning');
-        setTimeout(() => {
-          line.textContent = chunks[at] ?? '';
-          line.classList.remove('turning');
-        }, 350);
-      }, CAPTION_MS);
-    }
-    return [head, marks, specs, record, story];
+    return [head, marks, specs, record];
   }
 
   /**
@@ -810,6 +822,31 @@ export class CollectorView {
 export function boxHeight(width: number, height: number, ratio: number, depth: number): number {
   const fits = Math.min(height - UNDER_REM, (width - 1) / (ratio + depth));
   return clamp(fits, BOX_MIN_REM, BOX_MAX_REM);
+}
+
+/** Where an element is on the screen, as fractions of it; `null` if it is not laid out. */
+function screenArea(node: HTMLElement): ScreenArea | null {
+  const r = node.getBoundingClientRect();
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  if (!r.width || !r.height || !w || !h) return null;
+  return { left: r.left / w, top: r.top / h, width: r.width / w, height: r.height / h };
+}
+
+/** A section of the screen in Cyber's style: framed, its name in a small tag. */
+function bay(cls: string, name: string, ...content: (HTMLElement | null)[]): HTMLElement {
+  return el(
+    'section',
+    { class: `bay ${cls}` },
+    el('span', { class: 'bay-tag', 'aria-hidden': 'true' }, name),
+    ...content.filter((c): c is HTMLElement => c !== null)
+  );
+}
+
+function shotImage(src: string, on: boolean): HTMLImageElement {
+  const img = picture(src, on ? 'on' : '');
+  img.addEventListener('error', () => img.remove(), { once: true });
+  return img;
 }
 
 function boxTransform(angle: number): string {

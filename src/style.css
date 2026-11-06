@@ -3005,8 +3005,15 @@ kbd {
   position: relative;
   height: 100%;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 22rem;
-  column-gap: 1.6rem;
+  /* Bays: the label over them all; the case on the left, the footage and the story in the
+     middle, the dossier on the right. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr) 21rem;
+  grid-template-rows: auto minmax(0, 1fr) minmax(0, 0.62fr);
+  grid-template-areas:
+    'label label label'
+    'case footage dossier'
+    'case story dossier';
+  gap: 0.8rem 0.9rem;
   padding-bottom: 0.4rem;
 }
 
@@ -3061,11 +3068,9 @@ kbd {
 
 /* The game's video playing under the page: the room lets it through, darkened a little, its
    floor and edges kept so the case still stands somewhere. */
+/* The game's video plays under the page, in the footage bay's window only: the room goes, so
+   nothing is drawn over it; around the window, Forma's player is black. */
 .collector.video-on .collector-backdrop {
-  background: rgb(4 6 12 / 35%);
-}
-
-.collector.video-on .collector-backdrop img {
   visibility: hidden;
 }
 
@@ -3197,13 +3202,152 @@ kbd {
 }
 
 /* The showcase: label, case, poses, prints. */
-.showcase {
+.collector .showcase {
+  display: contents;
+}
+
+.collector .slab-label {
+  grid-area: label;
+}
+
+/* A bay: a section framed in Cyber's style, brackets at two corners, its name in a tag. */
+.bay {
+  position: relative;
   min-width: 0;
   min-height: 0;
+  padding: 1.7rem 1rem 0.9rem;
+  border: 1px solid rgb(34 228 255 / 16%);
+  border-radius: 0.2rem;
+  background: linear-gradient(180deg, rgb(13 19 32 / 94%), rgb(7 11 20 / 94%));
+}
+
+.bay::before,
+.bay::after {
+  content: '';
+  position: absolute;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid var(--game);
+  pointer-events: none;
+}
+
+.bay::before {
+  top: -1px;
+  left: -1px;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.bay::after {
+  right: -1px;
+  bottom: -1px;
+  border-left: 0;
+  border-top: 0;
+}
+
+.bay-tag {
+  position: absolute;
+  top: 0.5rem;
+  left: 1rem;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--game);
+}
+
+.bay-tag::before {
+  content: '▸ ';
+}
+
+.bay.case {
+  grid-area: case;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, 1fr) auto;
   justify-items: center;
-  row-gap: 0.3rem;
+  /* The box's light, not the panel's: the room shows through. */
+  background: linear-gradient(180deg, rgb(13 19 32 / 55%), rgb(7 11 20 / 80%));
+}
+
+.bay.footage {
+  grid-area: footage;
+  display: grid;
+  place-items: center;
+}
+
+/* A 4:3 screen, as tall as the bay lets it. */
+.bay.footage .screen {
+  position: relative;
+  height: 100%;
+  max-width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 0.15rem;
+  background: #000;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 10%);
+}
+
+.bay.footage .screen img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+
+.bay.footage .screen img.on {
+  opacity: 1;
+}
+
+.bay.footage .no-signal {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* The video's window: the bay and its screen let Forma's player through. */
+.collector.video-on .bay.footage,
+.collector.video-on .bay.footage .screen {
+  background: transparent;
+}
+
+.collector.video-on .bay.footage .screen img,
+.collector.video-on .bay.footage .no-signal {
+  visibility: hidden;
+}
+
+.bay.story {
+  grid-area: story;
+}
+
+.collector.no-story .bay.footage {
+  grid-row: footage / story;
+}
+
+.collector.no-story .bay.story {
+  display: none;
+}
+
+.bay.story .text {
+  height: 100%;
+  overflow: hidden;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #c3d4e1;
+}
+
+.bay.story .scrolling .scroll-inner,
+.bay.story .text.scrolling .scroll-inner {
+  will-change: transform;
+  animation: read-through var(--scroll-s, 10s) ease-in-out 1.5s infinite alternate;
 }
 
 .slab-label {
@@ -3592,39 +3736,9 @@ kbd {
   content: '◆ ';
 }
 
-/* Screenshots as prints, down the right of the box, each a little askew. */
-.prints {
-  position: absolute;
-  z-index: 1;
-  right: 0;
-  top: 0;
-  bottom: 2.4rem;
-  width: 8rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.9rem;
-}
-
-.prints .print {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  padding: 0.28rem 0.28rem 0.8rem;
-  background: #e6edf4;
-  border-radius: 0.1rem;
-  box-shadow: 0 0.4rem 1rem rgb(0 0 0 / 55%);
-  transform: rotate(calc((1 - var(--i)) * 3deg + 1deg));
-}
-
-.prints .print img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* The dossier: everything known, what is kept, what was played. */
+/* The dossier: everything known, what it offers, what was played. */
 .dossier {
+  grid-area: dossier;
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -3634,7 +3748,7 @@ kbd {
   border: 1px solid rgb(34 228 255 / 16%);
   border-top: 2px solid var(--game);
   border-radius: 0.4rem;
-  background: var(--panel);
+  background: linear-gradient(180deg, rgb(13 19 32 / 96%), rgb(7 11 20 / 96%));
 }
 
 .dossier .head.has-logo h2 {
@@ -3818,27 +3932,6 @@ kbd {
   width: calc(var(--done) * 100%);
   border-radius: inherit;
   background: var(--game);
-}
-
-.dossier .story {
-  flex: 1;
-  min-height: 0;
-}
-
-.dossier .story .line {
-  display: -webkit-box;
-  margin: 0;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 9;
-  font-size: 0.8rem;
-  line-height: 1.45;
-  color: #b7cad8;
-  transition: opacity 350ms ease;
-}
-
-.dossier .story .line.turning {
-  opacity: 0;
 }
 
 :root[data-motion='off'] .display .ring,
