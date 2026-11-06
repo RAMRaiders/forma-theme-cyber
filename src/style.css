@@ -3151,6 +3151,29 @@ kbd {
   opacity: 0;
 }
 
+.collector-backdrop img.leaving {
+  transition-duration: 500ms;
+}
+
+/* A new game's bays fade in, a short rise with it; well before its box turns or its video
+   starts, so nothing moving sits under the fade. Backwards only: once in, no style is left. */
+.collector.arriving .bay,
+.collector.arriving .dossier {
+  animation: bay-in 420ms ease-out backwards;
+}
+
+@keyframes bay-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+
+:root[data-motion='off'] .collector.arriving .bay,
+:root[data-motion='off'] .collector.arriving .dossier {
+  animation: none;
+}
+
 .collector-backdrop::after {
   content: '';
   position: absolute;
@@ -3180,16 +3203,15 @@ kbd {
 /* The shelf: over the middle of the screen while the selection moves, then gone. Opacity
    only, so its rows stay laid out (and measured) underneath. */
 .shelf {
+  /* The middle column, from the footage's top to the story's bottom: the case and the dossier dim
+     round it. */
+  grid-area: footage-start / footage-start / story-end / story-end;
   position: absolute;
   z-index: 5;
-  top: -0.5rem;
-  bottom: 0;
-  left: 50%;
-  width: 28rem;
+  inset: 0;
   /* Every spine as long, about a box spine's own shape at the row's height (so a spine picture is
      hardly trimmed), in the middle of the shelf. */
   --spine-len: 17rem;
-  translate: -50% 0;
   overflow: hidden;
   padding: 0 1rem;
   background: linear-gradient(
@@ -3199,13 +3221,34 @@ kbd {
     rgb(4 7 14 / 92%) 88%,
     transparent
   );
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
-  mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
   opacity: 0;
   visibility: hidden;
   transition:
     opacity 260ms ease,
     visibility 0s 260ms;
+}
+
+/* Its top and bottom fade into the dark behind it: two still layers over the rows (a mask over
+   moving rows glitched on a Pi's WebKit). */
+.shelf::before,
+.shelf::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  height: 18%;
+  pointer-events: none;
+}
+
+.shelf::before {
+  top: 0;
+  background: linear-gradient(180deg, rgb(3 5 11), rgb(3 5 11 / 0%));
+}
+
+.shelf::after {
+  bottom: 0;
+  background: linear-gradient(0deg, rgb(3 5 11), rgb(3 5 11 / 0%));
 }
 
 /* The rows glide as one to bring the selected to the middle: the compositor's work. */
@@ -3228,9 +3271,10 @@ kbd {
 /* The case and the dossier dim behind the shelf while it shows. */
 .collector::after {
   content: '';
-  position: absolute;
+  /* The whole screen, edges and corners too. */
+  position: fixed;
   z-index: 4;
-  inset: -1rem -2rem;
+  inset: 0;
   background: rgb(2 4 10 / 84%);
   opacity: 0;
   pointer-events: none;
@@ -3341,6 +3385,18 @@ kbd {
 
 .collector .slab-label {
   grid-area: label;
+  position: relative;
+}
+
+/* The label over the dimming while the shelf shows, dimmed too but less: the game picked, read
+   at a glance. */
+.collector.browsing .slab-label {
+  z-index: 5;
+  opacity: 0.6;
+}
+
+.collector .slab-label {
+  transition: opacity 160ms ease;
 }
 
 /* A bay: a part of the screen, unframed over the fan art, its name in a tag. */

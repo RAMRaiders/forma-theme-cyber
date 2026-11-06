@@ -95,12 +95,18 @@ const ALTERNATE_MS = 10_000;
 /** The story a page at a time: each this long, fading this long between. */
 const STORY_PAGE_MS = 12_000;
 const STORY_FADE_MS = 300;
-/** A held direction: the showcase waits for the selection to settle. */
-const SETTLE_MS = 150;
+/** The showcase behind the shelf waits for the selection to rest this long: made anew at each
+ * step, it held up the shelf's glide on a Pi. A shows it at once ({@link CollectorView.settleNow}). */
+const SETTLE_MS = 350;
 /** The box and the cartridge sliding past each other, slowly (as in style.css). */
 const SLIDE_MS = 2200;
 /** On a game: the box first turns after this, then every `TURN_MS`. */
 const FIRST_TURN_MS = 3200;
+/** A new game's fan art fading in over the last, then the last fading out (as in style.css). */
+const BACKDROP_IN_MS = 900;
+const BACKDROP_OUT_MS = 500;
+/** A new game's bays fading in, well before its box turns or its video starts (as in style.css). */
+const ARRIVE_MS = 420;
 const TURN_MS = 4600;
 /** After this long on a game, the pictures of the games around it are made ahead. */
 const PREPARE_AFTER_MS = 3000;
@@ -153,8 +159,8 @@ export class CollectorView {
   #source: LazyList<Game> | null = null;
   #selected = 0;
   #pending = false;
-  #lastMove = -Infinity;
   #settle: ReturnType<typeof setTimeout> | undefined;
+  #arriving: ReturnType<typeof setTimeout> | undefined;
   #timers: ReturnType<typeof setTimeout>[] = [];
   #intervals: ReturnType<typeof setInterval>[] = [];
   #accents = new Map<number, Promise<string | null>>();
@@ -204,6 +210,11 @@ export class CollectorView {
     const same = !!now && !!this.#box && this.#game?.id === now.id;
     this.select(selected, same);
     if (same && now) this.#update(now);
+    else {
+      // Opening a list: its game shown at once; only moves along the shelf wait to rest.
+      clearTimeout(this.#settle);
+      this.#showSelected();
+    }
     requestAnimationFrame(() => this.#track.classList.remove('still'));
   }
 
@@ -223,6 +234,15 @@ export class CollectorView {
     this.#dropTimer = setTimeout(() => this.root.classList.remove('browsing'), DROP_MS);
   }
 
+  /** A new game's bays fade in (not its label, which follows each step along the shelf). */
+  #arrive(): void {
+    clearTimeout(this.#arriving);
+    this.root.classList.remove('arriving');
+    void this.root.offsetWidth;
+    this.root.classList.add('arriving');
+    this.#arriving = setTimeout(() => this.root.classList.remove('arriving'), ARRIVE_MS);
+  }
+
   /** The shelf showing: the selection still moving, or just moved. */
   get browsing(): boolean {
     return this.root.classList.contains('browsing');
@@ -234,6 +254,18 @@ export class CollectorView {
     clearTimeout(this.#settle);
     this.root.classList.remove('browsing');
     this.#showSelected();
+  }
+
+  /**
+   * The label over the shelf at once for the game picked (it stays lit while the shelf shows):
+   * only the label, cheap; the rest of the showcase waits for the selection to rest.
+   */
+  #labelNow(): void {
+    const game = this.selected;
+    const label = this.#showcase.querySelector('.slab-label');
+    if (game && label && label.getAttribute('data-id') !== String(game.id)) {
+      label.replaceWith(this.#label(game));
+    }
   }
 
   get selected(): Game | undefined {
@@ -256,12 +288,9 @@ export class CollectorView {
     if (!changed || quiet) return;
     this.#browse();
     this.#stopVideo();
-    const now = performance.now();
-    const fast = now - this.#lastMove < SETTLE_MS;
-    this.#lastMove = now;
+    this.#labelNow();
     clearTimeout(this.#settle);
-    if (fast) this.#settle = setTimeout(() => this.#showSelected(), SETTLE_MS);
-    else this.#showSelected();
+    this.#settle = setTimeout(() => this.#showSelected(), SETTLE_MS);
   }
 
   /** The visible shelf, from whatever is loaded; again as pages arrive. */
@@ -419,7 +448,7 @@ export class CollectorView {
   #showSelected(again = false): void {
     const game = this.selected;
     this.#pending = !game;
-    if (game && !again && this.#game?.id === game.id && this.#box) return;
+    if (game && !again && this.#game?.id === game.id && this.#box) return this.#labelNow();
     this.#stop();
     if (!game) return;
     this.#game = game;
@@ -429,6 +458,7 @@ export class CollectorView {
     this.#backdropFor(game);
     this.#showcase.replaceChildren(...this.#showcaseParts(game));
     this.#dossier.replaceChildren(...this.#dossierParts(game));
+    this.#arrive();
     requestAnimationFrame(() => this.#fit?.());
     if (motion()) {
       this.#later(() => {
@@ -547,11 +577,15 @@ export class CollectorView {
   }
 
   /** The fan art behind the whole view, shaded so the words over it read. */
+  /**
+   * The new fan art fades in over the old, once decoded (a picture decoded mid-fade caught on a
+   * Pi); only then does the old one fade out under it: no dip to dark between the two.
+   */
   #backdropFor(game: Game): void {
     const old = [...this.#backdrop.children];
     const leave = () => {
       old.forEach((n) => n.classList.add('leaving'));
-      setTimeout(() => old.forEach((n) => n.remove()), 900);
+      setTimeout(() => old.forEach((n) => n.remove()), BACKDROP_OUT_MS);
     };
     const src =
       this.#options.media(game, 'fanart', BACKDROP_W) ?? this.#options.media(game, 'image', 400);
@@ -561,8 +595,13 @@ export class CollectorView {
     img.addEventListener(
       'load',
       () => {
-        img.classList.remove('waiting');
-        leave();
+        void (img.decode?.() ?? Promise.resolve())
+          .catch(() => {})
+          .then(() => {
+            if (!img.isConnected) return;
+            img.classList.remove('waiting');
+            setTimeout(leave, BACKDROP_IN_MS);
+          });
       },
       { once: true }
     );
@@ -701,7 +740,7 @@ export class CollectorView {
     ].filter((t): t is string => !!t);
     return el(
       'div',
-      { class: 'slab-label' },
+      { class: 'slab-label', 'data-id': String(game.id) },
       mark,
       el(
         'div',

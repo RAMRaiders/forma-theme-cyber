@@ -245,6 +245,50 @@ describe('the Collector view', () => {
     expect(versionText('Beta 2')).toBe('Beta 2');
   });
 
+  it('fades the new fan art in over the old, then the old out: never a dip to dark', async () => {
+    const art = { ...BOXED, fanart: 'art' };
+    const { v } = await view([game(1, 'After Burner', art), game(2, 'Doom', art)]);
+    const imgs = () => [...v.root.querySelectorAll<HTMLImageElement>('.collector-backdrop img')];
+    const settle = async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    };
+    imgs()[0]!.dispatchEvent(new Event('load'));
+    await settle();
+    expect(imgs()[0]!.classList.contains('waiting')).toBe(false);
+    vi.advanceTimersByTime(2100);
+    v.select(1);
+    // Not until the selection rests.
+    expect(imgs()).toHaveLength(1);
+    vi.advanceTimersByTime(400);
+    const [first, next] = imgs();
+    expect(next?.classList.contains('waiting')).toBe(true);
+    // The old one stays whole while the new one loads and fades in over it.
+    expect(first?.classList.contains('leaving')).toBe(false);
+    next!.dispatchEvent(new Event('load'));
+    await settle();
+    expect(next!.classList.contains('waiting')).toBe(false);
+    vi.advanceTimersByTime(800);
+    expect(first!.classList.contains('leaving')).toBe(false);
+    vi.advanceTimersByTime(200);
+    expect(first!.classList.contains('leaving')).toBe(true);
+    vi.advanceTimersByTime(500);
+    expect(imgs()).toEqual([next]);
+  });
+
+  it('fades a new game in once the selection rests; the label alone follows each step', async () => {
+    const { v, text } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
+    vi.advanceTimersByTime(2100);
+    expect(v.root.classList.contains('arriving')).toBe(false);
+    v.select(1);
+    expect(text('.slab-label .what strong')).toEqual(['Doom']);
+    expect(v.root.classList.contains('arriving')).toBe(false);
+    vi.advanceTimersByTime(350);
+    expect(v.root.classList.contains('arriving')).toBe(true);
+    vi.advanceTimersByTime(420);
+    expect(v.root.classList.contains('arriving')).toBe(false);
+  });
+
   it('on A while the shelf shows, puts it away and shows the game picked at once', async () => {
     const { v, text } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom')]);
     vi.advanceTimersByTime(2100);
@@ -307,8 +351,11 @@ describe('the Collector view', () => {
     vi.advanceTimersByTime(500);
     v.select(1);
     expect(text('.spine-row.selected .title')).toEqual(['Doom']);
-    vi.advanceTimersByTime(200);
+    // The label at once, lit over the shelf; the rest of the showcase once the selection rests.
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
+    vi.advanceTimersByTime(200);
+    expect(v.root.querySelector('.cbox .front .made-cover')).toBeNull();
+    vi.advanceTimersByTime(200);
     // No box picture: a cover made from what it has.
     expect(v.root.querySelector('.cbox .front .made-cover')).not.toBeNull();
     expect(text('.dossier .mark')).toHaveLength(3);
