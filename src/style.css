@@ -3567,14 +3567,15 @@ kbd {
 
 /* The favourite's gold star, just after the game's name and details; only when it is one. */
 .slab-label .fav {
-  display: none;
+  /* Its place kept when it is not one: the grade stays at the right end either way. */
+  visibility: hidden;
   font-size: 2.4rem;
   line-height: 1;
   color: #ffd75e;
 }
 
 .slab-label .fav.on {
-  display: block;
+  visibility: visible;
 }
 
 /* The grade at the right end of the label: the score large in the game's colour, out of five;
