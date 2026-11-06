@@ -245,6 +245,18 @@ describe('the Collector view', () => {
     expect(versionText('Beta 2')).toBe('Beta 2');
   });
 
+  it('on A while the shelf shows, puts it away and shows the game picked at once', async () => {
+    const { v, text } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom')]);
+    vi.advanceTimersByTime(2100);
+    v.select(1);
+    v.select(0);
+    v.select(1);
+    expect(v.browsing).toBe(true);
+    v.settleNow();
+    expect(v.browsing).toBe(false);
+    expect(text('.slab-label .what strong')).toEqual(['Doom']);
+  });
+
   it('stars a favourite in the label, and a reload of the same game moves nothing', async () => {
     const g = game(7, 'After Burner', BOXED);
     const { v } = await view([g]);
@@ -252,7 +264,7 @@ describe('the Collector view', () => {
     expect(star().classList.contains('on')).toBe(false);
     const box = v.root.querySelector('.cbox');
     // The shelf gone after the first show.
-    vi.advanceTimersByTime(1200);
+    vi.advanceTimersByTime(2100);
     expect(v.root.classList.contains('browsing')).toBe(false);
     // The list reloaded after the favourite was set: the same game, starred.
     const list = new LazyList<Game>(
@@ -327,7 +339,7 @@ describe('the shelf and the video', () => {
     await list.start(0);
     v.show(list, 0);
     expect(v.root.classList.contains('browsing')).toBe(true);
-    vi.advanceTimersByTime(1200);
+    vi.advanceTimersByTime(2100);
     expect(v.root.classList.contains('browsing')).toBe(false);
     vi.advanceTimersByTime(1500);
     expect(play).toHaveBeenCalledTimes(1);

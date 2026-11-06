@@ -85,7 +85,7 @@ export const COLLECTOR_PICTURES: readonly (readonly [Kind, number])[] = [
 const ROW_REM = 2.5;
 const OVERSCAN = 6;
 /** The shelf over the middle while moving; this long after the last move it fades. */
-const DROP_MS = 1100;
+const DROP_MS = 2000;
 /** On a game this long, its video plays in the footage bay. */
 const VIDEO_AFTER_MS = 2500;
 /** With no video, the footage bay shows the screenshots in turn. */
@@ -221,6 +221,19 @@ export class CollectorView {
     this.root.classList.add('browsing');
     clearTimeout(this.#dropTimer);
     this.#dropTimer = setTimeout(() => this.root.classList.remove('browsing'), DROP_MS);
+  }
+
+  /** The shelf showing: the selection still moving, or just moved. */
+  get browsing(): boolean {
+    return this.root.classList.contains('browsing');
+  }
+
+  /** The shelf away now, the game picked in the showcase at once (A on the shelf). */
+  settleNow(): void {
+    clearTimeout(this.#dropTimer);
+    clearTimeout(this.#settle);
+    this.root.classList.remove('browsing');
+    this.#showSelected();
   }
 
   get selected(): Game | undefined {

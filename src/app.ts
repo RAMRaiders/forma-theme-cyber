@@ -614,6 +614,10 @@ export class App {
     if (e.repeat) return;
     switch (e.action) {
       case 'confirm':
+        // On the Collector's shelf, A first shows the game picked; A again plays it.
+        if (this.#list && this.#gameView === this.#collector && this.#collector.browsing) {
+          return this.#collector.settleNow();
+        }
         return void this.#confirm();
       case 'back':
         return void this.#back();
