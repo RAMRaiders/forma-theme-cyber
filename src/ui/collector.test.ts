@@ -3,7 +3,7 @@ import type { Game } from '@ramraiders/forma-sdk';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LazyList } from '../logic/pager.js';
-import { CollectorView, boxHeight, gradeOf, hue, inventory, serial } from './collector.js';
+import { CollectorView, boxHeight, gradeOf, hue, hueOf, inventory, serial } from './collector.js';
 import type { Kind } from './stage.js';
 
 const game = (id: number, name: string, media: Partial<Record<Kind, string>> = {}): Game =>
@@ -157,6 +157,13 @@ describe('the box in its case', () => {
     expect(boxHeight(30, 30, 1.4, 0.2)).toBeCloseTo(29 / 1.6);
     expect(boxHeight(200, 200, 0.7, 0.1)).toBe(26);
     expect(boxHeight(5, 5, 1, 0.1)).toBe(12);
+  });
+});
+
+describe('a spine’s colour', () => {
+  it('is the hue of its box’s colour', () => {
+    expect(hueOf('hsl(212 95% 70%)')).toBe(212);
+    expect(hueOf('#fff')).toBeNull();
   });
 });
 

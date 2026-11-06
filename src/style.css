@@ -3107,6 +3107,16 @@ kbd {
   background: hsl(var(--hue) 85% 58%);
 }
 
+/* Until its box's colour is known: plain grey. */
+.spine-row:not(.tinted) {
+  border-color: rgb(255 255 255 / 12%);
+  background: linear-gradient(90deg, #1c2330 0%, #111722 65%, #090e18 100%);
+}
+
+.spine-row:not(.tinted) .band {
+  background: #4a5568;
+}
+
 .spine-row .title {
   flex: 1;
   min-width: 0;

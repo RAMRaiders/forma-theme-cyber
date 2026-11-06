@@ -116,6 +116,8 @@ export class CollectorView {
   #timers: ReturnType<typeof setTimeout>[] = [];
   #intervals: ReturnType<typeof setInterval>[] = [];
   #accents = new Map<number, Promise<string | null>>();
+  /** The shelf's colours, worked out one after another. */
+  #colourQueue: Promise<void> = Promise.resolve();
   #achievements = new Map<number, Promise<Achievements | null>>();
   #game: ShowGame | null = null;
   #box: HTMLElement | null = null;
@@ -196,7 +198,8 @@ export class CollectorView {
       if (node.dataset.key !== key) {
         node.dataset.key = key;
         node.replaceChildren(...(game ? shelfRow(game) : [el('span', { class: 'title' }, '…')]));
-        node.style.setProperty('--hue', String(game ? hue(game.name) : 200));
+        node.classList.remove('tinted');
+        if (game) this.#spineColour(game, node);
       }
       node.classList.toggle('selected', i === this.#selected);
       node.setAttribute('aria-selected', String(i === this.#selected));
@@ -292,16 +295,61 @@ export class CollectorView {
   }
 
   /** The game's colour, from its box: Cyber's own until it is known. */
-  #tint(game: Game): void {
+  /**
+   * A shelf row in its game's own colour, from its box: grey until the colour is known (one
+   * picture at a time, so scrolling stays smooth on a Pi); a colour from its name where it has
+   * no picture at all.
+   */
+  #spineColour(game: Game, node: HTMLElement): void {
+    const key = node.dataset.key;
+    // Skipped if the row has gone by before its turn (scrolling fast through a long list).
+    const colour = this.#colourOf(game, () => node.isConnected && node.dataset.key === key);
+    if (!colour) {
+      node.style.setProperty('--hue', String(hue(game.name)));
+      node.classList.add('tinted');
+      return;
+    }
+    void colour.then((c) => {
+      // The row has since moved on to another game.
+      if (node.dataset.key !== key) return;
+      const degrees = c ? hueOf(c) : null;
+      node.style.setProperty('--hue', String(degrees ?? hue(game.name)));
+      node.classList.add('tinted');
+    });
+  }
+
+  /**
+   * A game's colour from its box (or its fan art), worked out once and kept. For the shelf
+   * (`wanted` given) in turn, and not at all if no longer wanted by then; for the selected game
+   * at once.
+   */
+  #colourOf(game: Game, wanted?: () => boolean): Promise<string | null> | null {
     const accent = this.#options.accent;
     const source =
       this.#options.media(game, 'thumbnail', 64) ?? this.#options.media(game, 'fanart', 64);
-    if (!accent || !source) return;
+    if (!accent || !source) return null;
     let colour = this.#accents.get(game.id);
-    if (!colour) {
+    if (colour) return colour;
+    if (!wanted) {
       colour = accent(source).catch(() => null);
       this.#accents.set(game.id, colour);
+      return colour;
     }
+    const id = game.id;
+    const queued = this.#colourQueue.then(async () => {
+      if (wanted()) return accent(source).catch(() => null);
+      // Not worked out: asked again when the row comes back.
+      this.#accents.delete(id);
+      return null;
+    });
+    this.#colourQueue = queued.then(() => undefined);
+    this.#accents.set(id, queued);
+    return queued;
+  }
+
+  #tint(game: Game): void {
+    const colour = this.#colourOf(game);
+    if (!colour) return;
     const id = game.id;
     void colour.then((c) => {
       if (c && this.#game?.id === id) this.root.style.setProperty('--game', c);
@@ -673,7 +721,13 @@ function favouriteTag(): HTMLElement {
   return el('span', { class: 'favourite' }, '★ Favourite');
 }
 
-/** A colour of its own for each game's spine on the shelf, from its name. */
+/** The hue in an `hsl(...)` colour, in degrees; `null` if it is not one. */
+export function hueOf(colour: string): number | null {
+  const m = /^hsl\(\s*(-?[\d.]+)/.exec(colour);
+  return m ? Number(m[1]) : null;
+}
+
+/** A colour of its own for a game with no picture, from its name. */
 export function hue(name: string): number {
   let h = 0;
   for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
