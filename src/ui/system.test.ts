@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
 
-import { gear, logoHeight, press, systemColours } from './system.js';
+import { gear, logoHeight, press, readingMs, systemColours } from './system.js';
 
 const hueOf = (rgb: string) => {
   const [r, g, b] = rgb.split(' ').map((v) => Number(v) / 255) as [number, number, number];
@@ -10,6 +10,25 @@ const hueOf = (rgb: string) => {
   const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
   return Math.round((h * 60 + 360) % 360);
 };
+
+describe('how long words stay on screen', () => {
+  const words = (n: number) => Array.from({ length: n }, () => 'word').join(' ');
+
+  it('grows with how much there is to read', () => {
+    expect(readingMs(words(13))).toBe(8850);
+    expect(readingMs(words(27))).toBe(15_150);
+    expect(readingMs(words(64))).toBe(31_800);
+  });
+
+  it('is never too short to take in', () => {
+    expect(readingMs(words(4))).toBe(6000);
+    expect(readingMs('')).toBe(6000);
+  });
+
+  it('counts words however they are spaced', () => {
+    expect(readingMs(`  ${words(20)}  `)).toBe(readingMs(words(20).replaceAll(' ', '\n  ')));
+  });
+});
 
 describe('the colours a system lights its screen with', () => {
   it('are its logo’s own: both of them, in neon', () => {

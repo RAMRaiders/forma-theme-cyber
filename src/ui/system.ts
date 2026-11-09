@@ -12,10 +12,13 @@ import { circuitSvg } from './circuit.js';
 import { el } from './dom.js';
 import { preload, ready } from './preload.js';
 
-/** A curiosity stays this long before the next one. */
-const FACT_MS = 10_000;
-/** The text under the logo turns from the system's description to each chapter of its story. */
-const READ_MS = 16_000;
+/**
+ * Words that take turns stay as long as they take to read from a sofa: a moment to look over,
+ * then this long for each word (about 130 a minute), and never less than the shortest stay.
+ */
+const READ_START_MS = 3000;
+const READ_WORD_MS = 450;
+const READ_LEAST_MS = 6000;
 /** How long the text under the logo takes to fade out, before the next fades in. */
 const READ_FADE_MS = 300;
 /**
@@ -41,6 +44,27 @@ const HELD_REST_MS = 220;
 const DECODE_MS = 250;
 /** Text too long for its box scrolls through at this speed, in px per second. */
 const SCROLL_PX_S = 16;
+/** Text too long for its box waits this long before it starts to scroll (as in style.css). */
+const SCROLL_START_MS = 1500;
+
+/** How long `text` should stay on screen for someone to read all of it. */
+export function readingMs(text: string): number {
+  const words = text.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(READ_LEAST_MS, READ_START_MS + words * READ_WORD_MS);
+}
+
+/** How long one pass of the scroll takes for words this many px too long for their box. */
+function scrollSeconds(over: number): number {
+  // Resting a quarter of the time at each end.
+  return Math.max(6, (over / SCROLL_PX_S) * 2);
+}
+
+/** How long the words in `box` should stay: to read them, and for any scroll to reach the end. */
+function stayMs(box: HTMLElement | null | undefined, text: string): number {
+  const over = (box?.firstElementChild?.scrollHeight ?? 0) - (box?.clientHeight ?? 0);
+  const scroll = over > 2 ? SCROLL_START_MS + scrollSeconds(over) * 1000 : 0;
+  return Math.max(readingMs(text), scroll);
+}
 
 type Spec = keyof NonNullable<SystemInfo['specs']>;
 
@@ -190,10 +214,10 @@ export class SystemView {
   /** The makers' logos, once loaded: until then, the maker's name. */
   #makers: MakerLogo[] = [];
   #fact = 0;
-  #factTimer: ReturnType<typeof setInterval> | undefined;
+  #factTimer: ReturnType<typeof setTimeout> | undefined;
   /** Which of the description and the story's chapters shows under the logo. */
   #read = 0;
-  #readTimer: ReturnType<typeof setInterval> | undefined;
+  #readTimer: ReturnType<typeof setTimeout> | undefined;
   #boardTimer: ReturnType<typeof setTimeout> | undefined;
   #restTimer: ReturnType<typeof setTimeout> | undefined;
   #dropTimer: ReturnType<typeof setTimeout> | undefined;
@@ -318,8 +342,8 @@ export class SystemView {
     this.#drawnFor = null;
     clearTimeout(this.#dropTimer);
     this.root.classList.remove('browsing');
-    clearInterval(this.#factTimer);
-    clearInterval(this.#readTimer);
+    clearTimeout(this.#factTimer);
+    clearTimeout(this.#readTimer);
     clearTimeout(this.#boardTimer);
     clearTimeout(this.#restTimer);
   }
@@ -526,10 +550,8 @@ export class SystemView {
         const inner = box.firstElementChild as HTMLElement | null;
         const over = (inner?.scrollHeight ?? 0) - box.clientHeight;
         if (!inner || over <= 2) continue;
-        // Resting a quarter of the time at each end.
-        const seconds = Math.max(6, (over / SCROLL_PX_S) * 2);
         box.style.setProperty('--scroll', `${-over}px`);
-        box.style.setProperty('--scroll-s', `${seconds}s`);
+        box.style.setProperty('--scroll-s', `${scrollSeconds(over)}s`);
         box.classList.add('scrolling');
       }
     });
@@ -559,19 +581,23 @@ export class SystemView {
     this.#read += 1;
     const text = all[this.#read % all.length] ?? '';
     box.classList.add('fading');
-    setTimeout(() => {
+    this.#readTimer = setTimeout(() => {
       const fresh = scroller('p', text, 'description fading');
       box.replaceWith(fresh);
       this.#scrollOverflow();
       requestAnimationFrame(() => requestAnimationFrame(() => fresh.classList.remove('fading')));
+      this.#scheduleReading();
     }, READ_FADE_MS);
   }
 
+  /** The next page comes when this one has been read: each stays as long as its words need. */
   #scheduleReading(): void {
-    clearInterval(this.#readTimer);
-    if (this.#readings().length > 1 && this.rotateFacts) {
-      this.#readTimer = setInterval(() => this.#nextReading(), READ_MS);
-    }
+    clearTimeout(this.#readTimer);
+    const all = this.#readings();
+    if (all.length < 2 || !this.rotateFacts) return;
+    const box = this.#slots.get('reading')?.querySelector<HTMLElement>('.description');
+    const ms = stayMs(box, all[this.#read % all.length] ?? '');
+    this.#readTimer = setTimeout(() => this.#nextReading(), ms);
   }
 
   #factStrip(): HTMLElement | null {
@@ -587,19 +613,19 @@ export class SystemView {
         `Did you know? ${(this.#fact % facts.length) + 1}/${facts.length}`
       ),
       scroller('p', fact),
-      // How long until the next one, when they move on by themselves.
-      facts.length > 1 && this.rotateFacts
-        ? el('span', { class: 'timer', style: `--fact-ms: ${FACT_MS}ms` })
-        : null
+      // How long until the next one, when they move on by themselves (see `#scheduleFact`).
+      facts.length > 1 && this.rotateFacts ? el('span', { class: 'timer' }) : null
     );
   }
 
   #scheduleFact(): void {
-    clearInterval(this.#factTimer);
+    clearTimeout(this.#factTimer);
     const facts = this.#info?.curiosities ?? [];
-    if (facts.length > 1 && this.rotateFacts) {
-      this.#factTimer = setInterval(() => this.nextFact(), FACT_MS);
-    }
+    if (facts.length < 2 || !this.rotateFacts) return;
+    const strip = this.#slots.get('fact');
+    const ms = stayMs(strip?.querySelector<HTMLElement>('.scroll'), facts[this.#fact] ?? '');
+    strip?.querySelector<HTMLElement>('.timer')?.style.setProperty('--fact-ms', `${ms}ms`);
+    this.#factTimer = setTimeout(() => this.nextFact(), ms);
   }
 }
 
