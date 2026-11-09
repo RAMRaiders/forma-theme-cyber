@@ -6,6 +6,7 @@ import type {
   GameStart,
   InputEvent,
   SettingsChanged,
+  VersionGroup,
   ViewInfo
 } from '@ramraiders/forma-sdk';
 import { FormaError } from '@ramraiders/forma-sdk';
@@ -36,7 +37,7 @@ import { type Move, moveGrid, moveHome, moveList } from './logic/nav.js';
 import { LazyList } from './logic/pager.js';
 import { el } from './ui/dom.js';
 import { type Card, GridView } from './ui/grid.js';
-import { COLLECTOR_PICTURES, CollectorView } from './ui/collector.js';
+import { COLLECTOR_PICTURES, CollectorView, type OtherVersion } from './ui/collector.js';
 import { GamesView } from './ui/games.js';
 import { HomeView, type Shortcut, type Tile } from './ui/home.js';
 import { loader } from './ui/loader.js';
@@ -126,6 +127,7 @@ export class App {
     stopVideo: () => void this.forma.video.stop().catch(() => {}),
     prepare: (items) => void this.forma.library.prepareMedia(items as never).catch(() => {})
   });
+  readonly #versions = new Map<string, Promise<VersionGroup[]>>();
   /** The Collector view of a game list: Select → View on a list. */
   readonly #collector = new CollectorView({
     media: (game, kind, width) =>
@@ -136,6 +138,7 @@ export class App {
       const { data } = await this.forma.ra.game(game.id);
       return { earned: data.earned, total: data.achievementCount };
     },
+    otherVersions: (game) => this.#otherVersions(game),
     play: (game, area) => this.forma.video.play(game.id, { area }),
     stopVideo: () => void this.forma.video.stop().catch(() => {}),
     // The game companies' logos first, then the hardware makers'.
@@ -241,7 +244,10 @@ export class App {
       this.#companies = [...games, ...makers];
     });
     this.forma.input.on((e) => this.#onInput(e));
-    this.forma.events.on('library:changed', () => this.#reloadSoon());
+    this.forma.events.on('library:changed', () => {
+      this.#versions.clear();
+      this.#reloadSoon();
+    });
     // Views change with collections too: the shortcuts' counts follow.
     this.forma.events.on('views:changed', () => {
       void this.#loadViews();
@@ -771,6 +777,17 @@ export class App {
   }
 
   /** Library changes arrive in bursts (a scraper run); reload once they settle. */
+  /** Each system's versions, asked once until the library changes. */
+  async #otherVersions(game: Game): Promise<OtherVersion[]> {
+    let groups = this.#versions.get(game.system);
+    if (!groups) {
+      groups = this.forma.library.versions(game.system);
+      this.#versions.set(game.system, groups);
+    }
+    const group = (await groups).find((g) => g.games.some((v) => v.id === game.id));
+    return group?.games.filter((v) => v.id !== game.id) ?? [];
+  }
+
   #reloadSoon(): void {
     clearTimeout(this.#reloadTimer);
     this.#reloadTimer = setTimeout(() => void this.#load(), 300);

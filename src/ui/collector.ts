@@ -11,6 +11,7 @@ import {
   LANGUAGES,
   type MediaUrl,
   REGIONS,
+  sameDetails,
   type ShowGame,
   ago,
   captions,
@@ -43,9 +44,17 @@ export interface ScreenArea {
   height: number;
 }
 
+/** Another file of the same game, as the library's versions list gives it. */
+export interface OtherVersion {
+  path: string;
+  tags: string[];
+}
+
 export interface CollectorOptions {
   media: MediaUrl;
   achievements?: (game: Game) => Promise<Achievements | null>;
+  /** The other versions of this game in the library: only ones on disk. */
+  otherVersions?: (game: Game) => Promise<OtherVersion[]>;
   /** A developer's or publisher's logo, from its name; `null` where Cyber has none. */
   company?: (name: string) => string | null;
   /** The game's colour, from a small picture of it. */
@@ -365,9 +374,11 @@ export class CollectorView {
     else this.#showSelected();
   }
 
-  /** The game shown, as it is now: its star in the label. */
+  /** The game shown, as it is now: its star in the label, or all of it if its details changed. */
   #update(game: Game): void {
+    const changed = !!this.#game && !sameDetails(this.#game, game);
     this.#game = game;
+    if (changed) return this.#showSelected(true);
     this.#showcase.querySelector('.slab-label .fav')?.classList.toggle('on', game.favorite);
   }
 
@@ -961,6 +972,7 @@ export class CollectorView {
         row('Last', game.lastPlayed ? ago(game.lastPlayed) : null)
       ) ?? el('section', { class: 'part' });
     this.#achievementsInto(game, record);
+    if (copy) this.#versionsInto(game, copy, row);
 
     // This copy and the play record take turns in one place.
     const turns = [copy, record].filter((p): p is HTMLElement => p !== null);
@@ -1018,6 +1030,24 @@ export class CollectorView {
       mark('cheevos', ICONS.cheevos, 'Achievements', game.raGameId !== null),
       pegiMark(game)
     );
+  }
+
+  /** "Also owned", in this copy's details, for a game with other versions in the library. */
+  #versionsInto(
+    game: Game,
+    copy: HTMLElement,
+    row: (label: string, value: string) => HTMLElement | null
+  ): void {
+    const fetch = this.#options.otherVersions;
+    if (!fetch) return;
+    const id = game.id;
+    void fetch(game)
+      .catch(() => [])
+      .then((others) => {
+        const text = versionsText(others);
+        const line = text ? row('Also owned', text) : null;
+        if (line && this.#game?.id === id) copy.querySelector('.specs')?.append(line);
+      });
   }
 
   #achievementsInto(game: Game, record: HTMLElement): void {
@@ -1304,4 +1334,24 @@ function madeBack(game: Game, media: MediaUrl): HTMLElement[] {
       el('p', {}, captions(game.description ?? '')[0] ?? game.name)
     )
   ];
+}
+
+/**
+ * The other versions in a line: `Japan, USA · English patch ×8`. Long lists stop at three kinds
+ * and say how many more. Empty when there are none.
+ */
+export function versionsText(others: OtherVersion[]): string {
+  const counts = new Map<string, number>();
+  for (const other of others) {
+    const rom = romName(other.path);
+    const region = rom.regions[0];
+    const place = region ? (REGIONS[region] ?? region.toUpperCase()) : null;
+    const patched = other.tags.some((t) => /^(t-en|translated en)/i.test(t));
+    const kind = patched ? 'English patch' : rom.version && versionText(rom.version);
+    const label = [place, kind].filter(Boolean).join(' · ') || (other.tags[0] ?? 'Other version');
+    counts.set(label, (counts.get(label) ?? 0) + 1);
+  }
+  const labels = [...counts].map(([label, n]) => (n > 1 ? `${label} ×${n}` : label));
+  const extra = labels.length - 3;
+  return extra > 0 ? `${labels.slice(0, 3).join(', ')} +${extra}` : labels.join(', ');
 }

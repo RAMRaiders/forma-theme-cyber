@@ -3,6 +3,7 @@ import type { Game } from '@ramraiders/forma-sdk';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LazyList } from '../logic/pager.js';
+import { versionsText } from './collector.js';
 import {
   CollectorView,
   type ScreenArea,
@@ -322,6 +323,20 @@ describe('the Collector view', () => {
     expect(v.root.querySelector('.cbox')).toBe(box);
   });
 
+  it('draws the game again when a scrape changes it, without moving the shelf', async () => {
+    const g = game(7, 'After Burner', BOXED);
+    const { v } = await view([g]);
+    vi.advanceTimersByTime(2100);
+    const list = new LazyList<Game>(
+      () => Promise.resolve({ items: [{ ...g, description: 'Freshly scraped.' }], total: 1 }),
+      50
+    );
+    await list.start(0);
+    v.show(list, 0);
+    expect(v.root.textContent).toContain('Freshly scraped.');
+    expect(v.root.classList.contains('browsing')).toBe(false);
+  });
+
   it('cuts a story into pages that fit, between sentences', () => {
     const box = document.createElement('div');
     // 40 characters a page.
@@ -422,6 +437,26 @@ describe('a spine’s colour', () => {
   it('is the hue of its box’s colour', () => {
     expect(hueOf('hsl(212 95% 70%)')).toBe(212);
     expect(hueOf('#fff')).toBeNull();
+  });
+});
+
+describe('other versions of a game', () => {
+  it('sums them up by place and kind', () => {
+    const patched = (n: number) => ({
+      path: `Game (USA) (T-En by Someone v${n}).md`,
+      tags: ['USA', `T-En by Someone v${n}`]
+    });
+    expect(versionsText([])).toBe('');
+    expect(versionsText([{ path: 'Game (Japan).md', tags: ['Japan'] }])).toBe('Japan');
+    expect(versionsText([patched(1), patched(2)])).toBe('USA · English patch ×2');
+  });
+
+  it('stops at three kinds', () => {
+    const others = ['Japan', 'USA', 'Europe', 'Brazil', 'Korea'].map((r) => ({
+      path: `Game (${r}).md`,
+      tags: [r]
+    }));
+    expect(versionsText(others)).toBe('Japan, USA, Europe +2');
   });
 });
 

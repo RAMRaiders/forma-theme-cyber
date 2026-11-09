@@ -31,6 +31,7 @@ const game = (
   releaseDate: '1994-03-19',
   rating: 0.95,
   favorite: true,
+  iconic: false,
   hidden: false,
   playCount: 3,
   lastPlayed: null,

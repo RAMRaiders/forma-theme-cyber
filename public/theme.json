@@ -4,7 +4,7 @@
   "version": "0.7.12",
   "entry": "index.html",
   "logo": "logo.svg",
-  "sdk": "^1.24",
+  "sdk": "^1.26",
   "permissions": ["settings.system", "settings.emulators"],
   "resolutions": ["1280x720", "1920x1080"],
   "views": ["systems"],
@@ -121,6 +121,23 @@
   ],
   "scraper": {
     "media": ["boxside", "boxback", "cartridge", "fanart", "manual"],
-    "fields": ["ageRating"]
+    "fields": ["ageRating"],
+    "shows": [
+      "thumbnail",
+      "boxart",
+      "boxback",
+      "boxside",
+      "cartridge",
+      "image",
+      "titleshot",
+      "mix",
+      "map",
+      "video",
+      "fanart",
+      "wheel",
+      "marquee",
+      "manual"
+    ],
+    "backups": { "marquee": "wheel", "boxart": "thumbnail" }
   }
 }

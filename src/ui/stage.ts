@@ -184,6 +184,16 @@ interface Preview {
   shown: boolean;
 }
 
+/** What a game's page does not draw from, or only touches lightly: these change in place. */
+const NOT_ITS_DETAILS = new Set(['favorite', 'hidden', 'playCount', 'lastPlayed', 'gameTime']);
+
+/** Whether two versions of a game show the same details and pictures (a scrape changes them). */
+export function sameDetails(a: object, b: object): boolean {
+  const details = (game: object) =>
+    JSON.stringify(Object.entries(game).filter(([key]) => !NOT_ITS_DETAILS.has(key)));
+  return details(a) === details(b);
+}
+
 export class Stage {
   /** The acts, over the screen. */
   readonly root = el('section', { class: 'detail stage', 'data-act': '1' });
@@ -220,7 +230,7 @@ export class Stage {
 
   /** Shows `game` from act 1; the same game again (a favourite toggled) keeps its act. */
   show(game: ShowGame): void {
-    if (this.#game?.id === game.id && this.#title) {
+    if (this.#game?.id === game.id && this.#title && sameDetails(this.#game, game)) {
       this.#game = game;
       const title = this.#titleBlock(game);
       this.#title.replaceWith(title);
