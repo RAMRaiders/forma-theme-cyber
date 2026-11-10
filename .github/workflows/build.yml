@@ -7,9 +7,6 @@ on:
 
 permissions:
   contents: read
-  # @ramraiders/forma-sdk comes from GitHub Packages; the package must grant this repo read
-  # access (package settings → Manage Actions access).
-  packages: read
 
 jobs:
   build:
@@ -22,12 +19,8 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
-          registry-url: https://npm.pkg.github.com
-          scope: "@ramraiders"
 
       - run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - run: npm run verify
 

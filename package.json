@@ -19,7 +19,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@ramraiders/forma-sdk": "^1.16.0"
+    "@ramraiders/forma-sdk": "file:vendor/ramraiders-forma-sdk-1.26.0.tgz"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.3",
