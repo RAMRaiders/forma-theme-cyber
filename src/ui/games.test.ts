@@ -6,7 +6,7 @@ import { LazyList } from '../logic/pager.js';
 import { GamesView } from './games.js';
 
 const game = (id: number, name: string, media: Record<string, string>, favorite = false) =>
-  ({ id, name, system: 'nes', favorite, media }) as unknown as Game;
+  ({ id, name, path: `${name}.nes`, system: 'nes', favorite, media }) as unknown as Game;
 
 describe('the game list', () => {
   it('shows each game by its logo, its name kept for screen readers, never a mark', async () => {

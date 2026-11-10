@@ -65,23 +65,65 @@ const REGION_LETTERS: Record<string, string> = {
   UK: 'uk'
 };
 
-const LANGUAGE = /^[A-Z][a-z](-[A-Z][a-z]+)?$/;
+/** `En`, `Pt-BR`, `Zh-Hant`; not `Re-release`. */
+const LANGUAGE = /^[A-Z][a-z](-([A-Z]{2}|[A-Z][a-z]+))?$/;
+/** Brazilian Portuguese stands apart, with its own flag; every other language by its first two. */
+const languageCode = (tag: string) => {
+  const code = tag.toLowerCase();
+  return code === 'pt-br' ? code : code.slice(0, 2);
+};
 const VERSION =
   /^(rev\s*[\w.]+|v\s?\d[\w.]*|beta(\s*\d+)?|proto(type)?(\s*\d+)?|demo|sample|alt(\s*\d+)?|unl|unlicensed|pirate|bootleg|aftermarket|homebrew|hack)$/i;
 
 /** GoodTools' square brackets, those that say a copy is not the official release. */
 const BRACKETS: [RegExp, string][] = [
-  [/^T[+-]/, 'Translation'],
   [/^h(\d|[A-Z])/, 'Hack'],
   [/^p\d*$/, 'Pirate']
 ];
+
+/** A fan translation and the language it is into: `T-En by Someone`, `T+Por1.0`, `Translated En`. */
+const TRANSLATED = /^(?:Translated\s+|T[-+])([A-Za-z]{2,3})(?![a-z])/;
+/** GoodTools' three-letter languages. */
+const GOODTOOLS_LANGUAGES: Record<string, string> = {
+  eng: 'en',
+  fre: 'fr',
+  ger: 'de',
+  spa: 'es',
+  ita: 'it',
+  por: 'pt',
+  bra: 'pt-br',
+  dut: 'nl',
+  swe: 'sv',
+  pol: 'pl',
+  rus: 'ru',
+  jap: 'ja',
+  kor: 'ko',
+  chi: 'zh',
+  gre: 'el'
+};
+
+/** The language `group` says the copy was translated into: `''` if unknown, `null` if it is not one. */
+function translatedInto(group: string): string | null {
+  const tag = TRANSLATED.exec(group.trim())?.[1]?.toLowerCase();
+  if (!tag) return null;
+  return tag.length === 2 ? tag : (GOODTOOLS_LANGUAGES[tag] ?? '');
+}
 
 export function romName(path: string): RomName {
   const file = path.split('/').pop() ?? path;
   const regions: string[] = [];
   const languages: string[] = [];
   const versions: string[] = [];
+  const translation = (language: string) => {
+    if (language) languages.push(language);
+    versions.push('Translation');
+  };
   for (const [, group = ''] of file.matchAll(/\(([^()]*)\)/g)) {
+    const into = translatedInto(group);
+    if (into !== null) {
+      translation(into);
+      continue;
+    }
     const parts = group.split(',').map((p) => p.trim());
     const asRegions = parts.map((p) => REGION_WORDS[p.toLowerCase()]);
     if (asRegions.every((r) => r)) {
@@ -89,7 +131,7 @@ export function romName(path: string): RomName {
       continue;
     }
     if (parts.every((p) => LANGUAGE.test(p))) {
-      languages.push(...parts.map((p) => p.slice(0, 2).toLowerCase()));
+      languages.push(...parts.map(languageCode));
       continue;
     }
     if (VERSION.test(group.trim())) {
@@ -104,6 +146,11 @@ export function romName(path: string): RomName {
     }
   }
   for (const [, group = ''] of file.matchAll(/\[([^[\]]*)\]/g)) {
+    const into = translatedInto(group);
+    if (into !== null) {
+      translation(into);
+      continue;
+    }
     const found = BRACKETS.find(([tag]) => tag.test(group.trim()));
     if (found) versions.push(found[1]);
   }
@@ -123,6 +170,7 @@ const LANGUAGE_FLAGS: Record<string, string> = {
   es: 'es',
   it: 'it',
   pt: 'pt',
+  'pt-br': 'br',
   nl: 'nl',
   sv: 'se',
   da: 'dk',

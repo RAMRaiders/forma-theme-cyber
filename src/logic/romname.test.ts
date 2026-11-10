@@ -26,6 +26,40 @@ describe('a ROM’s file name', () => {
     });
   });
 
+  it('gives the language a fan translation is into', () => {
+    const into = (name: string) => {
+      const { languages, version } = romName(name);
+      return { languages, version };
+    };
+    const english = { languages: ['en'], version: 'Translation' };
+    expect(into('Dyna Brothers (Japan) [T-En by Tybis v0.1] [i].zip')).toEqual(english);
+    expect(into('Monster World IV (Japan) (Translated En).zip')).toEqual(english);
+    expect(into('Game (Japan) (Translated Fr).zip').languages).toEqual(['fr']);
+    expect(into('Game (J) [T+Eng1.0_Someone].md')).toEqual(english);
+    expect(into('Game (J) [T+Por].md').languages).toEqual(['pt']);
+    expect(into('Game (J) [T-Bra].md').languages).toEqual(['pt-br']);
+    // Both ways of naming it, and languages the cartridge already had.
+    expect(into('Game (Japan) (Translated En) [T-En by Someone].zip')).toEqual(english);
+    expect(into('Taruruto (Japan) (En,Fr,Ja) [T-En by Someone].zip').languages).toEqual([
+      'en',
+      'fr',
+      'ja'
+    ]);
+    // A translation into something not known is still one.
+    expect(into('Game (J) [T-Xyz].md')).toEqual({ languages: [], version: 'Translation' });
+  });
+
+  it('gives languages with a country, and Brazilian Portuguese apart', () => {
+    expect(romName('Cave Story (World) (Pt-BR) (Aftermarket) (Unl).zip').languages).toEqual([
+      'pt-br'
+    ]);
+    expect(romName('Cave Story (World) (Pt-PT).zip').languages).toEqual(['pt']);
+    expect(romName('Asteborg (World) (En,Fr,Pt-BR).zip').languages).toEqual(['en', 'fr', 'pt-br']);
+    expect(romName('Game (En-US).zip').languages).toEqual(['en']);
+    expect(romName('Game (Re-release).zip').languages).toEqual([]);
+    expect(languageFlag('pt-br')).toBe('./flags/br.svg');
+  });
+
   it('gives nothing from a bare name', () => {
     expect(romName('Doom.wad')).toEqual({ regions: [], languages: [], version: null });
     // Not the official release, whatever else the name says.
@@ -36,6 +70,7 @@ describe('a ROM’s file name', () => {
       'Translation'
     );
     expect(romName('Sonic (U) [h1].md').version).toBe('Hack');
+    expect(romName('Sonic (U) [h1].md').languages).toEqual([]);
     expect(romName('Sonic (U) [p1].md').version).toBe('Pirate');
     expect(romName('Sonic (U) [!].md').version).toBeNull();
     expect(romName('Sonic (U) [f1].md').version).toBeNull();

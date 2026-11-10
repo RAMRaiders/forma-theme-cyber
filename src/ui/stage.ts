@@ -1,5 +1,6 @@
 import type { Game } from '@ramraiders/forma-sdk';
 
+import { romName } from '../logic/romname.js';
 import { DEFAULT_BACK, DEFAULT_FRONT } from './cover.js';
 import { el } from './dom.js';
 
@@ -163,6 +164,7 @@ export const LANGUAGES: Record<string, string> = {
   es: 'Spanish',
   it: 'Italian',
   pt: 'Portuguese',
+  'pt-br': 'Portuguese (Brazil)',
   nl: 'Dutch',
   sv: 'Swedish',
   da: 'Danish',
@@ -368,7 +370,9 @@ export class Stage {
     add('Developer', game.developer);
     add('Publisher', game.publisher !== game.developer ? game.publisher : null);
     add('Region', game.region ? names(game.region, REGIONS) : null);
-    add('Languages', game.lang ? names(game.lang, LANGUAGES) : null);
+    // As in the Collector: the ROM's own name first (it is the copy at hand), the scraper's after.
+    const languages = romName(game.path).languages.join(',') || game.lang;
+    add('Languages', languages ? names(languages, LANGUAGES) : null);
     add('Played', played(game));
     if (this.options.media(game, 'manual')) add('Manual', 'In the box');
 
