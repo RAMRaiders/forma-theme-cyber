@@ -6,8 +6,10 @@
 export interface RomName {
   regions: string[];
   languages: string[];
-  /** `Rev 1`, `v1.1`, `Beta`, `Proto`, `Unl`, `Hack`…; `null` for a first, official release. */
+  /** `Rev 1`, `v1.1`, `Beta`, `Proto`…; `null` when the name gives none. */
   version: string | null;
+  /** What kind of copy it is: `Unl`, `Aftermarket`, `Hack`, `Translation`…; `null` for none. */
+  status: string | null;
 }
 
 /** No-Intro's region words. */
@@ -73,7 +75,8 @@ const languageCode = (tag: string) => {
   return code === 'pt-br' ? code : code.slice(0, 2);
 };
 const VERSION =
-  /^(rev\s*[\w.]+|v\s?\d[\w.]*|beta(\s*\d+)?|proto(type)?(\s*\d+)?|demo|sample|alt(\s*\d+)?|unl|unlicensed|pirate|bootleg|aftermarket|homebrew|hack)$/i;
+  /^(rev\s*[\w.]+|v\s?\d[\w.]*|beta(\s*\d+)?|proto(type)?(\s*\d+)?|demo|sample|alt(\s*\d+)?)$/i;
+const STATUS = /^(unl|unlicensed|pirate|bootleg|aftermarket|homebrew|hack)$/i;
 
 /** GoodTools' square brackets, those that say a copy is not the official release. */
 const BRACKETS: [RegExp, string][] = [
@@ -114,9 +117,10 @@ export function romName(path: string): RomName {
   const regions: string[] = [];
   const languages: string[] = [];
   const versions: string[] = [];
+  const statuses: string[] = [];
   const translation = (language: string) => {
     if (language) languages.push(language);
-    versions.push('Translation');
+    statuses.push('Translation');
   };
   for (const [, group = ''] of file.matchAll(/\(([^()]*)\)/g)) {
     const into = translatedInto(group);
@@ -138,6 +142,10 @@ export function romName(path: string): RomName {
       versions.push(group.trim());
       continue;
     }
+    if (STATUS.test(group.trim())) {
+      statuses.push(group.trim());
+      continue;
+    }
     // GoodTools: one region (`U`, `UK`) or letters together (`JUE`).
     if (/^[A-Z]{1,3}$/.test(group)) {
       const one = REGION_LETTERS[group];
@@ -152,12 +160,13 @@ export function romName(path: string): RomName {
       continue;
     }
     const found = BRACKETS.find(([tag]) => tag.test(group.trim()));
-    if (found) versions.push(found[1]);
+    if (found) statuses.push(found[1]);
   }
   return {
     regions: [...new Set(regions)],
     languages: [...new Set(languages)],
-    version: versions.length ? [...new Set(versions)].join(' · ') : null
+    version: versions.length ? [...new Set(versions)].join(' · ') : null,
+    status: statuses.length ? [...new Set(statuses)].join(' · ') : null
   };
 }
 

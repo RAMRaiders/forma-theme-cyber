@@ -1084,13 +1084,15 @@ export class CollectorView {
       row('Released', released),
       row('Developer', company(game.developer)),
       row('Publisher', company(game.publisher)),
-      row('Genre', game.genre)
+      row('Genre', game.genre),
+      row('Region', flags(flaggedRegions(regions), REGIONS, regionFlag)),
+      // A hack or a homebrew game with no version is no "original release".
+      row('Version', rom.version || !rom.status ? versionText(rom.version) : null),
+      row('Status', rom.status && versionText(rom.status))
     );
     const copy = section(
       'This copy',
-      row('Region', flags(flaggedRegions(regions), REGIONS, regionFlag)),
       row('Languages', flags(languages, LANGUAGES, languageFlag)),
-      row('Version', versionText(rom.version)),
       row('Media', this.#archive(game))
     );
     const record =
@@ -1101,7 +1103,8 @@ export class CollectorView {
         row('Last', game.lastPlayed ? ago(game.lastPlayed) : null)
       ) ?? el('section', { class: 'part' });
     this.#achievementsInto(game, record);
-    if (copy) this.#versionsInto(game, copy, row);
+    const versions = release ?? copy;
+    if (versions) this.#versionsInto(game, versions, row);
 
     // This copy and the play record take turns in one place.
     const turns = [copy, record].filter((p): p is HTMLElement => p !== null);
@@ -1164,7 +1167,7 @@ export class CollectorView {
   /** "Also owned", in this copy's details, for a game with other versions in the library. */
   #versionsInto(
     game: Game,
-    copy: HTMLElement,
+    part: HTMLElement,
     row: (label: string, value: string) => HTMLElement | null
   ): void {
     const fetch = this.#options.otherVersions;
@@ -1175,7 +1178,7 @@ export class CollectorView {
       .then((others) => {
         const text = versionsText(others);
         const line = text ? row('Also owned', text) : null;
-        if (line && this.#game?.id === id) copy.querySelector('.specs')?.append(line);
+        if (line && this.#game?.id === id) part.querySelector('.specs')?.append(line);
       });
   }
 
@@ -1393,7 +1396,7 @@ function flagChip(name: string, flag: string | null): HTMLElement {
  */
 export function versionText(version: string | null): string {
   if (!version) return 'Original release';
-  return version.split(' · ').map(versionWords).join(' · ');
+  return [...new Set(version.split(' · ').map(versionWords))].join(' · ');
 }
 
 function versionWords(version: string): string {
@@ -1407,9 +1410,10 @@ function versionWords(version: string): string {
     demo: 'Demo',
     sample: 'Sample',
     unl: 'Unlicensed',
+    unlicensed: 'Unlicensed',
     pirate: 'Pirate',
     bootleg: 'Bootleg',
-    aftermarket: 'Aftermarket',
+    aftermarket: 'Homebrew',
     homebrew: 'Homebrew',
     hack: 'Hack'
   };
@@ -1486,7 +1490,8 @@ export function versionsText(others: OtherVersion[]): string {
     const region = rom.regions[0];
     const place = region ? (REGIONS[region] ?? region.toUpperCase()) : null;
     const patched = other.tags.some((t) => /^(t-en|translated en)/i.test(t));
-    const kind = patched ? 'English patch' : rom.version && versionText(rom.version);
+    const about = [rom.version, rom.status].filter(Boolean).join(' · ');
+    const kind = patched ? 'English patch' : about && versionText(about);
     const label = [place, kind].filter(Boolean).join(' · ') || (other.tags[0] ?? 'Other version');
     counts.set(label, (counts.get(label) ?? 0) + 1);
   }

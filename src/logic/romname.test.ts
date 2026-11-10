@@ -7,13 +7,15 @@ describe('a ROM’s file name', () => {
     expect(romName('Super Metroid (Japan, USA) (En,Ja).sfc')).toEqual({
       regions: ['jp', 'us'],
       languages: ['en', 'ja'],
-      version: null
+      version: null,
+      status: null
     });
     expect(romName('sub/Chrono Trigger (USA) (Rev 1).zip').version).toBe('Rev 1');
     expect(romName('Game (Europe) (En,Fr,De) (Beta 2).md')).toEqual({
       regions: ['eu'],
       languages: ['en', 'fr', 'de'],
-      version: 'Beta 2'
+      version: 'Beta 2',
+      status: null
     });
   });
 
@@ -22,16 +24,17 @@ describe('a ROM’s file name', () => {
     expect(romName('Mario (U) (V1.1).nes')).toEqual({
       regions: ['us'],
       languages: [],
-      version: 'V1.1'
+      version: 'V1.1',
+      status: null
     });
   });
 
   it('gives the language a fan translation is into', () => {
     const into = (name: string) => {
-      const { languages, version } = romName(name);
-      return { languages, version };
+      const { languages, status } = romName(name);
+      return { languages, status };
     };
-    const english = { languages: ['en'], version: 'Translation' };
+    const english = { languages: ['en'], status: 'Translation' };
     expect(into('Dyna Brothers (Japan) [T-En by Tybis v0.1] [i].zip')).toEqual(english);
     expect(into('Monster World IV (Japan) (Translated En).zip')).toEqual(english);
     expect(into('Game (Japan) (Translated Fr).zip').languages).toEqual(['fr']);
@@ -46,7 +49,7 @@ describe('a ROM’s file name', () => {
       'ja'
     ]);
     // A translation into something not known is still one.
-    expect(into('Game (J) [T-Xyz].md')).toEqual({ languages: [], version: 'Translation' });
+    expect(into('Game (J) [T-Xyz].md')).toEqual({ languages: [], status: 'Translation' });
   });
 
   it('gives languages with a country, and Brazilian Portuguese apart', () => {
@@ -61,19 +64,28 @@ describe('a ROM’s file name', () => {
   });
 
   it('gives nothing from a bare name', () => {
-    expect(romName('Doom.wad')).toEqual({ regions: [], languages: [], version: null });
+    expect(romName('Doom.wad')).toEqual({
+      regions: [],
+      languages: [],
+      version: null,
+      status: null
+    });
     // Not the official release, whatever else the name says.
-    expect(romName('Shui Hu Zhuan (China) (Unl).zip').version).toBe('Unl');
-    expect(romName('Game (World) (Rev 1) (Unl).md').version).toBe('Rev 1 · Unl');
-    expect(romName('Game (Pirate).md').version).toBe('Pirate');
-    expect(romName('Trouble Shooter (Japan) [T-En by M.I.J.E.T. v061029] [n].md').version).toBe(
+    expect(romName('Shui Hu Zhuan (China) (Unl).zip').status).toBe('Unl');
+    expect(romName('Shui Hu Zhuan (China) (Unl).zip').version).toBeNull();
+    expect(romName('Game (World) (v1.1) (Aftermarket) (Unl).md')).toMatchObject({
+      version: 'v1.1',
+      status: 'Aftermarket · Unl'
+    });
+    expect(romName('Game (Pirate).md').status).toBe('Pirate');
+    expect(romName('Trouble Shooter (Japan) [T-En by M.I.J.E.T. v061029] [n].md').status).toBe(
       'Translation'
     );
-    expect(romName('Sonic (U) [h1].md').version).toBe('Hack');
+    expect(romName('Sonic (U) [h1].md').status).toBe('Hack');
     expect(romName('Sonic (U) [h1].md').languages).toEqual([]);
-    expect(romName('Sonic (U) [p1].md').version).toBe('Pirate');
-    expect(romName('Sonic (U) [!].md').version).toBeNull();
-    expect(romName('Sonic (U) [f1].md').version).toBeNull();
+    expect(romName('Sonic (U) [p1].md').status).toBe('Pirate');
+    expect(romName('Sonic (U) [!].md').status).toBeNull();
+    expect(romName('Sonic (U) [f1].md').status).toBeNull();
     // A subtitle in brackets is not a region.
     expect(romName('Wario Land (Super Mario Land 3).gb').regions).toEqual([]);
   });

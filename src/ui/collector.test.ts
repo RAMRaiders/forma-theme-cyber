@@ -195,8 +195,8 @@ describe('the Collector view', () => {
       'Publisher',
       'Genre',
       'Region',
-      'Languages',
       'Version',
+      'Languages',
       'Media',
       'Played',
       'Time'
@@ -210,7 +210,7 @@ describe('the Collector view', () => {
     expect([...flags(0)].map((c) => c.getAttribute('title'))).toEqual(['USA', 'Japan']);
     expect([...flags(1)].map((c) => c.getAttribute('title'))).toEqual(['English', 'Japanese']);
     expect(text('.dossier .specs .flags')).toEqual(['', '']);
-    expect(dd[6]).toBe('Revision 1');
+    expect(dd[5]).toBe('Revision 1');
     // What it has, lit; what it lacks, faint.
     expect(text('.dossier .archive .on')).toEqual([
       'Box',
@@ -247,7 +247,26 @@ describe('the Collector view', () => {
     expect(versionText('Proto')).toBe('Prototype');
     expect(versionText('Beta 2')).toBe('Beta 2');
     expect(versionText('Unl')).toBe('Unlicensed');
-    expect(versionText('Rev 1 · Unl')).toBe('Revision 1 · Unlicensed');
+    expect(versionText('Aftermarket · Unl')).toBe('Homebrew · Unlicensed');
+    expect(versionText('Aftermarket · Homebrew')).toBe('Homebrew');
+  });
+
+  it('keeps what kind of copy it is apart from its version', async () => {
+    const rows = async (path: string) => {
+      const { text } = await view([{ ...game(7, 'Tanglewood', BOXED), path }]);
+      const labels = text('.dossier .specs dt');
+      const values = text('.dossier .specs dd');
+      return Object.fromEntries(labels.map((label, i) => [label, values[i]]));
+    };
+    const both = await rows('Tanglewood (World) (v1.1) (Aftermarket) (Unl).md');
+    expect(both['Version']).toBe('Version 1.1');
+    expect(both['Status']).toBe('Homebrew · Unlicensed');
+    const noVersion = await rows('Tanglewood (World) (Aftermarket) (Unl).md');
+    expect(noVersion['Version']).toBeUndefined();
+    expect(noVersion['Status']).toBe('Homebrew · Unlicensed');
+    const plain = await rows('Tanglewood (USA).md');
+    expect(plain['Version']).toBe('Original release');
+    expect(plain['Status']).toBeUndefined();
   });
 
   it('fades the new fan art in over the old, which goes once covered: never a dip to dark', async () => {
@@ -577,6 +596,9 @@ describe('other versions of a game', () => {
     expect(versionsText([])).toBe('');
     expect(versionsText([{ path: 'Game (Japan).md', tags: ['Japan'] }])).toBe('Japan');
     expect(versionsText([patched(1), patched(2)])).toBe('USA · English patch ×2');
+    expect(versionsText([{ path: 'Game (World) (v2) (Unl).md', tags: [] }])).toBe(
+      'World · Version 2 · Unlicensed'
+    );
   });
 
   it('stops at three kinds', () => {
