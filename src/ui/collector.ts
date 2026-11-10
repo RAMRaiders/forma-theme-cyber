@@ -402,6 +402,15 @@ export class CollectorView {
     return [img, ...parts];
   }
 
+  /** A game's pictures were replaced: draws again its spine and, if it is the one shown, its case. */
+  mediaChanged(id: number): void {
+    for (const node of this.#rows.values()) {
+      if (node.dataset.key === String(id)) node.dataset.key = '';
+    }
+    this.render();
+    if (this.selected?.id === id) this.#showSelected(true);
+  }
+
   refreshSelected(game: Game): void {
     this.#source?.set(this.#selected, game);
     this.render();

@@ -165,6 +165,16 @@ export class GamesView {
     row.prepend(logo);
   }
 
+  /** A game's pictures were replaced: draws again its row and, if it is the one shown, the rest. */
+  mediaChanged(id: number): void {
+    for (const node of this.#rows.values()) {
+      if (node.dataset.key === String(id)) node.dataset.key = '';
+    }
+    this.render();
+    const game = this.selected;
+    if (game?.id === id) this.#stage.show(game, true);
+  }
+
   /** Redraws the selected game after it changed, e.g. a favourite toggled. */
   refreshSelected(game: Game): void {
     this.#source?.set(this.#selected, game);

@@ -443,6 +443,34 @@ describe('the default theme', () => {
     expect(text('.spine-row.selected .title')).toEqual(picked);
   });
 
+  it('draws a game again when its pictures are replaced, from new addresses', async () => {
+    const { press, root, fire, backend } = await start();
+    const invoke = backend.invoke.bind(backend);
+    vi.spyOn(backend, 'invoke').mockImplementation(async (command, args) => {
+      const answer = await invoke(command, args);
+      if (command !== 'nav_browse') return answer;
+      const browse = answer as Browse;
+      if (browse.listing.kind !== 'games') return answer;
+      const media = { boxside: 'side.png', fanart: 'fan.png', thumbnail: 'box.png' };
+      const items = browse.listing.items.map((game) => ({ ...game, media }));
+      return { ...browse, listing: { ...browse.listing, items } };
+    });
+    const asked = vi.spyOn(backend, 'mediaUrl');
+    await press('confirm');
+    await press('confirm');
+    await vi.waitFor(() => expect(root.querySelector('.games')).not.toBeNull());
+    fire('settings:changed', { scope: 'theme', key: 'gamesView', value: 'collector' });
+    await vi.waitFor(() => expect(root.querySelector('.spine-row.selected')).not.toBeNull());
+    await vi.waitFor(() => expect(asked.mock.calls.some((c) => c[1] !== 'boxside')).toBe(true));
+    const game = asked.mock.calls.filter((c) => c[1] !== 'boxside').at(-1)![0];
+    asked.mockClear();
+    fire('media:changed', { game });
+    const again = asked.mock.calls.filter((c) => c[0] === game);
+    expect(again.map((c) => c[1])).toContain('boxside');
+    expect(again.some((c) => c[1] !== 'boxside')).toBe(true);
+    expect(again.every((c) => c[3] === 1)).toBe(true);
+  });
+
   it('reads its settings one by one, over the single object it used to keep', async () => {
     const backend = mockBackend({ permissions: [] });
     await backend.invoke('settings_set', {

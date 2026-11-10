@@ -249,6 +249,10 @@ export class App {
       this.#versions.clear();
       this.#reloadSoon();
     });
+    // A scrape replaced a game's pictures, often under the same names: nothing else says so.
+    this.forma.events.on('media:changed', ({ game }) => {
+      if (this.#list) this.#gameView.mediaChanged(game);
+    });
     // Views change with collections too: the shortcuts' counts follow.
     this.forma.events.on('views:changed', () => {
       void this.#loadViews();

@@ -237,8 +237,8 @@ export class Stage {
   }
 
   /** Shows `game` from act 1; the same game again (a favourite toggled) keeps its act. */
-  show(game: ShowGame): void {
-    if (this.#game?.id === game.id && this.#title && sameDetails(this.#game, game)) {
+  show(game: ShowGame, again = false): void {
+    if (!again && this.#game?.id === game.id && this.#title && sameDetails(this.#game, game)) {
       this.#game = game;
       const title = this.#titleBlock(game);
       this.#title.replaceWith(title);
