@@ -36,6 +36,27 @@ export class LazyList<T> {
     return item;
   }
 
+  /**
+   * Where the item passing `test` is, or `-1`: looking outward from the page holding `near`, and
+   * loading pages only until it is found.
+   */
+  async findIndex(test: (item: T) => boolean, near = 0): Promise<number> {
+    const pages = Math.ceil(this.#total / this.pageSize);
+    const start = Math.floor(near / this.pageSize);
+    for (let distance = 0; distance < pages; distance++) {
+      for (const page of distance ? [start - distance, start + distance] : [start]) {
+        if (page < 0 || page >= pages) continue;
+        const offset = page * this.pageSize;
+        if (this.#items[offset] === undefined) await this.#load(page);
+        const at = this.#items
+          .slice(offset, offset + this.pageSize)
+          .findIndex((item) => item !== undefined && test(item));
+        if (at >= 0) return offset + at;
+      }
+    }
+    return -1;
+  }
+
   /** Replaces one loaded item, e.g. after toggling a favourite. */
   set(index: number, item: T): void {
     if (index >= 0 && index < this.#total) this.#items[index] = item;

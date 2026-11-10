@@ -324,7 +324,9 @@ export class App {
     this.#systemView.hide();
     // A system's games keep its board behind them; other views have none.
     if (this.#view !== CYBER_VIEW || target.shortcut) this.#backdrop.replaceChildren();
-    const index = this.#level.index;
+    const remembered = this.#level.index;
+    // A reload keeps to the game selected, wherever it now sorts: a scrape can rename it.
+    const follow = reload && this.#list ? this.#gameView.selected?.id : undefined;
     const { view, path } = target;
     const loading = this.#loading('Loading games…');
     try {
@@ -340,7 +342,12 @@ export class App {
           PAGE,
           () => this.#gameView.render()
         );
-        await list.start(index);
+        await list.start(remembered);
+        const moved =
+          follow === undefined || list.get(remembered)?.id === follow
+            ? -1
+            : await list.findIndex((g) => g.id === follow, remembered);
+        const index = moved >= 0 ? moved : remembered;
         this.#list = list;
         this.#level.index = Math.min(index, Math.max(0, list.total - 1));
         this.#main.replaceChildren(this.#gameView.root);
@@ -350,7 +357,7 @@ export class App {
       } else {
         this.#list = null;
         this.#cards = await this.#allCards(first);
-        this.#level.index = Math.min(index, Math.max(0, this.#cards.length - 1));
+        this.#level.index = Math.min(remembered, Math.max(0, this.#cards.length - 1));
         this.#main.replaceChildren(this.#grid.root);
         this.#grid.show(this.#cards, this.#level.index);
       }

@@ -4,7 +4,7 @@
  * output for the fixture library). jsdom has no layout, so this checks behaviour and wiring,
  * not looks.
  */
-import { connect, type InputEvent } from '@ramraiders/forma-sdk';
+import { connect, type Browse, type InputEvent } from '@ramraiders/forma-sdk';
 import { mockBackend } from '@ramraiders/forma-sdk/mock';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -416,6 +416,31 @@ describe('the default theme', () => {
     const invoke = vi.spyOn(backend, 'invoke');
     await press('confirm');
     expect(invoke.mock.calls.map(([command]) => command)).toContain('launch_game');
+  });
+
+  it('stays on the game selected when a reload moves it, as a rename by a scraper does', async () => {
+    const { press, root, fire, text, backend } = await start();
+    await press('confirm');
+    await press('confirm');
+    await vi.waitFor(() => expect(root.querySelector('.games')).not.toBeNull());
+    fire('settings:changed', { scope: 'theme', key: 'gamesView', value: 'collector' });
+    await vi.waitFor(() => expect(text('.spine-row.selected .title')).toHaveLength(1));
+    const picked = text('.spine-row.selected .title');
+    const invoke = backend.invoke.bind(backend);
+    vi.spyOn(backend, 'invoke').mockImplementation(async (command, args) => {
+      const answer = await invoke(command, args);
+      if (command !== 'nav_browse') return answer;
+      const browse = answer as Browse;
+      if (browse.listing.kind !== 'games') return answer;
+      const items = [...browse.listing.items].reverse();
+      return { ...browse, listing: { ...browse.listing, items } };
+    });
+    const rows = () => [...root.querySelectorAll<HTMLElement>('.spine-row')];
+    const at = () => rows().findIndex((r) => r.classList.contains('selected'));
+    expect(at()).toBe(0);
+    fire('library:changed', null);
+    await vi.waitFor(() => expect(at()).toBe(rows().length - 1));
+    expect(text('.spine-row.selected .title')).toEqual(picked);
   });
 
   it('reads its settings one by one, over the single object it used to keep', async () => {

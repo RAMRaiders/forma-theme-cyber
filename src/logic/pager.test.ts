@@ -66,4 +66,18 @@ describe('LazyList', () => {
     await list.start();
     expect(list.get(0)).toBe(7);
   });
+
+  it('finds an item by looking outward from a page, loading only what it must', async () => {
+    const { fetch, calls } = source(350);
+    const list = new LazyList<number>(fetch, 100);
+    await list.start(150);
+    expect(calls).toEqual([100]);
+    expect(await list.findIndex((n) => n === 120, 150)).toBe(120);
+    expect(calls).toEqual([100]);
+    expect(await list.findIndex((n) => n === 230, 150)).toBe(230);
+    // The nearest page each way, the one before it first.
+    expect(calls).toEqual([100, 0, 200]);
+    expect(await list.findIndex((n) => n === 999, 150)).toBe(-1);
+    expect(calls).toEqual([100, 0, 200, 300]);
+  });
 });
