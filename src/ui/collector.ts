@@ -109,7 +109,7 @@ const FANART_KEPT = 12;
 const VIDEO_AFTER_MS = 2500;
 /** With no video, the footage bay shows the screenshots in turn. */
 const SHOT_MS = 4000;
-/** This copy and the play record take turns, each this long. */
+/** This copy and the play record take turns, each this long, when they do not fit together. */
 const ALTERNATE_MS = 10_000;
 /** The story a page at a time: each this long, fading this long between. */
 const STORY_PAGE_MS = 12_000;
@@ -210,6 +210,8 @@ export class CollectorView {
   /** The shelf's colours, worked out one after another. */
   #colourQueue: Promise<void> = Promise.resolve();
   #achievements = new Map<number, Promise<Achievements | null>>();
+  /** Lays out this copy and the play record again: together if they fit, else in turn. */
+  #layDossier: (() => void) | null = null;
   #game: ShowGame | null = null;
   #box: HTMLElement | null = null;
   /** Sizes the box to its case, once the case is laid out. */
@@ -1106,13 +1108,27 @@ export class CollectorView {
     const versions = release ?? copy;
     if (versions) this.#versionsInto(game, versions, row);
 
-    // This copy and the play record take turns in one place.
+    // This copy and the play record one under the other when the dossier has room for both,
+    // else taking turns in one place. Asked again as it grows (achievements arrive later).
     const turns = [copy, record].filter((p): p is HTMLElement => p !== null);
     turns[0]?.classList.add('shown');
     const alternate = el('div', { class: 'alternate' }, ...turns);
+    this.#layDossier = null;
     if (turns.length > 1) {
+      const dossier = this.#dossier;
+      const lay = () => {
+        alternate.classList.add('together');
+        const fits = dossier.scrollHeight <= dossier.clientHeight + 1;
+        alternate.classList.toggle('together', fits);
+        return fits;
+      };
+      this.#layDossier = lay;
+      requestAnimationFrame(() => {
+        if (dossier.contains(alternate)) lay();
+      });
       let at = 0;
       this.#every(() => {
+        if (lay()) return;
         turns[at]?.classList.remove('shown');
         at = (at + 1) % turns.length;
         turns[at]?.classList.add('shown');
@@ -1196,8 +1212,14 @@ export class CollectorView {
       const bar = el('div', { class: 'bar' });
       bar.style.setProperty('--done', String(a.earned / a.total));
       record.append(
-        el('div', { class: 'achievements' }, el('span', {}, `🏆 ${a.earned} / ${a.total}`), bar)
+        el(
+          'div',
+          { class: 'achievements' },
+          el('span', {}, glyph(ICONS.cheevos), `${a.earned} / ${a.total}`),
+          bar
+        )
       );
+      this.#layDossier?.();
     });
   }
 
@@ -1428,10 +1450,16 @@ const ICONS = {
     '<path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1.5A3.5 3.5 0 0 0 7.5 11M17 6h3v1.5a3.5 3.5 0 0 1-3.5 3.5"/><path d="M12 14v3M8.5 20.5h7M10 17h4v3.5h-4z"/>'
 } as const;
 
+/** One of the line icons, for show. Never an emoji: the Pi has no font for them, they come out
+ * as squares. */
+function glyph(icon: string): HTMLElement {
+  const span = el('span', { class: 'glyph', 'aria-hidden': 'true' });
+  span.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">${icon}</svg>`;
+  return span;
+}
+
 function mark(cls: string, icon: string, label: string, on: boolean): HTMLElement {
-  const glyph = el('span', { class: 'glyph', 'aria-hidden': 'true' });
-  glyph.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round">${icon}</svg>`;
-  return el('li', { class: `mark ${cls}${on ? ' on' : ''}` }, glyph, el('span', {}, label));
+  return el('li', { class: `mark ${cls}${on ? ' on' : ''}` }, glyph(icon), el('span', {}, label));
 }
 
 /** A front made up: the fan art (or a screenshot) under its logo (or its name). */

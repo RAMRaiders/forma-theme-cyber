@@ -4530,6 +4530,18 @@ kbd {
   transition: opacity 400ms ease;
 }
 
+.dossier .alternate.together {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.dossier .alternate.together > .part {
+  opacity: 1;
+  visibility: visible;
+  transition: none;
+}
+
 :root[data-motion='off'] .dossier .alternate > .part {
   transition: none;
 }
@@ -4571,6 +4583,20 @@ kbd {
   gap: 0.25rem;
   margin-top: 0.35rem;
   font-size: 0.7rem;
+}
+
+.dossier .achievements .glyph {
+  display: inline-block;
+  width: 0.95rem;
+  height: 0.95rem;
+  margin-right: 0.35rem;
+  vertical-align: -0.2rem;
+}
+
+.dossier .achievements svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .dossier .bar {

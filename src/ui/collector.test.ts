@@ -230,13 +230,24 @@ describe('the Collector view', () => {
     ]);
   });
 
-  it('shows this copy and the play record in turn', async () => {
-    const { text } = await view([game(7, 'After Burner', BOXED)]);
+  it('shows this copy and the play record together when they fit', async () => {
+    const { v } = await view([game(7, 'After Burner', BOXED)]);
+    vi.advanceTimersByTime(20);
+    expect(v.root.querySelector('.dossier .alternate')!.classList.contains('together')).toBe(true);
+  });
+
+  it('shows this copy and the play record in turn when they do not fit', async () => {
+    vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(500);
+    vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(300);
+    const { v, text } = await view([game(7, 'After Burner', BOXED)]);
+    vi.advanceTimersByTime(20);
+    expect(v.root.querySelector('.dossier .alternate')!.classList.contains('together')).toBe(false);
     expect(text('.dossier .alternate .part.shown h3')).toEqual(['This copy']);
     vi.advanceTimersByTime(10_000);
     expect(text('.dossier .alternate .part.shown h3')).toEqual(['Play record']);
     vi.advanceTimersByTime(10_000);
     expect(text('.dossier .alternate .part.shown h3')).toEqual(['This copy']);
+    vi.restoreAllMocks();
   });
 
   it("says the dump's version in words", () => {
@@ -249,6 +260,16 @@ describe('the Collector view', () => {
     expect(versionText('Unl')).toBe('Unlicensed');
     expect(versionText('Aftermarket · Unl')).toBe('Homebrew · Unlicensed');
     expect(versionText('Aftermarket · Homebrew')).toBe('Homebrew');
+  });
+
+  it('shows achievements with a drawn trophy, never an emoji the Pi has no font for', async () => {
+    const { v } = await view([{ ...game(7, 'After Burner', BOXED), raGameId: 9 }], {
+      achievements: () => Promise.resolve({ earned: 0, total: 30 } as never)
+    });
+    await vi.waitFor(() => expect(v.root.querySelector('.dossier .achievements')).not.toBeNull());
+    const line = v.root.querySelector('.dossier .achievements span')!;
+    expect(line.querySelector('svg')).not.toBeNull();
+    expect(line.textContent).toBe('0 / 30');
   });
 
   it('keeps what kind of copy it is apart from its version', async () => {
