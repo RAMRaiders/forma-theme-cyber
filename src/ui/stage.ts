@@ -393,7 +393,7 @@ export class Stage {
             el(
               'div',
               { class: 'achievements' },
-              el('span', {}, `🏆 ${a.earned} of ${a.total} achievements`),
+              el('span', {}, `${a.earned} of ${a.total} achievements`),
               bar
             )
           );

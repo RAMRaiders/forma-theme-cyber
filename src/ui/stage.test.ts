@@ -115,7 +115,7 @@ describe('the game stage', () => {
     ]);
     expect(text('.facts dd')).toContain('English, French');
     expect(text('.facts dd')).toContain('3× · 1 h 30 min');
-    expect(text('.achievements span')).toEqual(['🏆 12 of 40 achievements']);
+    expect(text('.achievements span')).toEqual(['12 of 40 achievements']);
 
     // The box turns round once it is in.
     const box = s.root.querySelector('.box3d')!;
