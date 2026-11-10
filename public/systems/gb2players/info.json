@@ -9,7 +9,9 @@
     "memory": "8 KB RAM · 8 KB VRAM",
     "graphics": "160 × 144 reflective LCD, 4 shades",
     "sound": "4 channels (2 pulse, wave, noise), stereo through headphones",
-    "media": "ROM cartridges"
+    "media": "ROM cartridges",
+    "generation": "4th",
+    "lifetime": "1989–2003 (14 years)"
   },
   "chips": [
     {

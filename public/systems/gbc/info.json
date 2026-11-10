@@ -10,7 +10,9 @@
     "graphics": "160 × 144 colour LCD, up to 56 colours from 32,768",
     "sound": "4 channels (2 pulse, wave, noise)",
     "media": "ROM cartridges",
-    "unitsSold": "About 118.69 million (Game Boy and Game Boy Color combined)"
+    "unitsSold": "About 118.69 million (Game Boy and Game Boy Color combined)",
+    "generation": "5th",
+    "lifetime": "1998–2003 (5 years)"
   },
   "chips": [
     {

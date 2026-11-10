@@ -9,7 +9,9 @@
     "memory": "4 KB RAM",
     "graphics": "MARIA",
     "sound": "TIA (POKEY optional on cartridge)",
-    "media": "Cartridge"
+    "media": "Cartridge",
+    "generation": "3rd",
+    "lifetime": "1986–1992 (6 years)"
   },
   "chips": [
     {

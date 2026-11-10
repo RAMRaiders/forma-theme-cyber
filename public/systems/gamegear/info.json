@@ -10,7 +10,9 @@
     "graphics": "3.2\" backlit colour LCD, 160 × 144, 32 colours on screen from 4,096",
     "sound": "SN76489-type PSG, stereo through headphones",
     "media": "ROM cartridges",
-    "unitsSold": "About 10.62 million"
+    "unitsSold": "About 10.62 million",
+    "generation": "4th",
+    "lifetime": "1990–1997 (7 years)"
   },
   "chips": [
     {

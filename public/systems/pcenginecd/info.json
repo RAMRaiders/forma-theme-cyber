@@ -9,7 +9,9 @@
     "memory": "64 KB RAM (System Card), 256 KB with Super System Card; +2 MB with Arcade Card",
     "graphics": "HuC6270 VDC + HuC6260 VCE (host console)",
     "sound": "HuC6280 wavetable + OKI MSM5205 ADPCM + CD audio",
-    "media": "CD-ROM with System Card HuCard"
+    "media": "CD-ROM with System Card HuCard",
+    "generation": "4th",
+    "lifetime": "1988–1994 (6 years)"
   },
   "chips": [
     {

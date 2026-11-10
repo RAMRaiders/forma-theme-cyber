@@ -9,7 +9,9 @@
     "memory": "4 KB",
     "graphics": "Custom display chips, 160×102, 256-colour palette",
     "sound": "Custom I/O + sound chip, 3 square-wave voices + noise",
-    "media": "Cartridge (Videocade)"
+    "media": "Cartridge (Videocade)",
+    "generation": "2nd",
+    "lifetime": "1977–1983 (6 years)"
   },
   "chips": [
     {

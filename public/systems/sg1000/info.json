@@ -9,7 +9,9 @@
     "memory": "1 KB RAM / 16 KB VRAM",
     "graphics": "Texas Instruments TMS9918A, 256×192, 15 colours",
     "sound": "Texas Instruments SN76489 (3 tone + 1 noise)",
-    "media": "Cartridge, Sega Card"
+    "media": "Cartridge, Sega Card",
+    "generation": "3rd",
+    "lifetime": "1983–1985 (2 years)"
   },
   "chips": [
     {

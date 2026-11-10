@@ -5,5 +5,8 @@
   ],
   "unverified": [],
   "bestsellers": ["Prince of Persia", "Batz 'n Balls", "Defenders of the Earth"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "lifetime": "1989–1992 (3 years)"
+  }
 }

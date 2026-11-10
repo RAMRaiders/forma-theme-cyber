@@ -10,7 +10,9 @@
     "graphics": "Sega 315-5124 VDP (TMS9918-derived)",
     "sound": "SN76489 PSG in VDP; YM2413 FM on JP model",
     "media": "Cartridge / Sega Card",
-    "unitsSold": "10–13 million"
+    "unitsSold": "10–13 million",
+    "generation": "3rd",
+    "lifetime": "1985–1996 (11 years)"
   },
   "chips": [
     {

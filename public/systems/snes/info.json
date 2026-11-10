@@ -10,7 +10,9 @@
     "graphics": "S-PPU1 / S-PPU2, up to 256 of 32,768 colours, Mode 7",
     "sound": "Sony SPC700 + S-DSP, 8 ADPCM channels, 64 KB audio RAM",
     "media": "Cartridge",
-    "unitsSold": "~49.1 million"
+    "unitsSold": "~49.1 million",
+    "generation": "4th",
+    "lifetime": "1990–2003 (13 years)"
   },
   "chips": [
     {

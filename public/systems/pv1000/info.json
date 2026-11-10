@@ -9,7 +9,9 @@
     "memory": "2 KB RAM (shared with video)",
     "graphics": "NEC D65010G031, 8 colours",
     "sound": "NEC D65010G031, 3 square-wave voices",
-    "media": "Cartridge"
+    "media": "Cartridge",
+    "generation": "3rd",
+    "lifetime": "1983–1984 (1 year)"
   },
   "chips": [
     {

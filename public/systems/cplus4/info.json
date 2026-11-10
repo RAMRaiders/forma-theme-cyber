@@ -9,7 +9,8 @@
     "memory": "64 KB RAM",
     "graphics": "TED: 320 × 200, 121 colours, no sprites",
     "sound": "TED: 2 voices",
-    "media": "ROM cartridges, cassette, floppy disk"
+    "media": "ROM cartridges, cassette, floppy disk",
+    "lifetime": "1984–1985 (1 year)"
   },
   "chips": [
     {

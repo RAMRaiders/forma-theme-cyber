@@ -1,14 +1,17 @@
 {
   "sega32x": ["sega-magazine-uk-12-supplement-megadrive-32-x-guide"],
   "megadrive": [
-    "Game_Players_Sega_Genesis_Strategy_Guide_Vol_01_Issue_01",
-    "beep-megadrive-1994-01",
-    "megadrive-fan-1994-01"
+    "segamegadriveadvancedgaming05",
+    "sega-force-10",
+    "mean-machines-sega-09",
+    "megagoldsummerspecial",
+    "sega-force-16"
   ],
   "snes": [
     "sup01",
-    "the-super-famicom-1990-11-30-number-1-volume-1-issue-1",
-    "the-super-famicom-1991-01-25-number-4-volume-2-issue-1"
+    "SNES_Force_Issue_07_1993-12_Impact_Magazines_GB",
+    "super-gamer-11",
+    "snes-force-01"
   ],
   "nes": [
     "nintendo_power_issue1",
@@ -22,7 +25,7 @@
   ],
   "gamecube": ["cube-01", "egms-unofficial-game-cube-guide-march-2002"],
   "gbc": ["Total_Game_Boy_Issue_01", "Total_Game_Boy_Issue_03"],
-  "gba": ["gba-master-guide-01", "Nintendo_Accion_110_Locos_por_Game_Boy_Advance", "GBALRU1"],
+  "gba": ["gba-master-guide-01"],
   "psx": [
     "Official_US_PlayStation_Magazine_Volume_1_Issue_1_1997-10_Ziff_Davis_US",
     "Official_UK_Playstation_Magazine_1999_Future_Publishing_GB_platinum_special",
@@ -33,13 +36,18 @@
     "ops2specialeditiontheaz",
     "Official_UK_Playstation_2_Magazine_Issue_003_2001_01_Future_Publishing_GB"
   ],
-  "saturn": ["sup53saturnguide", "Official_Sega_Saturn_Magazine_001", "SSMJP199401941201"],
+  "saturn": [
+    "Official_Sega_Saturn_Magazine_001",
+    "official-sega-saturn-magazine-issue-22",
+    "sup53saturnguide",
+    "Sega_Saturn_Magazine_Issue_02_1995-12_EMAP_Images_GB"
+  ],
   "dreamcast": [
     "EDGE.N067.1999.01.Supplement.Dreamcast",
     "Official_Dreamcast_Magazine_The_Special_Issue_1999-10_Dennis_Publishing_GB",
     "Official_Dreamcast_Magazine_The_Issue_01_1999-09_Imagine_Publishing_US"
   ],
-  "pcengine": ["super-pc-engine-fan-1", "pc-engine-fan-september-1992", "turbo-play"],
+  "pcengine": ["turbo-play-us-12", "turbo-play"],
   "neogeo": ["neogeofreak0001", "neogeofreak0030", "neogeofreak0033"],
   "jaguar": ["EDGE.N022.1995.07.Supplement.Atari.Jaguar"],
   "lynx": ["AtariLynxMarketingEGM", "atari-lynx-grey-matters-vol-3-1992"],
@@ -51,7 +59,8 @@
   "3do": [
     "3DOMagazineIssue10199605ParagonPublishingGB",
     "3DO_Magazine_Issue_12_1996-07_Paragon_Publishing_GB",
-    "3do-magazine-japan-issue-09-may-june-1995"
+    "3-do-gold-01",
+    "3-do-magazine-04"
   ],
   "zxspectrum": ["YourSinclair37Jan89", "sinclair-user-magazine-045", "sinclair-user-magazine-058"],
   "c64": ["Zzap044Dec88", "zzap64-magazine-044", "zzap64-magazine-006"],
@@ -62,7 +71,7 @@
     "Atari_ST_User_Issue_088_1993-06_Europress_GB"
   ],
   "amiga1200": ["cuamiga-magazine-027", "cuamiga-magazine-025", "cuamiga-magazine-046"],
-  "msx1": ["MSXMagazine-Japan", "msxcomputermagazine", "MSXMAGAZINE3_201808"],
+  "msx1": ["MSXComputing", "msx-user-1985-09-images"],
   "x68000": ["OhX1990-1995", "OhX_1991-08", "OhX_1993-05"],
   "c20": [
     "Personal_Computing_On_The_VIC-20_1982_Commodore",
@@ -71,9 +80,14 @@
   ],
   "cplus4": ["Commodore_C16_Plus4_Reference_Book", "Videobasic-C16", "C16MSXN40"],
   "gamegear": ["OfficialSegaGenesisGameGearStrategies3rdEdition"],
-  "megacd": ["beepmega-cdappendix-booklet-march-1992"],
+  "megacd": ["mega-tech-supplement-mega-cd-guide"],
   "sg1000": ["beep-1986-04"],
-  "gb": ["pokemon-rot-blau-nintendo-game-boy-offizieller-spieleberater"],
+  "gb": [
+    "game-boy-official-magazine-3",
+    "game-boy-players-guide",
+    "n64-presents-the-game-boy-companion_202206",
+    "Total_Game_Boy_Issue_07"
+  ],
   "fds": ["famimaga-1992-apr-17", "famimagajune1987", "famimaga5111990"],
   "virtualboy": [],
   "intellivision": [],
@@ -85,8 +99,13 @@
   "ngpc": ["ngpc_20211014", "softv2"],
   "wswan": [],
   "sgb": ["Nintendo_Players_Guide_Super_Game_Boy"],
-  "gb2players": ["pokemon-rot-blau-nintendo-game-boy-offizieller-spieleberater"],
-  "msx2": ["MSXMAGAZINE2", "MSXMAGAZINE_201807", "msxcomputermagazine"],
+  "gb2players": [
+    "game-boy-official-magazine-3",
+    "game-boy-players-guide",
+    "n64-presents-the-game-boy-companion_202206",
+    "Total_Game_Boy_Issue_07"
+  ],
+  "msx2": ["MSXComputing", "msx-user-1985-09-images"],
   "msx2+": ["MSXMAGAZINE_201807", "MSXMAGAZINE2"],
   "msxturbor": ["MSXMAGAZINE3_201808", "MSXMAGAZINE_201807"],
   "ngp": ["softv2", "ngpc_20211014"],

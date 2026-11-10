@@ -5,5 +5,8 @@
   ],
   "unverified": [],
   "bestsellers": ["Beyond Zork", "A Mind Forever Voyaging", "Elite"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "lifetime": "1985–1989 (4 years)"
+  }
 }

@@ -8,7 +8,8 @@
     "cpu": "NEC μPD7810",
     "graphics": "Monochrome LCD, 61 × 64",
     "sound": "1-bit DAC, built-in speaker",
-    "media": "ROM cartridges (40-pin)"
+    "media": "ROM cartridges (40-pin)",
+    "generation": "4th"
   },
   "chips": [
     {

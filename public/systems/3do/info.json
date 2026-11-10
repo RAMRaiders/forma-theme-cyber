@@ -10,7 +10,9 @@
     "graphics": "Custom cel engines (MADAM / CLIO)",
     "sound": "DSP in CLIO custom chip",
     "media": "CD-ROM (double speed)",
-    "unitsSold": "~2 million"
+    "unitsSold": "~2 million",
+    "generation": "5th",
+    "lifetime": "1993–1996 (3 years)"
   },
   "chips": [
     {

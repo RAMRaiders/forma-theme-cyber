@@ -10,7 +10,9 @@
     "graphics": "160 × 144 reflective LCD, 4 shades",
     "sound": "4 channels (2 pulse, wave, noise), stereo through headphones",
     "media": "ROM cartridges",
-    "unitsSold": "About 118.69 million (Game Boy and Game Boy Color combined)"
+    "unitsSold": "About 118.69 million (Game Boy and Game Boy Color combined)",
+    "generation": "4th",
+    "lifetime": "1989–2003 (14 years)"
   },
   "chips": [
     {

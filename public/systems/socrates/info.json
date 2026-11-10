@@ -1,4 +1,8 @@
 {
   "bestsellers": ["Amazing Mazes", "Around the World", "Memory Mania"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "generation": "3rd",
+    "lifetime": "1988–1996 (8 years)"
+  }
 }

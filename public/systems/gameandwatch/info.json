@@ -9,7 +9,9 @@
     "graphics": "Segmented LCD with fixed, pre-printed graphics",
     "sound": "Piezo buzzer",
     "media": "None, one built-in game per unit",
-    "unitsSold": "About 43.4 million"
+    "unitsSold": "About 43.4 million",
+    "generation": "2nd",
+    "lifetime": "1980–1991 (11 years)"
   },
   "chips": [
     {

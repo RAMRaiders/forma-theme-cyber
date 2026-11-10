@@ -8,7 +8,8 @@
     "cpu": "65SC02 @ 4 MHz",
     "graphics": "160 × 160 LCD, 4 shades, tilting screen",
     "sound": "2 tone + 1 noise channel, plus DMA audio",
-    "media": "ROM cartridges"
+    "media": "ROM cartridges",
+    "generation": "4th"
   },
   "chips": [
     {

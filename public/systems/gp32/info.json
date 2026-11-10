@@ -10,7 +10,9 @@
     "graphics": "3.5\" TFT, 320 × 240, 16-bit colour",
     "sound": "Software-mixed 16-bit stereo",
     "media": "SmartMedia cards",
-    "unitsSold": "About 30,000–32,000"
+    "unitsSold": "About 30,000–32,000",
+    "generation": "6th",
+    "lifetime": "2001–2005 (4 years)"
   },
   "chips": [
     {

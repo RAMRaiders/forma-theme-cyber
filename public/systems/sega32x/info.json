@@ -10,7 +10,9 @@
     "graphics": "32X VDP framebuffer overlaid on Mega Drive video, up to 32,768 colours",
     "sound": "2-channel PWM (plus Mega Drive sound)",
     "media": "Cartridge (32X CD with Mega-CD)",
-    "unitsSold": "~665,000"
+    "unitsSold": "~665,000",
+    "generation": "5th",
+    "lifetime": "1994–1996 (2 years)"
   },
   "chips": [
     {

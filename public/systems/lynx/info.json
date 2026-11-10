@@ -7,5 +7,9 @@
   ],
   "unverified": [],
   "bestsellers": ["Batman Returns", "Chip's Challenge", "California Games"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "generation": "4th",
+    "lifetime": "1989–1995 (6 years)"
+  }
 }

@@ -10,7 +10,9 @@
     "graphics": "TIA (Television Interface Adaptor)",
     "sound": "TIA, 2 channels",
     "media": "Cartridge",
-    "unitsSold": "~30 million"
+    "unitsSold": "~30 million",
+    "generation": "2nd",
+    "lifetime": "1977–1992 (15 years)"
   },
   "chips": [
     {

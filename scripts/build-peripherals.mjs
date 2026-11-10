@@ -44,7 +44,7 @@ async function info(file) {
       format: 'json',
       prop: 'imageinfo',
       iiprop: 'url|extmetadata',
-      iiurlwidth: '900',
+      iiurlwidth: '1600',
       titles: `File:${file}`
     });
   const page = Object.values((await (await get(url)).json()).query.pages)[0];
@@ -63,14 +63,66 @@ async function info(file) {
   };
 }
 
-/** The picture with the white round it made transparent: a flood from every edge. */
-async function cutOut(buf) {
+/** The picture cut down to `crop`, `[left, top, width, height]` as fractions of it. */
+async function cropped(buf, crop) {
+  if (!crop) return buf;
+  const { width, height } = await sharp(buf).metadata();
+  const [x, y, w, h] = crop;
+  return sharp(buf)
+    .extract({
+      left: Math.round(x * width),
+      top: Math.round(y * height),
+      width: Math.round(w * width),
+      height: Math.round(h * height)
+    })
+    .png()
+    .toBuffer();
+}
+
+/** Makes everything but the largest connected shape transparent: specks, and a neighbour. */
+function keepLargest(data, width, height) {
+  const label = new Int32Array(width * height);
+  const sizes = [0];
+  for (let start = 0; start < width * height; start++) {
+    if (label[start] || data[start * 4 + 3] === 0) continue;
+    const id = sizes.length;
+    let count = 0;
+    const stack = [start];
+    label[start] = id;
+    while (stack.length) {
+      const p = stack.pop();
+      count++;
+      const x = p % width;
+      for (const q of [
+        x > 0 ? p - 1 : -1,
+        x < width - 1 ? p + 1 : -1,
+        p >= width ? p - width : -1,
+        p < width * (height - 1) ? p + width : -1
+      ]) {
+        if (q >= 0 && !label[q] && data[q * 4 + 3] !== 0) {
+          label[q] = id;
+          stack.push(q);
+        }
+      }
+    }
+    sizes.push(count);
+  }
+  const biggest = sizes.indexOf(Math.max(...sizes));
+  for (let p = 0; p < width * height; p++) if (label[p] !== biggest) data[p * 4 + 3] = 0;
+}
+
+/**
+ * The picture with the white round it made transparent: a flood from every edge. `limit`: how
+ * near white counts (lower takes a soft shadow too). `largest`: only the biggest shape stays.
+ * `holes`: white enclosed by the thing goes too (a trigger guard), for what has no white of its own.
+ */
+async function cutOut(buf, { limit = WHITE, largest = false, holes = false } = {}) {
   const { data, info: size } = await sharp(buf)
     .ensureAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true });
   const { width, height } = size;
-  const white = (p) => data[p * 4] >= WHITE && data[p * 4 + 1] >= WHITE && data[p * 4 + 2] >= WHITE;
+  const white = (p) => data[p * 4] >= limit && data[p * 4 + 1] >= limit && data[p * 4 + 2] >= limit;
   const seen = new Uint8Array(width * height);
   const stack = [];
   for (let x = 0; x < width; x++) stack.push(x, (height - 1) * width + x);
@@ -86,6 +138,8 @@ async function cutOut(buf) {
     if (p >= width) stack.push(p - width);
     if (p < width * (height - 1)) stack.push(p + width);
   }
+  if (holes) for (let p = 0; p < width * height; p++) if (white(p)) data[p * 4 + 3] = 0;
+  if (largest) keepLargest(data, width, height);
   return sharp(data, { raw: { width, height, channels: 4 } })
     .trim()
     .png()
@@ -95,6 +149,7 @@ async function cutOut(buf) {
 const only = process.env.ONLY ? new Set(process.env.ONLY.split(',')) : null;
 const picks = JSON.parse(readFileSync(join(ROOT, 'scripts', 'peripherals.json'), 'utf8'));
 const art = JSON.parse(readFileSync(ART, 'utf8'));
+const before = readFileSync(join(SYSTEMS, 'PERIPHERALS.md'), 'utf8').split('\n');
 const credits = [
   '# Peripherals',
   '',
@@ -104,7 +159,8 @@ const credits = [
 ];
 for (const [id, items] of Object.entries(picks)) {
   if (only && !only.has(id)) {
-    for (const p of art[id]?.peripherals ?? []) credits.push(`- **${id}**: ${p.name}`);
+    // Not fetched this time: its credits stay as they are.
+    credits.push(...before.filter((line) => line.startsWith(`- **${id}**:`)));
     continue;
   }
   const dir = join(SYSTEMS, id);
@@ -114,10 +170,11 @@ for (const [id, items] of Object.entries(picks)) {
   }
   const entry = (art[id] ??= { logo: null, picture: null });
   const peripherals = [];
-  for (const { file, name } of items) {
+  for (const { file, name, crop, limit, largest, holes } of items) {
     try {
       const about = await info(file);
-      const png = await cutOut(Buffer.from(await (await get(about.url)).arrayBuffer()));
+      const whole = Buffer.from(await (await get(about.url)).arrayBuffer());
+      const png = await cutOut(await cropped(whole, crop), { limit, largest, holes });
       const out = `gear-${peripherals.length + 1}.webp`;
       await sharp(png)
         .resize({ height: HEIGHT, width: HEIGHT * 2, fit: 'inside', withoutEnlargement: true })

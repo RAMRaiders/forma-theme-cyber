@@ -6,5 +6,8 @@
   ],
   "unverified": [],
   "bestsellers": ["After Burner", "Indiana Jones and the Fate of Atlantis", "Lemmings"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "lifetime": "1989–1997 (8 years)"
+  }
 }

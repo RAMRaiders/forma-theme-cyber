@@ -1,4 +1,7 @@
 {
   "bestsellers": ["Monster Mine"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "lifetime": "1983–1984 (1 year)"
+  }
 }

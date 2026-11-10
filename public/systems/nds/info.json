@@ -10,5 +10,8 @@
     "New Super Mario Bros.",
     "Nintendogs|Nintendogs: Lab & Friends|Nintendogs: Dachshund & Friends|Nintendogs: Chihuahua & Friends|Nintendogs: Best Friends",
     "Mario Kart DS"
-  ]
+  ],
+  "specs": {
+    "generation": "7th"
+  }
 }

@@ -36,9 +36,10 @@ function tidy(title) {
   return title
     .replace(/\[[^\]]*\]/g, '')
     .replace(
-      /\((\d+ ?dpi|[A-Z]{2}|\d{4}-\d{2}|[^)]*(Publishing|Ziff|EMAP|Images|Geibunsha)[^)]*)\)/gi,
+      /\((\d+ ?dpi|[A-Z]{2}|\d{4}-\d{2}|[^)]*(Publishing|Ziff|EMAP|Images|Geibunsha|Magazines)[^)]*)\)/gi,
       ''
     )
+    .replace(/\(medium resolution\) Complete Set/i, '')
     .replace(/\s+/g, ' ')
     .replace(/\s*-\s*$/, '')
     .trim();
@@ -68,6 +69,7 @@ async function cover(item) {
 const only = process.env.ONLY ? new Set(process.env.ONLY.split(',')) : null;
 
 const art = JSON.parse(readFileSync(ART, 'utf8'));
+const before = readFileSync(join(SYSTEMS, 'MAGAZINES.md'), 'utf8').split('\n');
 const credits = [
   '# Magazines',
   '',
@@ -120,13 +122,9 @@ const keep = (id) => only && !only.has(id);
   }
 }
 
-// Those not fetched this time keep their line.
-for (const [id, entry] of Object.entries(art)) {
-  if (!keep(id)) continue;
-  for (const m of entry.magazines ?? []) {
-    const line = `- **${id}**: ${m.title}`;
-    if (!credits.some((c) => c.startsWith(`- **${id}**: [${m.title}]`))) credits.push(line);
-  }
+// Those not fetched this time keep their credits as they are.
+for (const id of Object.keys(art)) {
+  if (keep(id)) credits.push(...before.filter((line) => line.startsWith(`- **${id}**:`)));
 }
 writeFileSync(ART, JSON.stringify(art, null, 2) + '\n');
 writeFileSync(join(SYSTEMS, 'MAGAZINES.md'), credits.join('\n') + '\n');

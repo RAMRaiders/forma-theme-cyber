@@ -10,7 +10,9 @@
     "graphics": "SGI Reality Coprocessor (RSP + RDP) @ 62.5 MHz",
     "sound": "Software via RCP's RSP",
     "media": "Cartridge (64DD disk drive in JP)",
-    "unitsSold": "32.93 million"
+    "unitsSold": "32.93 million",
+    "generation": "5th",
+    "lifetime": "1996–2002 (6 years)"
   },
   "chips": [
     {

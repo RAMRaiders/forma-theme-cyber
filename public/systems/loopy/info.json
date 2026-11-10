@@ -8,7 +8,9 @@
     "cpu": "Hitachi SH7021 (SuperH) @ 16 MHz",
     "memory": "1 MB",
     "sound": "4-channel 12-bit PCM",
-    "media": "Cartridge"
+    "media": "Cartridge",
+    "generation": "5th",
+    "lifetime": "1995–1998 (3 years)"
   },
   "chips": [
     {

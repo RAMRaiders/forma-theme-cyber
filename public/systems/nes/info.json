@@ -10,7 +10,9 @@
     "graphics": "Ricoh 2C02 PPU, 256×240, 64 sprites (8 per line)",
     "sound": "5-channel APU inside the 2A03 (2 pulse, triangle, noise, DPCM)",
     "media": "Cartridge (Famicom Disk System in Japan)",
-    "unitsSold": "~61.9 million"
+    "unitsSold": "~61.9 million",
+    "generation": "3rd",
+    "lifetime": "1983–2003 (20 years)"
   },
   "chips": [
     {

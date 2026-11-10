@@ -8,7 +8,8 @@
     "cpu": "Motorola 6800 @ 0.89 MHz",
     "memory": "1 KB",
     "graphics": "Motorola MC6847 VDG",
-    "media": "Cartridge"
+    "media": "Cartridge",
+    "generation": "2nd"
   },
   "chips": [
     {

@@ -9,7 +9,9 @@
     "memory": "8 KB RAM / 8 KB VRAM (Game Boy side)",
     "graphics": "Game Boy LCD image, 160×144, recoloured by the SNES with borders",
     "sound": "Game Boy APU, mixed through the SNES",
-    "media": "Game Boy cartridge in adapter"
+    "media": "Game Boy cartridge in adapter",
+    "generation": "4th",
+    "lifetime": "1994–1998 (4 years)"
   },
   "chips": [
     {

@@ -15,7 +15,11 @@
       },
       {
         "file": "mag-3.webp",
-        "title": "3DO Magazine (Japan) Issue 09 May/June 1995"
+        "title": "3DO Magazine Special - Gold Issue 01"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "3DO Magazine Issue 04"
       }
     ],
     "hues": [
@@ -1086,8 +1090,20 @@
     ],
     "magazines": [
       {
+        "file": "mag-1.webp",
+        "title": "Game Boy Official Magazine 3"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Game Boy Players Guide"
+      },
+      {
         "file": "mag-3.webp",
-        "title": "Pokémon Rot / Blau - Nintendo Game Boy - Offizieller Spieleberater"
+        "title": "The Game Boy Companion - N64 Magazine"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Total Game Boy Issue 07"
       }
     ],
     "peripherals": [
@@ -1114,8 +1130,20 @@
     ],
     "magazines": [
       {
+        "file": "mag-1.webp",
+        "title": "Game Boy Official Magazine 3"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Game Boy Players Guide"
+      },
+      {
         "file": "mag-3.webp",
-        "title": "Pokémon Rot / Blau - Nintendo Game Boy - Offizieller Spieleberater"
+        "title": "The Game Boy Companion - N64 Magazine"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Total Game Boy Issue 07"
       }
     ]
   },
@@ -1127,14 +1155,6 @@
       {
         "file": "mag-1.webp",
         "title": "GBA Master Guide Issue 01"
-      },
-      {
-        "file": "mag-2.webp",
-        "title": "Nintendo Accion 110 Locos por Game Boy Advance"
-      },
-      {
-        "file": "mag-3.webp",
-        "title": "Game Boy Advance - La rivista ufficiale 1"
       }
     ],
     "hues": [
@@ -1518,7 +1538,7 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "BEEP Mega CD Appendix Booklet (March 1992)"
+        "title": "Megatech Supplement Mega CD Guide"
       }
     ]
   },
@@ -1529,15 +1549,23 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Game Players Sega Genesis Strategy Guide Vol 01 Issue 01"
+        "title": "Sega Mega Drive Advanced Gaming Issue 05"
       },
       {
         "file": "mag-2.webp",
-        "title": "Beep! Megadrive 1994 01"
+        "title": "Sega Force Issue 10"
       },
       {
         "file": "mag-3.webp",
-        "title": "Megadrive Fan 1994 01"
+        "title": "Mean Machines Sega Issue 09"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "MEGA Magazine Gold Summer Special"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Sega Force Issue 16"
       }
     ],
     "hues": [
@@ -1621,15 +1649,11 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "MSX Magazine"
+        "title": "MSX Computing"
       },
       {
         "file": "mag-2.webp",
-        "title": "Archive of MSX Computer Magazine (Dutch)"
-      },
-      {
-        "file": "mag-3.webp",
-        "title": "MSX Magazine Revival Vol. 3 - MSX MAGAZINE 永久保存版3"
+        "title": "MSX User"
       }
     ]
   },
@@ -1640,15 +1664,11 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "MSX Magazine Revival Vol. 2 - MSX MAGAZINE 永久保存版2"
+        "title": "MSX Computing"
       },
       {
         "file": "mag-2.webp",
-        "title": "MSX Magazine Revival Vol. 1 - MSX MAGAZINE 永久保存版"
-      },
-      {
-        "file": "mag-3.webp",
-        "title": "Archive of MSX Computer Magazine (Dutch)"
+        "title": "MSX User"
       }
     ]
   },
@@ -2067,14 +2087,10 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Super PC Engine Fan Vol. 1"
+        "title": "Turbo Play US 12"
       },
       {
         "file": "mag-2.webp",
-        "title": "PC Engine Fan - September 1992"
-      },
-      {
-        "file": "mag-3.webp",
         "title": "Turbo Play"
       }
     ],
@@ -2401,15 +2417,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Supplement Issue 53 SEGA MegaZone Saturn Guide"
-      },
-      {
-        "file": "mag-2.webp",
         "title": "Official Sega Saturn Magazine Issue 1"
       },
       {
+        "file": "mag-2.webp",
+        "title": "Official Sega Saturn Magazine Issue 22 (Resident Evil 1)"
+      },
+      {
         "file": "mag-3.webp",
-        "title": "Sega Saturn Magazine - 1994-01"
+        "title": "Supplement Issue 53 SEGA MegaZone Saturn Guide"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Sega Saturn Magazine - Issue 02"
       }
     ],
     "hues": [
@@ -2574,15 +2594,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Super Play Super Nintendo Magazine (medium resolution) Complete Set"
+        "title": "Super Play Super Nintendo Magazine"
       },
       {
         "file": "mag-2.webp",
-        "title": "The Super Famicom - 1990-11-30 - Number 1 - Volume 1 - Issue 1"
+        "title": "SNES Force - Issue 07"
       },
       {
         "file": "mag-3.webp",
-        "title": "The Super Famicom - 1991-01-25 - Number 4 - Volume 2 - Issue 1"
+        "title": "Super Gamer Issue 11"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "SNES Force Issue 01"
       }
     ],
     "hues": [

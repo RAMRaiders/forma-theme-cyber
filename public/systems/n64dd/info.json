@@ -6,5 +6,9 @@
   ],
   "unverified": [],
   "bestsellers": ["F-Zero X Expansion Kit", "Mario Artist: Paint Studio", "SimCity 64"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "generation": "5th",
+    "lifetime": "1999–2001 (2 years)"
+  }
 }

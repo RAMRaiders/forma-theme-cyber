@@ -10,7 +10,9 @@
     "graphics": "NEC PowerVR2 (CLX2) @ 100 MHz",
     "sound": "Yamaha AICA (ARM7 core)",
     "media": "GD-ROM (~1 GB)",
-    "unitsSold": "9.13 million"
+    "unitsSold": "9.13 million",
+    "generation": "6th",
+    "lifetime": "1998–2001 (3 years)"
   },
   "chips": [
     {

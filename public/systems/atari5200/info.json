@@ -9,7 +9,9 @@
     "memory": "16 KB RAM",
     "graphics": "ANTIC + GTIA",
     "sound": "POKEY, 4 channels",
-    "media": "Cartridge"
+    "media": "Cartridge",
+    "generation": "2nd",
+    "lifetime": "1982–1984 (2 years)"
   },
   "chips": [
     {

@@ -9,7 +9,8 @@
     "memory": "2 KB RAM",
     "graphics": "Monochrome LCD, 75 × 64",
     "sound": "1 channel",
-    "media": "ROM cartridges (8–16 KB)"
+    "media": "ROM cartridges (8–16 KB)",
+    "generation": "2nd"
   },
   "chips": [
     {

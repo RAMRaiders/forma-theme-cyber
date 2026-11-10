@@ -3,9 +3,10 @@
 Front pages of magazines about each system from the Internet
 Archive, shown on the systems screen. Built by `scripts/build-magazines.mjs`.
 
-- **3do**: 3DO Magazine
-- **3do**: 3DO Magazine - Issue 12
-- **3do**: 3DO Magazine (Japan) Issue 09 May/June 1995
+- **3do**: [3DO Magazine](https://archive.org/details/3DOMagazineIssue10199605ParagonPublishingGB)
+- **3do**: [3DO Magazine - Issue 12](https://archive.org/details/3DO_Magazine_Issue_12_1996-07_Paragon_Publishing_GB)
+- **3do**: [3DO Magazine Special - Gold Issue 01](https://archive.org/details/3-do-gold-01)
+- **3do**: [3DO Magazine Issue 04](https://archive.org/details/3-do-magazine-04)
 - **amiga1200**: CU Amiga Magazine Issue 027
 - **amiga1200**: CU Amiga Magazine Issue 025
 - **amiga1200**: CU Amiga Magazine Issue 046
@@ -45,11 +46,15 @@ Archive, shown on the systems screen. Built by `scripts/build-magazines.mjs`.
 - **gamecube**: Cube Issue 01
 - **gamecube**: EGM's Unofficial Game Cube Guide - March 2002
 - **gamegear**: Official Sega Genesis & Game Gear Strategies ( 3rd Edition)
-- **gb**: Pokémon Rot / Blau - Nintendo Game Boy - Offizieller Spieleberater
-- **gb2players**: Pokémon Rot / Blau - Nintendo Game Boy - Offizieller Spieleberater
-- **gba**: GBA Master Guide Issue 01
-- **gba**: Nintendo Accion 110 Locos por Game Boy Advance
-- **gba**: Game Boy Advance - La rivista ufficiale 1
+- **gb**: [Game Boy Official Magazine 3](https://archive.org/details/game-boy-official-magazine-3)
+- **gb**: [Game Boy Players Guide](https://archive.org/details/game-boy-players-guide)
+- **gb**: [The Game Boy Companion - N64 Magazine](https://archive.org/details/n64-presents-the-game-boy-companion_202206)
+- **gb**: [Total Game Boy Issue 07](https://archive.org/details/Total_Game_Boy_Issue_07)
+- **gb2players**: [Game Boy Official Magazine 3](https://archive.org/details/game-boy-official-magazine-3)
+- **gb2players**: [Game Boy Players Guide](https://archive.org/details/game-boy-players-guide)
+- **gb2players**: [The Game Boy Companion - N64 Magazine](https://archive.org/details/n64-presents-the-game-boy-companion_202206)
+- **gb2players**: [Total Game Boy Issue 07](https://archive.org/details/Total_Game_Boy_Issue_07)
+- **gba**: [GBA Master Guide Issue 01](https://archive.org/details/gba-master-guide-01)
 - **gbc**: Total Game Boy Issue 01
 - **gbc**: Total Game Boy Issue 03
 - **gbc2players**: Total Game Boy Issue 01
@@ -60,16 +65,16 @@ Archive, shown on the systems screen. Built by `scripts/build-magazines.mjs`.
 - **mastersystem**: Mean Machines Sega Issues 1-53
 - **mastersystem**: Mean Machines Sega Magazine Issue 04
 - **mastersystem**: Mean Machines Sega Magazine Issue 03
-- **megacd**: BEEP Mega CD Appendix Booklet (March 1992)
-- **megadrive**: Game Players Sega Genesis Strategy Guide Vol 01 Issue 01
-- **megadrive**: Beep! Megadrive 1994 01
-- **megadrive**: Megadrive Fan 1994 01
-- **msx1**: MSX Magazine
-- **msx1**: Archive of MSX Computer Magazine (Dutch)
-- **msx1**: MSX Magazine Revival Vol. 3 - MSX MAGAZINE 永久保存版3
-- **msx2**: MSX Magazine Revival Vol. 2 - MSX MAGAZINE 永久保存版2
-- **msx2**: MSX Magazine Revival Vol. 1 - MSX MAGAZINE 永久保存版
-- **msx2**: Archive of MSX Computer Magazine (Dutch)
+- **megacd**: [Megatech Supplement Mega CD Guide](https://archive.org/details/mega-tech-supplement-mega-cd-guide)
+- **megadrive**: [Sega Mega Drive Advanced Gaming Issue 05](https://archive.org/details/segamegadriveadvancedgaming05)
+- **megadrive**: [Sega Force Issue 10](https://archive.org/details/sega-force-10)
+- **megadrive**: [Mean Machines Sega Issue 09](https://archive.org/details/mean-machines-sega-09)
+- **megadrive**: [MEGA Magazine Gold Summer Special](https://archive.org/details/megagoldsummerspecial)
+- **megadrive**: [Sega Force Issue 16](https://archive.org/details/sega-force-16)
+- **msx1**: [MSX Computing](https://archive.org/details/MSXComputing)
+- **msx1**: [MSX User](https://archive.org/details/msx-user-1985-09-images)
+- **msx2**: [MSX Computing](https://archive.org/details/MSXComputing)
+- **msx2**: [MSX User](https://archive.org/details/msx-user-1985-09-images)
 - **msx2+**: MSX Magazine Revival Vol. 1 - MSX MAGAZINE 永久保存版
 - **msx2+**: MSX Magazine Revival Vol. 2 - MSX MAGAZINE 永久保存版2
 - **msxturbor**: MSX Magazine Revival Vol. 3 - MSX MAGAZINE 永久保存版3
@@ -93,9 +98,8 @@ Archive, shown on the systems screen. Built by `scripts/build-magazines.mjs`.
 - **ngp**: SNK Neo-Geo Pocket Color WW Magazine Advertisements & Reviews
 - **ngpc**: SNK Neo-Geo Pocket Color WW Magazine Advertisements & Reviews
 - **ngpc**: NeoGeo Pocket Soft Information Vol. 2
-- **pcengine**: Super PC Engine Fan Vol. 1
-- **pcengine**: PC Engine Fan - September 1992
-- **pcengine**: Turbo Play
+- **pcengine**: [Turbo Play US 12](https://archive.org/details/turbo-play-us-12)
+- **pcengine**: [Turbo Play](https://archive.org/details/turbo-play)
 - **prboom**: DOOM II Official Strategy Guide
 - **prboom**: Ultimate Future Games Issue 14 - Supplement Playstation Doom Guide
 - **prboom**: Doom III Gamespot Guide
@@ -104,18 +108,20 @@ Archive, shown on the systems screen. Built by `scripts/build-magazines.mjs`.
 - **psx**: Official US PlayStation Magazine - Volume 3 Issue 1
 - **satellaview**: Satellaview Tsushin Monthly FamicomTsushin May extra issue
 - **satellaview**: Satellaview Tsushin サテラビュー通信 1995年9月号
-- **saturn**: Supplement Issue 53 SEGA MegaZone Saturn Guide
-- **saturn**: Official Sega Saturn Magazine Issue 1
-- **saturn**: Sega Saturn Magazine - 1994-01
+- **saturn**: [Official Sega Saturn Magazine Issue 1](https://archive.org/details/Official_Sega_Saturn_Magazine_001)
+- **saturn**: [Official Sega Saturn Magazine Issue 22 (Resident Evil 1)](https://archive.org/details/official-sega-saturn-magazine-issue-22)
+- **saturn**: [Supplement Issue 53 SEGA MegaZone Saturn Guide](https://archive.org/details/sup53saturnguide)
+- **saturn**: [Sega Saturn Magazine - Issue 02](https://archive.org/details/Sega_Saturn_Magazine_Issue_02_1995-12_EMAP_Images_GB)
 - **scummvm**: LucasArts "The Adventurer" Magazine Complete 13 Issues
 - **scummvm**: Curse of Monkey Island, The Prima
 - **scummvm**: The Adventurer magazine
 - **sega32x**: SEGA Magazine Issue 12 Supplement - Megadrive 32X Guide
 - **sg1000**: Beep 1986 04
 - **sgb**: Nintendo Player's Guide Super Game Boy
-- **snes**: Super Play Super Nintendo Magazine (medium resolution) Complete Set
-- **snes**: The Super Famicom - 1990-11-30 - Number 1 - Volume 1 - Issue 1
-- **snes**: The Super Famicom - 1991-01-25 - Number 4 - Volume 2 - Issue 1
+- **snes**: [Super Play Super Nintendo Magazine](https://archive.org/details/sup01)
+- **snes**: [SNES Force - Issue 07](https://archive.org/details/SNES_Force_Issue_07_1993-12_Impact_Magazines_GB)
+- **snes**: [Super Gamer Issue 11](https://archive.org/details/super-gamer-11)
+- **snes**: [SNES Force Issue 01](https://archive.org/details/snes-force-01)
 - **supergrafx**: NEC Super Grafx JAP Magazine Advertisements
 - **supergrafx**: Daimakaimura (NEC Supergrafx) - Box, Manual and Card Scans
 - **videopacplus**: Videopac Philips

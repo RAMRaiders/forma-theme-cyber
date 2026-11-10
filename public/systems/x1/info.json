@@ -5,5 +5,8 @@
   ],
   "unverified": [],
   "bestsellers": ["Super Mario Bros. Special", "Brain Breaker", "Xevious"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "lifetime": "1982–1987 (5 years)"
+  }
 }

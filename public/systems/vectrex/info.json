@@ -9,7 +9,9 @@
     "memory": "1 KB RAM",
     "graphics": "Built-in monochrome vector CRT",
     "sound": "General Instrument AY-3-8912",
-    "media": "Cartridge"
+    "media": "Cartridge",
+    "generation": "2nd",
+    "lifetime": "1982–1984 (2 years)"
   },
   "chips": [
     {

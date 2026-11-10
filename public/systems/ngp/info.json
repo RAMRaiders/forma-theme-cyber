@@ -9,7 +9,9 @@
     "sound": "T6W28 PSG (SN76489-type) plus DAC",
     "media": "ROM cartridges",
     "released": "1998 JP",
-    "graphics": "160 × 152 monochrome LCD, 8 shades"
+    "graphics": "160 × 152 monochrome LCD, 8 shades",
+    "generation": "5th",
+    "lifetime": "1998–2001 (3 years)"
   },
   "chips": [
     {

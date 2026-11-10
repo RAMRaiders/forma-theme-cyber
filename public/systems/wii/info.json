@@ -6,5 +6,9 @@
     "Early models play GameCube discs and have ports for GameCube controllers and memory cards."
   ],
   "unverified": [],
-  "bestsellers": ["Wii Sports", "Mario Kart Wii", "Wii Sports Resort"]
+  "bestsellers": ["Wii Sports", "Mario Kart Wii", "Wii Sports Resort"],
+  "specs": {
+    "generation": "7th",
+    "lifetime": "2006–2013 (7 years)"
+  }
 }

@@ -11,5 +11,9 @@
     "Videocart-3: Video Blackjack",
     "Videocart-10: Maze, Jailbreak, Blind-Man's-Bluff, Trailblazer"
   ],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "generation": "2nd",
+    "lifetime": "1976–1983 (7 years)"
+  }
 }

@@ -10,7 +10,9 @@
     "graphics": "Sega 315-5313 VDP (Yamaha YM7101)",
     "sound": "Yamaha YM2612 FM + SN76489 PSG",
     "media": "Cartridge",
-    "unitsSold": "~30.75 million"
+    "unitsSold": "~30.75 million",
+    "generation": "4th",
+    "lifetime": "1988–1997 (9 years)"
   },
   "chips": [
     {
@@ -33,14 +35,28 @@
   "curiosities": [
     "The Z80 also lets it play Master System games through the Power Base Converter.",
     "Tectoy has kept making versions of it in Brazil for decades.",
-    "The Genesis name was used in North America because Sega could not secure the Mega Drive trademark there.",
-    "The 32X and Mega-CD add-ons could be connected at the same time."
+    "The 32X and Mega-CD add-ons could be connected at the same time.",
+    "North America got the Genesis name because Sega's David Rosen disliked 'Mega Drive' and wanted something that meant a new beginning.",
+    "Sega went through more than 300 names before choosing Mega Drive; it had been announced as the Mark V.",
+    "The 16-BIT lettering on the original console was embossed in gold to give an impression of power.",
+    "Virtua Racing was the only game with the Sega Virtua Processor chip, and at US$100 it was the most expensive Genesis cartridge.",
+    "'Blast processing' was a term Sega coined to make the console sound far ahead of the Super NES.",
+    "To keep its reverse engineering clean, Electronic Arts had Mike Schwartz work alone in a room nicknamed Chernobyl.",
+    "Sega sued Accolade for decompiling its games, and in 1992 a US appeals court ruled that the decompilation was fair use.",
+    "Sega Channel delivered a library of fifty games a month over cable television from 1994, and peaked at 250,000 subscribers.",
+    "Sega Meganet brought online games to Japanese players in November 1990, through a Mega Modem plugged into the console.",
+    "Sega's Videogame Rating Council was America's first video game rating system, running from GA to MA-17.",
+    "Mortal Kombat's 'Blood Code' unlocked all the arcade gore on the Genesis, while the game kept a modest MA-13 rating.",
+    "The six-button pad arrived in 1993, adding three face buttons to suit arcade fighting games.",
+    "Street Fighter II: Champion Edition sold more than a million copies on the console."
   ],
   "unverified": [],
   "bestsellers": ["Sonic the Hedgehog", "Sonic the Hedgehog 2", "Disney's Aladdin|Aladdin"],
   "story": [
-    "Sega built the Mega Drive on its System 16 arcade boards: a Motorola 68000 with a Z80 for sound. It launched in Japan in October 1988, where it stayed behind the PC Engine and the Famicom.",
-    "In North America it became the Genesis in 1989, with 'Genesis does what Nintendon't' advertising and arcade ports. Under Tom Kalinske, Sega bundled Sonic the Hedgehog from 1991 and for a while outsold the Super NES there, with sports games from EA and a cooler, older image.",
-    "It sold around 30 million units, stayed popular in Brazil for decades, and its music, from the Yamaha FM chip, is loved to this day."
+    "Sega built the Mega Drive on what it had learned from its System 16 arcade boards: a Motorola 68000 with a Z80 for sound. It reached Japan on 29 October 1988, a week after Super Mario Bros. 3, and stayed behind the Famicom and the PC Engine at home.",
+    "Sega first offered the North American rights to Atari, but Jack Tramiel judged the console too expensive. So Sega launched it alone as the Genesis in September 1989, with Altered Beast in the box and 'Genesis does what Nintendon't' in its advertising.",
+    "Tom Kalinske took over Sega of America in 1990 with a four-point plan: cut the price, build an American studio, advertise harder, and replace Altered Beast with Sonic the Hedgehog. In the 1991 holidays the Genesis outsold the Super NES nearly two to one.",
+    "By January 1992 Sega held 65% of the US 16-bit market, and it won four Christmases in a row. Electronic Arts reverse-engineered the console and signed with Sega in 1990, bringing John Madden Football. Night Trap and Mortal Kombat then drew the 1993 hearings that led to the ESRB.",
+    "Donkey Kong Country helped the Super NES pull ahead from 1995. Sega sold 30.75 million consoles, with millions more licensed models from Tectoy in Brazil and Majesco in the US. Its Yamaha FM sound is still loved today."
   ]
 }

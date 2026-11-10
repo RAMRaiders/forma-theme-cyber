@@ -9,7 +9,9 @@
     "memory": "2 MB DRAM (64-bit bus)",
     "graphics": "Tom: RISC GPU, Object Processor, blitter @ 26.59 MHz",
     "sound": "Jerry: RISC DSP @ 26.59 MHz",
-    "media": "Cartridge (CD add-on)"
+    "media": "Cartridge (CD add-on)",
+    "generation": "5th",
+    "lifetime": "1993–1996 (3 years)"
   },
   "chips": [
     {

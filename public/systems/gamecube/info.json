@@ -10,7 +10,9 @@
     "graphics": "ATI/ArtX Flipper @ 162 MHz",
     "sound": "Macronix DSP in Flipper",
     "media": "8 cm miniDVD-based disc (1.5 GB)",
-    "unitsSold": "21.74 million"
+    "unitsSold": "21.74 million",
+    "generation": "6th",
+    "lifetime": "2001–2007 (6 years)"
   },
   "chips": [
     {

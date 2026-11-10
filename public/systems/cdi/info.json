@@ -7,5 +7,8 @@
   ],
   "unverified": [],
   "bestsellers": ["Hotel Mario", "Link: The Faces of Evil", "Zelda: The Wand of Gamelon"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "generation": "4th"
+  }
 }

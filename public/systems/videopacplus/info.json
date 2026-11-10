@@ -9,7 +9,8 @@
     "memory": "6 KB RAM",
     "graphics": "Intel 8245 + Thomson EF9340/EF9341, 320×238, 16 colours",
     "sound": "Intel 8245, 1 channel",
-    "media": "Cartridge"
+    "media": "Cartridge",
+    "generation": "3rd"
   },
   "chips": [
     {

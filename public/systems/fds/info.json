@@ -10,7 +10,9 @@
     "graphics": "Ricoh 2C02 PPU (Famicom)",
     "sound": "2A03 + 2C33 wavetable channel",
     "media": "Disk Card (Quick Disk, 2 sides)",
-    "unitsSold": "~4.4 million"
+    "unitsSold": "~4.4 million",
+    "generation": "3rd",
+    "lifetime": "1986–1993 (7 years)"
   },
   "chips": [
     {

@@ -10,7 +10,9 @@
     "graphics": "Two Reflection Technology scanning red LED displays, 384×224 per eye",
     "sound": "VSU, 6 channels (wavetable + noise)",
     "media": "Cartridge",
-    "unitsSold": "~770,000"
+    "unitsSold": "~770,000",
+    "generation": "5th",
+    "lifetime": "1995–1996 (1 year)"
   },
   "chips": [
     {

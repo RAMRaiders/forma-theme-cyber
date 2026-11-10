@@ -10,7 +10,9 @@
     "graphics": "SNK custom sprite hardware, 4,096 of 65,536 colours",
     "sound": "Yamaha YM2610",
     "media": "CD-ROM (1×; 2× on the CDZ)",
-    "unitsSold": "~570,000"
+    "unitsSold": "~570,000",
+    "generation": "4th",
+    "lifetime": "1994–1997 (3 years)"
   },
   "chips": [
     {

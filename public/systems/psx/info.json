@@ -10,7 +10,9 @@
     "graphics": "Sony custom GPU, up to 640×480, 24-bit colour",
     "sound": "Sony SPU, 24 ADPCM channels",
     "media": "CD-ROM",
-    "unitsSold": "~102.5 million"
+    "unitsSold": "~102.5 million",
+    "generation": "5th",
+    "lifetime": "1994–2006 (12 years)"
   },
   "chips": [
     {

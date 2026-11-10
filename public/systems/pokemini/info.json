@@ -9,7 +9,8 @@
     "memory": "4 KB RAM",
     "graphics": "96 × 64 monochrome LCD",
     "sound": "Single-channel piezo",
-    "media": "ROM cartridges"
+    "media": "ROM cartridges",
+    "generation": "6th"
   },
   "chips": [
     {

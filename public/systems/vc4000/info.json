@@ -8,7 +8,9 @@
     "cpu": "Signetics 2650A @ 0.887 MHz",
     "memory": "37 bytes of data RAM",
     "graphics": "Signetics 2636 PVI",
-    "media": "Cartridge"
+    "media": "Cartridge",
+    "generation": "2nd",
+    "lifetime": "1978–1983 (5 years)"
   },
   "chips": [
     {

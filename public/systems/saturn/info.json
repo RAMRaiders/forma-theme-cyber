@@ -10,7 +10,9 @@
     "graphics": "VDP1 (sprites, polygons) + VDP2 (backgrounds)",
     "sound": "Yamaha YMF292 SCSP + Motorola 68EC000, 32 channels",
     "media": "CD-ROM",
-    "unitsSold": "~9.26 million"
+    "unitsSold": "~9.26 million",
+    "generation": "5th",
+    "lifetime": "1994–2000 (6 years)"
   },
   "chips": [
     {

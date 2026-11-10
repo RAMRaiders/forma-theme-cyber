@@ -10,7 +10,9 @@
     "graphics": "240 × 160 TFT LCD, 32,768 colours, tile and bitmap modes",
     "sound": "2 PCM channels plus the 4 Game Boy channels",
     "media": "ROM cartridges",
-    "unitsSold": "About 81.51 million"
+    "unitsSold": "About 81.51 million",
+    "generation": "6th",
+    "lifetime": "2001–2010 (9 years)"
   },
   "chips": [
     {

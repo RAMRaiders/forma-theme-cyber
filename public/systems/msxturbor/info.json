@@ -9,7 +9,8 @@
     "memory": "256 KB (ST) · 512 KB (GT) RAM · 128 KB VRAM",
     "graphics": "Yamaha V9958, as MSX2+",
     "sound": "PSG + YM2413 FM + 8-bit PCM",
-    "media": "ROM cartridges, 3.5\" floppy disk"
+    "media": "ROM cartridges, 3.5\" floppy disk",
+    "lifetime": "1990–1993 (3 years)"
   },
   "chips": [
     {

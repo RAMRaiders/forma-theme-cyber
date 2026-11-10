@@ -9,7 +9,8 @@
     "memory": "2 MB Chip RAM",
     "graphics": "AGA: 256 colours from 16.8 million, HAM8 mode up to 262,144",
     "sound": "Paula: 4 × 8-bit PCM channels, stereo",
-    "media": "3.5\" floppy (880 KB), 2.5\" IDE hard drive"
+    "media": "3.5\" floppy (880 KB), 2.5\" IDE hard drive",
+    "lifetime": "1992–1996 (4 years)"
   },
   "chips": [
     {

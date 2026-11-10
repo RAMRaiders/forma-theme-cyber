@@ -9,7 +9,9 @@
     "graphics": "75×60, 8 colours",
     "sound": "Mono",
     "media": "Cartridge",
-    "unitsSold": "~400,000"
+    "unitsSold": "~400,000",
+    "generation": "2nd",
+    "lifetime": "1981–1984 (3 years)"
   },
   "chips": [
     {

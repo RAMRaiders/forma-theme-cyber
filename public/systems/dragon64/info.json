@@ -5,5 +5,8 @@
   ],
   "unverified": [],
   "bestsellers": ["Chuckie Egg", "Cuthbert Goes Walkabout", "Manic Miner"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "lifetime": "1982–1987 (5 years)"
+  }
 }

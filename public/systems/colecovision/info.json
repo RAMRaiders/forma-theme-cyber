@@ -10,7 +10,9 @@
     "graphics": "TI TMS9928A",
     "sound": "TI SN76489A",
     "media": "Cartridge",
-    "unitsSold": "~2 million"
+    "unitsSold": "~2 million",
+    "generation": "2nd",
+    "lifetime": "1982–1985 (3 years)"
   },
   "chips": [
     {

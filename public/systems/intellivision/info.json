@@ -9,7 +9,9 @@
     "graphics": "GI AY-3-8900 STIC",
     "sound": "GI AY-3-8914",
     "media": "Cartridge",
-    "unitsSold": "~3 million"
+    "unitsSold": "~3 million",
+    "generation": "2nd",
+    "lifetime": "1979–1990 (11 years)"
   },
   "chips": [
     {

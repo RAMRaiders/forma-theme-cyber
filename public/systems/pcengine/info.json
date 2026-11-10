@@ -9,7 +9,9 @@
     "memory": "8 KB RAM / 64 KB VRAM",
     "graphics": "HuC6270 VDC + HuC6260 VCE, 512-colour palette",
     "sound": "6-channel wavetable (inside HuC6280)",
-    "media": "HuCard / TurboChip"
+    "media": "HuCard / TurboChip",
+    "generation": "4th",
+    "lifetime": "1987–1994 (7 years)"
   },
   "chips": [
     {

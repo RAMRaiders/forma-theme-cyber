@@ -9,7 +9,9 @@
     "memory": "512 KB RAM in add-on + 1 MB ROM; 8 Mbit memory packs",
     "graphics": "S-PPU1 / S-PPU2 (host Super Famicom)",
     "sound": "Sony SPC700 + S-DSP (host Super Famicom)",
-    "media": "Satellite broadcast, BS-X cartridge and 8 Mbit memory packs"
+    "media": "Satellite broadcast, BS-X cartridge and 8 Mbit memory packs",
+    "generation": "4th",
+    "lifetime": "1995–2000 (5 years)"
   },
   "chips": [
     {

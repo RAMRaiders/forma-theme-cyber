@@ -6,5 +6,8 @@
   ],
   "unverified": [],
   "bestsellers": ["Adventureland", "Dancing Demon", "Android Nim"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "lifetime": "1977–1981 (4 years)"
+  }
 }

@@ -4,5 +4,8 @@
     "Alphabet Park Adventure",
     "Bob the Builder: Bob's Busy Day"
   ],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "generation": "6th"
+  }
 }

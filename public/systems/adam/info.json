@@ -1,4 +1,7 @@
 {
   "bestsellers": ["Donkey Kong", "B.C. II: Grog's Revenge", "Donkey Kong Jr."],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "lifetime": "1983–1985 (2 years)"
+  }
 }

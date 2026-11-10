@@ -9,7 +9,9 @@
     "memory": "64 KB work RAM / 128 KB VRAM",
     "graphics": "UMC UM6618, 320×240, 256 of 32,768 colours",
     "sound": "UMC UM6619, 16-channel PCM",
-    "media": "Cartridge"
+    "media": "Cartridge",
+    "generation": "5th",
+    "lifetime": "1995–1996 (1 year)"
   },
   "chips": [
     {

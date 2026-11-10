@@ -10,7 +10,9 @@
     "graphics": "Intel 8244 (NTSC) / 8245 (PAL), 160×200, 16 colours",
     "sound": "Intel 8244/8245, mono",
     "media": "Cartridge",
-    "unitsSold": "~2 million"
+    "unitsSold": "~2 million",
+    "generation": "2nd",
+    "lifetime": "1978–1984 (6 years)"
   },
   "chips": [
     {

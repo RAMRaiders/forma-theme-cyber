@@ -9,7 +9,9 @@
     "memory": "64 bytes internal + 1 KB",
     "graphics": "40 red LEDs + spinning mirror, 150×40 monochrome",
     "sound": "National Semiconductor COP411L",
-    "media": "Cartridge"
+    "media": "Cartridge",
+    "generation": "2nd",
+    "lifetime": "1982–1983 (1 year)"
   },
   "chips": [
     {

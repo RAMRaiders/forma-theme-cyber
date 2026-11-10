@@ -62,15 +62,22 @@
   "megadrive": [
     {
       "file": "Sega-Genesis-6But-Cont.jpg",
-      "name": "Six-button pad"
+      "name": "Six-button pad",
+      "crop": [0, 0.11, 1, 0.89],
+      "limit": 150,
+      "largest": true
     },
     {
       "file": "Sega-Genesis-Arcade-Stick.jpg",
       "name": "Arcade Power Stick"
     },
     {
-      "file": "Konami-Justifiers-Genesis-Light-Gun.jpg",
-      "name": "Justifier light gun"
+      "file": "Konami-Justifiers-Genesis-Set.jpg",
+      "name": "Justifier light gun",
+      "crop": [0, 0, 0.62, 0.86],
+      "largest": true,
+      "holes": true,
+      "limit": 225
     }
   ],
   "mastersystem": [

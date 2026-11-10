@@ -6,5 +6,8 @@
   ],
   "unverified": [],
   "bestsellers": ["3D Startrek", "B-1 Nuclear Bomber", "Miner!"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "lifetime": "1977–1982 (5 years)"
+  }
 }

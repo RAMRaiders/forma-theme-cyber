@@ -1,4 +1,8 @@
 {
   "bestsellers": ["God of War III", "Demon's Souls", "Metal Gear Solid 4: Guns of the Patriots"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "generation": "7th",
+    "lifetime": "2006–2017 (11 years)"
+  }
 }

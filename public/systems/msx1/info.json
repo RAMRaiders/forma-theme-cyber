@@ -9,7 +9,8 @@
     "memory": "8–64 KB RAM · 16 KB VRAM",
     "graphics": "TMS9918A: 256 × 192, 16 colours, 32 sprites",
     "sound": "General Instrument AY-3-8910, 3 channels",
-    "media": "ROM cartridges, cassette, 3.5\" floppy disk"
+    "media": "ROM cartridges, cassette, 3.5\" floppy disk",
+    "lifetime": "1983–1993 (10 years)"
   },
   "chips": [
     {

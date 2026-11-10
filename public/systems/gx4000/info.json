@@ -9,7 +9,9 @@
     "memory": "64 KB (16 KB used as video RAM)",
     "graphics": "Amstrad custom ASIC, hardware sprites, 4,096-colour palette",
     "sound": "General Instrument AY-3-8912",
-    "media": "Cartridge"
+    "media": "Cartridge",
+    "generation": "3rd",
+    "lifetime": "1990–1991 (1 year)"
   },
   "chips": [
     {

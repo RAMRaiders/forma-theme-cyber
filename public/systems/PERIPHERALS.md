@@ -18,7 +18,7 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **gamecube**: Hori controller, [Hori-Nintendo-GameCube-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Hori-Nintendo-GameCube-Controller-FL.jpg), by Evan-Amos, Public domain.
 - **megadrive**: Six-button pad, [Sega-Genesis-6But-Cont.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-6But-Cont.jpg), by Evan-Amos, Public domain.
 - **megadrive**: Arcade Power Stick, [Sega-Genesis-Arcade-Stick.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-Arcade-Stick.jpg), by Evan-Amos, Public domain.
-- **megadrive**: Justifier light gun, [Konami-Justifiers-Genesis-Light-Gun.jpg](https://commons.wikimedia.org/wiki/File:Konami-Justifiers-Genesis-Light-Gun.jpg), by Evan-Amos, Public domain.
+- **megadrive**: Justifier light gun, [Konami-Justifiers-Genesis-Set.jpg](https://commons.wikimedia.org/wiki/File:Konami-Justifiers-Genesis-Set.jpg), by Evan-Amos, Public domain.
 - **mastersystem**: Control Pads, [Sega-Master-System-Controllers.jpg](https://commons.wikimedia.org/wiki/File:Sega-Master-System-Controllers.jpg), by Evan-Amos, Public domain.
 - **mastersystem**: Control Stick, [Sega-Master-System-Control-Stick.jpg](https://commons.wikimedia.org/wiki/File:Sega-Master-System-Control-Stick.jpg), by Evan-Amos, Public domain.
 - **saturn**: 3D Control Pad, [Sega-Saturn-3D-Controller.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-3D-Controller.jpg), by Evan-Amos, Public domain.

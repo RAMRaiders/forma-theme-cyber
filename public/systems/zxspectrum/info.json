@@ -10,7 +10,8 @@
     "graphics": "256 × 192, 15 colours, 2 colours per 8 × 8 block",
     "sound": "1-bit beeper (AY-3-8912 on 128K models)",
     "media": "Cassette tape",
-    "unitsSold": "More than 5 million"
+    "unitsSold": "More than 5 million",
+    "lifetime": "1982–1992 (10 years)"
   },
   "chips": [
     {

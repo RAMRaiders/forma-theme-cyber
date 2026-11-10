@@ -10,7 +10,9 @@
     "graphics": "Custom ASIC: scaling and rotation",
     "sound": "Ricoh RF5C164 PCM + CD audio",
     "media": "CD-ROM",
-    "unitsSold": "2.24 million"
+    "unitsSold": "2.24 million",
+    "generation": "4th",
+    "lifetime": "1991–1996 (5 years)"
   },
   "chips": [
     {

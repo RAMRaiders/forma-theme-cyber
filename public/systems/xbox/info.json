@@ -1,4 +1,8 @@
 {
   "bestsellers": ["Halo 2", "Halo: Combat Evolved", "JSRF: Jet Set Radio Future"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "generation": "6th",
+    "lifetime": "2001–2006 (5 years)"
+  }
 }

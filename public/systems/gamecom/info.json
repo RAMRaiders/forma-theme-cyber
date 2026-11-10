@@ -9,7 +9,9 @@
     "graphics": "200 × 160 touchscreen LCD, 4 shades of grey",
     "sound": "4 channels: 2 waveform, noise, 8-bit PCM",
     "media": "ROM cartridges (two slots on the original model)",
-    "unitsSold": "Fewer than 300,000"
+    "unitsSold": "Fewer than 300,000",
+    "generation": "5th",
+    "lifetime": "1997–2000 (3 years)"
   },
   "chips": [
     {

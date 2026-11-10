@@ -1,4 +1,8 @@
 {
   "bestsellers": ["Uncharted: Golden Abyss", "Mortal Kombat", "WipEout 2048"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "generation": "8th",
+    "lifetime": "2011–2019 (8 years)"
+  }
 }

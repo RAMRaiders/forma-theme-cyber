@@ -1,4 +1,7 @@
 {
   "bestsellers": ["Baseball", "Cave Crawlers", "Frogger"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "specs": {
+    "lifetime": "1982–1985 (3 years)"
+  }
 }
