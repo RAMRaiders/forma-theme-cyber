@@ -670,11 +670,12 @@ main {
     opacity 200ms ease,
     visibility 0s linear 200ms;
   will-change: opacity;
+  /* Near black under the logos; beyond the column the screen shows, dimmed, as a sneak peek. */
   background: linear-gradient(
     90deg,
     transparent,
-    rgb(4 7 14 / 72%) 12%,
-    rgb(4 7 14 / 72%) 88%,
+    rgb(3 5 11 / 94%) 12%,
+    rgb(3 5 11 / 94%) 88%,
     transparent
   );
 }
@@ -753,8 +754,6 @@ main {
 .system-list {
   position: relative;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -772,9 +771,12 @@ main {
 }
 
 .system-list li {
-  position: relative;
+  /* Placed on the track, which runs past the list's ends when it loops. */
+  position: absolute;
+  top: calc(var(--place) * var(--strip-item));
+  left: 0;
+  right: 0;
   display: grid;
-  flex: none;
   place-items: center;
   /* Every logo the same height: the column's slide is all that moves. */
   height: var(--strip-item);
@@ -3516,12 +3518,13 @@ kbd {
   --spine-h: 2.85rem;
   overflow: hidden;
   padding: 0 1rem;
+  /* Near black only round the spines; beyond it the screen shows, dimmed, as a sneak peek. */
   background: linear-gradient(
     90deg,
-    transparent,
-    rgb(4 7 14 / 72%) 12%,
-    rgb(4 7 14 / 72%) 88%,
-    transparent
+    transparent calc(50% - var(--spine-len) / 2 - 3rem),
+    rgb(3 5 11 / 94%) calc(50% - var(--spine-len) / 2 - 0.8rem),
+    rgb(3 5 11 / 94%) calc(50% + var(--spine-len) / 2 + 0.8rem),
+    transparent calc(50% + var(--spine-len) / 2 + 3rem)
   );
   opacity: 0;
   visibility: hidden;

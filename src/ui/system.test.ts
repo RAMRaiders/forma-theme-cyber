@@ -7,9 +7,11 @@ import {
   press,
   readingMs,
   releaseDates,
+  SystemView,
   systemColours,
   turnCover
 } from './system.js';
+import type { CyberSystem, InfoStore } from '../data/catalog.js';
 
 const hueOf = (rgb: string) => {
   const [r, g, b] = rgb.split(' ').map((v) => Number(v) / 255) as [number, number, number];
@@ -18,6 +20,57 @@ const hueOf = (rgb: string) => {
   const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
   return Math.round((h * 60 + 360) % 360);
 };
+
+describe('the strip of logos', () => {
+  const systems = (n: number) =>
+    Array.from({ length: n }, (_, i) => ({
+      summary: { name: `s${i}`, fullname: `System ${i}`, gameCount: 1 },
+      category: 'consoles',
+      logo: null,
+      logoSmall: null,
+      logoDark: false,
+      photo: null,
+      photoKind: 'cutout',
+      hues: [],
+      magazines: [],
+      peripherals: []
+    })) as unknown as CyberSystem[];
+  const strip = (n: number) => {
+    const infos = {
+      makers: () => Promise.resolve({}),
+      peek: () => null,
+      get: () => Promise.resolve(null)
+    } as unknown as InfoStore;
+    const view = new SystemView(infos, () => {});
+    document.body.replaceChildren(view.root);
+    view.show(systems(n), 0);
+    const place = (name: string) =>
+      [...view.root.querySelectorAll<HTMLElement>('.system-list li')]
+        .find((li) => li.querySelector('.name')?.textContent === name)
+        ?.style.getPropertyValue('--place');
+    return { view, place };
+  };
+
+  it('with more systems than it shows, puts the last ones before the first', () => {
+    const tall = vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(320);
+    const { view, place } = strip(12);
+    expect(place('System 11')).toBe('-1');
+    expect(place('System 1')).toBe('1');
+    view.select(11);
+    expect(view.root.querySelector('li.selected .name')?.textContent).toBe('System 11');
+    expect(place('System 11')).toBe('-1'); // one step up, not all the way down the list
+    view.hide();
+    tall.mockRestore();
+  });
+
+  it('with few systems stays a plain list, each once', () => {
+    const tall = vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(320);
+    const { view, place } = strip(3);
+    expect(view.root.querySelectorAll('.system-list li')).toHaveLength(3);
+    expect(place('System 2')).toBe('2');
+    tall.mockRestore();
+  });
+});
 
 describe('how long words stay on screen', () => {
   const words = (n: number) => Array.from({ length: n }, () => 'word').join(' ');

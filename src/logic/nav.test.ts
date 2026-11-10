@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { moveGrid, moveHome, moveList } from './nav.js';
+import { loopIndex, loopPlace, moveGrid, moveHome, moveList } from './nav.js';
 
 describe('moveGrid', () => {
   // 10 items in 4 columns:
@@ -26,6 +26,21 @@ describe('moveGrid', () => {
     expect(moveGrid(38, 40, 4, 'pageDown')).toBe(39);
     expect(moveGrid(0, 0, 4, 'down')).toBe(0);
     expect(moveGrid(2, 10, 0, 'down')).toBe(3);
+  });
+});
+
+describe('a looping list', () => {
+  it('shows the last items before the first, and the first after the last', () => {
+    expect(loopIndex(-1, 8)).toBe(7);
+    expect(loopIndex(8, 8)).toBe(0);
+    expect(loopIndex(19, 8)).toBe(3);
+  });
+
+  it('steps across the ends by one place, and jumps within the list as they are', () => {
+    expect(loopPlace(0, 0, 7, 8)).toBe(-1);
+    expect(loopPlace(7, 7, 0, 8)).toBe(8);
+    expect(loopPlace(16, 0, 1, 8)).toBe(17);
+    expect(loopPlace(2, 2, 5, 8)).toBe(5);
   });
 });
 

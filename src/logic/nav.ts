@@ -61,6 +61,17 @@ export function moveList(
   }
 }
 
+/** Which item of `total` a place on a looping list's endless track shows. */
+export function loopIndex(place: number, total: number): number {
+  return ((place % total) + total) % total;
+}
+
+/** A looping list's place after moving from item `from` to item `to`, the short way round. */
+export function loopPlace(place: number, from: number, to: number, total: number): number {
+  const step = to - from;
+  return place + (Math.abs(step) * 2 > total ? step - Math.sign(step) * total : step);
+}
+
 /**
  * Cyber's home: a grid of `count` categories in `columns` columns, then one row of `shortcuts`
  * under it (favourites and the like), all in one index: the shortcuts follow the categories.

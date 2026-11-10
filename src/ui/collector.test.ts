@@ -416,6 +416,24 @@ describe('the Collector view', () => {
     ]);
   });
 
+  it('with more games than it shows, puts the last ones before the first', async () => {
+    const tall = vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(320);
+    const { v, text } = await view(
+      Array.from({ length: 30 }, (_, i) => game(i + 1, `Game ${i + 1}`))
+    );
+    const top = (name: string) =>
+      [...v.root.querySelectorAll<HTMLElement>('.spine-row')].find(
+        (r) => r.querySelector('.title')?.textContent === name
+      )?.style.top;
+    expect(top('Game 30')).toBe('-3.2rem');
+    expect(top('Game 2')).toBe('3.2rem');
+    vi.advanceTimersByTime(500);
+    v.select(29);
+    expect(text('.spine-row.selected .title')).toEqual(['Game 30']);
+    expect(top('Game 30')).toBe('-3.2rem'); // one step up, not all the way down the list
+    tall.mockRestore();
+  });
+
   it('keeps every game on the shelf, the selected one pulled out', async () => {
     const { v, text } = await view([
       game(1, 'After Burner', BOXED),

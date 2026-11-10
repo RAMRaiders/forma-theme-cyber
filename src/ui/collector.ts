@@ -4,6 +4,7 @@ import type { LazyList } from '../logic/pager.js';
 import { ageRatings, asPegi } from '../logic/agerating.js';
 import { flaggedRegions, languageFlag, regionFlag, romName } from '../logic/romname.js';
 import { DEFAULT_BACK, DEFAULT_FRONT, hue } from './cover.js';
+import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
 import {
   ARCADE,
@@ -232,6 +233,8 @@ export class CollectorView {
   #video = false;
   /** Room above the first row and below the last, so any row can sit in the middle. */
   #pad = 0;
+  /** The selected row's place on the track: past the ends when the shelf loops. */
+  #place = 0;
 
   /** Its animations were stopped by `leave`: the game shown next starts them again. */
   #left = false;
@@ -262,6 +265,12 @@ export class CollectorView {
       this.#showSelected();
     }
     requestAnimationFrame(() => this.#track.classList.remove('still'));
+  }
+
+  /** With more games than the shelf shows at once, the last ones come before the first. */
+  #loops(total: number, row: number): boolean {
+    const shown = this.#shelf.clientHeight;
+    return shown > 0 && total >= Math.ceil(shown / row) + 2;
   }
 
   /** The shelf's room above the first row, so any row can sit in the middle. */
@@ -312,6 +321,7 @@ export class CollectorView {
   /** `quiet`: the same game again (a reload), not a move: no shelf, nothing restarted. */
   select(index: number, quiet = false): void {
     const changed = index !== this.#selected;
+    const from = this.#selected;
     this.#selected = index;
     const now = performance.now();
     const held = changed && !quiet && now - this.#steppedAt < HELD_MS;
@@ -321,7 +331,10 @@ export class CollectorView {
     this.#measure();
     // The selected row in the middle, at the ends of the list too; the rows glide there. Whole
     // pixels: text on a layer moved by a fraction of one shimmers.
-    this.#track.style.transform = `translateY(${Math.round(this.#pad - index * row)}px)`;
+    const total = this.#source?.total ?? 0;
+    this.#place =
+      from >= 0 && this.#loops(total, row) ? loopPlace(this.#place, from, index, total) : index;
+    this.#track.style.transform = `translateY(${Math.round(this.#pad - this.#place * row)}px)`;
     this.render();
     if (!changed || quiet) return;
     this.#browse();
@@ -344,9 +357,10 @@ export class CollectorView {
     const row = ROW_REM * remPx();
     // Those in sight round the selected one, and a few more for the glide.
     const half = Math.ceil(this.#shelf.clientHeight / row / 2) + OVERSCAN;
-    const at = Math.max(0, this.#selected);
-    const first = Math.max(0, at - half);
-    const last = Math.min(source.total - 1, at + half);
+    const loops = this.#loops(source.total, row);
+    const at = loops ? this.#place : Math.max(0, this.#selected);
+    const first = loops ? at - half : Math.max(0, at - half);
+    const last = loops ? at + half : Math.min(source.total - 1, at + half);
     for (const [i, node] of this.#rows) {
       if (i < first || i > last) {
         node.remove();
@@ -354,7 +368,7 @@ export class CollectorView {
       }
     }
     for (let i = first; i <= last; i++) {
-      const game = source.get(i);
+      const game = source.get(loops ? loopIndex(i, source.total) : i);
       let node = this.#rows.get(i);
       if (!node) {
         node = el('div', { class: 'spine-row', role: 'option' });
@@ -371,8 +385,9 @@ export class CollectorView {
         node.classList.remove('tinted');
         if (game) this.#spineColour(game, node);
       }
-      node.classList.toggle('selected', i === this.#selected);
-      node.setAttribute('aria-selected', String(i === this.#selected));
+      const selected = i === (loops ? at : this.#selected);
+      node.classList.toggle('selected', selected);
+      node.setAttribute('aria-selected', String(selected));
     }
     if (this.#pending && this.selected) this.#showSelected();
   }

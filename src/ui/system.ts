@@ -9,7 +9,8 @@ import {
 } from '../data/catalog.js';
 import { categoryArt } from './art.js';
 import { circuitSvg } from './circuit.js';
-import { el } from './dom.js';
+import { loopIndex, loopPlace } from '../logic/nav.js';
+import { el, remPx } from './dom.js';
 import { preload, ready } from './preload.js';
 
 /**
@@ -28,6 +29,8 @@ const READ_FADE_MS = 300;
 const BOARD_MS = 450;
 /** How long what was shown takes to fade, as the next system comes in. */
 const LEAVE_MS = 220;
+/** One logo's place in the strip (as `--strip-item` in style.css). */
+const STRIP_ITEM_REM = 6.8;
 /** The strip of logos shows while moving, over the stage; this long after the last move it goes. */
 const DROP_MS = 1400;
 /** Steps closer together than this are the direction held: the strip then runs evenly. */
@@ -227,7 +230,10 @@ export class SystemView {
   readonly #slots = new Map<Slot, HTMLElement>();
   /** The stage showing: the slots' parent. */
   #page: HTMLElement | null = null;
-  #rows: HTMLElement[] = [];
+  /** The strip's logos, by place on its track: past the ends when it loops. */
+  readonly #rows = new Map<number, HTMLElement>();
+  /** The selected logo's place on the track. */
+  #place = 0;
   #systems: CyberSystem[] = [];
   #selected = -1;
   /** Which system the stage shows. */
@@ -297,8 +303,8 @@ export class SystemView {
     }
     this.#onScreen = true;
     this.#systems = systems;
-    this.#rows = systems.map(row);
-    this.#list.replaceChildren(...this.#rows);
+    this.#rows.clear();
+    this.#list.replaceChildren();
     this.#panel.replaceChildren(el('div', { class: 'floor', 'aria-hidden': 'true' }));
     this.#slots.clear();
     this.#page = null;
@@ -326,18 +332,19 @@ export class SystemView {
    * `quiet`: the user did not move, so the strip stays away.
    */
   select(index: number, now = false, quiet = false): void {
-    this.#rows[this.#selected]?.classList.remove('selected');
-    const moved = index !== this.#selected;
+    const from = this.#selected;
+    const moved = index !== from;
     this.#selected = index;
     clearTimeout(this.#settle);
     const stepped = performance.now();
     this.#list.classList.toggle('held', moved && !quiet && stepped - this.#steppedAt < HELD_MS);
     if (moved) this.#steppedAt = stepped;
-    const r = this.#rows[index];
     const system = this.#systems[index];
-    if (!r || !system) return;
-    r.classList.add('selected');
-    this.#centre(r);
+    if (!system) return;
+    const total = this.#systems.length;
+    this.#place = from >= 0 && this.#loops() ? loopPlace(this.#place, from, index, total) : index;
+    this.#drawStrip();
+    this.#centre();
     if (!quiet) this.#browse();
     this.#preload(index);
     const ticket = ++this.#ticket;
@@ -403,16 +410,48 @@ export class SystemView {
     clearTimeout(this.#boardTimer);
   }
 
+  /** With more systems than the strip shows at once, the last ones come before the first. */
+  #loops(): boolean {
+    const shown = this.#rail.clientHeight;
+    return shown > 0 && this.#systems.length >= Math.ceil(shown / (STRIP_ITEM_REM * remPx())) + 2;
+  }
+
+  /** The logos on the track: every one, or when it loops, those round the selected one. */
+  #drawStrip(): void {
+    const total = this.#systems.length;
+    const loops = this.#loops();
+    const half = Math.ceil(this.#rail.clientHeight / (STRIP_ITEM_REM * remPx()) / 2) + 2;
+    const first = loops ? this.#place - half : 0;
+    const last = loops ? this.#place + half : total - 1;
+    for (const [place, node] of this.#rows) {
+      if (place < first || place > last) {
+        node.remove();
+        this.#rows.delete(place);
+      }
+    }
+    for (let place = first; place <= last; place++) {
+      let node = this.#rows.get(place);
+      if (!node) {
+        node = row(this.#systems[loops ? loopIndex(place, total) : place]!);
+        node.style.setProperty('--place', String(place));
+        this.#list.append(node);
+        this.#rows.set(place, node);
+      }
+      node.classList.toggle('selected', place === this.#place);
+    }
+  }
+
   /**
    * The strip slides so the selected logo sits in its middle, under the selection frame, at the
    * ends of the list too (a transform: the compositor's work, cheap on a Pi).
    */
-  #centre(row: HTMLElement): void {
+  #centre(): void {
     const games = this.#systems[this.#selected]?.summary.gameCount ?? 0;
     this.#where.textContent = `${games.toLocaleString('en')} ${games === 1 ? 'game' : 'games'}`;
     const strip = this.#rail.clientHeight;
     if (strip === 0) return;
-    const y = row.offsetTop + row.offsetHeight / 2 - strip / 2;
+    const item = STRIP_ITEM_REM * remPx();
+    const y = this.#place * item + item / 2 - strip / 2;
     // Whole pixels: text on a layer moved by a fraction of one shimmers.
     this.#list.style.transform = `translateY(${-Math.round(y)}px)`;
   }
