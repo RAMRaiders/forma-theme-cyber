@@ -145,7 +145,8 @@ export class App {
     play: (game, area) => this.forma.video.play(game.id, { area }),
     stopVideo: () => void this.forma.video.stop().catch(() => {}),
     // The game companies' logos first, then the hardware makers'.
-    company: (name) => makerLogos(name, this.#companies)[0] ?? null,
+    company: (name) =>
+      makerLogos(name, this.#companies)[0] ?? this.forma.library.companyLogoUrl(name),
     accent: accentOf,
     system: (name) => {
       const system = this.#groups.flatMap((g) => g.systems).find((s) => s.summary.name === name);
