@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { DEFAULT_BACK, DEFAULT_FRONT } from './cover.js';
 import type { Game } from '@ramraiders/forma-sdk';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -213,7 +214,9 @@ describe('the game stage', () => {
       )
     );
     await vi.advanceTimersByTimeAsync(ACT_THREE_MS);
-    expect(s.root.querySelector('.logo, .score, .case, .cartridge, .achievements')).toBeNull();
+    expect(s.root.querySelector('.logo, .score, .cartridge, .achievements')).toBeNull();
+    expect(s.root.querySelector('.case .front')?.getAttribute('src')).toBe(DEFAULT_FRONT);
+    expect(s.root.querySelector('.case .back')?.getAttribute('src')).toBe(DEFAULT_BACK);
     expect(srcs()).toEqual(['forma://media/1/image?w=480']);
     expect(text('.facts dt')).toEqual(['Released', 'Publisher', 'Played']);
     expect(text('.facts dd')).toContain('Never yet');
@@ -221,7 +224,7 @@ describe('the game stage', () => {
     expect(achievements).not.toHaveBeenCalled();
 
     s.show(game({ id: 3, description: null }, {}));
-    expect(s.root.classList.contains('no-box')).toBe(true);
+    expect(s.root.querySelector('.box3d.has-back')).not.toBeNull();
     expect(s.root.querySelector<HTMLElement>('.captions')!.hidden).toBe(true);
 
     function srcs() {

@@ -29,17 +29,31 @@ const BOARD_MS = 450;
 /** How long what was shown takes to fade, as the next system comes in. */
 const LEAVE_MS = 220;
 /**
- * The stage changes once the selection rests this long, so a quick run down the rail moves the
- * rail alone, without the stage flickering through every system on the way.
+ * The strip of logos shows while moving, over the stage; this long after the last move it goes
+ * and the page changes to the system picked. Until then only the strip moves; A does it at once
+ * ({@link SystemView.settleNow}).
  */
-const REST_MS = 170;
-/** The strip of logos shows while moving, over the stage; this long after the last move, it goes. */
-const DROP_MS = 1000;
-/**
- * Holding a direction: the stage waits this long after the last step, so only the rail moves
- * while the list runs (a Pi takes about a frame and a half to draw a new stage).
- */
-const HELD_REST_MS = 220;
+const DROP_MS = 2000;
+/** The strip stays this long over the new page, so the page is there before the strip goes. */
+const PAGE_SHOWN_MS = 420;
+/** How long the last page takes to fade under the next (as in style.css). */
+const PAGE_LEAVE_MS = 380;
+/** The system's colours: a page keeps its own while it fades out. */
+const SYSTEM_COLOURS = [
+  '--sys',
+  '--sys-rgb',
+  '--sys2-rgb',
+  '--sys3-rgb',
+  '--sys4-rgb',
+  '--sys-10',
+  '--sys-20',
+  '--sys-30',
+  '--sys-45',
+  '--sys-70'
+];
+/** The magazines' front cover turns away this often, taking this long (as in style.css). */
+const COVER_MS = 7000;
+const COVER_TURN_MS = 650;
 /** At most this long waiting for the next system's pictures (when not preloaded yet). */
 const DECODE_MS = 250;
 /** Text too long for its box scrolls through at this speed, in px per second. */
@@ -68,17 +82,27 @@ function stayMs(box: HTMLElement | null | undefined, text: string): number {
 
 type Spec = keyof NonNullable<SystemInfo['specs']>;
 
-/** The callouts round the console, as on a schematic: three each side. */
+/** The callouts round the console, as on a schematic: two each side. */
 const LEFT: [Spec, string][] = [
   ['cpu', 'CPU'],
-  ['memory', 'Memory'],
-  ['graphics', 'Graphics']
+  ['memory', 'Memory']
 ];
 const RIGHT: [Spec, string][] = [
-  ['sound', 'Sound'],
-  ['media', 'Media'],
-  ['unitsSold', 'Sold']
+  ['graphics', 'Graphics'],
+  ['sound', 'Sound']
 ];
+
+/** What the technical sheet beside the logo adds to its maker and dates, as far as it has room. */
+const SHEET: [Spec, string][] = [
+  ['generation', 'Generation:'],
+  ['lifetime', 'Lifetime:'],
+  ['unitsSold', 'Units sold:'],
+  ['engine', 'Engine:'],
+  ['language', 'Language:'],
+  ['license', 'License:']
+];
+/** The sheet's rows: all that fit beside the logo. */
+const SHEET_ROWS = 5;
 
 /** Each category's own colour, as on its home tile. */
 const CATEGORY_RGB: Record<CategoryId, string> = {
@@ -185,7 +209,7 @@ function makerRgb(maker: string): string | null {
 }
 
 /** The parts of the stage that change together when the selection moves. */
-type Slot = 'intro' | 'reading' | 'tally' | 'showcase' | 'press' | 'gear' | 'fact';
+type Slot = 'intro' | 'reading' | 'press' | 'showcase' | 'best' | 'gear' | 'fact';
 
 /**
  * A category's systems: a strip of logos over the middle while moving, kept centred on the
@@ -218,9 +242,17 @@ export class SystemView {
   /** Which of the description and the story's chapters shows under the logo. */
   #read = 0;
   #readTimer: ReturnType<typeof setTimeout> | undefined;
+  #coverTimer: ReturnType<typeof setInterval> | undefined;
   #boardTimer: ReturnType<typeof setTimeout> | undefined;
-  #restTimer: ReturnType<typeof setTimeout> | undefined;
   #dropTimer: ReturnType<typeof setTimeout> | undefined;
+  /** Between `show` and `hide`. */
+  #onScreen = false;
+  /** What to do once the page asked for is drawn: let the strip go. */
+  #onDrawn: (() => void) | null = null;
+  /** The new page is up and the strip is only about to go: A is for the page now. */
+  #holding = false;
+  /** Shows the selected system on the stage, while it is still waiting to. */
+  #load: (() => void) | null = null;
   /** Curiosities move on by themselves; Interface → Rotate curiosities. */
   rotateFacts = true;
   /** What is behind the screen (Look → Systems background); `board`: each system's own. */
@@ -235,7 +267,12 @@ export class SystemView {
     /** Shows a board behind the whole screen (the app's backdrop). */
     private readonly backdrop: (svg: string) => void
   ) {
-    this.#rail.append(this.#list, this.#where);
+    this.#rail.append(
+      this.#list,
+      this.#where,
+      el('span', { class: 'edge top' }),
+      el('span', { class: 'edge bottom' })
+    );
     this.root.append(this.#rail, this.#panel);
     void infos.makers().then((makers) => {
       this.#makers = makers;
@@ -250,17 +287,35 @@ export class SystemView {
     return this.#systems.length;
   }
 
+  /**
+   * Fills the screen. Called again while it is up when the library changes (a copy, a scrape,
+   * one game at a time): the same systems then only take their new numbers, and even a changed
+   * list is redrawn without the strip, which is for the user's own moves.
+   */
   show(systems: CyberSystem[], selected: number): void {
+    const refresh = this.#onScreen;
+    const same =
+      systems.length === this.#systems.length &&
+      systems.every((s, i) => s.summary.name === this.#systems[i]?.summary.name);
+    if (refresh && same && selected === this.#selected) {
+      this.#systems = systems;
+      return;
+    }
+    this.#onScreen = true;
     this.#systems = systems;
     this.#rows = systems.map(row);
     this.#list.replaceChildren(...this.#rows);
-    this.#panel.replaceChildren(el('div', { class: 'floor', 'aria-hidden': 'true' }), floorFx());
+    this.#panel.replaceChildren(el('div', { class: 'floor', 'aria-hidden': 'true' }));
     this.#slots.clear();
     this.#page = null;
     this.#selected = -1;
     this.#shown = -1;
     this.#drawnFor = null;
-    this.select(selected, true);
+    // Straight to it, no glide from wherever the last list was.
+    this.#list.classList.add('still');
+    // Arriving, or the list changing, is not moving: the strip waits for the first press.
+    this.select(selected, true, true);
+    requestAnimationFrame(() => this.#list.classList.remove('still'));
   }
 
   /** Look → Systems background changed: the screen as it is, in the new look, at once. */
@@ -268,15 +323,15 @@ export class SystemView {
     this.#drawnFor = null;
     if (this.#selected >= 0) {
       this.#shown = -1;
-      this.select(this.#selected, true);
+      this.select(this.#selected, true, true);
     }
   }
 
   /**
    * `now`: draw at once (entering the screen), not fading in, nor the board after a rest.
-   * `held`: a repeat of a held direction; the stage follows once the list stops.
+   * `quiet`: the user did not move, so the strip stays away.
    */
-  select(index: number, now = false, held = false): void {
+  select(index: number, now = false, quiet = false): void {
     this.#rows[this.#selected]?.classList.remove('selected');
     this.#selected = index;
     const r = this.#rows[index];
@@ -284,7 +339,7 @@ export class SystemView {
     if (!r || !system) return;
     r.classList.add('selected');
     this.#centre(r);
-    this.#browse();
+    if (!quiet) this.#browse();
     this.#preload(index);
     const ticket = ++this.#ticket;
     const show = (info: SystemInfo | null) => {
@@ -295,15 +350,39 @@ export class SystemView {
       this.#render(system, !now, ticket);
       this.#drawBoard(system, now ? 0 : BOARD_MS);
     };
-    clearTimeout(this.#restTimer);
     const load = () => {
+      this.#load = null;
       // Loaded with the catalogue, so normally at hand: drawn once, never first without its info.
       const known = this.infos.peek(system.summary.name);
       if (known !== undefined) return show(known);
       void this.infos.get(system.summary.name).then(show);
     };
     if (now) load();
-    else this.#restTimer = setTimeout(load, held ? HELD_REST_MS : REST_MS);
+    else this.#load = load;
+  }
+
+  /** The strip showing: the selection still moving, or just moved. */
+  get browsing(): boolean {
+    return this.root.classList.contains('browsing') && !this.#holding;
+  }
+
+  /** The system picked on the stage now (A on the strip, or the wait over); then the strip goes. */
+  settleNow(): void {
+    if (this.#onDrawn) return;
+    clearTimeout(this.#dropTimer);
+    const load = this.#load;
+    if (!load) return this.#stripGone();
+    this.#onDrawn = () => {
+      this.#onDrawn = null;
+      this.#holding = true;
+      this.#dropTimer = setTimeout(() => this.#stripGone(), PAGE_SHOWN_MS);
+    };
+    load();
+  }
+
+  #stripGone(): void {
+    this.#holding = false;
+    this.root.classList.remove('browsing');
   }
 
   /** The pictures of the systems either side go first in the preload queue. */
@@ -329,35 +408,35 @@ export class SystemView {
 
   /**
    * The strip of logos over the middle of the stage while moving; a moment after the last
-   * move it fades, and the system's page is the screen. Only opacity changes.
+   * move it fades, and the page changes to the system picked. Only opacity changes.
    */
   #browse(): void {
     this.root.classList.add('browsing');
+    this.#onDrawn = null;
+    this.#holding = false;
     clearTimeout(this.#dropTimer);
-    this.#dropTimer = setTimeout(() => this.root.classList.remove('browsing'), DROP_MS);
+    this.#dropTimer = setTimeout(() => this.settleNow(), DROP_MS);
   }
 
   /** Stops the curiosity timer when the screen goes away. */
   hide(): void {
+    this.#onScreen = false;
     this.#drawnFor = null;
     clearTimeout(this.#dropTimer);
-    this.root.classList.remove('browsing');
+    this.#onDrawn = null;
+    this.#stripGone();
     clearTimeout(this.#factTimer);
     clearTimeout(this.#readTimer);
+    clearInterval(this.#coverTimer);
     clearTimeout(this.#boardTimer);
-    clearTimeout(this.#restTimer);
+    this.#load = null;
   }
 
   /**
    * The strip slides so the selected logo sits in its middle, under the selection frame, at the
-   * ends of the list too (a transform: the compositor's work, cheap on a Pi). Its neighbours
-   * fade with their distance from it.
+   * ends of the list too (a transform: the compositor's work, cheap on a Pi).
    */
   #centre(row: HTMLElement): void {
-    for (const [n, r] of this.#rows.entries()) {
-      const d = Math.abs(n - this.#selected);
-      r.dataset.near = d <= 3 ? String(d) : '';
-    }
     const games = this.#systems[this.#selected]?.summary.gameCount ?? 0;
     this.#where.textContent = `${games.toLocaleString('en')} ${games === 1 ? 'game' : 'games'}`;
     const strip = this.#rail.clientHeight;
@@ -442,7 +521,17 @@ export class SystemView {
     if (!animate) return old.remove();
     old.classList.remove('entering');
     old.classList.add('leaving');
-    setTimeout(() => old.remove(), LEAVE_MS);
+    setTimeout(() => old.remove(), PAGE_LEAVE_MS);
+  }
+
+  /** The page on the stage keeps the colours it has, whatever the next system sets. */
+  #keepPageColours(): void {
+    if (!this.#page) return;
+    const current = getComputedStyle(this.#page);
+    for (const name of SYSTEM_COLOURS) {
+      const value = current.getPropertyValue(name);
+      if (value) this.#page.style.setProperty(name, value);
+    }
   }
 
   #render(system: CyberSystem, animate: boolean, ticket: number): void {
@@ -454,7 +543,7 @@ export class SystemView {
     const title = el('h2', { class: 'name' }, info?.name ?? s.fullname ?? s.name);
     const year = s.releaseYear ? String(s.releaseYear) : null;
     const released = info?.specs?.released ?? year;
-    const byline = bylineOf(maker, released, makerLogos(maker, this.#makers));
+    const sheet = technicalSheet(maker, makerLogos(maker, this.#makers), released, info?.specs);
 
     const callouts = (side: 'left' | 'right', specs: [Spec, string][]) => {
       const items = specs.flatMap(([key, label], n) => {
@@ -479,20 +568,18 @@ export class SystemView {
       el(
         'div',
         { class: 'intro' },
-        el('div', { class: 'heading' }, logoImage(system, 'logo'), title),
-        byline
+        el(
+          'div',
+          { class: 'heading' },
+          el('div', { class: 'brand' }, logoImage(system, 'logo'), title),
+          sheet
+        )
       )
     ]);
     parts.push(['reading', this.#readingPart()]);
     parts.push([
-      'tally',
-      el(
-        'div',
-        { class: 'tally' },
-        el('span', { class: 'count' }, s.gameCount.toLocaleString('en')),
-        el('span', { class: 'unit' }, s.gameCount === 1 ? 'game' : 'games'),
-        bestsellerShelf(bestsellers(s.name, info?.bestsellers), info?.bestsellersBy !== 'classics')
-      )
+      'best',
+      bestsellerShelf(bestsellers(s.name, info?.bestsellers), info?.bestsellersBy !== 'classics')
     ]);
     parts.push([
       'showcase',
@@ -521,6 +608,7 @@ export class SystemView {
         },
         this.#selected
       );
+      if (animate) this.#keepPageColours();
       const root = document.documentElement.style;
       root.setProperty('--sys', `rgb(${rgb})`);
       root.setProperty('--sys-rgb', rgb);
@@ -533,6 +621,8 @@ export class SystemView {
       this.#scrollOverflow();
       this.#scheduleFact();
       this.#scheduleReading();
+      this.#scheduleCover();
+      this.#onDrawn?.();
     };
     // The next system shows whole, its pictures ready, rather than its words first.
     if (!animate) return apply();
@@ -567,7 +657,17 @@ export class SystemView {
     const all = this.#readings();
     const text = all[this.#read % Math.max(1, all.length)];
     if (!text) return null;
-    return el('div', { class: 'reading' }, scroller('p', text, 'description'));
+    return el(
+      'div',
+      { class: 'reading' },
+      scroller('p', text, 'description'),
+      // Which page of how many, when they take turns.
+      all.length > 1 ? el('span', { class: 'page' }, this.#pageOf(all.length)) : null
+    );
+  }
+
+  #pageOf(total: number): string {
+    return `${(this.#read % total) + 1}/${total}`;
   }
 
   /**
@@ -580,10 +680,13 @@ export class SystemView {
     if (!box || all.length < 2) return;
     this.#read += 1;
     const text = all[this.#read % all.length] ?? '';
+    const page = this.#pageOf(all.length);
+    const counter = this.#slots.get('reading')?.querySelector('.page');
     box.classList.add('fading');
     this.#readTimer = setTimeout(() => {
       const fresh = scroller('p', text, 'description fading');
       box.replaceWith(fresh);
+      if (counter) counter.textContent = page;
       this.#scrollOverflow();
       requestAnimationFrame(() => requestAnimationFrame(() => fresh.classList.remove('fading')));
       this.#scheduleReading();
@@ -618,6 +721,16 @@ export class SystemView {
     );
   }
 
+  #scheduleCover(): void {
+    clearInterval(this.#coverTimer);
+    if (this.rotateFacts) {
+      this.#coverTimer = setInterval(() => {
+        const stand = this.#slots.get('press');
+        if (stand) turnCover(stand);
+      }, COVER_MS);
+    }
+  }
+
   #scheduleFact(): void {
     clearTimeout(this.#factTimer);
     const facts = this.#info?.curiosities ?? [];
@@ -638,22 +751,16 @@ function bestsellerShelf(best: Bestseller[], ranked: boolean): HTMLElement | nul
   return el(
     'div',
     { class: 'bestsellers' },
-    // Classics have no order to show: no ranks on them.
     el('span', { class: 'label' }, ranked ? 'Best sellers' : 'Classics'),
     el(
       'ol',
       {},
-      ...best.map((game, n) => {
+      ...best.map((game) => {
         const art = el('img', { src: game.art, alt: game.name, decoding: 'async' });
         const item = el(
           'li',
           {},
-          el(
-            'span',
-            { class: 'pic' },
-            art,
-            ranked ? el('span', { class: 'rank' }, String(n + 1)) : ''
-          ),
+          el('span', { class: 'pic' }, art),
           el('span', { class: 'name' }, game.name)
         );
         art.addEventListener('error', () => item.remove());
@@ -683,32 +790,76 @@ function settle(images: HTMLImageElement[]): Promise<void> {
   ]);
 }
 
-/**
- * Who made it and when: the maker as its logo where Cyber has it (its name for screen readers,
- * and in its place if the logo will not load), then the year. `null` when neither is known.
- */
-function bylineOf(
-  maker: string | null | undefined,
-  released: string | null | undefined,
-  logos: readonly string[]
-): HTMLElement | null {
-  if (!maker && !released) return null;
-  const line = el('p', { class: 'byline' });
-  if (maker && logos.length) {
-    // All of them, or the name: never some logos and a gap.
-    const imgs = logos.map((src) =>
-      el('img', { class: 'maker-logo', src, alt: '', decoding: 'async' })
+/** The regions release dates name, and the flag (in public/flags/) each is shown with. */
+const REGION_FLAGS: Record<string, string> = {
+  JP: 'jp',
+  NA: 'us',
+  EU: 'eu',
+  UK: 'gb',
+  DE: 'de',
+  KR: 'kr',
+  TW: 'tw'
+};
+
+/** A release date with each region's code as its flag: "1988 JP · 1989 NA". */
+export function releaseDates(text: string): (string | HTMLElement)[] {
+  return text
+    .split(/\b(JP|NA|EU|UK|DE|KR|TW)\b/)
+    .map((part, n) =>
+      n % 2
+        ? el('img', { class: 'flag', src: `./flags/${REGION_FLAGS[part]}.svg`, alt: part })
+        : part
     );
-    const makers = el('span', { class: 'makers', role: 'img', 'aria-label': maker }, ...imgs);
-    for (const img of imgs) {
-      img.addEventListener('error', () => makers.replaceWith(maker), { once: true });
-    }
-    line.append(makers);
-  } else if (maker) {
-    line.append(maker);
+}
+
+/**
+ * The technical sheet beside the logo: who made it (its logo where Cyber has one), when, and
+ * what else is known. `null` when nothing is.
+ */
+function technicalSheet(
+  maker: string | null | undefined,
+  logos: readonly string[],
+  released: string | null | undefined,
+  specs: SystemInfo['specs']
+): HTMLElement | null {
+  const row = (label: string, value: HTMLElement) =>
+    el('div', { class: 'sheet-row' }, el('dt', {}, label), value);
+  const rows: HTMLElement[] = [];
+  if (maker) {
+    const mark = makerMark(maker, logos);
+    rows.push(row('Manufacturer:', mark ? el('dd', {}, mark) : scroller('dd', maker)));
   }
-  if (released) line.append(el('span', { class: 'year' }, maker ? ` · ${released}` : released));
-  return line;
+  if (released) {
+    rows.push(
+      row(
+        'Release date:',
+        el(
+          'dd',
+          { class: 'scroll' },
+          el('span', { class: 'scroll-inner' }, ...releaseDates(released))
+        )
+      )
+    );
+  }
+  for (const [key, label] of SHEET) {
+    const value = specs?.[key];
+    if (value) rows.push(row(label, scroller('dd', value)));
+  }
+  return rows.length ? el('dl', { class: 'sheet' }, ...rows.slice(0, SHEET_ROWS)) : null;
+}
+
+/** The maker's logos; `null` where Cyber has none (its name is used). */
+function makerMark(maker: string | null | undefined, logos: readonly string[]): HTMLElement | null {
+  if (!maker || !logos.length) return null;
+  // All of them, or the name: never some logos and a gap.
+  const imgs = logos.map((src) =>
+    el('img', { class: 'maker-logo', src, alt: '', decoding: 'async' })
+  );
+  const makers = el('span', { class: 'makers', role: 'img', 'aria-label': maker }, ...imgs);
+  for (const img of imgs) {
+    img.addEventListener('error', () => makers.replaceWith(maker), { once: true });
+  }
+  return makers;
 }
 
 /** A system's logo; a dark one gets a light halo; none (or a broken file) leaves nothing. */
@@ -723,19 +874,6 @@ function logoImage(system: CyberSystem, cls: string, big = false): HTMLImageElem
   });
   logo.addEventListener('error', () => logo.remove());
   return logo;
-}
-
-/**
- * What moves on the floor under the console, outside the stage pages (they fade as the
- * selection moves): rings of light going out from under it, sparks rising round it.
- */
-function floorFx(): HTMLElement {
-  return el(
-    'div',
-    { class: 'floor-fx', 'aria-hidden': 'true' },
-    ...[0, 1, 2].map((n) => el('span', { class: 'ping', style: `--n: ${n}` })),
-    ...[0, 1, 2, 3, 4, 5, 6, 7].map((n) => el('span', { class: 'spark', style: `--n: ${n}` }))
-  );
 }
 
 /**
@@ -778,18 +916,44 @@ function shelfFigure(cls: string, src: string, alt: string, caption?: string): H
 }
 
 /**
- * Magazines about the system, standing before its console: three covers side by side, the
- * first in the middle, each whole. `null` for a system with none.
+ * Magazines about the system, a stack of up to five, the front one whole and big enough to
+ * read, the start of each of the others showing behind it. `null` for a system with none.
  */
 export function press(system: Pick<CyberSystem, 'magazines'>): HTMLElement | null {
-  const mags = system.magazines.slice(0, 3);
+  const mags = system.magazines.slice(0, 5);
   if (!mags.length) return null;
-  const row = mags.length === 3 ? [mags[1]!, mags[0]!, mags[2]!] : mags;
   return el(
     'div',
-    { class: `stand n${row.length}`, 'aria-label': 'In the press' },
-    ...row.map((m) => shelfFigure(m === mags[0] ? 'cover lead' : 'cover', m.src, m.title))
+    { class: 'stand', 'aria-label': 'In the press' },
+    ...mags.map((m, n) => {
+      const fig = shelfFigure('cover', m.src, m.title);
+      fig.dataset.pos = String(n);
+      return fig;
+    })
   );
+}
+
+/**
+ * The front cover turns away like a page and goes to the back of the stack; those behind it
+ * come forward. Transform and opacity only.
+ */
+export function turnCover(stand: HTMLElement): void {
+  const covers = [...stand.querySelectorAll<HTMLElement>('.cover')].sort(
+    (a, b) => Number(a.dataset.pos) - Number(b.dataset.pos)
+  );
+  const [front, next, ...rest] = covers;
+  if (!front || !next) return;
+  front.classList.add('turning');
+  [next, ...rest].forEach((cover, n) => {
+    cover.dataset.pos = String(n);
+  });
+  setTimeout(() => {
+    // Straight to the back, unseen, then the stack's own moves again.
+    front.classList.add('parked');
+    front.classList.remove('turning');
+    front.dataset.pos = String(rest.length + 1);
+    requestAnimationFrame(() => requestAnimationFrame(() => front.classList.remove('parked')));
+  }, COVER_TURN_MS);
 }
 
 /**
@@ -809,10 +973,10 @@ export function gear(system: Pick<CyberSystem, 'peripherals'>): HTMLElement | nu
 
 /**
  * How tall a logo stands in the column, in rem, for its width over its height: the same area for
- * every one (about 2 × 7rem), so a wide logo is low and a square one taller; 1rem to 2rem.
+ * every one (about 3 × 11rem), so a wide logo is low and a square one taller; 1.5rem to 3rem.
  */
 export function logoHeight(aspect: number): number {
-  return Math.min(2, Math.max(1, 3.75 / Math.sqrt(aspect)));
+  return Math.min(3, Math.max(1.5, 5.6 / Math.sqrt(aspect)));
 }
 
 function row(system: CyberSystem): HTMLElement {

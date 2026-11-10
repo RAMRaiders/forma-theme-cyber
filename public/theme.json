@@ -120,8 +120,9 @@
     }
   ],
   "scraper": {
-    "media": ["boxside", "boxback", "cartridge", "fanart", "manual"],
+    "media": ["boxback", "cartridge", "fanart", "manual"],
     "fields": ["ageRating"],
+    "viewSetting": "gamesView",
     "shows": [
       "thumbnail",
       "boxart",
@@ -138,6 +139,9 @@
       "marquee",
       "manual"
     ],
-    "backups": { "marquee": "wheel", "boxart": "thumbnail" }
+    "backups": { "marquee": "wheel", "boxart": "thumbnail" },
+    "views": {
+      "collector": { "media": ["boxside"] }
+    }
   }
 }

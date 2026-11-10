@@ -1,5 +1,6 @@
 import type { Game } from '@ramraiders/forma-sdk';
 
+import { DEFAULT_BACK, DEFAULT_FRONT } from './cover.js';
 import { el } from './dom.js';
 
 /**
@@ -44,6 +45,11 @@ export type ShowGame = Game & {
 
 /** A URL for `kind` of `game` at `width` pixels, or `null` when the game has none. */
 export type MediaUrl = (game: Game, kind: Kind, width?: number) => string | null;
+
+/** One of the games its system is remembered for (Forma 1.25; the SDK's types will follow). */
+export function isIconic(game: Game): boolean {
+  return (game as Game & { iconic?: boolean }).iconic === true;
+}
 
 export interface Achievements {
   earned: number;
@@ -253,10 +259,9 @@ export class Stage {
     this.root.replaceChildren(
       this.#title,
       this.#factsBlock(game),
-      ...(collection ? [collection] : []),
+      collection,
       this.#captions(game)
     );
-    this.root.classList.toggle('no-box', !collection);
 
     if (!motion()) {
       this.root.dataset.act = '2';
@@ -335,6 +340,7 @@ export class Stage {
     // Marks first (a favourite), then the score and what kind of game it is.
     const line = el('div', { class: 'tagline' });
     if (game.favorite) line.append(el('span', { class: 'tag favourite' }, '★ Favourite'));
+    if (isIconic(game)) line.append(el('span', { class: 'tag iconic' }, 'Iconic'));
     if (game.rating !== null) {
       const score = Math.round(game.rating * 100) / 10;
       const stars = el('span', { class: 'stars', role: 'img', 'aria-label': `${score} of 10` });
@@ -397,15 +403,19 @@ export class Stage {
    * Act 2's other half: the box in 3D, turning; the cartridge leaning on it; screenshots fanned
    * behind. `null` when the game has none of them.
    */
-  #collection(game: Game): HTMLElement | null {
+  #collection(game: Game): HTMLElement {
     const media = this.options.media;
-    const front = media(game, 'thumbnail', 520) ?? media(game, 'boxart', 520);
-    const back = media(game, 'thumbnail') ? media(game, 'boxback', 520) : null;
+    const scanned = media(game, 'thumbnail', 520) ?? media(game, 'boxart', 520);
+    const front = scanned ?? DEFAULT_FRONT;
+    const back = !scanned
+      ? DEFAULT_BACK
+      : media(game, 'thumbnail')
+        ? media(game, 'boxback', 520)
+        : null;
     const cartridge = media(game, 'cartridge', 360);
     const shots = STILLS.map((k) => media(game, k, 480))
       .filter((u): u is string => u !== null)
       .slice(0, 3);
-    if (!front && !cartridge && shots.length === 0) return null;
 
     const collection = el('div', { class: 'collection' });
     const fan = el('div', { class: 'shots' });
@@ -416,39 +426,41 @@ export class Stage {
     });
     collection.append(fan);
 
-    if (front) {
-      const box = el('div', { class: 'box3d' });
-      const turn = el('div', { class: 'case' });
-      // Sized to the box's own shape once its picture is in: the faces and spine follow it.
-      const face = picture(front, 'front');
-      face.addEventListener(
-        'load',
-        () => {
-          if (face.naturalWidth > 0) {
-            turn.style.aspectRatio = `${face.naturalWidth} / ${face.naturalHeight}`;
-            box.classList.add('ready');
+    const box = el('div', { class: 'box3d' });
+    const turn = el('div', { class: 'case' });
+    // Sized to the box's own shape once its picture is in: the faces and spine follow it.
+    const face = picture(front, 'front');
+    face.addEventListener(
+      'load',
+      () => {
+        if (face.naturalWidth > 0) {
+          turn.style.aspectRatio = `${face.naturalWidth} / ${face.naturalHeight}`;
+          box.classList.add('ready');
+        }
+      },
+      { once: true }
+    );
+    face.addEventListener('error', () => turn.prepend(picture(DEFAULT_FRONT, 'front')), {
+      once: true
+    });
+    turn.append(face);
+    turn.append(el('div', { class: 'spine' }));
+    if (back) {
+      turn.append(picture(back, 'back'));
+      box.classList.add('has-back');
+    }
+    box.append(turn);
+    collection.append(box);
+    if (back && motion()) {
+      this.#later(() => {
+        box.classList.add('flipped');
+        // While the video plays, the box rests: the Pi's decoder has the time to itself.
+        this.#every(() => {
+          if (!this.backdrop.classList.contains('through')) {
+            box.classList.toggle('flipped');
           }
-        },
-        { once: true }
-      );
-      turn.append(face, el('div', { class: 'spine' }));
-      if (back) {
-        turn.append(picture(back, 'back'));
-        box.classList.add('has-back');
-      }
-      box.append(turn);
-      collection.append(box);
-      if (back && motion()) {
-        this.#later(() => {
-          box.classList.add('flipped');
-          // While the video plays, the box rests: the Pi's decoder has the time to itself.
-          this.#every(() => {
-            if (!this.backdrop.classList.contains('through')) {
-              box.classList.toggle('flipped');
-            }
-          }, FLIP_MS);
-        }, ACT_TWO_MS + 1800);
-      }
+        }, FLIP_MS);
+      }, ACT_TWO_MS + 1800);
     }
     if (cartridge) collection.append(picture(cartridge, 'cartridge'));
     return collection;
@@ -513,7 +525,11 @@ export class Stage {
     };
     play(game)
       .then(({ playing }) => {
-        if (this.#preview !== preview) return;
+        if (this.#preview !== preview) {
+          // Stopped while Forma was still starting it: the stop came too soon to catch it.
+          if (this.#preview === null) this.options.stopVideo?.();
+          return;
+        }
         if (!playing) return without();
         // Shown no sooner than act 3 would have been.
         const wait = actThree ? Math.max(0, this.#shownAt + ACT_THREE_MS - Date.now()) : 0;

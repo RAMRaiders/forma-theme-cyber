@@ -6,7 +6,7 @@
 export interface RomName {
   regions: string[];
   languages: string[];
-  /** `Rev 1`, `v1.1`, `Beta`, `Proto`, `Demo`…; `null` for a first release. */
+  /** `Rev 1`, `v1.1`, `Beta`, `Proto`, `Unl`, `Hack`…; `null` for a first, official release. */
   version: string | null;
 }
 
@@ -67,7 +67,14 @@ const REGION_LETTERS: Record<string, string> = {
 
 const LANGUAGE = /^[A-Z][a-z](-[A-Z][a-z]+)?$/;
 const VERSION =
-  /^(rev\s*[\w.]+|v\s?\d[\w.]*|beta(\s*\d+)?|proto(type)?(\s*\d+)?|demo|sample|alt(\s*\d+)?)$/i;
+  /^(rev\s*[\w.]+|v\s?\d[\w.]*|beta(\s*\d+)?|proto(type)?(\s*\d+)?|demo|sample|alt(\s*\d+)?|unl|unlicensed|pirate|bootleg|aftermarket|homebrew|hack)$/i;
+
+/** GoodTools' square brackets, those that say a copy is not the official release. */
+const BRACKETS: [RegExp, string][] = [
+  [/^T[+-]/, 'Translation'],
+  [/^h(\d|[A-Z])/, 'Hack'],
+  [/^p\d*$/, 'Pirate']
+];
 
 export function romName(path: string): RomName {
   const file = path.split('/').pop() ?? path;
@@ -96,10 +103,14 @@ export function romName(path: string): RomName {
       if (each.every((r) => r)) regions.push(...(each as string[]));
     }
   }
+  for (const [, group = ''] of file.matchAll(/\[([^[\]]*)\]/g)) {
+    const found = BRACKETS.find(([tag]) => tag.test(group.trim()));
+    if (found) versions.push(found[1]);
+  }
   return {
     regions: [...new Set(regions)],
     languages: [...new Set(languages)],
-    version: versions.length ? versions.join(' · ') : null
+    version: versions.length ? [...new Set(versions)].join(' · ') : null
   };
 }
 
@@ -127,6 +138,11 @@ const LANGUAGE_FLAGS: Record<string, string> = {
 const FLAGS = new Set(
   'us eu jp gb fr de es it nl se br kr cn tw hk au ca pt ru pl dk fi no be ch at gr'.split(' ')
 );
+
+/** Regions as they are flagged: a World copy shows the three the consoles were sold in. */
+export function flaggedRegions(regions: string[]): string[] {
+  return [...new Set(regions.flatMap((r) => (r === 'wor' ? ['jp', 'us', 'eu'] : [r])))];
+}
 
 export function regionFlag(code: string): string | null {
   const c = code.toLowerCase();

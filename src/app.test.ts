@@ -128,9 +128,9 @@ describe('the default theme', () => {
     expect(text('.system-panel > :not(.leaving) .reading .description')).toEqual([
       'An 8-bit console.'
     ]);
-    expect(text('.system-panel > :not(.leaving) dd')).toEqual(['Ricoh 2A03']);
-    // The stage: its games as a readout, its place in the rail, a callout on the left.
-    expect(text('.system-panel > :not(.leaving) .tally .count')).toEqual(['3']);
+    expect(text('.system-panel > :not(.leaving) .sheet dd')).toEqual(['Nintendo', '1985']);
+    expect(text('.system-panel > :not(.leaving) .specs dd')).toEqual(['Ricoh 2A03']);
+    // The stage: a callout on the left.
     expect(text('.system-panel > :not(.leaving) .specs-left dt')).toEqual(['CPU']);
     expect(text('.system-panel > :not(.leaving) > .fact:not(.leaving) p')).toEqual(['First fact.']);
     await press('north');
@@ -143,18 +143,22 @@ describe('the default theme', () => {
 
     // A system without info.json still shows, from Forma's data.
     await press('down');
-    // The rail moves at once; the stage follows once the selection rests.
+    // The strip moves at once; the page behind it stays until A, or until the strip goes.
     expect(text('.system-list li.selected .name')).toEqual(['Mega Drive']);
+    expect(text('.system-panel > :not(.leaving) .name')).toEqual(['Nintendo Entertainment System']);
+    await press('confirm');
     await vi.waitFor(() =>
       expect(text('.system-panel > :not(.leaving) .name')).toEqual(['Mega Drive'])
     );
     await press('up');
 
+    await press('confirm'); // A on the strip first shows the system
     await press('confirm');
     expect(text('.trail .crumb')).toEqual(['Consoles', 'Nintendo Entertainment System']);
     // Breadcrumbs: the step you are on is the lit one.
     expect(text('.trail .crumb.current')).toEqual(['Nintendo Entertainment System']);
     expect(text('h1.current')).toEqual([]);
+    expect(root.querySelector<HTMLElement>('h1')!.hidden).toBe(true); // the root goes unsaid
     // Names only: a favourite is marked on its stage, not in the list.
     await vi.waitFor(() => expect(text('.row')).toContain('Super Mario Bros.'));
     expect(text('.row.selected')).toEqual(['Homebrew Demo']);
@@ -205,8 +209,8 @@ describe('the default theme', () => {
     await press('confirm');
     const playing = root.querySelector<HTMLElement>('.playing')!;
     await vi.waitFor(() => expect(playing.hidden).toBe(false));
-    expect(text('.launch .loader-label')).toEqual(['Starting Homebrew Demo']);
-    expect(text('.launch .loader-detail')).toEqual(['Nintendo Entertainment System']);
+    await vi.waitFor(() => expect(text('.launch .loader-label')).toEqual(['Starting game']));
+    expect(text('.launch .launch-title')).toEqual(['Homebrew Demo']);
     expect(root.querySelector('.launch .loader-chip')).not.toBeNull();
     await vi.waitFor(() => expect(playing.hidden).toBe(true));
   });
@@ -347,6 +351,21 @@ describe('the default theme', () => {
     await vi.waitFor(async () =>
       expect(await context()).toMatchObject({ system: { name: 'nes' }, game: { id: 1 } })
     );
+  });
+
+  it('leaves the systems screen alone while the library changes', async () => {
+    const { press, text, fire } = await start();
+    await press('confirm');
+    await vi.waitFor(() =>
+      expect(text('.system-list .name')[0]).toBe('Nintendo Entertainment System')
+    );
+    const strip = document.querySelector('.systems')!;
+    expect(strip.classList.contains('browsing')).toBe(false); // none on arriving
+    const page = document.querySelector('.stage-page');
+    fire('library:changed', null);
+    await new Promise((done) => setTimeout(done, 450));
+    expect(strip.classList.contains('browsing')).toBe(false);
+    expect(document.querySelector('.stage-page')).toBe(page);
   });
 
   it('follows its settings as Forma’s menu changes them', async () => {

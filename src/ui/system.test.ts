@@ -1,7 +1,15 @@
 // @vitest-environment jsdom
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { gear, logoHeight, press, readingMs, systemColours } from './system.js';
+import {
+  gear,
+  logoHeight,
+  press,
+  readingMs,
+  releaseDates,
+  systemColours,
+  turnCover
+} from './system.js';
 
 const hueOf = (rgb: string) => {
   const [r, g, b] = rgb.split(' ').map((v) => Number(v) / 255) as [number, number, number];
@@ -91,21 +99,40 @@ describe('more of a system’s colours', () => {
 
 describe('a logo in the column', () => {
   it('stands lower the wider it is, within 1rem and 2rem', () => {
-    expect(logoHeight(1)).toBe(2);
-    expect(logoHeight(3.5)).toBeCloseTo(2, 0);
+    expect(logoHeight(1)).toBe(3);
+    expect(logoHeight(3.5)).toBeCloseTo(3, 0);
     expect(logoHeight(6)).toBeLessThan(logoHeight(3));
-    expect(logoHeight(40)).toBe(1);
+    expect(logoHeight(40)).toBe(1.5);
   });
 });
 
 describe('the press and the gear', () => {
   const mag = (n: number) => ({ src: `./systems/x/mag-${n}.webp`, title: `Issue ${n}` });
 
-  it('stands three magazines, the first in the middle', () => {
-    const stand = press({ magazines: [mag(1), mag(2), mag(3), mag(4)] })!;
-    const covers = [...stand.querySelectorAll('.cover img')].map((i) => i.getAttribute('alt'));
-    expect(covers).toEqual(['Issue 2', 'Issue 1', 'Issue 3']);
-    expect(stand.querySelector('.cover.lead img')?.getAttribute('alt')).toBe('Issue 1');
+  /** The covers' titles, front one first. */
+  const order = (stand: HTMLElement) =>
+    [...stand.querySelectorAll<HTMLElement>('.cover')]
+      .sort((a, b) => Number(a.dataset.pos) - Number(b.dataset.pos))
+      .map((c) => c.querySelector('img')?.getAttribute('alt'));
+
+  it('stacks five magazines at most, the first in front, with no words', () => {
+    const stand = press({ magazines: [mag(1), mag(2), mag(3), mag(4), mag(5), mag(6)] })!;
+    expect(order(stand)).toEqual(['Issue 1', 'Issue 2', 'Issue 3', 'Issue 4', 'Issue 5']);
+    expect(stand.textContent).toBe('');
+  });
+
+  it('turns the front cover away and puts it at the back', () => {
+    vi.useFakeTimers();
+    try {
+      const stand = press({ magazines: [mag(1), mag(2), mag(3)] })!;
+      turnCover(stand);
+      expect(stand.querySelector('.cover.turning img')?.getAttribute('alt')).toBe('Issue 1');
+      vi.runAllTimers();
+      expect(stand.querySelector('.cover.turning')).toBeNull();
+      expect(order(stand)).toEqual(['Issue 2', 'Issue 3', 'Issue 1']);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('names up to four peripherals', () => {
@@ -122,5 +149,27 @@ describe('the press and the gear', () => {
   it('is nothing for a system with none', () => {
     expect(press({ magazines: [] })).toBeNull();
     expect(gear({ peripherals: [] })).toBeNull();
+  });
+});
+
+describe('release dates', () => {
+  it('shows each region as its flag and keeps the rest of the words', () => {
+    const parts = releaseDates('1985 JP (Mark III) · 1986 NA · 1987 EU');
+    const flags = parts.filter((p): p is HTMLImageElement => typeof p !== 'string');
+    expect(flags.map((f) => f.getAttribute('src'))).toEqual([
+      './flags/jp.svg',
+      './flags/us.svg',
+      './flags/eu.svg'
+    ]);
+    expect(parts.filter((p) => typeof p === 'string')).toEqual([
+      '1985 ',
+      ' (Mark III) · 1986 ',
+      ' · 1987 ',
+      ''
+    ]);
+  });
+
+  it('leaves a date with no region as it is', () => {
+    expect(releaseDates('1982')).toEqual(['1982']);
   });
 });

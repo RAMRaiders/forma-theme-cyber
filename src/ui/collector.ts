@@ -2,7 +2,8 @@ import type { Game } from '@ramraiders/forma-sdk';
 
 import type { LazyList } from '../logic/pager.js';
 import { ageRatings, asPegi } from '../logic/agerating.js';
-import { languageFlag, regionFlag, romName } from '../logic/romname.js';
+import { flaggedRegions, languageFlag, regionFlag, romName } from '../logic/romname.js';
+import { DEFAULT_BACK, DEFAULT_FRONT, hue } from './cover.js';
 import { el, remPx } from './dom.js';
 import {
   ARCADE,
@@ -11,8 +12,9 @@ import {
   LANGUAGES,
   type MediaUrl,
   REGIONS,
-  sameDetails,
   type ShowGame,
+  isIconic,
+  sameDetails,
   ago,
   captions,
   date,
@@ -91,7 +93,7 @@ export const COLLECTOR_PICTURES: readonly (readonly [Kind, number])[] = [
 ];
 
 /** Row height of the shelf in rem: each a box on its side. */
-const ROW_REM = 2.5;
+const ROW_REM = 3.2;
 const OVERSCAN = 6;
 /** The shelf over the middle while moving; this long after the last move it fades. */
 const DROP_MS = 2000;
@@ -200,6 +202,9 @@ export class CollectorView {
   /** Room above the first row and below the last, so any row can sit in the middle. */
   #pad = 0;
 
+  /** Its animations were stopped by `leave`: the game shown next starts them again. */
+  #left = false;
+
   constructor(options: CollectorOptions) {
     this.#options = options;
     this.#shelf.append(this.#track);
@@ -216,7 +221,7 @@ export class CollectorView {
     // The same game as before (the list reloaded, after a favourite say): no shelf, the case
     // goes on as it was, only what changed about the game is shown.
     const now = source.get(selected);
-    const same = !!now && !!this.#box && this.#game?.id === now.id;
+    const same = !!now && !!this.#box && this.#game?.id === now.id && !this.#left;
     this.select(selected, same);
     if (same && now) this.#update(now);
     else {
@@ -395,6 +400,7 @@ export class CollectorView {
     clearTimeout(this.#dropTimer);
     this.root.classList.remove('browsing');
     this.#stop();
+    this.#left = true;
   }
 
   resume(): void {
@@ -419,7 +425,9 @@ export class CollectorView {
     const id = game.id;
     play(game, area)
       .then(({ playing }) => {
-        if (playing && this.#video && this.#game?.id === id) this.#seeThrough(true);
+        // Stopped while Forma was still starting it: the stop came too soon to catch it.
+        if (!this.#video) return this.#options.stopVideo?.();
+        if (playing && this.#game?.id === id) this.#seeThrough(true);
       })
       .catch(() => {});
   }
@@ -459,9 +467,12 @@ export class CollectorView {
   #showSelected(again = false): void {
     const game = this.selected;
     this.#pending = !game;
-    if (game && !again && this.#game?.id === game.id && this.#box) return this.#labelNow();
+    if (game && !again && !this.#left && this.#game?.id === game.id && this.#box) {
+      return this.#labelNow();
+    }
     this.#stop();
     if (!game) return;
+    this.#left = false;
     this.#game = game;
     this.#angle = 0;
     this.root.style.removeProperty('--game');
@@ -651,7 +662,7 @@ export class CollectorView {
     const shots = PRINTS.map((k) => media(game, k, 400)).filter((u): u is string => u !== null);
     this.#footage = el('div', { class: 'screen' });
     this.#footage.append(...shots.map((src, i) => shotImage(src, i === 0)));
-    if (!shots.length) this.#footage.append(el('span', { class: 'no-signal' }, 'No signal'));
+    if (!shots.length) this.#footage.append(noSignal());
     if (shots.length > 1 && motion()) {
       let at = 0;
       this.#every(() => {
@@ -758,7 +769,11 @@ export class CollectorView {
         { class: 'what' },
         el('span', { class: 'brand' }, 'CYBER · COLLECTOR GRADE'),
         el('strong', {}, game.name),
-        el('span', { class: 'line' }, details.join(' · ')),
+        el(
+          'span',
+          { class: 'line' },
+          [isIconic(game) ? 'Iconic' : '', ...details].filter(Boolean).join(' · ')
+        ),
         el('span', { class: 'serial' }, serial(game))
       ),
       // The favourite's gold star, right after its name and details (only when it is one).
@@ -959,7 +974,7 @@ export class CollectorView {
     );
     const copy = section(
       'This copy',
-      row('Region', flags(regions, REGIONS, regionFlag)),
+      row('Region', flags(flaggedRegions(regions), REGIONS, regionFlag)),
       row('Languages', flags(languages, LANGUAGES, languageFlag)),
       row('Version', versionText(rom.version)),
       row('Media', this.#archive(game))
@@ -1168,13 +1183,6 @@ export function hueOf(colour: string): number | null {
   return m ? Number(m[1]) : null;
 }
 
-/** A colour of its own for a game with no picture, from its name. */
-export function hue(name: string): number {
-  let h = 0;
-  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
-  return h % 360;
-}
-
 /** A rating (0–1) as a collector's grade: `3.5` (of 5, as the stars), "Excellent". */
 /** A rating (0–1) as five stars, the part of each lit. */
 function stars(rating: number): HTMLElement {
@@ -1267,10 +1275,14 @@ function flagChip(name: string, flag: string | null): HTMLElement {
 
 /**
  * The dump's version, as its file name gives it, in words: `Rev 1` → `Revision 1`, `v1.1` →
- * `Version 1.1`, `Proto` → `Prototype`; with none, the first release as it came out.
+ * `Version 1.1`, `Unl` → `Unlicensed`; with none, the first release as it came out.
  */
 export function versionText(version: string | null): string {
   if (!version) return 'Original release';
+  return version.split(' · ').map(versionWords).join(' · ');
+}
+
+function versionWords(version: string): string {
   const rev = /^rev\s*([\w.]+)$/i.exec(version);
   if (rev) return `Revision ${rev[1]!.toUpperCase()}`;
   const v = /^v\s*([\d.]+\w*)$/i.exec(version);
@@ -1279,7 +1291,13 @@ export function versionText(version: string | null): string {
     proto: 'Prototype',
     beta: 'Beta',
     demo: 'Demo',
-    sample: 'Sample'
+    sample: 'Sample',
+    unl: 'Unlicensed',
+    pirate: 'Pirate',
+    bootleg: 'Bootleg',
+    aftermarket: 'Aftermarket',
+    homebrew: 'Homebrew',
+    hack: 'Hack'
   };
   return words[version.toLowerCase()] ?? version;
 }
@@ -1302,6 +1320,7 @@ function mark(cls: string, icon: string, label: string, on: boolean): HTMLElemen
 function madeCover(game: Game, media: MediaUrl): HTMLElement[] {
   const art = media(game, 'fanart', BACKDROP_W) ?? media(game, 'image', 400);
   const logo = media(game, 'wheel', 560) ?? media(game, 'marquee', 560);
+  if (!art && !logo) return [picture(DEFAULT_FRONT, '')];
   return [
     el(
       'div',
@@ -1310,6 +1329,11 @@ function madeCover(game: Game, media: MediaUrl): HTMLElement[] {
       logo ? picture(logo, 'logo') : el('strong', {}, game.name)
     )
   ];
+}
+
+/** An untuned set: a still of static (drawn once), and only the words blink. */
+function noSignal(): HTMLElement {
+  return el('div', { class: 'no-signal' }, el('span', {}, 'No signal'));
 }
 
 /** A spine made up: the game's colour, its logo (or its name) along it. */
@@ -1326,6 +1350,7 @@ function madeSpine(game: Game, media: MediaUrl): HTMLElement[] {
 /** A back made up: a screenshot and the first lines of its story. */
 function madeBack(game: Game, media: MediaUrl): HTMLElement[] {
   const shot = PRINTS.map((k) => media(game, k, 400)).find((u) => u !== null);
+  if (!shot && !captions(game.description ?? '').length) return [picture(DEFAULT_BACK, '')];
   return [
     el(
       'div',

@@ -1,5 +1,7 @@
 // @vitest-environment jsdom
+import { DEFAULT_FRONT, hue } from './cover.js';
 import type { Game } from '@ramraiders/forma-sdk';
+import type { CollectorOptions } from './collector.js';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LazyList } from '../logic/pager.js';
@@ -11,7 +13,6 @@ import {
   paginate,
   versionText,
   gradeOf,
-  hue,
   hueOf,
   serial
 } from './collector.js';
@@ -55,9 +56,10 @@ const media = (g: Game, kind: Kind, width?: number) =>
     ? `forma://media/${g.id}/${kind}${width ? `?w=${width}` : ''}`
     : null;
 
-async function view(games: Game[]) {
+async function view(games: Game[], extra: Partial<CollectorOptions> = {}) {
   const v = new CollectorView({
     media,
+    ...extra,
     system: () => ({ name: 'Sega 32X', logo: './systems/sega32x/logo-small.webp', dark: false })
   });
   document.body.replaceChildren(v.root);
@@ -71,7 +73,7 @@ async function view(games: Game[]) {
   const text = (sel: string) =>
     [...v.root.querySelectorAll(sel)].map((n) => n.textContent?.trim() ?? '');
   const src = (sel: string) => v.root.querySelector<HTMLImageElement>(sel)?.getAttribute('src');
-  return { v, text, src };
+  return { v, list, text, src };
 }
 
 beforeEach(() => {
@@ -244,6 +246,8 @@ describe('the Collector view', () => {
     expect(versionText('v1.1')).toBe('Version 1.1');
     expect(versionText('Proto')).toBe('Prototype');
     expect(versionText('Beta 2')).toBe('Beta 2');
+    expect(versionText('Unl')).toBe('Unlicensed');
+    expect(versionText('Rev 1 · Unl')).toBe('Revision 1 · Unlicensed');
   });
 
   it('fades the new fan art in over the old, then the old out: never a dip to dark', async () => {
@@ -369,10 +373,11 @@ describe('the Collector view', () => {
     // The label at once, lit over the shelf; the rest of the showcase once the selection rests.
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
     vi.advanceTimersByTime(200);
-    expect(v.root.querySelector('.cbox .front .made-cover')).toBeNull();
+    expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).not.toBe(DEFAULT_FRONT);
     vi.advanceTimersByTime(200);
-    // No box picture: a cover made from what it has.
-    expect(v.root.querySelector('.cbox .front .made-cover')).not.toBeNull();
+    // Nothing to make a cover from: the default box, and static where the footage would be.
+    expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).toBe(DEFAULT_FRONT);
+    expect(text('.no-signal span')).toEqual(['No signal']);
     expect(text('.dossier .mark')).toHaveLength(3);
   });
 });
@@ -437,6 +442,53 @@ describe('a spine’s colour', () => {
   it('is the hue of its box’s colour', () => {
     expect(hueOf('hsl(212 95% 70%)')).toBe(212);
     expect(hueOf('#fff')).toBeNull();
+  });
+});
+
+describe('a preview video', () => {
+  it('is stopped when it only starts after it stopped being wanted', async () => {
+    const box = { left: 0, top: 0, right: 100, bottom: 100, width: 100, height: 100 };
+    const rect = vi
+      .spyOn(Element.prototype, 'getBoundingClientRect')
+      .mockReturnValue(box as DOMRect);
+    let started: (answer: { playing: boolean; sound: boolean }) => void = () => {};
+    const play = vi.fn(
+      () =>
+        new Promise<{ playing: boolean; sound: boolean }>((resolve) => {
+          started = resolve;
+        })
+    );
+    const stopVideo = vi.fn();
+    const g = game(7, 'After Burner', { ...BOXED, video: 'clip' });
+    const { v } = await view([g], { play, stopVideo });
+    vi.advanceTimersByTime(3000);
+    expect(play).toHaveBeenCalledTimes(1);
+
+    v.leave();
+    expect(stopVideo).toHaveBeenCalledTimes(1);
+    started({ playing: true, sound: true });
+    await vi.waitFor(() => expect(stopVideo).toHaveBeenCalledTimes(2));
+    rect.mockRestore();
+  });
+});
+
+describe('coming back to the same game', () => {
+  it('starts its animations and video again', async () => {
+    const box = { left: 0, top: 0, right: 100, bottom: 100, width: 100, height: 100 };
+    const rect = vi
+      .spyOn(Element.prototype, 'getBoundingClientRect')
+      .mockReturnValue(box as DOMRect);
+    const play = vi.fn(() => Promise.resolve({ playing: false, sound: false }));
+    const g = game(7, 'After Burner', { ...BOXED, video: 'clip' });
+    const { v, list } = await view([g], { play });
+    vi.advanceTimersByTime(3000);
+    expect(play).toHaveBeenCalledTimes(1);
+
+    v.leave();
+    v.show(list, 0);
+    vi.advanceTimersByTime(3000);
+    expect(play).toHaveBeenCalledTimes(2);
+    rect.mockRestore();
   });
 });
 

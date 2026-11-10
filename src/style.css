@@ -59,7 +59,7 @@ body,
   grid-template-rows: auto 1fr auto;
 }
 
-/* The header is a breadcrumb trail, for show: Categories ▸ Consoles ▸ PlayStation. The step you
+/* The header is a breadcrumb trail, for show: Consoles ▸ PlayStation. The step you
    are on is lit; the ones before it dim, and give way first when the screen is narrow. */
 header {
   display: flex;
@@ -133,6 +133,11 @@ h1.current {
   content: '▸';
   margin: 0 0.7rem;
   color: var(--accent);
+}
+
+/* First after a hidden root: nothing to separate it from. */
+h1[hidden] + .trail .crumb:first-child::before {
+  content: none;
 }
 
 main {
@@ -614,8 +619,8 @@ main {
   /* The stage, the whole screen; the strip of logos over its middle while moving. */
   grid-template-rows: minmax(0, 1fr);
   /* The column's width, and one logo's place in it, under the selection frame. */
-  --strip: 19rem;
-  --strip-item: 4.6rem;
+  --strip: 24rem;
+  --strip-item: 6.8rem;
   height: 100%;
   min-height: 0;
 }
@@ -629,23 +634,24 @@ main {
   --sys-70: color-mix(in srgb, var(--sys) 70%, transparent);
 }
 
-/* While moving, the stage darkens under the strip; a moment after the last move both fade
-   away and the system's page is the screen. Only opacity changes, each on its own layer. */
+/* While moving, the whole screen darkens under the strip, as under the Collector's shelf; a
+   moment after the last move both fade away and the system's page is the screen. Only opacity
+   changes, each on its own layer. */
 .systems::after {
   content: '';
-  position: absolute;
+  position: fixed;
   z-index: 2;
   inset: 0;
-  background: rgb(2 4 10 / 62%);
+  background: rgb(2 4 10 / 84%);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 450ms ease;
+  transition: opacity 260ms ease;
   will-change: opacity;
 }
 
 .systems.browsing::after {
   opacity: 1;
-  transition-duration: 120ms;
+  transition-duration: 160ms;
 }
 
 /* The column: logos down the middle of the screen, fading toward its ends. */
@@ -661,25 +667,45 @@ main {
   opacity: 0;
   visibility: hidden;
   transition:
-    opacity 450ms ease,
-    visibility 0s linear 450ms;
+    opacity 260ms ease,
+    visibility 0s linear 260ms;
   will-change: opacity;
   background: linear-gradient(
+    90deg,
     transparent,
-    rgb(4 6 14 / 92%) 18%,
-    rgb(4 6 14 / 92%) 82%,
+    rgb(4 7 14 / 92%) 12%,
+    rgb(4 7 14 / 92%) 88%,
     transparent
   );
-  -webkit-mask-image: linear-gradient(transparent, #000 18%, #000 82%, transparent);
-  mask-image: linear-gradient(transparent, #000 18%, #000 82%, transparent);
 }
 
 .systems.browsing .system-rail {
   opacity: 1;
   visibility: visible;
   transition:
-    opacity 120ms ease,
+    opacity 160ms ease,
     visibility 0s;
+}
+
+/* Its top and bottom fade into the dark behind it: still layers over the logos (a mask over
+   moving rows glitches on a Pi's WebKit). */
+.system-rail .edge {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  height: 18%;
+  pointer-events: none;
+}
+
+.system-rail .edge.top {
+  top: 0;
+  background: linear-gradient(180deg, rgb(3 5 11), rgb(3 5 11 / 0%));
+}
+
+.system-rail .edge.bottom {
+  bottom: 0;
+  background: linear-gradient(0deg, rgb(3 5 11), rgb(3 5 11 / 0%));
 }
 
 /* The selection: a frame fixed in the strip's middle, the logos sliding under it. Moving is
@@ -705,7 +731,7 @@ main {
   left: 0.6rem;
   top: 50%;
   width: 0.22rem;
-  height: 2rem;
+  height: 3rem;
   translate: 0 -50%;
   border-radius: 1rem;
   background: var(--sys);
@@ -719,7 +745,7 @@ main {
   top: 50%;
   translate: 0 calc(var(--strip-item) / 2 - 1.3rem);
   font-family: var(--mono);
-  font-size: 0.55rem;
+  font-size: 0.7rem;
   letter-spacing: 0.12em;
   color: var(--muted);
 }
@@ -732,8 +758,12 @@ main {
   margin: 0;
   padding: 0;
   list-style: none;
-  transition: transform 200ms ease-out;
+  transition: transform 260ms cubic-bezier(0.22, 0.7, 0.3, 1);
   will-change: transform;
+}
+
+.system-list.still {
+  transition: none;
 }
 
 .system-list li {
@@ -744,28 +774,20 @@ main {
   /* Every logo the same height: the column's slide is all that moves. */
   height: var(--strip-item);
   padding: 0 2.2rem;
-  opacity: 0.2;
-}
-
-/* Fainter the further from the selection. */
-.system-list li[data-near='3'] {
-  opacity: 0.3;
-}
-
-.system-list li[data-near='2'] {
-  opacity: 0.45;
-}
-
-.system-list li[data-near='1'] {
-  opacity: 0.65;
+  opacity: 0.68;
+  transition: opacity 260ms ease;
 }
 
 /* Each logo centred in the same small box, as large as it fits in it. */
 .system-list .logo {
   /* Set from its shape once loaded (logoHeight): every logo the same weight. */
-  height: var(--logo-h, 1.6rem);
-  max-width: 8rem;
+  height: var(--logo-h, 2.4rem);
+  max-width: 12.5rem;
   object-fit: contain;
+}
+
+.system-list .logo {
+  transition: transform 260ms cubic-bezier(0.22, 0.7, 0.3, 1);
 }
 
 .system-list li.selected .logo {
@@ -798,7 +820,7 @@ main {
   display: block;
   max-width: 100%;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 1.4rem;
   letter-spacing: 0;
   color: var(--fg);
 }
@@ -849,134 +871,25 @@ main {
   will-change: transform;
 }
 
-/* The floor comes alive under the console: rings of light going out, sparks rising. Its own
-   layers, outside the stage pages, moved by transform and opacity alone (the compositor's
-   work, nothing redrawn). */
-.system-panel .floor-fx {
-  position: absolute;
-  z-index: -1;
-  left: 50%;
-  bottom: 4.6rem;
-  width: 0;
-  height: 0;
-  pointer-events: none;
-}
-
-.system-panel .floor-fx .ping {
-  position: absolute;
-  left: -15rem;
-  top: -2.4rem;
-  width: 30rem;
-  height: 4.8rem;
-  border: 2px solid var(--sys-70);
-  border-radius: 50%;
-  opacity: 0;
-  transform: scale(0.2);
-  will-change: transform, opacity;
-  animation: floor-ping 4.5s cubic-bezier(0.2, 0.6, 0.4, 1) calc(var(--n) * -1.5s) infinite;
-}
-
-@keyframes floor-ping {
-  0% {
-    opacity: 0;
-    transform: scale(0.2);
-  }
-  15% {
-    opacity: 0.9;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.35);
-  }
-}
-
-.system-panel .floor-fx .spark {
-  position: absolute;
-  left: calc((var(--n) - 3.5) * 3.4rem);
-  top: 0;
-  width: 0.3rem;
-  height: 0.3rem;
-  background: rgb(var(--sys2-rgb));
-  opacity: 0;
-  will-change: transform, opacity;
-  animation: floor-spark 6s linear calc(var(--n) * -0.77s) infinite;
-}
-
-.system-panel .floor-fx .spark:nth-child(odd) {
-  background: var(--sys);
-  animation-duration: 7.4s;
-}
-
-@keyframes floor-spark {
-  0% {
-    opacity: 0;
-    transform: translate(0, 0);
-  }
-  20% {
-    opacity: 0.85;
-  }
-  100% {
-    opacity: 0;
-    transform: translate(0.8rem, -16rem);
-  }
-}
-
-/* The console hovers a little over the floor, and its shadow breathes with it. */
-.system-panel .console .photo,
-.system-panel .hero .art {
-  will-change: transform;
-  animation: console-hover 5s ease-in-out infinite alternate;
-}
-
-@keyframes console-hover {
-  from {
-    translate: 0 0.15rem;
-  }
-  to {
-    translate: 0 -0.55rem;
-  }
-}
-
-.system-panel .cutout::before {
-  animation: console-shadow 5s ease-in-out infinite alternate;
-}
-
-@keyframes console-shadow {
-  to {
-    opacity: 0.7;
-    scale: 0.9 1;
-  }
-}
-
-:root[data-motion='off'] .system-panel .floor-fx,
-:root[data-motion='off'] .system-panel .console .photo,
-:root[data-motion='off'] .system-panel .hero .art,
-:root[data-motion='off'] .system-panel .cutout::before {
-  animation: none;
-}
-
-:root[data-motion='off'] .system-panel .floor-fx {
-  display: none;
-}
-
 /* One system's stage, a page over the floor. Always on its own layer: moving to the next
    system draws the new page once and blends the two, nothing else is redrawn. */
 .system-panel .stage-page {
   position: absolute;
   inset: 0;
   display: grid;
-  /* Fixed rows and columns: a longer story, a bigger count or a two-line curiosity never moves
-     the console; what does not fit scrolls in its own box. */
-  /* From the logo, top left, with its story; the count and best sellers top right. In the
-     middle the console with its hardware round it, the press to its left, the peripherals
-     to its right. */
-  grid-template-columns: 13.5rem minmax(0, 1fr) 13.5rem;
+  /* Fixed rows and columns: a longer story or a two-line curiosity never moves the console;
+     what does not fit scrolls in its own box. */
+  /* From the logo, top left, with its story; the magazines top right. In the middle the
+     console with its hardware round it, the best sellers to its left, the peripherals to its
+     right. */
+  /* The third column only widens the magazines' corner: the console stays in the middle. */
+  grid-template-columns: 13.5rem minmax(0, 1fr) 3rem 13.5rem;
   grid-template-rows: auto auto minmax(0, 1fr) 3.4rem;
   grid-template-areas:
-    'intro intro tally'
-    'reading reading tally'
-    'press showcase gear'
-    'fact fact fact';
+    'intro intro press press'
+    'reading reading press press'
+    'best showcase showcase gear'
+    'fact fact fact fact';
   gap: 0.6rem 2rem;
   padding: 1.1rem 1.6rem 1rem;
   will-change: opacity;
@@ -991,64 +904,97 @@ main {
   display: block;
 }
 
-/* The press: three covers the same size standing side by side, a little over one another
-   and turned toward the middle, the first in front there. Every cover whole, in its own
-   shape, a little darker only at the foot. */
+/* The press, top right: a stack of magazines, the front one whole and readable on the right,
+   the start of each of the others (where their names begin) showing to its left. Every so
+   often the front cover turns away like a page and goes to the back. */
 .system-panel .stand {
   grid-area: press;
-  align-self: center;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding: 0 0.7rem;
+  justify-self: end;
+  align-self: start;
+  position: relative;
+  width: 18.5rem;
+  height: 11rem;
 }
 
+/* Each on its own layer, moved by transform and opacity alone. */
 .system-panel .cover {
-  flex: none;
-  margin: 0 -0.7rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  margin: 0;
   border-radius: 0.2rem;
   overflow: hidden;
-  box-shadow:
-    0 0 0 1px rgb(255 255 255 / 14%),
-    0 0.8rem 1.6rem rgb(0 0 0 / 70%);
-  transform: rotate(-6deg);
-  transform-origin: 50% 100%;
+  transform-origin: 0 50%;
+  transition:
+    transform 650ms cubic-bezier(0.3, 0.7, 0.3, 1),
+    opacity 650ms ease;
+  will-change: transform, opacity;
 }
 
-.system-panel .cover.lead ~ .cover {
-  transform: rotate(6deg);
+.system-panel .cover[data-pos='0'] {
+  z-index: 5;
 }
 
-.system-panel .cover.lead {
+.system-panel .cover[data-pos='1'] {
+  z-index: 4;
+  transform: translateX(-2.4rem) scale(0.95);
+  opacity: 0.85;
+}
+
+.system-panel .cover[data-pos='2'] {
+  z-index: 3;
+  transform: translateX(-4.8rem) scale(0.9);
+  opacity: 0.7;
+}
+
+.system-panel .cover[data-pos='3'] {
+  z-index: 2;
+  transform: translateX(-7.2rem) scale(0.85);
+  opacity: 0.55;
+}
+
+.system-panel .cover[data-pos='4'] {
   z-index: 1;
-  transform: translateY(-0.5rem) scale(1.08);
-  box-shadow:
-    0 0 0 1px rgb(var(--sys-rgb) / 55%),
-    0 0 1.6rem rgb(var(--sys-rgb) / 30%),
-    0 1rem 2rem rgb(0 0 0 / 75%);
+  transform: translateX(-9.6rem) scale(0.8);
+  opacity: 0.4;
 }
 
-.system-panel .stand.n1 .cover {
-  transform: rotate(-3deg);
+.system-panel .cover.turning {
+  z-index: 6;
+  transform: perspective(40rem) rotateY(-110deg);
+  opacity: 0;
 }
 
+.system-panel .cover.parked {
+  transition: none;
+  opacity: 0;
+}
+
+/* A thin edge round each, a little darker at the foot; the frame inside, drawn once. */
 .system-panel .cover::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(transparent 65%, rgb(4 6 12 / 30%));
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 18%);
+  background: linear-gradient(transparent 80%, rgb(4 6 12 / 25%));
+}
+
+.system-panel .cover[data-pos='0']::after {
+  box-shadow: inset 0 0 0 1px rgb(var(--sys-rgb) / 70%);
 }
 
 .system-panel .cover img {
+  display: block;
   width: auto;
-  height: auto;
-  max-width: 5.4rem;
-  max-height: 9rem;
+  height: 100%;
+  max-width: 8.8rem;
+  object-fit: cover;
 }
 
-.system-panel .stand.n1 img {
-  max-width: 9rem;
-  max-height: 12rem;
+:root[data-motion='off'] .system-panel .cover {
+  transition: none;
 }
 
 /* The peripherals, big enough to see: two by two, each on its lit spot of floor, named. */
@@ -1145,9 +1091,22 @@ main {
    same height, so nothing moves as one fades into the next. */
 .system-panel .reading {
   grid-area: reading;
+  position: relative;
   min-width: 0;
   height: calc(4 * 1.45 * 0.86rem + 0.35rem);
+  padding-right: 2.8rem;
   overflow: hidden;
+}
+
+/* Which page of the description and story this is: "2/4". */
+.system-panel .reading .page {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: rgb(var(--sys2-rgb));
 }
 
 .system-panel .reading .description {
@@ -1165,11 +1124,23 @@ main {
   overflow: hidden;
 }
 
+/* The system's logo, and its technical sheet to the right of it, some way apart. */
 .system-panel .heading {
   display: flex;
   align-items: center;
-  gap: 1.1rem;
-  height: 4.2rem;
+  gap: 2.6rem;
+  height: 6rem;
+  min-width: 0;
+  font-family: var(--mono);
+  color: var(--sys);
+}
+
+.system-panel .brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.2rem;
   min-width: 0;
 }
 
@@ -1179,13 +1150,9 @@ main {
   object-fit: contain;
 }
 
-/* With its official logo up, the name is a quiet label beside it. */
+/* Its official logo says the name. */
 .system-panel .heading:has(.logo) .name {
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  color: var(--sys);
-  text-shadow: 0 0 0.5rem #000;
+  display: none;
 }
 
 .system-panel .name {
@@ -1202,33 +1169,65 @@ main {
     0 0 1.6rem var(--sys-45);
 }
 
-.system-panel .byline {
-  display: flex;
+/* The technical sheet: a label and a value on each line; a value too long scrolls in its line. */
+.system-panel .sheet {
+  flex: 0 1 30rem;
+  display: grid;
+  grid-auto-rows: 1.2rem;
+  min-width: 0;
+  margin: 0;
+  padding-left: 1.4rem;
+  border-left: 1px solid var(--sys-45);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.system-panel .sheet .sheet-row {
+  display: grid;
+  grid-template-columns: 7.2rem minmax(0, 1fr);
   align-items: center;
-  margin: 0.45rem 0 0;
-  font-family: var(--mono);
-  font-size: 0.85rem;
-  letter-spacing: 0.06em;
+  min-width: 0;
+}
+
+.system-panel .sheet dt {
   color: var(--sys);
   text-shadow: 0 0 0.5rem #000;
 }
 
-/* The maker, as its own logo, the height of a line and a half; the year after it. */
-.system-panel .byline .makers {
+.system-panel .sheet dd {
+  height: 1.2rem;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: #fff;
+  font-size: inherit;
+  line-height: 1.2rem;
+  text-shadow: 0 0 0.5rem #000;
+}
+
+/* A release date's region, as its flag. */
+.system-panel .sheet .flag {
+  display: inline-block;
+  width: 1.2rem;
+  height: 0.9rem;
+  border-radius: 0.1rem;
+  outline: 1px solid rgb(255 255 255 / 25%);
+  object-fit: cover;
+  vertical-align: -0.12rem;
+}
+
+/* The maker, as its own logo. */
+.system-panel .sheet .makers {
   display: flex;
   align-items: center;
-  gap: 0.9rem;
+  gap: 0.7rem;
 }
 
-.system-panel .byline .maker-logo {
-  height: 1.35rem;
-  max-width: 9rem;
+.system-panel .sheet .maker-logo {
+  height: 1.1rem;
+  max-width: 7rem;
   object-fit: contain;
   object-position: left center;
-}
-
-.system-panel .byline .year {
-  white-space: pre;
 }
 
 .system-panel .description {
@@ -1245,99 +1244,71 @@ main {
     0 0 1rem #000;
 }
 
-/* How many games, as a big readout, and where this system is in the rail. */
-.system-panel .tally {
-  grid-area: tally;
-  row-gap: 0.4rem;
-  min-height: 0;
+/* The system's best sellers, left of the console: stacked rows, one game each, in the system's
+   own colours, a real cartridge or disc with its name beside it. */
+.system-panel .bestsellers {
+  grid-area: best;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  justify-items: end;
-  align-content: start;
-  align-items: baseline;
-  column-gap: 0.6rem;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0.5rem;
+  max-height: 100%;
+  min-height: 0;
   font-family: var(--mono);
 }
 
-/* The count and its unit on one line, the best sellers under both. */
-.system-panel .tally .bestsellers {
-  grid-column: 1 / -1;
-}
-
-.system-panel .tally .count {
-  font-size: 3.4rem;
-  font-weight: 800;
-  line-height: 1;
-  color: #fff;
-  text-shadow: 0 0 1.2rem var(--sys-70);
-}
-
-.system-panel .tally .unit {
-  font-size: 0.8rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: rgb(var(--sys2-rgb));
-}
-
-/* Under the count, the system's best sellers: their real cartridges or discs, ranked. A fixed
-   size, so the count above never moves. */
-.system-panel .bestsellers {
-  display: grid;
-  justify-items: end;
-  gap: 0.3rem;
-  margin-top: 0.5rem;
-}
-
-.system-panel .bestsellers .label {
-  justify-self: start;
-}
-
 .system-panel .bestsellers ol {
-  display: flex;
-  gap: 0.55em;
+  display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+  min-height: 0;
   margin: 0;
   padding: 0;
   list-style: none;
-  /* The cases are sized in em: this one size scales them all. */
-  font-size: 1.05rem;
 }
 
 .system-panel .bestsellers li {
+  --tile: var(--sys-rgb);
   display: grid;
-  grid-template-rows: 4.4em auto;
-  gap: 0.25em;
-  width: 3.7em;
+  grid-template-columns: 6.2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  min-height: 0;
+  padding: 0.3rem 0.45rem;
+  border: 1px solid rgb(var(--tile) / 55%);
+  border-radius: 0.45rem;
+  background: linear-gradient(90deg, rgb(var(--tile) / 30%), rgb(var(--tile) / 8%));
+}
+
+/* Each row in the next of the system's own colours. */
+.system-panel .bestsellers li:nth-child(2) {
+  --tile: var(--sys2-rgb);
+}
+
+.system-panel .bestsellers li:nth-child(3) {
+  --tile: var(--sys3-rgb);
 }
 
 .system-panel .bestsellers .pic {
   position: relative;
+  height: 100%;
   min-height: 0;
 }
 
-/* The game's name, small, under its cartridge: two lines at most. */
+/* The game's name beside its cartridge: four lines at most. */
 .system-panel .bestsellers .name {
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 4;
   font-family: 'Inter', 'DejaVu Sans', system-ui, sans-serif;
-  font-size: 0.42em;
+  font-size: 0.66rem;
   font-weight: 400;
   line-height: 1.25;
   letter-spacing: normal;
-  text-align: center;
   text-transform: none;
   text-shadow: none;
-  color: var(--muted);
-}
-
-/* Each place in the system's next colour. */
-.system-panel .bestsellers li:nth-child(2) {
-  --rank: rgb(var(--sys2-rgb));
-}
-
-.system-panel .bestsellers li:nth-child(3) {
-  --rank: rgb(var(--sys3-rgb));
+  color: var(--fg);
 }
 
 /* The real cartridge or disc, whole, standing on the shelf's line. */
@@ -1346,22 +1317,7 @@ main {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  object-position: 50% 100%;
-}
-
-.system-panel .bestsellers .rank {
-  position: absolute;
-  right: -0.3em;
-  bottom: -0.3em;
-  display: grid;
-  place-items: center;
-  width: 1.05em;
-  height: 1.05em;
-  border-radius: 50%;
-  background: var(--rank, var(--sys));
-  color: #05070d;
-  font-size: 0.62em;
-  font-weight: 800;
+  object-position: 50% 50%;
 }
 
 /* The console between its callouts. */
@@ -1668,6 +1624,12 @@ main {
   mask-image: linear-gradient(transparent, #000 0.6em, #000 calc(100% - 0.6em), transparent);
 }
 
+/* One line high: a fade would wash the whole line out. */
+.system-panel .sheet .scrolling {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
 .system-panel .fact .timer {
   position: absolute;
   left: 0;
@@ -1707,6 +1669,16 @@ main {
   will-change: opacity;
 }
 
+/* A whole page, changing system: a slower blend, the new one settling up into place. */
+.system-panel .stage-page.entering {
+  animation: page-in 420ms cubic-bezier(0.22, 0.7, 0.3, 1) both;
+  will-change: opacity, transform;
+}
+
+.system-panel .stage-page.leaving {
+  animation: slot-out 380ms ease-in-out both;
+}
+
 .system-panel .slot-showcase.entering {
   animation-name: showcase-in;
   animation-duration: 320ms;
@@ -1715,6 +1687,13 @@ main {
 @keyframes slot-in {
   from {
     opacity: 0;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
   }
 }
 
@@ -2126,6 +2105,11 @@ main {
   box-shadow: inset 0 0 0 1px rgb(255 215 94 / 45%);
 }
 
+.stage .tag.iconic {
+  color: var(--neon);
+  box-shadow: inset 0 0 0 1px rgb(34 228 255 / 45%);
+}
+
 .stage .facts-block {
   grid-area: 2 / 1;
   align-self: start;
@@ -2368,16 +2352,6 @@ main {
   transition: opacity 900ms ease;
 }
 
-/* No collection: the words take the width. */
-.stage.no-box .title-block,
-.stage.no-box .facts-block {
-  grid-column: 1 / 3;
-}
-
-.stage.no-box .captions {
-  right: 10%;
-}
-
 :root[data-motion='off'] .stage > *,
 :root[data-motion='off'] .stage .shot,
 :root[data-motion='off'] .stage .cartridge,
@@ -2583,28 +2557,352 @@ kbd {
 
 /* While a game starts: its art and the loader, until the emulator's window covers Forma. */
 .overlay.playing {
+  /* Over everything a view lifts, the Collector's box included. */
+  z-index: 100;
   background: var(--bg);
 }
 
 .launch {
-  display: grid;
-  justify-items: center;
-  gap: 1.5rem;
-  max-width: 90vw;
-  max-height: 90vh;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6vw;
+  padding: 8vh 8vw;
   overflow: hidden;
+  background: var(--bg);
+  animation: launch-in 0.3s ease-out both;
 }
 
-.launch-art {
-  max-width: min(40rem, 80vw);
-  max-height: 45vh;
+@keyframes launch-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.launch-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.45;
+}
+
+/* Keeps the words readable over any picture, without a costly blur on the Pi. */
+.launch::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse at center, rgb(4 6 12 / 55%), rgb(4 6 12 / 92%));
+}
+
+.launch-hero {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.launch-box,
+.launch-shot {
+  display: block;
+  max-width: 42vw;
+  max-height: 72vh;
   object-fit: contain;
   border-radius: var(--radius);
-  box-shadow: 0 0 1.5rem rgb(34 228 255 / 25%);
+  box-shadow:
+    0 1rem 3rem rgb(0 0 0 / 70%),
+    0 0 1.5rem rgb(34 228 255 / 25%);
+}
+
+.launch-words {
+  display: grid;
+  flex: 0 1 38vw;
+  justify-items: center;
+  gap: 1.5rem;
+  min-width: 0;
+  text-align: center;
+}
+
+.launch.alone .launch-words {
+  flex-basis: min(70vw, 60rem);
+}
+
+.launch-logo {
+  max-width: 100%;
+  max-height: 26vh;
+  object-fit: contain;
+}
+
+.launch-title {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.launch-system {
+  max-width: min(18rem, 60%);
+  max-height: 5rem;
+  object-fit: contain;
+}
+
+.launch.no-art .launch-system {
+  max-width: min(28rem, 70%);
+  max-height: 9rem;
+}
+
+.launch-system.dark {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  background: rgb(255 255 255 / 85%);
+}
+
+.launch-system-name {
+  margin: 0;
+  color: var(--muted);
 }
 
 .launch .loader {
   height: auto;
+}
+
+/* ---- The boot sequence, for a game with pictures. Only transform and opacity move, so
+   the Pi's compositor does it all. */
+.launch.has-art {
+  --launch-glow: var(--launch-accent, var(--neon));
+}
+
+.launch.has-art .launch-backdrop {
+  will-change: transform;
+  animation: launch-drift 9s ease-out both;
+}
+
+@keyframes launch-drift {
+  from {
+    transform: scale(1.02);
+  }
+
+  to {
+    transform: scale(1.1);
+  }
+}
+
+/* One line of light, going down the screen again and again. */
+.launch-scan {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--launch-glow) 30%,
+    var(--launch-glow) 70%,
+    transparent
+  );
+  opacity: 0.35;
+  pointer-events: none;
+  will-change: transform;
+  animation: launch-scan 3.2s linear infinite;
+}
+
+@keyframes launch-scan {
+  from {
+    transform: translateY(-2vh);
+  }
+
+  to {
+    transform: translateY(102vh);
+  }
+}
+
+/* The box swings in, then hovers, turning a little. */
+.launch.has-art .launch-hero {
+  perspective: 60rem;
+  animation: launch-swing 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes launch-swing {
+  from {
+    opacity: 0;
+    transform: translateX(-8vw) rotateY(28deg) scale(0.9);
+  }
+}
+
+.launch-case {
+  position: relative;
+  will-change: transform;
+  animation: launch-hover 4.5s ease-in-out 0.6s infinite alternate;
+}
+
+@keyframes launch-hover {
+  from {
+    transform: rotateY(-5deg) translateY(0.4rem);
+  }
+
+  to {
+    transform: rotateY(5deg) translateY(-0.4rem);
+  }
+}
+
+/* Corner brackets locking on to it. */
+.launch-case::before,
+.launch-case::after {
+  content: '';
+  position: absolute;
+  width: 2.6rem;
+  height: 2.6rem;
+  border: 2px solid var(--launch-glow);
+  animation: launch-lock 0.5s ease-out 0.45s both;
+}
+
+.launch-case::before {
+  top: -0.9rem;
+  left: -0.9rem;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.launch-case::after {
+  right: -0.9rem;
+  bottom: -0.9rem;
+  border-top: 0;
+  border-left: 0;
+}
+
+@keyframes launch-lock {
+  from {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+
+/* Light across the box, clipped to it. */
+.launch-sheen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: var(--radius);
+  pointer-events: none;
+}
+
+.launch-sheen::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: 0;
+  width: 40%;
+  background: linear-gradient(100deg, transparent 15%, rgb(255 255 255 / 30%) 50%, transparent 85%);
+  will-change: transform;
+  animation: launch-sheen 2.6s ease-in-out 0.7s infinite both;
+}
+
+@keyframes launch-sheen {
+  from {
+    transform: translateX(-160%) skewX(-14deg);
+  }
+
+  60%,
+  to {
+    transform: translateX(360%) skewX(-14deg);
+  }
+}
+
+/* The logo arrives in stutters. */
+.launch.has-art .launch-logo,
+.launch.has-art .launch-title {
+  animation: launch-glitch 0.5s steps(1, end) 0.3s both;
+}
+
+@keyframes launch-glitch {
+  0% {
+    opacity: 0;
+    transform: translateX(-1.2rem);
+  }
+
+  25% {
+    opacity: 0.7;
+    transform: translateX(0.8rem);
+  }
+
+  50% {
+    opacity: 0.25;
+    transform: translateX(-0.4rem);
+  }
+
+  75% {
+    opacity: 1;
+    transform: translateX(0.2rem);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.launch-status {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  animation: launch-in 0.4s ease-out 0.7s both;
+}
+
+.launch-status .loader-label {
+  font-size: 0.85rem;
+  color: var(--launch-glow);
+}
+
+.launch-cells {
+  display: flex;
+  gap: 0.28rem;
+}
+
+.launch-cells span {
+  width: 0.9rem;
+  height: 1.1rem;
+  border-radius: 1px;
+  background: var(--launch-glow);
+  box-shadow: 0 0 0.5rem var(--launch-glow);
+  opacity: 0.14;
+  animation: launch-cell 1.68s linear calc(var(--i) * 85ms) infinite;
+}
+
+@keyframes launch-cell {
+  0%,
+  100% {
+    opacity: 0.14;
+  }
+
+  10%,
+  55% {
+    opacity: 1;
+  }
+}
+
+:root[data-motion='off'] .launch,
+:root[data-motion='off'] .launch *,
+:root[data-motion='off'] .launch *::before,
+:root[data-motion='off'] .launch *::after {
+  animation: none;
+}
+
+:root[data-motion='off'] .launch-scan {
+  display: none;
+}
+
+:root[data-motion='off'] .launch-cells span {
+  opacity: 0.7;
 }
 
 /* ---- Systems background (Look → Systems background) ---------------------------------- */
@@ -3004,6 +3302,11 @@ kbd {
   /* Narrower: the story and specs take less, the press and peripherals go. */
   .system-panel .stage-page {
     grid-template-columns: 15rem minmax(0, 1fr) 11rem;
+    grid-template-areas:
+      'intro intro press'
+      'reading reading press'
+      'best showcase gear'
+      'fact fact fact';
   }
 
   .system-panel .specs {
@@ -3013,10 +3316,6 @@ kbd {
   .system-panel .stand,
   .system-panel .gear {
     display: none;
-  }
-
-  .system-panel .tally .count {
-    font-size: 2.2rem;
   }
 
   .system-panel .bestsellers {
@@ -3211,7 +3510,8 @@ kbd {
   inset: 0;
   /* Every spine as long, about a box spine's own shape at the row's height (so a spine picture is
      hardly trimmed), in the middle of the shelf. */
-  --spine-len: 17rem;
+  --spine-len: 22rem;
+  --spine-h: 2.85rem;
   overflow: hidden;
   padding: 0 1rem;
   background: linear-gradient(
@@ -3290,7 +3590,7 @@ kbd {
   position: absolute;
   left: calc(50% - var(--spine-len) / 2);
   width: var(--spine-len);
-  height: 2.2rem;
+  height: var(--spine-h);
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -3306,7 +3606,7 @@ kbd {
   );
   color: #c9dbe8;
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.95rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   opacity: 0.68;
@@ -3340,15 +3640,16 @@ kbd {
   background: none;
 }
 
+/* The whole spine, filling the box just inside the row's 1px border, the selection's. */
 .spine-row .spine-pic {
   position: absolute;
   top: 0;
   left: 0;
-  width: 2.2rem;
-  height: var(--spine-len);
+  width: calc(var(--spine-h) - 2px);
+  height: calc(var(--spine-len) - 2px);
   transform-origin: 0 0;
-  transform: translateY(2.2rem) rotate(-90deg);
-  object-fit: cover;
+  transform: translateY(calc(var(--spine-h) - 2px)) rotate(-90deg);
+  object-fit: fill;
 }
 
 .spine-row.pictured .band,
@@ -3488,10 +3789,32 @@ kbd {
   display: grid;
   place-items: center;
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 1rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: #fff;
+  background:
+    linear-gradient(rgb(0 0 0 / 55%), rgb(0 0 0 / 55%)),
+    url('./assets/noise.png') 0 0 / 8rem 8rem;
+  image-rendering: pixelated;
+}
+
+/* All that moves: the words, on and off a couple of times a second at most. */
+.no-signal span {
+  padding: 0.3rem 0.5rem 0.3rem 0.8rem;
+  background: #000;
+  animation: no-signal-blink 1.4s steps(1) infinite;
+}
+
+@keyframes no-signal-blink {
+  60% {
+    opacity: 0;
+  }
+}
+
+:root[data-motion='off'] .no-signal span,
+.collector.video-on .no-signal span {
+  animation: none;
 }
 
 /* The video's window: the bay and its screen let Forma's player through. */

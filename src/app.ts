@@ -38,6 +38,7 @@ import { LazyList } from './logic/pager.js';
 import { el } from './ui/dom.js';
 import { type Card, GridView } from './ui/grid.js';
 import { COLLECTOR_PICTURES, CollectorView, type OtherVersion } from './ui/collector.js';
+import { launchScreen } from './ui/launch.js';
 import { GamesView } from './ui/games.js';
 import { HomeView, type Shortcut, type Tile } from './ui/home.js';
 import { loader } from './ui/loader.js';
@@ -310,10 +311,11 @@ export class App {
   }
 
   /** Loads the current level and shows it, keeping the remembered selection. */
-  async #load(): Promise<void> {
-    // Whatever shows next, the game list's video (and its sound) stops.
+  async #load(reload = false): Promise<void> {
+    // Whatever shows next, the game list's video (and its sound) stops. A reload stays on the
+    // same list: the Collector's case goes on turning, and the list tells it what changed.
     this.#games.leave();
-    this.#collector.leave();
+    if (!reload) this.#collector.leave();
     const target = this.#target();
     if (this.#view === CYBER_VIEW && this.#stack.length <= 2 && !target.shortcut) {
       return this.#loadCyber();
@@ -496,21 +498,45 @@ export class App {
     this.#applyPrefs();
   }
 
-  /** While the emulator starts: the game's art, its name and system, and the loader. */
+  /** While the emulator starts: the game by its pictures, or by its system if it has none. */
   #showLaunch({ gameId, system, name }: GameStart): void {
     this.#song.hide();
-    const art = el('img', {
-      class: 'launch-art',
-      src: this.forma.library.mediaUrl(gameId, 'image', DETAIL_WIDTH),
-      alt: ''
-    });
-    art.addEventListener('error', () => art.remove());
-    const known = this.#groups.flatMap((g) => g.systems).find((s) => s.summary.name === system);
-    const systemName = known ? known.summary.fullname || system : system;
-    this.#playing.replaceChildren(
-      el('div', { class: 'launch' }, art, loader(`Starting ${name}`, systemName))
-    );
+    this.#playing.replaceChildren();
     this.#playing.hidden = false;
+    const known = this.#groups.flatMap((g) => g.systems).find((s) => s.summary.name === system);
+    const shown = {
+      name: known ? known.summary.fullname || system : system,
+      logo: known?.logo ?? null,
+      dark: known?.logoDark ?? false,
+      photo: known?.photo ?? null
+    };
+    // Which pictures it has decides the layout, so nothing is drawn until that is known.
+    void this.forma.library
+      .game(gameId)
+      .catch(() => null)
+      .then((game) => {
+        if (this.#playing.hidden) return;
+        const has = (game?.media ?? {}) as Partial<Record<string, string>>;
+        const url = (kind: string, width: number) =>
+          has[kind] ? this.forma.library.mediaUrl(gameId, kind as 'image', width) : null;
+        const screen = launchScreen(name, shown, {
+          box: url('thumbnail', DETAIL_WIDTH),
+          shot: url('image', DETAIL_WIDTH),
+          backdrop: url('fanart', 1280),
+          soft: url('image', 320),
+          logo: url('wheel', DETAIL_WIDTH) ?? url('marquee', DETAIL_WIDTH)
+        });
+        this.#playing.replaceChildren(screen);
+        // The boot sequence in the game's own colour, once that is known.
+        const probe = url('thumbnail', 64) ?? url('fanart', 64);
+        if (probe) {
+          void accentOf(probe)
+            .then((colour) => {
+              if (colour) screen.style.setProperty('--launch-accent', colour);
+            })
+            .catch(() => {});
+        }
+      });
   }
 
   /** Breadcrumbs in Cyber's view: the category, then the system. */
@@ -573,13 +599,14 @@ export class App {
       document.documentElement.dataset.screen = this.#mode;
     }
     const view = this.#views.find((v) => v.id === this.#view);
-    // Breadcrumbs, for show: where you are, from the top (Categories, in Cyber's own view).
+    // Breadcrumbs, for show: where you are. Categories is the root: named only when you are on it.
     this.#title.textContent = this.#view === CYBER_VIEW ? 'Categories' : (view?.name ?? this.#view);
     const crumbs =
       this.#view === CYBER_VIEW
         ? this.#cyberTrail()
         : (this.#page?.trail ?? []).map((c) => c.label);
     this.#title.classList.toggle('current', crumbs.length === 0);
+    this.#title.hidden = this.#view === CYBER_VIEW && crumbs.length > 0;
     this.#trail.replaceChildren(
       ...crumbs.map((c, i) => {
         const cls = i === crumbs.length - 1 ? 'crumb current' : 'crumb';
@@ -624,6 +651,10 @@ export class App {
         if (this.#list && this.#gameView === this.#collector && this.#collector.browsing) {
           return this.#collector.settleNow();
         }
+        // On the systems' strip too: A first shows the system picked; A again opens it.
+        if (this.#mode === 'systems' && this.#systemView.browsing) {
+          return this.#systemView.settleNow();
+        }
         return void this.#confirm();
       case 'back':
         return void this.#back();
@@ -646,7 +677,7 @@ export class App {
       // the shoulders jump five.
       const step = move === 'left' ? 'up' : move === 'right' ? 'down' : move;
       level.index = moveList(level.index, this.#systemView.count, step, 5, repeat);
-      this.#systemView.select(level.index, false, repeat);
+      this.#systemView.select(level.index);
     } else if (
       this.#list &&
       this.#gameView === this.#collector &&
@@ -790,7 +821,7 @@ export class App {
 
   #reloadSoon(): void {
     clearTimeout(this.#reloadTimer);
-    this.#reloadTimer = setTimeout(() => void this.#load(), 300);
+    this.#reloadTimer = setTimeout(() => void this.#load(true), 300);
   }
 
   #notify(message: string): void {

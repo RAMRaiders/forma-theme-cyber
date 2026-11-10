@@ -64,14 +64,23 @@ export interface SystemInfo {
   description?: string;
   specs?: Partial<
     Record<
-      'maker' | 'released' | 'cpu' | 'memory' | 'graphics' | 'sound' | 'media' | 'unitsSold',
+      | 'maker'
+      | 'released'
+      | 'generation'
+      | 'lifetime'
+      | 'cpu'
+      | 'memory'
+      | 'graphics'
+      | 'sound'
+      | 'media'
+      | 'unitsSold',
       string
     >
   > &
     Record<string, string>;
   chips?: { role: string; part: string }[];
   curiosities?: string[];
-  /** Its story in three short chapters: how it began, in its day, what it left. */
+  /** Its story in short chapters: how it began, in its day, what it left. */
   story?: string[];
   /** Its best-selling games, best first; `A|B` for other titles of the same game. */
   bestsellers?: string[];
