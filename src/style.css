@@ -3441,8 +3441,9 @@ kbd {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.85;
-  transition: opacity 900ms ease;
+  /* Opaque, its shade in the layer over it: two see-through pictures fading across each other
+     added up, and the screen brightened then dimmed at every game. */
+  transition: opacity 650ms ease-in-out;
 }
 
 .collector-backdrop img.waiting,
@@ -3450,21 +3451,16 @@ kbd {
   opacity: 0;
 }
 
-.collector-backdrop img.leaving {
-  transition-duration: 500ms;
-}
-
-/* A new game's bays fade in, a short rise with it; well before its box turns or its video
+/* A new game's bays fade in, nothing else moving; well before its box turns or its video
    starts, so nothing moving sits under the fade. Backwards only: once in, no style is left. */
 .collector.arriving .bay,
 .collector.arriving .dossier {
-  animation: bay-in 420ms ease-out backwards;
+  animation: bay-in 360ms ease-out backwards;
 }
 
 @keyframes bay-in {
   from {
     opacity: 0;
-    transform: translateY(0.5rem);
   }
 }
 
@@ -3477,7 +3473,7 @@ kbd {
   content: '';
   position: absolute;
   inset: 0;
-  /* Lightest round the case, darkest under the story and the dossier. */
+  /* Lightest round the case, darkest under the story and the dossier; the last, all over. */
   background:
     linear-gradient(
       90deg,
@@ -3493,7 +3489,8 @@ kbd {
       transparent 22%,
       transparent 60%,
       rgb(4 6 12 / 80%) 100%
-    );
+    ),
+    linear-gradient(rgb(4 6 12 / 15%), rgb(4 6 12 / 15%));
 }
 
 /* The game's video plays under the page, in the footage bay's window only: the fan art has a
@@ -3517,45 +3514,51 @@ kbd {
   background: linear-gradient(
     90deg,
     transparent,
-    rgb(4 7 14 / 92%) 12%,
-    rgb(4 7 14 / 92%) 88%,
+    rgb(4 7 14 / 72%) 12%,
+    rgb(4 7 14 / 72%) 88%,
     transparent
   );
   opacity: 0;
   visibility: hidden;
   transition:
-    opacity 260ms ease,
-    visibility 0s 260ms;
+    opacity 200ms ease,
+    visibility 0s 200ms;
 }
 
-/* Its top and bottom fade into the dark behind it: two still layers over the rows (a mask over
-   moving rows glitched on a Pi's WebKit). */
+/* Its top and bottom fade the rows out: two still layers over them, only as wide as they are so
+   the fan art shows beside them (a mask over moving rows glitched on a Pi's WebKit). */
 .shelf::before,
 .shelf::after {
   content: '';
   position: absolute;
   z-index: 1;
-  left: 0;
-  right: 0;
+  left: calc(50% - var(--spine-len) / 2 - 0.8rem);
+  right: calc(50% - var(--spine-len) / 2 - 0.8rem);
   height: 18%;
   pointer-events: none;
 }
 
 .shelf::before {
   top: 0;
-  background: linear-gradient(180deg, rgb(3 5 11), rgb(3 5 11 / 0%));
+  background: linear-gradient(180deg, rgb(3 5 11 / 88%), rgb(3 5 11 / 0%));
 }
 
 .shelf::after {
   bottom: 0;
-  background: linear-gradient(0deg, rgb(3 5 11), rgb(3 5 11 / 0%));
+  background: linear-gradient(0deg, rgb(3 5 11 / 88%), rgb(3 5 11 / 0%));
 }
 
 /* The rows glide as one to bring the selected to the middle: the compositor's work. */
 .shelf .track {
   position: relative;
-  transition: transform 260ms cubic-bezier(0.22, 0.7, 0.3, 1);
+  transition: transform 180ms cubic-bezier(0.22, 0.7, 0.3, 1);
   will-change: transform;
+}
+
+/* The direction held: an even run from step to step (input repeats every 80ms). An easing here
+   starts over at each step, and the list surges and jerks. */
+.shelf .track.held {
+  transition: transform 100ms linear;
 }
 
 .shelf .track.still {
@@ -3565,7 +3568,7 @@ kbd {
 .collector.browsing .shelf {
   opacity: 1;
   visibility: visible;
-  transition: opacity 160ms ease;
+  transition: opacity 120ms ease;
 }
 
 /* The case and the dossier dim behind the shelf while it shows. */
@@ -3575,15 +3578,16 @@ kbd {
   position: fixed;
   z-index: 4;
   inset: 0;
-  background: rgb(2 4 10 / 84%);
+  /* A sneak peek: the game's fan art and case still show behind the shelf. */
+  background: rgb(2 4 10 / 50%);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 260ms ease;
+  transition: opacity 200ms ease;
 }
 
 .collector.browsing::after {
   opacity: 1;
-  transition-duration: 160ms;
+  transition-duration: 120ms;
 }
 
 .spine-row {
@@ -3609,10 +3613,9 @@ kbd {
   font-size: 0.95rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  /* No transition: a row animating its own scale or opacity gets a layer of its own for it, made
+     and dropped at every step while the track moves, which flickered on a Pi. */
   opacity: 0.68;
-  transition:
-    transform 260ms cubic-bezier(0.22, 0.7, 0.3, 1),
-    opacity 260ms ease;
 }
 
 .spine-row .band {

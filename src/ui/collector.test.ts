@@ -250,7 +250,7 @@ describe('the Collector view', () => {
     expect(versionText('Rev 1 · Unl')).toBe('Revision 1 · Unlicensed');
   });
 
-  it('fades the new fan art in over the old, then the old out: never a dip to dark', async () => {
+  it('fades the new fan art in over the old, which goes once covered: never a dip to dark', async () => {
     const art = { ...BOXED, fanart: 'art' };
     const { v } = await view([game(1, 'After Burner', art), game(2, 'Doom', art)]);
     const imgs = () => [...v.root.querySelectorAll<HTMLImageElement>('.collector-backdrop img')];
@@ -263,9 +263,10 @@ describe('the Collector view', () => {
     expect(imgs()[0]!.classList.contains('waiting')).toBe(false);
     vi.advanceTimersByTime(2100);
     v.select(1);
-    // Not until the selection rests.
+    // Not until the selection pauses, ahead of the rest of the game.
     expect(imgs()).toHaveLength(1);
-    vi.advanceTimersByTime(400);
+    vi.advanceTimersByTime(230);
+    expect(v.root.classList.contains('arriving')).toBe(false);
     const [first, next] = imgs();
     expect(next?.classList.contains('waiting')).toBe(true);
     // The old one stays whole while the new one loads and fades in over it.
@@ -273,12 +274,81 @@ describe('the Collector view', () => {
     next!.dispatchEvent(new Event('load'));
     await settle();
     expect(next!.classList.contains('waiting')).toBe(false);
-    vi.advanceTimersByTime(800);
     expect(first!.classList.contains('leaving')).toBe(false);
-    vi.advanceTimersByTime(200);
-    expect(first!.classList.contains('leaving')).toBe(true);
-    vi.advanceTimersByTime(500);
+    // Not on a clock alone: gone when the fade has really ended.
+    vi.advanceTimersByTime(600);
+    expect(imgs()).toEqual([first, next]);
+    next!.dispatchEvent(new Event('transitionend'));
     expect(imgs()).toEqual([next]);
+  });
+
+  it('removes the old fan art in the end, even if the fade never reports', async () => {
+    const art = { ...BOXED, fanart: 'art' };
+    const { v } = await view([game(1, 'After Burner', art), game(2, 'Doom', art)]);
+    const imgs = () => [...v.root.querySelectorAll<HTMLImageElement>('.collector-backdrop img')];
+    const settle = async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    };
+    imgs()[0]!.dispatchEvent(new Event('load'));
+    await settle();
+    vi.advanceTimersByTime(2100);
+    v.select(1);
+    vi.advanceTimersByTime(230);
+    const next = imgs()[1]!;
+    next.dispatchEvent(new Event('load'));
+    await settle();
+    vi.advanceTimersByTime(900);
+    expect(imgs()).toEqual([next]);
+  });
+
+  it('leaves the fan art alone when the game is shown again, and drops any passed by', async () => {
+    const art = { ...BOXED, fanart: 'art' };
+    const { v } = await view([
+      game(1, 'After Burner', art),
+      game(2, 'Doom', art),
+      game(3, 'Quake', art)
+    ]);
+    const imgs = () => [...v.root.querySelectorAll<HTMLImageElement>('.collector-backdrop img')];
+    expect(imgs()).toHaveLength(1);
+    imgs()[0]!.dispatchEvent(new Event('load'));
+    await Promise.resolve();
+    await Promise.resolve();
+    vi.advanceTimersByTime(2100);
+    v.select(1);
+    vi.advanceTimersByTime(230);
+    expect(imgs()).toHaveLength(2);
+    // Showing the same game once it has rested adds no second picture of it.
+    vi.advanceTimersByTime(300);
+    expect(imgs()).toHaveLength(2);
+    // On to another before Doom's had loaded: Doom's is dropped.
+    const doom = imgs()[1];
+    v.select(2);
+    vi.advanceTimersByTime(230);
+    expect(imgs()).not.toContain(doom);
+    expect(imgs()).toHaveLength(2);
+  });
+
+  it('runs at an even speed while the direction is held, and only then', async () => {
+    const { v, text } = await view([
+      game(1, 'After Burner', BOXED),
+      game(2, 'Doom', BOXED),
+      game(3, 'Quake', BOXED)
+    ]);
+    const held = () => v.root.querySelector('.track')!.classList.contains('held');
+    vi.advanceTimersByTime(2100);
+    v.select(1);
+    expect(held()).toBe(false);
+    expect(text('.slab-label .what strong')).toEqual(['Doom']);
+    vi.advanceTimersByTime(80);
+    v.select(2);
+    expect(held()).toBe(true);
+    // The label waits for the selection to rest.
+    expect(text('.slab-label .what strong')).toEqual(['Doom']);
+    vi.advanceTimersByTime(300);
+    expect(text('.slab-label .what strong')).toEqual(['Quake']);
+    v.select(1);
+    expect(held()).toBe(false);
   });
 
   it('fades a new game in once the selection rests; the label alone follows each step', async () => {
@@ -288,22 +358,10 @@ describe('the Collector view', () => {
     v.select(1);
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
     expect(v.root.classList.contains('arriving')).toBe(false);
-    vi.advanceTimersByTime(350);
+    vi.advanceTimersByTime(310);
     expect(v.root.classList.contains('arriving')).toBe(true);
-    vi.advanceTimersByTime(420);
+    vi.advanceTimersByTime(360);
     expect(v.root.classList.contains('arriving')).toBe(false);
-  });
-
-  it('on A while the shelf shows, puts it away and shows the game picked at once', async () => {
-    const { v, text } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom')]);
-    vi.advanceTimersByTime(2100);
-    v.select(1);
-    v.select(0);
-    v.select(1);
-    expect(v.browsing).toBe(true);
-    v.settleNow();
-    expect(v.browsing).toBe(false);
-    expect(text('.slab-label .what strong')).toEqual(['Doom']);
   });
 
   it('stars a favourite in the label, and a reload of the same game moves nothing', async () => {

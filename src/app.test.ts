@@ -394,7 +394,7 @@ describe('the default theme', () => {
   });
 
   it('switches a game list to the Collector view in place, its box turned left and right', async () => {
-    const { press, root, fire, text } = await start();
+    const { press, root, fire, text, backend } = await start();
     await press('confirm');
     await press('confirm');
     await vi.waitFor(() => expect(root.querySelector('.games')).not.toBeNull());
@@ -411,6 +411,11 @@ describe('the default theme', () => {
     // Up and down still move along the shelf.
     await press('down');
     expect(text('.spine-row.selected .title')).toHaveLength(1);
+    // A plays it there and then, the shelf still showing.
+    expect(root.querySelector('.collector.browsing')).not.toBeNull();
+    const invoke = vi.spyOn(backend, 'invoke');
+    await press('confirm');
+    expect(invoke.mock.calls.map(([command]) => command)).toContain('launch_game');
   });
 
   it('reads its settings one by one, over the single object it used to keep', async () => {

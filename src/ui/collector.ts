@@ -94,9 +94,16 @@ export const COLLECTOR_PICTURES: readonly (readonly [Kind, number])[] = [
 
 /** Row height of the shelf in rem: each a box on its side. */
 const ROW_REM = 3.2;
-const OVERSCAN = 6;
+const OVERSCAN = 10;
 /** The shelf over the middle while moving; this long after the last move it fades. */
-const DROP_MS = 2000;
+const DROP_MS = 1400;
+/** Steps closer together than this are the direction held: the shelf runs at an even speed. */
+const HELD_MS = 130;
+/** The fan art behind the shelf, a sneak peek, once the selection pauses this long: longer than
+ * between two quick presses, or the whole screen changes at each of them. */
+const PEEK_MS = 220;
+/** Fan art kept decoded, the game shown and those round it: going to them is then at once. */
+const FANART_KEPT = 12;
 /** On a game this long, its video plays in the footage bay. */
 const VIDEO_AFTER_MS = 2500;
 /** With no video, the footage bay shows the screenshots in turn. */
@@ -107,20 +114,21 @@ const ALTERNATE_MS = 10_000;
 const STORY_PAGE_MS = 12_000;
 const STORY_FADE_MS = 300;
 /** The showcase behind the shelf waits for the selection to rest this long: made anew at each
- * step, it held up the shelf's glide on a Pi. A shows it at once ({@link CollectorView.settleNow}). */
-const SETTLE_MS = 350;
+ * step, it held up the shelf's glide on a Pi. */
+const SETTLE_MS = 300;
 /** The box and the cartridge sliding past each other, slowly (as in style.css). */
 const SLIDE_MS = 2200;
 /** On a game: the box first turns after this, then every `TURN_MS`. */
 const FIRST_TURN_MS = 3200;
-/** A new game's fan art fading in over the last, then the last fading out (as in style.css). */
-const BACKDROP_IN_MS = 900;
-const BACKDROP_OUT_MS = 500;
+/** A new game's fan art fading in over the last (as in style.css). */
+const BACKDROP_FADE_MS = 650;
+/** A picture that arrives after its bay has, fading in rather than popping. */
+const PICTURE_FADE_MS = 300;
 /** A new game's bays fading in, well before its box turns or its video starts (as in style.css). */
-const ARRIVE_MS = 420;
+const ARRIVE_MS = 360;
 const TURN_MS = 4600;
 /** After this long on a game, the pictures of the games around it are made ahead. */
-const PREPARE_AFTER_MS = 3000;
+const PREPARE_AFTER_MS = 1000;
 const PREPARE_AROUND = 3;
 /** The box's height in rem until the case is laid out; its width and depth follow its pictures. */
 const BOX_REM = 17.5;
@@ -157,6 +165,21 @@ function picture(src: string, cls: string): HTMLImageElement {
   return el('img', { src, alt: '', decoding: 'async', class: cls });
 }
 
+/**
+ * The pictures under `root` still loading fade in when they arrive, instead of popping in. Up to
+ * each picture's own opacity (no keyframe to end on), so one meant to be hidden stays hidden.
+ */
+function fadeInAsLoaded(root: HTMLElement): void {
+  for (const img of root.querySelectorAll('img')) {
+    if (img.complete) continue;
+    img.addEventListener(
+      'load',
+      () => img.animate?.([{ opacity: 0, offset: 0 }], { duration: PICTURE_FADE_MS }),
+      { once: true }
+    );
+  }
+}
+
 export class CollectorView {
   readonly root = el('div', { class: 'collector' });
   readonly #backdrop = el('div', { class: 'collector-backdrop', 'aria-hidden': 'true' });
@@ -171,6 +194,14 @@ export class CollectorView {
   #selected = 0;
   #pending = false;
   #settle: ReturnType<typeof setTimeout> | undefined;
+  #peek: ReturnType<typeof setTimeout> | undefined;
+  /** When the selection last moved. */
+  #steppedAt = -Infinity;
+  /** The fan art behind the view, or on its way there. */
+  #backdropSrc: string | null = null;
+  /** Fan art kept decoded, oldest first; fetched one after another. */
+  #fanart = new Map<string, HTMLImageElement>();
+  #fanartQueue: Promise<unknown> = Promise.resolve();
   #arriving: ReturnType<typeof setTimeout> | undefined;
   #timers: ReturnType<typeof setTimeout>[] = [];
   #intervals: ReturnType<typeof setInterval>[] = [];
@@ -227,6 +258,7 @@ export class CollectorView {
     else {
       // Opening a list: its game shown at once; only moves along the shelf wait to rest.
       clearTimeout(this.#settle);
+      clearTimeout(this.#peek);
       this.#showSelected();
     }
     requestAnimationFrame(() => this.#track.classList.remove('still'));
@@ -257,19 +289,6 @@ export class CollectorView {
     this.#arriving = setTimeout(() => this.root.classList.remove('arriving'), ARRIVE_MS);
   }
 
-  /** The shelf showing: the selection still moving, or just moved. */
-  get browsing(): boolean {
-    return this.root.classList.contains('browsing');
-  }
-
-  /** The shelf away now, the game picked in the showcase at once (A on the shelf). */
-  settleNow(): void {
-    clearTimeout(this.#dropTimer);
-    clearTimeout(this.#settle);
-    this.root.classList.remove('browsing');
-    this.#showSelected();
-  }
-
   /**
    * The label over the shelf at once for the game picked (it stays lit while the shelf shows):
    * only the label, cheap; the rest of the showcase waits for the selection to rest.
@@ -294,15 +313,26 @@ export class CollectorView {
   select(index: number, quiet = false): void {
     const changed = index !== this.#selected;
     this.#selected = index;
+    const now = performance.now();
+    const held = changed && !quiet && now - this.#steppedAt < HELD_MS;
+    if (changed) this.#steppedAt = now;
+    this.#track.classList.toggle('held', held);
     const row = ROW_REM * remPx();
     this.#measure();
-    // The selected row in the middle, at the ends of the list too; the rows glide there.
-    this.#track.style.transform = `translateY(${this.#pad - index * row}px)`;
+    // The selected row in the middle, at the ends of the list too; the rows glide there. Whole
+    // pixels: text on a layer moved by a fraction of one shimmers.
+    this.#track.style.transform = `translateY(${Math.round(this.#pad - index * row)}px)`;
     this.render();
     if (!changed || quiet) return;
     this.#browse();
     this.#stopVideo();
-    this.#labelNow();
+    // While held the shelf says which game it is; the label's pictures would only flicker past.
+    if (!held) this.#labelNow();
+    clearTimeout(this.#peek);
+    this.#peek = setTimeout(() => {
+      const game = this.selected;
+      if (game) this.#backdropFor(game);
+    }, PEEK_MS);
     clearTimeout(this.#settle);
     this.#settle = setTimeout(() => this.#showSelected(), SETTLE_MS);
   }
@@ -397,6 +427,7 @@ export class CollectorView {
 
   leave(): void {
     clearTimeout(this.#settle);
+    clearTimeout(this.#peek);
     clearTimeout(this.#dropTimer);
     this.root.classList.remove('browsing');
     this.#stop();
@@ -480,6 +511,8 @@ export class CollectorView {
     this.#backdropFor(game);
     this.#showcase.replaceChildren(...this.#showcaseParts(game));
     this.#dossier.replaceChildren(...this.#dossierParts(game));
+    fadeInAsLoaded(this.#showcase);
+    fadeInAsLoaded(this.#dossier);
     this.#arrive();
     requestAnimationFrame(() => this.#fit?.());
     if (motion()) {
@@ -488,7 +521,10 @@ export class CollectorView {
         this.#every(() => this.#turnTo(1), TURN_MS);
       }, FIRST_TURN_MS);
     }
-    this.#later(() => this.#prepareAround(), PREPARE_AFTER_MS);
+    this.#later(() => {
+      this.#prepareAround();
+      this.#keepFanartAround();
+    }, PREPARE_AFTER_MS);
     this.#later(() => this.#startVideo(game), VIDEO_AFTER_MS);
   }
 
@@ -598,21 +634,34 @@ export class CollectorView {
     });
   }
 
-  /** The fan art behind the whole view, shaded so the words over it read. */
+  #fanartOf(game: Game): string | null {
+    return (
+      this.#options.media(game, 'fanart', BACKDROP_W) ?? this.#options.media(game, 'image', 400)
+    );
+  }
+
   /**
-   * The new fan art fades in over the old, once decoded (a picture decoded mid-fade caught on a
-   * Pi); only then does the old one fade out under it: no dip to dark between the two.
+   * The fan art behind the whole view, shaded so the words over it read. The new one fades in
+   * over the old, once decoded (a picture decoded mid-fade caught on a Pi); the old goes when
+   * it is covered. Both are opaque, so the screen stays as bright all through the fade.
    */
   #backdropFor(game: Game): void {
+    const src = this.#fanartOf(game);
+    if (src === this.#backdropSrc) return;
+    this.#backdropSrc = src;
+    // Still loading: those are for games already passed by.
+    this.#backdrop.querySelectorAll('img.waiting').forEach((n) => n.remove());
     const old = [...this.#backdrop.children];
-    const leave = () => {
+    const removeOld = () => old.forEach((n) => n.remove());
+    // A little over the fade: on a busy Pi it can start late, and the old must not go first.
+    const removeOldLater = () => setTimeout(removeOld, BACKDROP_FADE_MS + 200);
+    if (!src) {
       old.forEach((n) => n.classList.add('leaving'));
-      setTimeout(() => old.forEach((n) => n.remove()), BACKDROP_OUT_MS);
-    };
-    const src =
-      this.#options.media(game, 'fanart', BACKDROP_W) ?? this.#options.media(game, 'image', 400);
-    if (!src) return leave();
+      removeOldLater();
+      return;
+    }
     const img = picture(src, 'waiting');
+    img.addEventListener('transitionend', removeOld, { once: true });
     this.#backdrop.append(img);
     img.addEventListener(
       'load',
@@ -622,12 +671,53 @@ export class CollectorView {
           .then(() => {
             if (!img.isConnected) return;
             img.classList.remove('waiting');
-            setTimeout(leave, BACKDROP_IN_MS);
+            removeOldLater();
           });
       },
       { once: true }
     );
-    img.addEventListener('error', () => img.remove(), { once: true });
+    img.addEventListener(
+      'error',
+      () => {
+        img.remove();
+        this.#backdropSrc = null;
+      },
+      { once: true }
+    );
+  }
+
+  /** The fan art of the game shown and those round it, decoded ahead and kept, within a limit. */
+  #keepFanartAround(): void {
+    const source = this.#source;
+    if (!source) return;
+    for (let d = PREPARE_AROUND; d >= -PREPARE_AROUND; d--) {
+      const i = this.#selected + d;
+      const game = i >= 0 && i < source.total ? source.get(i) : undefined;
+      const src = game && this.#fanartOf(game);
+      if (src) this.#keepFanart(src);
+    }
+  }
+
+  #keepFanart(src: string): void {
+    const kept = this.#fanart.get(src);
+    this.#fanart.delete(src);
+    if (kept) {
+      this.#fanart.set(src, kept);
+      return;
+    }
+    const img = new Image();
+    img.decoding = 'async';
+    this.#fanart.set(src, img);
+    for (const oldest of this.#fanart.keys()) {
+      if (this.#fanart.size <= FANART_KEPT) break;
+      this.#fanart.delete(oldest);
+    }
+    this.#fanartQueue = this.#fanartQueue.then(async () => {
+      // Pushed out by others before its turn: not worth fetching.
+      if (this.#fanart.get(src) !== img) return;
+      img.src = src;
+      await img.decode?.().catch(() => {});
+    });
   }
 
   #showcaseParts(game: ShowGame): HTMLElement[] {

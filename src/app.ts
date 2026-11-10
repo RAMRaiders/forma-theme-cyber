@@ -647,11 +647,7 @@ export class App {
     if (e.repeat) return;
     switch (e.action) {
       case 'confirm':
-        // On the Collector's shelf, A first shows the game picked; A again plays it.
-        if (this.#list && this.#gameView === this.#collector && this.#collector.browsing) {
-          return this.#collector.settleNow();
-        }
-        // On the systems' strip too: A first shows the system picked; A again opens it.
+        // On the systems' strip, A first shows the system picked; A again opens it.
         if (this.#mode === 'systems' && this.#systemView.browsing) {
           return this.#systemView.settleNow();
         }
