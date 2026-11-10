@@ -470,6 +470,29 @@ describe('the default theme', () => {
     expect(again.every((c) => c[3] === 1)).toBe(true);
   });
 
+  it('opens a list where it was left, systems and games alike', async () => {
+    const { press, root, text } = await start();
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.system-list li.selected .name')).toHaveLength(1));
+    await press('down');
+    expect(text('.system-list li.selected .name')).toEqual(['Mega Drive']);
+    await press('back');
+    await vi.waitFor(() => expect(root.querySelector('.systems')).toBeNull());
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.system-list li.selected .name')).toEqual(['Mega Drive']));
+
+    await press('up');
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.row.selected')).toEqual(['Homebrew Demo']));
+    await press('down');
+    expect(text('.row.selected')).toEqual(['Super Mario Bros.']);
+    await press('back');
+    await vi.waitFor(() => expect(root.querySelector('.systems')).not.toBeNull());
+    expect(text('.system-list li.selected .name')).toEqual(['Nintendo Entertainment System']);
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.row.selected')).toEqual(['Super Mario Bros.']));
+  });
+
   it('reads its settings one by one, over the single object it used to keep', async () => {
     const backend = mockBackend({ permissions: [] });
     await backend.invoke('settings_set', {

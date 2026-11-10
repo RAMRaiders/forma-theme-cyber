@@ -51,6 +51,8 @@ import { SystemView } from './ui/system.js';
 interface Level {
   path: string[];
   index: number;
+  /** The game to come back to, wherever it now sorts: for the next load only. */
+  game?: number | undefined;
 }
 
 const PAGE = 100;
@@ -200,6 +202,8 @@ export class App {
   #views: ViewInfo[] = [];
   #view = 'systems';
   #stack: Level[] = [{ path: [], index: 0 }];
+  /** Where each list was left, so it opens there again until Forma restarts. */
+  readonly #places = new Map<string, Pick<Level, 'index' | 'game'>>();
   #page: Browse | null = null;
   #cards: Card[] = [];
   #list: LazyList<Game> | null = null;
@@ -330,7 +334,8 @@ export class App {
     if (this.#view !== CYBER_VIEW || target.shortcut) this.#backdrop.replaceChildren();
     const remembered = this.#level.index;
     // A reload keeps to the game selected, wherever it now sorts: a scrape can rename it.
-    const follow = reload && this.#list ? this.#gameView.selected?.id : undefined;
+    const follow = reload && this.#list ? this.#gameView.selected?.id : this.#level.game;
+    this.#level.game = undefined;
     const { view, path } = target;
     const loading = this.#loading('Loading games…');
     try {
@@ -730,12 +735,10 @@ export class App {
       if (shortcut) {
         const s = this.#shortcuts.find((x) => x.id === shortcut);
         if (!s || s.soon) return this.#notify(`${s?.label ?? 'This'} is coming in a later version`);
-        this.#stack.push({ path: [`${SHORTCUT}${shortcut}`], index: 0 });
-        return this.#load();
+        return this.#enter([`${SHORTCUT}${shortcut}`]);
       }
       if (this.#level.index === this.#groups.length) {
-        this.#stack.push({ path: [`${SHORTCUT}all`], index: 0 });
-        return this.#load();
+        return this.#enter([`${SHORTCUT}all`]);
       }
       // Forma's own reader, over Cyber; back is back here.
       if (this.#level.index === this.#groups.length + 1) {
@@ -745,14 +748,12 @@ export class App {
       }
       const tile = this.#groups[this.#level.index];
       if (!tile) return;
-      this.#stack.push({ path: [tile.category.id], index: 0 });
-      return this.#load();
+      return this.#enter([tile.category.id]);
     }
     if (this.#mode === 'systems') {
       const system = this.#systemView.selected;
       if (!system) return;
-      this.#stack.push({ path: [...this.#level.path, system.summary.name], index: 0 });
-      return this.#load();
+      return this.#enter([...this.#level.path, system.summary.name]);
     }
     if (this.#list) {
       const game = this.#gameView.selected;
@@ -768,12 +769,22 @@ export class App {
     }
     const card = this.#cards[this.#level.index];
     if (!card) return;
-    this.#stack.push({ path: [...this.#level.path, card.key], index: 0 });
-    await this.#load();
+    await this.#enter([...this.#level.path, card.key]);
+  }
+
+  /** Into a list, where it was left if it was. */
+  #enter(path: string[]): Promise<void> {
+    this.#stack.push({ path, index: 0, ...this.#places.get(path.join('/')) });
+    return this.#load();
   }
 
   async #back(): Promise<void> {
     if (this.#stack.length === 1) return;
+    const { path, index } = this.#level;
+    this.#places.set(path.join('/'), {
+      index,
+      game: this.#list ? this.#gameView.selected?.id : undefined
+    });
     this.#stack.pop();
     await this.#load();
   }
