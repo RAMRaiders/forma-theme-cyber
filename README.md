@@ -17,14 +17,8 @@ bundles a pinned build of it. New themes start from the separate template projec
 
 ## Setup
 
-The SDK comes from GitHub Packages. Give npm a token that can read packages, in your **user**
-`~/.npmrc` (never in this repo):
-
-```ini
-//npm.pkg.github.com/:_authToken=<token with read:packages>
-```
-
-With the GitHub CLI: `gh auth refresh -s read:packages`, then use `gh auth token`.
+The SDK is a package in `vendor/`, so no token or registry is needed. To change its version, build
+it with `npm pack` in Forma and install the new file with `npm install file:vendor/<file>.tgz`.
 
 ```sh
 npm install
