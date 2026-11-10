@@ -186,7 +186,7 @@
   },
   {
     "id": "technos",
-    "match": "^techn[o\u014d]s",
+    "match": "^techn[oō]s",
     "logo": "technos.webp"
   },
   {
@@ -231,7 +231,7 @@
   },
   {
     "id": "broderbund",
-    "match": "^br[o\u00f8]derbund",
+    "match": "^br[oø]derbund",
     "logo": "broderbund.webp"
   },
   {
@@ -253,5 +253,125 @@
     "id": "gamefreak",
     "match": "^game ?freak",
     "logo": "gamefreak.webp"
+  },
+  {
+    "id": "namcot",
+    "match": "^namcot\\b",
+    "logo": "namcot.webp"
+  },
+  {
+    "id": "human",
+    "match": "^human entertainment",
+    "logo": "human.webp"
+  },
+  {
+    "id": "tectoy",
+    "match": "^tec ?toy",
+    "logo": "tectoy.webp"
+  },
+  {
+    "id": "icom",
+    "match": "^icom simulations",
+    "logo": "icom.webp"
+  },
+  {
+    "id": "gtinteractive",
+    "match": "^gt interactive",
+    "logo": "gtinteractive.webp"
+  },
+  {
+    "id": "asmik",
+    "match": "^asmik",
+    "logo": "asmik.webp"
+  },
+  {
+    "id": "westwoodassociates",
+    "match": "^westwood associates",
+    "logo": "westwoodassociates.webp"
+  },
+  {
+    "id": "westwood",
+    "match": "^westwood",
+    "logo": "westwood.webp"
+  },
+  {
+    "id": "holobyte",
+    "match": "^spectrum holobyte",
+    "logo": "holobyte.webp"
+  },
+  {
+    "id": "gremlin",
+    "match": "^gremlin",
+    "logo": "gremlin.webp"
+  },
+  {
+    "id": "arcsystem",
+    "match": "^arc system works",
+    "logo": "arcsystem.webp"
+  },
+  {
+    "id": "itchio",
+    "match": "^itch\\.io",
+    "logo": "itchio.webp"
+  },
+  {
+    "id": "libretro",
+    "match": "^libretro",
+    "logo": "libretro.webp"
+  },
+  {
+    "id": "viacom",
+    "match": "^viacom",
+    "logo": "viacom.webp"
+  },
+  {
+    "id": "nowproduction",
+    "match": "^now production",
+    "logo": "nowproduction.webp"
+  },
+  {
+    "id": "microcabin",
+    "match": "^micro ?cabin",
+    "logo": "microcabin.webp"
+  },
+  {
+    "id": "alfasystem",
+    "match": "^alfa system",
+    "logo": "alfasystem.webp"
+  },
+  {
+    "id": "wolfteam",
+    "match": "^wolf ?team",
+    "logo": "wolfteam.webp"
+  },
+  {
+    "id": "lucasarts",
+    "match": "^lucasarts",
+    "logo": "lucasarts.webp"
+  },
+  {
+    "id": "absolute",
+    "match": "^absolute entertainment",
+    "logo": "absolute.webp"
+  },
+  {
+    "id": "red",
+    "match": "^red (company|entertainment)",
+    "logo": "red.webp"
+  },
+  {
+    "id": "systemsoft",
+    "match": "^systemsoft",
+    "logo": "systemsoft.webp"
+  },
+  {
+    "id": "ocean",
+    "match": "^ocean\\b",
+    "logo": "ocean.webp"
+  },
+  {
+    "id": "gamearts",
+    "match": "^game arts",
+    "logo": "gamearts.webp"
   }
 ]

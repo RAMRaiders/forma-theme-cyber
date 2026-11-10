@@ -16,7 +16,6 @@ All from Wikimedia Commons; built by scripts/build-makers.mjs --set=companies.
 - **ubisoft**: [Ubisoft logo.svg](https://commons.wikimedia.org/wiki/File:Ubisoft_logo.svg), by Ubisoft, Public domain.
 - **sunsoft**: [Sunsoft logo.svg](https://commons.wikimedia.org/wiki/File:Sunsoft_logo.svg), by Sunsoft, Public domain.
 - **natsume**: [Natsume Logo.svg](https://commons.wikimedia.org/wiki/File:Natsume_Logo.svg), by Natsume, Public domain.
-  Vector redesign: VectorVoyager, Public domain.
 - **koei**: [Koei logo.svg](https://commons.wikimedia.org/wiki/File:Koei_logo.svg), by http://www.segaretro.org/User:Scarred_Sun (uploader), Public domain.
 - **mattel**: [Mattel Electronics logo.svg](https://commons.wikimedia.org/wiki/File:Mattel_Electronics_logo.svg), by Mattel Electronics, Public domain.
 - **midway**: [Midway Games logo.svg](https://commons.wikimedia.org/wiki/File:Midway_Games_logo.svg), by Midway Games Inc., Public domain.
@@ -58,3 +57,28 @@ Revised SVG by Patrick87, Public domain.
 
 - **visco**: [Visco logo.png](https://commons.wikimedia.org/wiki/File:Visco_logo.png), by Visco Corporation, Public domain.
 - **gamefreak**: [GAME FREAK logo.svg](https://commons.wikimedia.org/wiki/File:GAME_FREAK_logo.svg), by GAME FREAK inc., Public domain.
+- **namcot**: [Namcot.png](https://commons.wikimedia.org/wiki/File:Namcot.png), by Nintenderonintendo, CC BY-SA 4.0.
+- **human**: [Human Entertainment logo.PNG](https://commons.wikimedia.org/wiki/File:Human_Entertainment_logo.PNG), by The original uploader was Hydao at English Wikipedia., Public domain.
+- **tectoy**: [Logotipo da Tectoy (2018).svg](<https://commons.wikimedia.org/wiki/File:Logotipo_da_Tectoy_(2018).svg>), by Tectoy, Public domain.
+- **icom**: [ICOM Simulations logo.svg](https://commons.wikimedia.org/wiki/File:ICOM_Simulations_logo.svg), by ICOM Simulations, Inc., Public domain.
+- **gtinteractive**: [GT Interactive Software logo.svg](https://commons.wikimedia.org/wiki/File:GT_Interactive_Software_logo.svg), by GT Interactive Software Corporation, Public domain.
+- **asmik**: [Asmik Ace logo.png](https://commons.wikimedia.org/wiki/File:Asmik_Ace_logo.png), by © Asmik Ace, inc., Public domain.
+- **westwoodassociates**: [Westwood Associates Logo.png](https://commons.wikimedia.org/wiki/File:Westwood_Associates_Logo.png), by Unknown authorUnknown author, Public domain.
+- **westwood**: [Westwood Studios 1994.svg](https://commons.wikimedia.org/wiki/File:Westwood_Studios_1994.svg), by Westwood Studios, Public domain.
+- **holobyte**: [Spectrum HoloByte logo on black.svg](https://commons.wikimedia.org/wiki/File:Spectrum_HoloByte_logo_on_black.svg), by Spectrum HoloByte, Public domain.
+- **gremlin**: [Gremlin Interactive Logo.svg](https://commons.wikimedia.org/wiki/File:Gremlin_Interactive_Logo.svg), by Original: Gremlin Interactive Limited
+  Vector redesign: VectorVoyager, Public domain.
+- **arcsystem**: [Arc system works logo.png](https://commons.wikimedia.org/wiki/File:Arc_system_works_logo.png), by Arc System Works, Public domain.
+- **itchio**: [Itch.io logo.svg](https://commons.wikimedia.org/wiki/File:Itch.io_logo.svg), by Itch.io, Public domain.
+- **libretro**: [LibRetro.svg](https://commons.wikimedia.org/wiki/File:LibRetro.svg), by Gameposo, CC BY-SA 4.0.
+- **viacom**: [Viacom (1990) Logo.svg](<https://commons.wikimedia.org/wiki/File:Viacom_(1990)_Logo.svg>), by Viacom International Inc., Public domain.
+- **nowproduction**: [Now Production logo.svg](https://commons.wikimedia.org/wiki/File:Now_Production_logo.svg), by Now Production Co., Ltd., Public domain.
+- **microcabin**: [MICRO CABIN logo w.svg](https://commons.wikimedia.org/wiki/File:MICRO_CABIN_logo_w.svg), by マイクロキャビン, Public domain.
+- **alfasystem**: [Alfa System Logo.png](https://commons.wikimedia.org/wiki/File:Alfa_System_Logo.png), by © AlfaSystem Co.,Ltd., Public domain.
+- **wolfteam**: [Wolf Team Logo.png](https://commons.wikimedia.org/wiki/File:Wolf_Team_Logo.png), by © WOLF TEAM, Public domain.
+- **lucasarts**: [Lucas arts wordmark.jpg](https://commons.wikimedia.org/wiki/File:Lucas_arts_wordmark.jpg), by Lucas arts, Public domain.
+- **absolute**: [Absolute Entertainment Logo.png](https://commons.wikimedia.org/wiki/File:Absolute_Entertainment_Logo.png), by unknown, CC BY 4.0.
+- **red**: [Red Entertainment Logo.png](https://commons.wikimedia.org/wiki/File:Red_Entertainment_Logo.png), by ©RED, Public domain.
+- **systemsoft**: [SystemSoft Alpha Logo.svg](https://commons.wikimedia.org/wiki/File:SystemSoft_Alpha_Logo.svg), by ©2019 SystemSoft Alpha Corporation, Public domain.
+- **ocean**: [Ocean Software logo.png](https://en.wikipedia.org/wiki/File:Ocean_Software_logo.png), by Ocean Software, PD.
+- **gamearts**: [Game Arts logo.svg](https://commons.wikimedia.org/wiki/File:Game_Arts_logo.svg), by Game Arts Co., Ltd., Public domain.

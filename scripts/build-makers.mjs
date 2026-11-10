@@ -28,9 +28,10 @@ mkdirSync(OUT, { recursive: true });
 
 const { [SET]: makers } = JSON.parse(readFileSync(join(ROOT, 'scripts', `${SET}.json`), 'utf8'));
 
-async function commons(title) {
+/** A file's picture and credit, from Commons or (`host`) a Wikipedia's own free files. */
+async function commons(title, host = 'commons.wikimedia.org') {
   const url =
-    'https://commons.wikimedia.org/w/api.php?' +
+    `https://${host}/w/api.php?` +
     new URLSearchParams({
       action: 'query',
       titles: `File:${title}`,
@@ -103,7 +104,7 @@ async function whiten(png, which) {
 const out = [];
 const credits = [];
 for (const maker of makers) {
-  const { file, credit } = await commons(maker.file);
+  const { file, credit } = await commons(maker.file, maker.host);
   const meta = await sharp(file).metadata();
   const density = Math.min(
     2400,

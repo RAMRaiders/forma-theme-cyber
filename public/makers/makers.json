@@ -126,7 +126,7 @@
   },
   {
     "id": "namco",
-    "match": "^namco",
+    "match": "^namco\\b",
     "logo": "namco.webp"
   },
   {

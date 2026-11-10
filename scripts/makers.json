@@ -128,7 +128,7 @@
     },
     {
       "id": "namco",
-      "match": "^namco",
+      "match": "^namco\\b",
       "file": "Namco logo.svg"
     },
     {

@@ -1,7 +1,9 @@
 import type { SystemSummary } from '@ramraiders/forma-sdk';
 import { describe, expect, it } from 'vitest';
 
-import { InfoStore, group, makerLogos } from './catalog.js';
+import { readFileSync } from 'node:fs';
+
+import { InfoStore, group, makerLogos, type MakerLogo } from './catalog.js';
 
 const system = (name: string, hardware: string | null, gameCount: number): SystemSummary => ({
   name,
@@ -75,6 +77,13 @@ describe('makerLogos', () => {
     { id: 'mb', match: '^(mb|milton bradley)$', logo: 'mb.webp' },
     { id: 'bad', match: '(', logo: 'bad.webp' }
   ];
+  it('tells a label from the company whose name it starts with: Namcot is not Namco', () => {
+    const list = JSON.parse(readFileSync('public/makers/makers.json', 'utf8')) as MakerLogo[];
+    expect(makerLogos('Namcot', list)).toEqual([]);
+    expect(makerLogos('Namco', list)).toEqual(['./makers/namco.webp']);
+    expect(makerLogos('Namco Bandai Games', list)).toEqual(['./makers/namco.webp']);
+  });
+
   it('finds the maker a name starts with, whatever its case', () => {
     expect(makerLogos('SEGA Enterprises', makers)).toEqual(['./makers/sega.webp']);
     expect(makerLogos('NEC Home Electronics', makers)).toEqual(['./makers/nec.webp']);

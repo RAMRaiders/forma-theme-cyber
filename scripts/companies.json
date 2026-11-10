@@ -255,6 +255,127 @@
       "id": "gamefreak",
       "match": "^game ?freak",
       "file": "GAME FREAK logo.svg"
+    },
+    {
+      "id": "namcot",
+      "match": "^namcot\\b",
+      "file": "Namcot.png"
+    },
+    {
+      "id": "human",
+      "match": "^human entertainment",
+      "file": "Human Entertainment logo.PNG"
+    },
+    {
+      "id": "tectoy",
+      "match": "^tec ?toy",
+      "file": "Logotipo da Tectoy (2018).svg"
+    },
+    {
+      "id": "icom",
+      "match": "^icom simulations",
+      "file": "ICOM Simulations logo.svg"
+    },
+    {
+      "id": "gtinteractive",
+      "match": "^gt interactive",
+      "file": "GT Interactive Software logo.svg"
+    },
+    {
+      "id": "asmik",
+      "match": "^asmik",
+      "file": "Asmik Ace logo.png"
+    },
+    {
+      "id": "westwoodassociates",
+      "match": "^westwood associates",
+      "file": "Westwood Associates Logo.png"
+    },
+    {
+      "id": "westwood",
+      "match": "^westwood",
+      "file": "Westwood Studios 1994.svg"
+    },
+    {
+      "id": "holobyte",
+      "match": "^spectrum holobyte",
+      "file": "Spectrum HoloByte logo on black.svg"
+    },
+    {
+      "id": "gremlin",
+      "match": "^gremlin",
+      "file": "Gremlin Interactive Logo.svg"
+    },
+    {
+      "id": "arcsystem",
+      "match": "^arc system works",
+      "file": "Arc system works logo.png"
+    },
+    {
+      "id": "itchio",
+      "match": "^itch\\.io",
+      "file": "Itch.io logo.svg"
+    },
+    {
+      "id": "libretro",
+      "match": "^libretro",
+      "file": "LibRetro.svg"
+    },
+    {
+      "id": "viacom",
+      "match": "^viacom",
+      "file": "Viacom (1990) Logo.svg"
+    },
+    {
+      "id": "nowproduction",
+      "match": "^now production",
+      "file": "Now Production logo.svg"
+    },
+    {
+      "id": "microcabin",
+      "match": "^micro ?cabin",
+      "file": "MICRO CABIN logo w.svg"
+    },
+    {
+      "id": "alfasystem",
+      "match": "^alfa system",
+      "file": "Alfa System Logo.png"
+    },
+    {
+      "id": "wolfteam",
+      "match": "^wolf ?team",
+      "file": "Wolf Team Logo.png"
+    },
+    {
+      "id": "lucasarts",
+      "match": "^lucasarts",
+      "file": "Lucas arts wordmark.jpg"
+    },
+    {
+      "id": "absolute",
+      "match": "^absolute entertainment",
+      "file": "Absolute Entertainment Logo.png"
+    },
+    {
+      "id": "red",
+      "match": "^red (company|entertainment)",
+      "file": "Red Entertainment Logo.png"
+    },
+    {
+      "id": "systemsoft",
+      "match": "^systemsoft",
+      "file": "SystemSoft Alpha Logo.svg"
+    },
+    {
+      "id": "ocean",
+      "match": "^ocean\\b",
+      "file": "Ocean Software logo.png",
+      "host": "en.wikipedia.org"
+    },
+    {
+      "id": "gamearts",
+      "match": "^game arts",
+      "file": "Game Arts logo.svg"
     }
   ]
 }
