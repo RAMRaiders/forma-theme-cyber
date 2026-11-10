@@ -634,7 +634,7 @@ main {
   --sys-70: color-mix(in srgb, var(--sys) 70%, transparent);
 }
 
-/* While moving, the whole screen darkens under the strip, as under the Collector's shelf; a
+/* While moving, the screen dims under the strip, as under the Collector's shelf: a sneak peek; a
    moment after the last move both fade away and the system's page is the screen. Only opacity
    changes, each on its own layer. */
 .systems::after {
@@ -642,16 +642,16 @@ main {
   position: fixed;
   z-index: 2;
   inset: 0;
-  background: rgb(2 4 10 / 84%);
+  background: rgb(2 4 10 / 50%);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 260ms ease;
+  transition: opacity 200ms ease;
   will-change: opacity;
 }
 
 .systems.browsing::after {
   opacity: 1;
-  transition-duration: 160ms;
+  transition-duration: 120ms;
 }
 
 /* The column: logos down the middle of the screen, fading toward its ends. */
@@ -667,14 +667,14 @@ main {
   opacity: 0;
   visibility: hidden;
   transition:
-    opacity 260ms ease,
-    visibility 0s linear 260ms;
+    opacity 200ms ease,
+    visibility 0s linear 200ms;
   will-change: opacity;
   background: linear-gradient(
     90deg,
     transparent,
-    rgb(4 7 14 / 92%) 12%,
-    rgb(4 7 14 / 92%) 88%,
+    rgb(4 7 14 / 72%) 12%,
+    rgb(4 7 14 / 72%) 88%,
     transparent
   );
 }
@@ -683,7 +683,7 @@ main {
   opacity: 1;
   visibility: visible;
   transition:
-    opacity 160ms ease,
+    opacity 120ms ease,
     visibility 0s;
 }
 
@@ -700,12 +700,12 @@ main {
 
 .system-rail .edge.top {
   top: 0;
-  background: linear-gradient(180deg, rgb(3 5 11), rgb(3 5 11 / 0%));
+  background: linear-gradient(180deg, rgb(3 5 11 / 88%), rgb(3 5 11 / 0%));
 }
 
 .system-rail .edge.bottom {
   bottom: 0;
-  background: linear-gradient(0deg, rgb(3 5 11), rgb(3 5 11 / 0%));
+  background: linear-gradient(0deg, rgb(3 5 11 / 88%), rgb(3 5 11 / 0%));
 }
 
 /* The selection: a frame fixed in the strip's middle, the logos sliding under it. Moving is
@@ -758,8 +758,13 @@ main {
   margin: 0;
   padding: 0;
   list-style: none;
-  transition: transform 260ms cubic-bezier(0.22, 0.7, 0.3, 1);
+  transition: transform 180ms cubic-bezier(0.22, 0.7, 0.3, 1);
   will-change: transform;
+}
+
+/* The direction held: an even run from step to step, as on the Collector's shelf. */
+.system-list.held {
+  transition: transform 100ms linear;
 }
 
 .system-list.still {

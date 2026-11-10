@@ -143,17 +143,16 @@ describe('the default theme', () => {
 
     // A system without info.json still shows, from Forma's data.
     await press('down');
-    // The strip moves at once; the page behind it stays until A, or until the strip goes.
+    // The strip moves at once; the page changes under it when the selection rests.
     expect(text('.system-list li.selected .name')).toEqual(['Mega Drive']);
     expect(text('.system-panel > :not(.leaving) .name')).toEqual(['Nintendo Entertainment System']);
-    await press('confirm');
     await vi.waitFor(() =>
       expect(text('.system-panel > :not(.leaving) .name')).toEqual(['Mega Drive'])
     );
+    expect(root.querySelector('.systems.browsing')).not.toBeNull(); // still over the new page
     await press('up');
 
-    await press('confirm'); // A on the strip first shows the system
-    await press('confirm');
+    await press('confirm'); // A opens it at once, the strip or not
     expect(text('.trail .crumb')).toEqual(['Consoles', 'Nintendo Entertainment System']);
     // Breadcrumbs: the step you are on is the lit one.
     expect(text('.trail .crumb.current')).toEqual(['Nintendo Entertainment System']);

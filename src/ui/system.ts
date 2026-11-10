@@ -28,14 +28,12 @@ const READ_FADE_MS = 300;
 const BOARD_MS = 450;
 /** How long what was shown takes to fade, as the next system comes in. */
 const LEAVE_MS = 220;
-/**
- * The strip of logos shows while moving, over the stage; this long after the last move it goes
- * and the page changes to the system picked. Until then only the strip moves; A does it at once
- * ({@link SystemView.settleNow}).
- */
-const DROP_MS = 2000;
-/** The strip stays this long over the new page, so the page is there before the strip goes. */
-const PAGE_SHOWN_MS = 420;
+/** The strip of logos shows while moving, over the stage; this long after the last move it goes. */
+const DROP_MS = 1400;
+/** Steps closer together than this are the direction held: the strip then runs evenly. */
+const HELD_MS = 130;
+/** The page changes, under the strip, once the selection has rested this long. */
+const SETTLE_MS = 300;
 /** How long the last page takes to fade under the next (as in style.css). */
 const PAGE_LEAVE_MS = 380;
 /** The system's colours: a page keeps its own while it fades out. */
@@ -245,14 +243,10 @@ export class SystemView {
   #coverTimer: ReturnType<typeof setInterval> | undefined;
   #boardTimer: ReturnType<typeof setTimeout> | undefined;
   #dropTimer: ReturnType<typeof setTimeout> | undefined;
+  #settle: ReturnType<typeof setTimeout> | undefined;
+  #steppedAt = 0;
   /** Between `show` and `hide`. */
   #onScreen = false;
-  /** What to do once the page asked for is drawn: let the strip go. */
-  #onDrawn: (() => void) | null = null;
-  /** The new page is up and the strip is only about to go: A is for the page now. */
-  #holding = false;
-  /** Shows the selected system on the stage, while it is still waiting to. */
-  #load: (() => void) | null = null;
   /** Curiosities move on by themselves; Interface → Rotate curiosities. */
   rotateFacts = true;
   /** What is behind the screen (Look → Systems background); `board`: each system's own. */
@@ -333,7 +327,12 @@ export class SystemView {
    */
   select(index: number, now = false, quiet = false): void {
     this.#rows[this.#selected]?.classList.remove('selected');
+    const moved = index !== this.#selected;
     this.#selected = index;
+    clearTimeout(this.#settle);
+    const stepped = performance.now();
+    this.#list.classList.toggle('held', moved && !quiet && stepped - this.#steppedAt < HELD_MS);
+    if (moved) this.#steppedAt = stepped;
     const r = this.#rows[index];
     const system = this.#systems[index];
     if (!r || !system) return;
@@ -351,38 +350,13 @@ export class SystemView {
       this.#drawBoard(system, now ? 0 : BOARD_MS);
     };
     const load = () => {
-      this.#load = null;
       // Loaded with the catalogue, so normally at hand: drawn once, never first without its info.
       const known = this.infos.peek(system.summary.name);
       if (known !== undefined) return show(known);
       void this.infos.get(system.summary.name).then(show);
     };
     if (now) load();
-    else this.#load = load;
-  }
-
-  /** The strip showing: the selection still moving, or just moved. */
-  get browsing(): boolean {
-    return this.root.classList.contains('browsing') && !this.#holding;
-  }
-
-  /** The system picked on the stage now (A on the strip, or the wait over); then the strip goes. */
-  settleNow(): void {
-    if (this.#onDrawn) return;
-    clearTimeout(this.#dropTimer);
-    const load = this.#load;
-    if (!load) return this.#stripGone();
-    this.#onDrawn = () => {
-      this.#onDrawn = null;
-      this.#holding = true;
-      this.#dropTimer = setTimeout(() => this.#stripGone(), PAGE_SHOWN_MS);
-    };
-    load();
-  }
-
-  #stripGone(): void {
-    this.#holding = false;
-    this.root.classList.remove('browsing');
+    else this.#settle = setTimeout(load, SETTLE_MS);
   }
 
   /** The pictures of the systems either side go first in the preload queue. */
@@ -408,14 +382,12 @@ export class SystemView {
 
   /**
    * The strip of logos over the middle of the stage while moving; a moment after the last
-   * move it fades, and the page changes to the system picked. Only opacity changes.
+   * move it fades, the page already changed under it. Only opacity changes.
    */
   #browse(): void {
     this.root.classList.add('browsing');
-    this.#onDrawn = null;
-    this.#holding = false;
     clearTimeout(this.#dropTimer);
-    this.#dropTimer = setTimeout(() => this.settleNow(), DROP_MS);
+    this.#dropTimer = setTimeout(() => this.root.classList.remove('browsing'), DROP_MS);
   }
 
   /** Stops the curiosity timer when the screen goes away. */
@@ -423,13 +395,12 @@ export class SystemView {
     this.#onScreen = false;
     this.#drawnFor = null;
     clearTimeout(this.#dropTimer);
-    this.#onDrawn = null;
-    this.#stripGone();
+    clearTimeout(this.#settle);
+    this.root.classList.remove('browsing');
     clearTimeout(this.#factTimer);
     clearTimeout(this.#readTimer);
     clearInterval(this.#coverTimer);
     clearTimeout(this.#boardTimer);
-    this.#load = null;
   }
 
   /**
@@ -442,7 +413,8 @@ export class SystemView {
     const strip = this.#rail.clientHeight;
     if (strip === 0) return;
     const y = row.offsetTop + row.offsetHeight / 2 - strip / 2;
-    this.#list.style.transform = `translateY(${-y}px)`;
+    // Whole pixels: text on a layer moved by a fraction of one shimmers.
+    this.#list.style.transform = `translateY(${-Math.round(y)}px)`;
   }
 
   #drawBoard(system: CyberSystem, delay: number): void {
@@ -622,7 +594,6 @@ export class SystemView {
       this.#scheduleFact();
       this.#scheduleReading();
       this.#scheduleCover();
-      this.#onDrawn?.();
     };
     // The next system shows whole, its pictures ready, rather than its words first.
     if (!animate) return apply();

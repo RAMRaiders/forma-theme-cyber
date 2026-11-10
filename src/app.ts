@@ -658,10 +658,6 @@ export class App {
     if (e.repeat) return;
     switch (e.action) {
       case 'confirm':
-        // On the systems' strip, A first shows the system picked; A again opens it.
-        if (this.#mode === 'systems' && this.#systemView.browsing) {
-          return this.#systemView.settleNow();
-        }
         return void this.#confirm();
       case 'back':
         return void this.#back();
