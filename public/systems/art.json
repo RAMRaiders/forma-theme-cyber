@@ -11,15 +11,19 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "3DO Magazine - Issue 12"
+        "title": "Electronic Games 1993-11"
       },
       {
         "file": "mag-3.webp",
-        "title": "3DO Magazine Special - Gold Issue 01"
+        "title": "Ultimate Future Games - Issue 02"
       },
       {
         "file": "mag-4.webp",
-        "title": "3DO Magazine Issue 04"
+        "title": "3DO Magazine - Issue 12"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "3DO Magazine Special - Gold Issue 01"
       }
     ],
     "hues": [
@@ -90,10 +94,18 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "CU Amiga Magazine Issue 025"
+        "title": "Amiga Computing Issue 062 Jul 93"
       },
       {
         "file": "mag-3.webp",
+        "title": "Amiga_Format_Issue_114__1998_09__Future_Publishing__GB__300dpi_"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "CU Amiga Magazine Issue 025"
+      },
+      {
+        "file": "mag-5.webp",
         "title": "CU Amiga Magazine Issue 046"
       }
     ]
@@ -147,14 +159,18 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Amstrad Computer User 01-90 (Aug 84 - May 92)"
-      },
-      {
-        "file": "mag-2.webp",
         "title": "Amstrad Action 001-117"
       },
       {
+        "file": "mag-2.webp",
+        "title": "Amstrad Computer User 01-90 (Aug 84 - May 92)"
+      },
+      {
         "file": "mag-3.webp",
+        "title": "Computing With The Amstrad Vol. 3 No. 3"
+      },
+      {
+        "file": "mag-4.webp",
         "title": "Amstrad Action Issue 064"
       }
     ]
@@ -256,19 +272,19 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "Atari VCS Owners Club Bulletin - AB 22 (Atari International)"
-      },
-      {
-        "file": "mag-3.webp",
-        "title": "Atari VCS Owners Club Bulletin - AB 21 (Atari International)"
-      },
-      {
-        "file": "mag-4.webp",
         "title": "Atari Age Volume 1 Number 2"
       },
       {
+        "file": "mag-3.webp",
+        "title": "Activisions - Vol. 5 (Activision)"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Atari Club Magazin (Weihnachts-Sonderausgabe 1982)"
+      },
+      {
         "file": "mag-5.webp",
-        "title": "Atari Age Volume 1 Number 3"
+        "title": "Atari VCS Owners Club Bulletin - AB 22 (Atari International)"
       }
     ],
     "peripherals": [
@@ -437,19 +453,19 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "Atari ST User - Issue 099 (Europress)"
-      },
-      {
-        "file": "mag-3.webp",
-        "title": "Atari ST User - Issue 088 (Europress)"
-      },
-      {
-        "file": "mag-4.webp",
         "title": "atari-st-format-issue-049"
       },
       {
+        "file": "mag-3.webp",
+        "title": "ST Action - Volume 1 Issue 1"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Atari ST User - Issue 099 (Europress)"
+      },
+      {
         "file": "mag-5.webp",
-        "title": "atari-st-format-issue-051"
+        "title": "Atari ST User - Issue 088 (Europress)"
       }
     ],
     "peripherals": [
@@ -570,10 +586,14 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "ZZap!64 Magazine Issue 044"
+        "title": "Commodore User Magazine Issue 43"
       },
       {
         "file": "mag-3.webp",
+        "title": "ZZap!64 Magazine Issue 044"
+      },
+      {
+        "file": "mag-4.webp",
         "title": "ZZap!64 Magazine Issue 006"
       }
     ],
@@ -857,6 +877,10 @@
       },
       {
         "file": "mag-3.webp",
+        "title": "Dreamcast Monthly - Issue 1"
+      },
+      {
+        "file": "mag-4.webp",
         "title": "Official Dreamcast Magazine, The - Issue 01"
       }
     ],
@@ -1008,10 +1032,14 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "Gamest 0260"
+        "title": "Play Meter - Volume 24, Number 4 - March 1998"
       },
       {
         "file": "mag-3.webp",
+        "title": "Gamest 0260"
+      },
+      {
+        "file": "mag-4.webp",
         "title": "Gamest 0068"
       }
     ]
@@ -1293,6 +1321,10 @@
       },
       {
         "file": "mag-2.webp",
+        "title": "GBX Game Boy Xtreme 06"
+      },
+      {
+        "file": "mag-3.webp",
         "title": "Total Game Boy Issue 03"
       }
     ],
@@ -1323,6 +1355,10 @@
       },
       {
         "file": "mag-2.webp",
+        "title": "GBX Game Boy Xtreme 06"
+      },
+      {
+        "file": "mag-3.webp",
         "title": "Total Game Boy Issue 03"
       }
     ]
@@ -1676,14 +1712,22 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Mean Machines Sega Issues 1-53"
-      },
-      {
-        "file": "mag-2.webp",
         "title": "Mean Machines Sega Magazine Issue 04"
       },
       {
+        "file": "mag-2.webp",
+        "title": "S the Sega Magazine Issue 04"
+      },
+      {
         "file": "mag-3.webp",
+        "title": "Sega Force Issue 01"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Mean Machines Sega Issues 1-53"
+      },
+      {
+        "file": "mag-5.webp",
         "title": "Mean Machines Sega Magazine Issue 03"
       }
     ],
@@ -1869,6 +1913,14 @@
       },
       {
         "file": "mag-2.webp",
+        "title": "MSX Computer Magazine 02 1986"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "MSX・FAN 1992-08月号"
+      },
+      {
+        "file": "mag-4.webp",
         "title": "MSX Magazine Revival Vol. 2 - MSX MAGAZINE 永久保存版2"
       }
     ]
@@ -1884,6 +1936,14 @@
       },
       {
         "file": "mag-2.webp",
+        "title": "MSX・FAN 1993-10月号"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "MSX Computer Magazine 02 1986"
+      },
+      {
+        "file": "mag-4.webp",
         "title": "MSX Magazine Revival Vol. 1 - MSX MAGAZINE 永久保存版"
       }
     ]
@@ -2027,6 +2087,14 @@
       },
       {
         "file": "mag-2.webp",
+        "title": "Arcadia Magazine No 32 January 01 2003 The House of the Dead III pages"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Play Meter - Volume 19, Number 5 April 1993"
+      },
+      {
+        "file": "mag-4.webp",
         "title": "Gamest 0066"
       }
     ]
@@ -2050,10 +2118,18 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "Neo Geo Freak 0030"
+        "title": "Gamest 199"
       },
       {
         "file": "mag-3.webp",
+        "title": "Play Meter - Volume 24, Number 4 - March 1998"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Neo Geo Freak 0030"
+      },
+      {
+        "file": "mag-5.webp",
         "title": "Neo Geo Freak 0033"
       }
     ],
@@ -2121,10 +2197,18 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "Nintendo Power Issue 002 September October 1988"
+        "title": "Nintendo Fun Club News Issue 03 Fall 1987"
       },
       {
         "file": "mag-3.webp",
+        "title": "Total Nintendo Magazine UK Issue 2 February 1992"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Nintendo Power Issue 002 September October 1988"
+      },
+      {
+        "file": "mag-5.webp",
         "title": "Nintendo Power Issue #3 November December 1988"
       }
     ],
@@ -2447,10 +2531,18 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "Official UK Playstation Magazine (1999)"
+        "title": "PSM (PlayStation Magazine) 001"
       },
       {
         "file": "mag-3.webp",
+        "title": "Playstation Plus Vol 1 Issue 10"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Official UK Playstation Magazine (1999)"
+      },
+      {
+        "file": "mag-5.webp",
         "title": "Official US PlayStation Magazine - Volume 3 Issue 1"
       }
     ],
@@ -2603,15 +2695,15 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "Official Sega Saturn Magazine Issue 22 (Resident Evil 1)"
-      },
-      {
-        "file": "mag-3.webp",
         "title": "Supplement Issue 53 SEGA MegaZone Saturn Guide"
       },
       {
-        "file": "mag-4.webp",
+        "file": "mag-3.webp",
         "title": "Sega Saturn Magazine - Issue 02"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Official Sega Saturn Magazine Issue 22 (Resident Evil 1)"
       }
     ],
     "peripherals": [
@@ -3245,10 +3337,14 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "Oh!X 1991 08"
+        "title": "Oh! MZ 1986年12月号 X68000のハードウェア X1turboZ コンピュータによる立体映像"
       },
       {
         "file": "mag-3.webp",
+        "title": "Oh!X 1991 08"
+      },
+      {
+        "file": "mag-4.webp",
         "title": "Oh!X 1993 05"
       }
     ]
@@ -3269,15 +3365,19 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "Antic Magazine Volume 6 Number 11 (Next Generation Game Machines)"
+        "title": "Atari Explorer - Volume 9 Number 6"
       },
       {
         "file": "mag-3.webp",
-        "title": "Antic Magazine Volume 7 Number 04 (Atari Home Turn-on)"
+        "title": "Atarian Issue 3 (October 1989)"
       },
       {
         "file": "mag-4.webp",
-        "title": "Atari Explorer - Volume 9 Number 6"
+        "title": "Antic Magazine Volume 6 Number 11 (Next Generation Game Machines)"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Antic Magazine Volume 7 Number 04 (Atari Home Turn-on)"
       }
     ],
     "peripherals": [
@@ -3356,6 +3456,10 @@
       },
       {
         "file": "mag-3.webp",
+        "title": "Crash zx spectrum"
+      },
+      {
+        "file": "mag-4.webp",
         "title": "Sinclair User Magazine Issue 058"
       }
     ],
@@ -3376,10 +3480,14 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "Official Playstation 2 Magazine Special Edition: The A-Z"
+        "title": "PSM (PlayStation Magazine) 063"
       },
       {
         "file": "mag-3.webp",
+        "title": "Official Playstation 2 Magazine Special Edition: The A-Z"
+      },
+      {
+        "file": "mag-4.webp",
         "title": "Official UK Playstation 2 Magazine - Issue 003"
       }
     ],
