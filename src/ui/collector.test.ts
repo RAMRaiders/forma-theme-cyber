@@ -490,10 +490,32 @@ describe('the Collector view', () => {
     v.select(1);
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
     expect(v.root.classList.contains('arriving')).toBe(false);
-    vi.advanceTimersByTime(760);
+    // Rested, and its pictures loaded: then it replaces the last.
+    await vi.advanceTimersByTimeAsync(760);
     expect(v.root.classList.contains('arriving')).toBe(true);
     vi.advanceTimersByTime(360);
     expect(v.root.classList.contains('arriving')).toBe(false);
+  });
+
+  it("keeps the game shown until the next one's pictures have loaded, then replaces it", async () => {
+    const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
+    vi.advanceTimersByTime(2100);
+    const waiting: (() => void)[] = [];
+    Object.defineProperty(HTMLImageElement.prototype, 'decode', {
+      configurable: true,
+      value: () => new Promise<void>((done) => waiting.push(done))
+    });
+    try {
+      v.select(1);
+      await vi.advanceTimersByTimeAsync(800);
+      // Doom's pictures still loading: After Burner's case still there, nothing emptied.
+      expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).toContain('media/1/');
+      waiting.forEach((done) => done());
+      await vi.advanceTimersByTimeAsync(0);
+      expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).toContain('media/2/');
+    } finally {
+      delete (HTMLImageElement.prototype as { decode?: unknown }).decode;
+    }
   });
 
   it('stars a favourite in the label, and a reload of the same game moves nothing', async () => {
@@ -598,7 +620,7 @@ describe('the Collector view', () => {
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
     vi.advanceTimersByTime(600);
     expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).not.toBe(DEFAULT_FRONT);
-    vi.advanceTimersByTime(200);
+    await vi.advanceTimersByTimeAsync(200);
     // Nothing to make a cover from: the default box, and static where the footage would be.
     expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).toBe(DEFAULT_FRONT);
     expect(text('.no-signal span')).toEqual(['No signal']);

@@ -4015,8 +4015,9 @@ kbd {
 }
 
 @keyframes bay-in {
+  /* From part-way: the last game's place is never empty, the next brightens into it. */
   from {
-    opacity: 0;
+    opacity: 0.45;
   }
 }
 

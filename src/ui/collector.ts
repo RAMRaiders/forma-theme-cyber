@@ -127,6 +127,8 @@ const LABEL_MS = 300;
 const HELD_PREVIEW_MS = 500;
 /** Fan art kept decoded, the game shown and those round it: going to them is then at once. */
 const FANART_KEPT = 12;
+/** Longest the game shown stays while the next one's pictures load: then it is replaced anyway. */
+const SWAP_WAIT_MS = 1200;
 /** On a game this long, its video plays in the footage bay. */
 const VIDEO_AFTER_MS = 2500;
 /** With no video, the footage bay shows the screenshots in turn. */
@@ -230,6 +232,8 @@ export class CollectorView {
   #peek: ReturnType<typeof setTimeout> | undefined;
   /** When the fan art and the label last followed a held shelf. */
   #previewedAt = 0;
+  /** Which draw of a game is the latest: one whose pictures load after another began is dropped. */
+  #drawRound = 0;
   #labelTimer: ReturnType<typeof setTimeout> | undefined;
   /** When the selection last moved. */
   #steppedAt = -Infinity;
@@ -427,7 +431,8 @@ export class CollectorView {
       const game = this.selected;
       if (game) {
         this.#labelNow();
-        this.#backdropFor(game);
+        // One at a time: the fan art still loading finishes and shows, the next comes after.
+        if (!this.#backdrop.querySelector('img.waiting')) this.#backdropFor(game);
       }
     }
     clearTimeout(this.#peek);
@@ -749,16 +754,45 @@ export class CollectorView {
     if (game && !again && !this.#left && this.#game?.id === game.id && this.#box) {
       return this.#labelNow();
     }
+    const round = ++this.#drawRound;
+    if (!game) {
+      this.#stop();
+      return;
+    }
+    this.#backdropFor(game);
+    const showcase = this.#showcaseParts(game);
+    const dossier = this.#dossierParts(game);
+    // Drawn again where it is (its pictures just replaced, its details changed): at once.
+    // Or nothing shown to keep (a list just opened, back from elsewhere): at once too.
+    if (again || !this.#game || this.#left) return this.#draw(game, showcase, dossier);
+    // Another game: the one shown stays until the next's pictures have loaded, then is
+    // replaced by it whole, rather than emptied first and filled in as they come.
+    const images = [...showcase, ...dossier].flatMap((part) => [
+      ...(part instanceof HTMLImageElement ? [part] : []),
+      ...part.querySelectorAll('img')
+    ]);
+    const loaded = images.map((img) =>
+      typeof img.decode === 'function' ? img.decode().catch(() => undefined) : Promise.resolve()
+    );
+    void Promise.race([
+      Promise.all(loaded),
+      new Promise((done) => setTimeout(done, SWAP_WAIT_MS))
+    ]).then(() => {
+      if (round !== this.#drawRound || this.selected?.id !== game.id) return;
+      this.#draw(game, showcase, dossier);
+    });
+  }
+
+  /** The game in the showcase and the dossier, its parts made: put in, and set going. */
+  #draw(game: Game, showcase: HTMLElement[], dossier: HTMLElement[]): void {
     this.#stop();
-    if (!game) return;
     this.#left = false;
     this.#game = game;
     this.#angle = 0;
     this.root.style.removeProperty('--game');
     this.#tint(game);
-    this.#backdropFor(game);
-    this.#showcase.replaceChildren(...this.#showcaseParts(game));
-    this.#dossier.replaceChildren(...this.#dossierParts(game));
+    this.#showcase.replaceChildren(...showcase);
+    this.#dossier.replaceChildren(...dossier);
     fadeInAsLoaded(this.#showcase);
     fadeInAsLoaded(this.#dossier);
     this.#scan.shown(game.id, this.#pictures());
