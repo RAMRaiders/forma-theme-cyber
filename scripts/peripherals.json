@@ -325,5 +325,93 @@
       "file": "Sinclair.zx.thermal.printer.jpg",
       "name": "ZX Printer"
     }
+  ],
+  "atari5200": [
+    {
+      "file": "Atari-5200-Controller.jpg",
+      "name": "Controller"
+    },
+    {
+      "file": "Atari-5200-Trak-Ball-Controller.jpg",
+      "name": "Trak-Ball"
+    }
+  ],
+  "atari7800": [
+    {
+      "file": "Atari-CX78-7800-Controller-FL.jpg",
+      "name": "CX78 Joypad"
+    },
+    {
+      "file": "Atari XG-1 light gun.jpg",
+      "name": "XG-1 light gun"
+    }
+  ],
+  "atari800": [
+    {
+      "file": "Atari-CX85.jpg",
+      "name": "CX85 Keypad"
+    },
+    {
+      "file": "Atari 1050 disk drive.jpg",
+      "name": "1050 Disk Drive"
+    },
+    {
+      "file": "Atari 410 (transparent bg).png",
+      "name": "410 Program Recorder"
+    },
+    {
+      "file": "Atari CX40 Joystick.jpg",
+      "name": "CX40 Joystick"
+    }
+  ],
+  "xegs": [
+    {
+      "file": "Atari XEGS keyboard.jpg",
+      "name": "Keyboard"
+    },
+    {
+      "file": "Atari XG-1 light gun.jpg",
+      "name": "XG-1 light gun"
+    },
+    {
+      "file": "Atari XE joystick (colour restored).jpg",
+      "name": "Joystick"
+    }
+  ],
+  "atarist": [
+    {
+      "file": "Atari st mouse.jpg",
+      "name": "Mouse",
+      "limit": 190,
+      "holes": true
+    }
+  ],
+  "lynx": [
+    {
+      "file": "Atari-Lynx-I-Sun-Visor.jpg",
+      "name": "Sun Visor"
+    },
+    {
+      "file": "Atari-Lynx-Carrying-Case.jpg",
+      "name": "Carrying Case"
+    },
+    {
+      "file": "Atari-Lynx-Cig-Lighter-Adapter.jpg",
+      "name": "Car Adapter"
+    }
+  ],
+  "jaguarcd": [
+    {
+      "file": "Atari-Jaguar-CD-Memory-Track-Cart.jpg",
+      "name": "Memory Track"
+    },
+    {
+      "file": "Atari-Jaguar-Controller-Flat.jpg",
+      "name": "Controller"
+    },
+    {
+      "file": "Atari-Jaguar-Pro-Controller-Flat.jpg",
+      "name": "Pro Controller"
+    }
   ]
 }

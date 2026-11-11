@@ -261,6 +261,14 @@
       {
         "file": "mag-3.webp",
         "title": "Atari VCS Owners Club Bulletin - AB 21 (Atari International)"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Atari Age Volume 1 Number 2"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Atari Age Volume 1 Number 3"
       }
     ],
     "peripherals": [
@@ -303,6 +311,28 @@
       {
         "file": "mag-2.webp",
         "title": "Atari Age Vol 02num 03"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Atari Age Volume 2 Number 2"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Atari Age Volume 2 Number 5"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Atari Age Volume 2 Number 4"
+      }
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Controller"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Trak-Ball"
       }
     ]
   },
@@ -315,6 +345,22 @@
     ],
     "consoleHues": [
       12
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Computer Entertainer issue 3-3"
+      }
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "CX78 Joypad"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "XG-1 light gun"
+      }
     ]
   },
   "atari800": {
@@ -323,6 +369,46 @@
     "kind": "cutout",
     "consoleHues": [
       45
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Atari Explorer (Atari)"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Antic Magazine Volume 3 Number 02 (Exploring the Atari XL)"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Analog Computing Magazine Issue 15 (Inside the 600XL)"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Atari User Issue 01"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Antic Magazine Volume 4 Number 09 (Atari Products Are Back)"
+      }
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "CX85 Keypad"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "1050 Disk Drive"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "410 Program Recorder"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "CX40 Joystick"
+      }
     ]
   },
   "atarist": {
@@ -344,6 +430,20 @@
       {
         "file": "mag-3.webp",
         "title": "Atari ST User - Issue 088 (Europress)"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "atari-st-format-issue-049"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "atari-st-format-issue-051"
+      }
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Mouse"
       }
     ]
   },
@@ -1324,6 +1424,18 @@
       {
         "file": "mag-1.webp",
         "title": "EDGE #022 (1995) - Supplement: Atari Jaguar"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Electronic Games 1993-09"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Cat Rap: News Source for the Atari Jaguar — Issue 1 — September 1993"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Cat Rap: News Source for the Atari Jaguar — Issue 2 — January 1994"
       }
     ],
     "peripherals": [
@@ -1360,6 +1472,34 @@
     ],
     "consoleHues": [
       5
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "A.P.E. — Atari Power Entertainment, No. 21, Fall Holiday 1995"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "A.P.E. — Atari Power Entertainment, No. 20, Summer 1995"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "A.P.E. — Atari Power Entertainment, No. 18, Winter 1995"
+      }
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Memory Track"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Controller"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "Pro Controller"
+      }
     ]
   },
   "jazz2": {
@@ -1449,6 +1589,18 @@
       {
         "file": "mag-2.webp",
         "title": "Atari Lynx Grey Matters Vol 3 1992"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Lynx User Issue 5"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Lynx User Issue 6"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Lynx User Issue 7"
       }
     ],
     "hues": [
@@ -1457,6 +1609,20 @@
     ],
     "consoleHues": [
       34
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Sun Visor"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Carrying Case"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "Car Adapter"
+      }
     ]
   },
   "macintosh": {
@@ -3075,6 +3241,34 @@
       5,
       225,
       54
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Antic Magazine Volume 7 Number 02 (Atari XE Game System)"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Antic Magazine Volume 6 Number 11 (Next Generation Game Machines)"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Antic Magazine Volume 7 Number 04 (Atari Home Turn-on)"
+      }
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Keyboard"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "XG-1 light gun"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "Joystick"
+      }
     ]
   },
   "xrick": {

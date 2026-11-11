@@ -49,12 +49,25 @@
   ],
   "pcengine": ["turbo-play-us-12", "turbo-play"],
   "neogeo": ["neogeofreak0001", "neogeofreak0030", "neogeofreak0033"],
-  "jaguar": ["EDGE.N022.1995.07.Supplement.Atari.Jaguar"],
-  "lynx": ["AtariLynxMarketingEGM", "atari-lynx-grey-matters-vol-3-1992"],
+  "jaguar": [
+    "EDGE.N022.1995.07.Supplement.Atari.Jaguar",
+    "Electronic-Games-1993-09",
+    "cat-rap-01-1993-09",
+    "cat-rap-02-1994-01"
+  ],
+  "lynx": [
+    "AtariLynxMarketingEGM",
+    "atari-lynx-grey-matters-vol-3-1992",
+    "lynx-user-issue-05",
+    "LynxUserIssue6",
+    "lynx-user-issue-07"
+  ],
   "atari2600": [
     "Atari_VCS_Owners_Club_Bulletin_AB_23_1982-12_Atari_International_GB",
     "Atari_VCS_Owners_Club_Bulletin_AB_22_1982-09_Atari_International_GB",
-    "Atari_VCS_Owners_Club_Bulletin_AB_21_1982-06_Atari_International_GB"
+    "Atari_VCS_Owners_Club_Bulletin_AB_21_1982-06_Atari_International_GB",
+    "atariage-1-2",
+    "atariage-1-3"
   ],
   "3do": [
     "3DOMagazineIssue10199605ParagonPublishingGB",
@@ -68,7 +81,9 @@
   "atarist": [
     "Atari_ST_User_Issue_067_1991-09_Europress_GB",
     "Atari_ST_User_Issue_099_1994-04_Europress_GB",
-    "Atari_ST_User_Issue_088_1993-06_Europress_GB"
+    "Atari_ST_User_Issue_088_1993-06_Europress_GB",
+    "atari-st-format-issue-049",
+    "atari-st-format-issue-051"
   ],
   "amiga1200": ["cuamiga-magazine-027", "cuamiga-magazine-025", "cuamiga-magazine-046"],
   "msx1": ["MSXComputing", "msx-user-1985-09-images"],
@@ -92,8 +107,14 @@
   "virtualboy": [],
   "intellivision": [],
   "colecovision": ["1980-coleco-catalog"],
-  "atari5200": ["AtariAgeIssues1-7", "AtariAgeVol02num03"],
-  "atari7800": [],
+  "atari5200": [
+    "AtariAgeIssues1-7",
+    "AtariAgeVol02num03",
+    "atariage-2-2",
+    "atariage-2-5",
+    "atariage-2-4"
+  ],
+  "atari7800": ["computer-entertainer-3-3"],
   "vectrex": [],
   "odyssey2": [],
   "ngpc": ["ngpc_20211014", "softv2"],
@@ -146,5 +167,18 @@
   "mrboom": [],
   "naomi2": ["gamest0052", "gamest0066"],
   "atomiswave": ["gamest0200"],
-  "gbc2players": ["Total_Game_Boy_Issue_01", "Total_Game_Boy_Issue_03"]
+  "gbc2players": ["Total_Game_Boy_Issue_01", "Total_Game_Boy_Issue_03"],
+  "atari800": [
+    "Atari_Explorer_1985-02_Atari_US",
+    "1984-06-anticmagazine",
+    "analog-computing-magazine-15",
+    "atari-user-uk-magazine-01",
+    "1986-01-anticmagazine"
+  ],
+  "xegs": ["1988-06-anticmagazine", "1988-03-anticmagazine", "1988-08-anticmagazine"],
+  "jaguarcd": [
+    "ape-atari-newsletter-issue-21",
+    "ape-atari-newsletter-issue-20",
+    "ape-atari-newsletter-issue-18"
+  ]
 }
