@@ -270,13 +270,13 @@ describe('the Collector view', () => {
       }
     ]);
     const dt = text('.dossier .specs dt');
-    expect(text('.dossier .specs dd')[dt.indexOf('Dump')]).toBe('No-IntroVerified');
+    expect(text('.dossier .specs dd')[dt.indexOf('Dump')]).toBe(
+      'No-IntroVerifiedAfter Burner (USA)'
+    );
+    expect(text('.dossier .dump .listed')).toEqual(['After Burner (USA)']);
     expect(text('.dossier .dump .seal')).toEqual(['No-Intro']);
     expect(v.root.querySelector('.dossier .dump')?.getAttribute('aria-label')).toBe(
       'Verified by No-Intro'
-    );
-    expect(v.root.querySelector('.dossier .dump.verified')?.getAttribute('title')).toBe(
-      'After Burner (USA)'
     );
     expect(dumpText(null)).toBeNull();
     expect(

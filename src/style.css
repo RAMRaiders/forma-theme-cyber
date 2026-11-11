@@ -4742,9 +4742,27 @@ kbd {
    with a lit dot. No glow (the Pi). */
 .dossier .dump {
   display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25em;
+  max-width: 100%;
+  --dump: var(--muted);
+}
+
+.dossier .dump .line {
+  display: inline-flex;
   align-items: center;
   gap: 0.5em;
-  --dump: var(--muted);
+}
+
+/* The catalogue's name for the dump, under the seal: small, one line. */
+.dossier .dump .listed {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 0.8em;
+  color: var(--muted);
 }
 
 .dossier .dump.verified {

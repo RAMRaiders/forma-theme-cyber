@@ -1654,15 +1654,17 @@ export function dumpText(dump: Game['dump'] | undefined): HTMLElement | null {
         : dump.status === 'badDump'
           ? ['Bad dump', 'doubtful']
           : ['Not catalogued', 'unknown'];
-  // The catalogue as its seal, the verdict by it; the catalogue's own name for it on hover.
+  // The catalogue as its seal, the verdict by it, and under them the catalogue's own name for
+  // the dump: on screen, as nothing hovers on a pad.
   return el(
     'span',
-    {
-      class: `dump ${kind}`,
-      title: dump.name ?? '',
-      'aria-label': catalogue ? `${text} by ${catalogue}` : text
-    },
-    catalogue ? el('span', { class: `seal ${dump.catalogue}` }, catalogue) : null,
-    el('span', { class: 'verdict' }, text)
+    { class: `dump ${kind}`, 'aria-label': catalogue ? `${text} by ${catalogue}` : text },
+    el(
+      'span',
+      { class: 'line' },
+      catalogue ? el('span', { class: `seal ${dump.catalogue}` }, catalogue) : null,
+      el('span', { class: 'verdict' }, text)
+    ),
+    dump.name ? el('span', { class: 'listed' }, dump.name) : null
   );
 }
