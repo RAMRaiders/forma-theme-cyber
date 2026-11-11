@@ -2258,6 +2258,12 @@ main {
   inset: 0 0 0 calc(var(--rail) + 1.5rem);
 }
 
+/* Over the whole Collector, its label and dossier too (always over its dim, at 5) and the
+   shelf's preview (6): under it they showed through, drawn again as the scrape's pictures came. */
+.collector .scan {
+  z-index: 8;
+}
+
 /* Taking over from Forma's menu, dark already: no fade in. */
 .scan.instant {
   animation: none;
