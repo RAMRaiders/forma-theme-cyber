@@ -4228,11 +4228,24 @@ kbd {
 
 .tv-set {
   position: relative;
+  /* Its body is drawn on a layer of its own under its parts (::before), so a video's hole can
+     be cut in the body alone: the tube's corners, over it, still round the video off. */
+  isolation: isolate;
   display: grid;
   gap: 3cqw;
   padding: 4cqw;
   border-radius: 3cqw;
   box-shadow: 0 3cqw 6cqw rgb(0 0 0 / 65%);
+}
+
+/* The body: under the TV's parts, a hole cut in it where a video plays (--hole, collector.ts). */
+.tv-set::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  clip-path: var(--hole, none);
 }
 
 .tv-screen {
@@ -4243,9 +4256,22 @@ kbd {
   /* A CRT's tube bulges: its corners round off. */
   border-radius: 7cqw / 6cqw;
   background: radial-gradient(ellipse at 50% 45%, #1a2a30 0%, #060a0d 75%);
+  --bezel: #141518;
   box-shadow:
-    0 0 0 1.4cqw #141518,
+    0 0 0 1.4cqw var(--bezel),
     0 0 0 1.8cqw rgb(0 0 0 / 50%);
+}
+
+/* The tube's corners, outside its curve, in the bezel's colour: over a video (a rectangle,
+   played under the page) the screen still curves. Opaque, so nothing half see-through. */
+.tv-screen::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 6cqw var(--bezel);
+  pointer-events: none;
 }
 
 .tv-screen img {
@@ -4316,6 +4342,9 @@ kbd {
 .tv[data-era='wood'] .tv-set {
   grid-template-columns: 1fr 20cqw;
   border: 0.8cqw solid #2b1a0b;
+}
+
+.tv[data-era='wood'] .tv-set::before {
   background:
     linear-gradient(180deg, rgb(255 220 170 / 14%), rgb(0 0 0 / 25%)),
     repeating-linear-gradient(
@@ -4377,14 +4406,18 @@ kbd {
 
 .tv[data-era='beige'] .tv-set {
   grid-template-rows: auto 8cqw;
+  box-shadow: 0 3cqw 6cqw rgb(0 0 0 / 65%);
+}
+
+.tv[data-era='beige'] .tv-set::before {
   background: linear-gradient(180deg, #d8d1c3 0%, #bdb5a5 100%);
   box-shadow:
     inset 0 0.6cqw 0 rgb(255 255 255 / 45%),
-    inset 0 -0.8cqw 0 rgb(0 0 0 / 18%),
-    0 3cqw 6cqw rgb(0 0 0 / 65%);
+    inset 0 -0.8cqw 0 rgb(0 0 0 / 18%);
 }
 
 .tv[data-era='beige'] .tv-screen {
+  --bezel: #3b3d42;
   box-shadow:
     0 0 0 1.8cqw #3b3d42,
     0 0 0 2.2cqw rgb(0 0 0 / 35%);
@@ -4409,13 +4442,16 @@ kbd {
 .tv[data-era='black'] .tv-set {
   grid-template-rows: auto 7cqw;
   border-radius: 4cqw;
+  box-shadow: 0 3cqw 6cqw rgb(0 0 0 / 65%);
+}
+
+.tv[data-era='black'] .tv-set::before {
   background: linear-gradient(180deg, #2b2d33 0%, #15161a 100%);
-  box-shadow:
-    inset 0 0.5cqw 0 rgb(255 255 255 / 12%),
-    0 3cqw 6cqw rgb(0 0 0 / 65%);
+  box-shadow: inset 0 0.5cqw 0 rgb(255 255 255 / 12%);
 }
 
 .tv[data-era='black'] .tv-screen {
+  --bezel: #0b0c0e;
   box-shadow:
     0 0 0 1.2cqw #0b0c0e,
     0 0 0 1.7cqw #8b8f97;
@@ -4439,10 +4475,12 @@ kbd {
 .tv[data-era='flat'] .tv-set {
   padding: 2.2cqw;
   border-radius: 1.2cqw;
+  box-shadow: 0 3cqw 6cqw rgb(0 0 0 / 65%);
+}
+
+.tv[data-era='flat'] .tv-set::before {
   background: linear-gradient(180deg, #1c1d21, #0d0e10);
-  box-shadow:
-    inset 0 0 0 0.3cqw #3a3c42,
-    0 3cqw 6cqw rgb(0 0 0 / 65%);
+  box-shadow: inset 0 0 0 0.3cqw #3a3c42;
 }
 
 .tv[data-era='flat'] .tv-screen {
@@ -4450,6 +4488,11 @@ kbd {
   border-radius: 0.4cqw;
   background: #020304;
   box-shadow: none;
+}
+
+.tv[data-era='flat'] .tv-screen::before,
+.tv[data-era='plain'] .tv-screen::before {
+  display: none;
 }
 
 .tv[data-era='flat'] .tv-screen::after {

@@ -829,6 +829,28 @@ export class CollectorView {
     } else {
       this.#backdrop.style.removeProperty('clip-path');
     }
+    // A TV round it: its body is painted behind the tube, so it gets the same hole (else the
+    // video showed its wood, not the game).
+    const set = this.#footage?.closest('.tv')?.querySelector<HTMLElement>('.tv-set');
+    if (set) {
+      const s = set.getBoundingClientRect();
+      if (r?.width && s.width) {
+        const [x0, y0, x1, y1] = [
+          r.left - s.left,
+          r.top - s.top,
+          r.right - s.left,
+          r.bottom - s.top
+        ].map((n) => `${Math.round(n)}px`);
+        // In its body only (style.css): the tube's corners, over it, round the video off.
+        set.style.setProperty(
+          '--hole',
+          `polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ` +
+            `${x0} ${y0}, ${x0} ${y1}, ${x1} ${y1}, ${x1} ${y0}, ${x0} ${y0})`
+        );
+      } else {
+        set.style.removeProperty('--hole');
+      }
+    }
     this.root.classList.toggle('video-on', on);
     document.documentElement.classList.toggle('video-through', on);
   }
