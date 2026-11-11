@@ -276,6 +276,11 @@ export class App {
     this.forma.events.on('music:song', (song) => {
       if (this.#playing.hidden) this.#song.show(song);
     });
+    // Forma's screensaver stopped the selected game's video; when it goes, the game's stage
+    // and its video come back, as after a game.
+    this.forma.events.on('screensaver', ({ active }) => {
+      if (!active && this.#list && this.#playing.hidden) this.#gameView.resume();
+    });
     this.forma.events.on('game:end', ({ error }) => {
       this.#playing.hidden = true;
       if (this.#list) this.#gameView.resume();
