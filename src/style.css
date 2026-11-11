@@ -2258,6 +2258,21 @@ main {
   inset: 0 0 0 calc(var(--rail) + 1.5rem);
 }
 
+/* Its scrape landed: no beam, no reticle, just the dark, till the game switches on (its
+   flicker, boot.ts) over the pictures drawn again beneath. */
+.collector .scan.found .scan-beam,
+.collector .scan.found .scan-grid,
+.collector .scan.found .scan-core,
+.collector .scan.reveal .scan-beam,
+.collector .scan.reveal .scan-core {
+  display: none;
+}
+
+.collector .scan.found .scan-shade {
+  background: #02040a;
+  opacity: 1;
+}
+
 /* Over the whole Collector, its label and dossier too (always over its dim, at 5) and the
    shelf's preview (6): under it they showed through, drawn again as the scrape's pictures came. */
 .collector .scan {

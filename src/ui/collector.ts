@@ -134,6 +134,8 @@ const ROW_REM = 3.2;
 const OVERSCAN = 10;
 /** The shelf over the middle while moving; this long after the last move it fades. */
 const DROP_MS = 1400;
+/** Longest the shelf stays past its time for the switch-on's logo, still loading. */
+const DROP_MARK_WAIT_MS = 1200;
 /** Steps closer together than this are the direction held: the shelf runs at an even speed. */
 const HELD_MS = 130;
 /** The fan art behind the shelf, a sneak peek, once the selection pauses this long: longer than
@@ -286,7 +288,14 @@ export class CollectorView {
   #navPicSrc: string | null = null;
   #dossierTimer: ReturnType<typeof setTimeout> | undefined;
   /** The logo for the switch-on as the shelf goes, once loaded, and whose it is. */
-  #dropMark: { id: number; mark: HTMLElement | null } | null = null;
+  #dropMark: {
+    id: number;
+    src: string | null;
+    mark: HTMLElement | null;
+    loading: Promise<HTMLElement | null>;
+  } | null = null;
+  /** Which shelf showing is the latest: a drop waiting on a logo for an older one is dropped. */
+  #dropRound = 0;
   /** Which dossier draw is the latest: one whose pictures decode after another began is dropped. */
   #dossierRound = 0;
   /** The shelf's height (px), measured once a list opens or the window is resized, not at each
@@ -417,13 +426,22 @@ export class CollectorView {
       this.#videoHeld = true;
     }
     clearTimeout(this.#dropTimer);
-    this.#dropTimer = setTimeout(() => {
+    const shown = this.selected;
+    if (shown) this.#prepareDropMark(shown);
+    const round = ++this.#dropRound;
+    const drop = (mark: HTMLElement | null) => {
+      if (round !== this.#dropRound || this.#left) return;
       perfMark('drop');
-      this.#bootOnDrop();
+      this.#bootOnDrop(mark);
       this.root.classList.remove('browsing');
       if (!this.#videoHeld) return;
       this.#videoHeld = false;
       if (this.#game && !this.#left) this.#startVideo(this.#game);
+    };
+    this.#dropTimer = setTimeout(() => {
+      const mark = this.#dropMarkNow();
+      if (mark === undefined) void this.#dropMarkLate().then(drop);
+      else drop(mark);
     }, DROP_MS);
   }
 
@@ -728,14 +746,37 @@ export class CollectorView {
    * The game stopped at, switched on as the shelf goes: its logo (loaded while the shelf was
    * still up), else its name, lit in a line of light over the screen, as after a scrape.
    */
-  #bootOnDrop(): void {
+  #bootOnDrop(mark: HTMLElement | null): void {
     const game = this.selected;
-    if (!game || this.#left) return;
-    const ready = this.#dropMark?.id === game.id ? this.#dropMark.mark : null;
-    const mark = ready ?? el('span', { class: 'boot-name' }, game.name);
+    if (!game || !mark) return;
     // Its colour as set on the view (reading the computed style here would restyle it all).
     const colour = this.root.style.getPropertyValue('--game').trim() || 'var(--neon)';
     boot(this.root, mark, 0, { colour });
+  }
+
+  /**
+   * The switch-on's mark for the game stopped at, its logo waited for a moment more if it is
+   * still loading (the shelf stays till then): its name only when it has no logo at all, and
+   * nothing (no switch-on) when its logo would not load.
+   */
+  #dropMarkNow(): HTMLElement | null | undefined {
+    const game = this.selected;
+    if (!game) return null;
+    this.#prepareDropMark(game);
+    const pending = this.#dropMark!;
+    if (pending.mark) return pending.mark;
+    if (!pending.src) return el('span', { class: 'boot-name' }, game.name);
+    return undefined;
+  }
+
+  /** The logo still loading: waited for a moment, else no switch-on. */
+  async #dropMarkLate(): Promise<HTMLElement | null> {
+    const game = this.selected;
+    const pending = this.#dropMark;
+    if (!game || !pending || pending.id !== game.id) return null;
+    const late = new Promise<null>((done) => setTimeout(() => done(null), DROP_MARK_WAIT_MS));
+    const mark = await Promise.race([pending.loading, late]);
+    return this.selected?.id === game.id ? mark : null;
   }
 
   #prepareDropMark(game: Game): void {
@@ -743,8 +784,11 @@ export class CollectorView {
     const media = this.#options.media;
     const src = media(game, 'wheel', 560) ?? media(game, 'marquee', 560);
     const id = game.id;
-    this.#dropMark = { id, mark: null };
-    void bootMarkLoaded(src, game.name, DROP_MS).then((mark) => {
+    const loading = bootMarkLoaded(src, game.name, 8000).then((mark) =>
+      mark.classList.contains('boot-logo') ? mark : null
+    );
+    this.#dropMark = { id, src, mark: null, loading };
+    void loading.then((mark) => {
       if (this.#dropMark?.id === id) this.#dropMark.mark = mark;
     });
   }
