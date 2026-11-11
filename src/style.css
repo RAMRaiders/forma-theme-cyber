@@ -4184,6 +4184,22 @@ kbd {
   transition: opacity 200ms ease;
 }
 
+/* The shelf gone: the case and footage fade in from the dark. */
+.collector.landing::after {
+  background: #02040a;
+  animation: collector-land 320ms ease-out both;
+}
+
+@keyframes collector-land {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
 .collector.browsing::after {
   opacity: 1;
   transition-duration: 120ms;

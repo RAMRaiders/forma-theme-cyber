@@ -548,28 +548,6 @@ describe('the Collector view', () => {
     }
   });
 
-  it('switches the game stopped at on as the shelf goes: its logo, its name without one', async () => {
-    const { wheel: _, ...noLogo } = BOXED;
-    const { v } = await view([
-      game(1, 'After Burner', BOXED),
-      game(2, 'Doom', BOXED),
-      game(3, 'Zool', noLogo)
-    ]);
-    await vi.advanceTimersByTimeAsync(2100);
-    document.querySelectorAll('.boot').forEach((b) => b.remove());
-    v.select(1);
-    expect(document.querySelector('.boot')).toBeNull();
-    await vi.advanceTimersByTimeAsync(1500);
-    expect(v.root.classList.contains('browsing')).toBe(false);
-    expect(document.querySelector('.boot.whole .boot-logo')?.getAttribute('src')).toContain(
-      '/2/wheel'
-    );
-    v.select(2);
-    await vi.advanceTimersByTimeAsync(1500);
-    expect(document.querySelector('.boot.whole .boot-mark')?.textContent).toBe('Zool');
-    document.querySelectorAll('.boot').forEach((b) => b.remove());
-  });
-
   it("frames the selected game's picture left of the shelf while it shows", async () => {
     const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
     await vi.advanceTimersByTimeAsync(2100);

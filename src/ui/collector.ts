@@ -8,7 +8,7 @@ import { DEFAULT_BACK, DEFAULT_FRONT, hue } from './cover.js';
 import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
 import { Scan } from './scan.js';
-import { boot, bootMarkLoaded, scrapedMark } from './boot.js';
+import { boot, scrapedMark } from './boot.js';
 import {
   ARCADE,
   type Achievements,
@@ -134,8 +134,8 @@ const ROW_REM = 3.2;
 const OVERSCAN = 10;
 /** The shelf over the middle while moving; this long after the last move it fades. */
 const DROP_MS = 1400;
-/** Longest the shelf stays past its time for the switch-on's logo, still loading. */
-const DROP_MARK_WAIT_MS = 1200;
+/** The details' fade in from the dark as the shelf goes (the CSS's `collector-land`). */
+const LAND_MS = 340;
 /** Steps closer together than this are the direction held: the shelf runs at an even speed. */
 const HELD_MS = 130;
 /** The fan art behind the shelf, a sneak peek, once the selection pauses this long: longer than
@@ -287,15 +287,6 @@ export class CollectorView {
   readonly #navPic = el('div', { class: 'nav-pic', 'aria-hidden': 'true' }, this.#tv);
   #navPicSrc: string | null = null;
   #dossierTimer: ReturnType<typeof setTimeout> | undefined;
-  /** The logo for the switch-on as the shelf goes, once loaded, and whose it is. */
-  #dropMark: {
-    id: number;
-    src: string | null;
-    mark: HTMLElement | null;
-    loading: Promise<HTMLElement | null>;
-  } | null = null;
-  /** Which shelf showing is the latest: a drop waiting on a logo for an older one is dropped. */
-  #dropRound = 0;
   /** Which dossier draw is the latest: one whose pictures decode after another began is dropped. */
   #dossierRound = 0;
   /** The shelf's height (px), measured once a list opens or the window is resized, not at each
@@ -342,6 +333,7 @@ export class CollectorView {
   /** The game's video behind the case after a moment; Interface → Video previews. */
   previews = true;
   #dropTimer: ReturnType<typeof setTimeout> | undefined;
+  #landing: ReturnType<typeof setTimeout> | undefined;
   /** A video asked for, until it is stopped. */
   #video = false;
   /** Its video, stopped while the shelf is up: it plays again when the shelf goes. */
@@ -426,22 +418,16 @@ export class CollectorView {
       this.#videoHeld = true;
     }
     clearTimeout(this.#dropTimer);
-    const shown = this.selected;
-    if (shown) this.#prepareDropMark(shown);
-    const round = ++this.#dropRound;
-    const drop = (mark: HTMLElement | null) => {
-      if (round !== this.#dropRound || this.#left) return;
+    this.#dropTimer = setTimeout(() => {
       perfMark('drop');
-      this.#bootOnDrop(mark);
+      // The details faded in from the dark, a moment: opacity only, one layer.
+      this.root.classList.add('landing');
+      clearTimeout(this.#landing);
+      this.#landing = setTimeout(() => this.root.classList.remove('landing'), LAND_MS);
       this.root.classList.remove('browsing');
       if (!this.#videoHeld) return;
       this.#videoHeld = false;
       if (this.#game && !this.#left) this.#startVideo(this.#game);
-    };
-    this.#dropTimer = setTimeout(() => {
-      const mark = this.#dropMarkNow();
-      if (mark === undefined) void this.#dropMarkLate().then(drop);
-      else drop(mark);
     }, DROP_MS);
   }
 
@@ -553,8 +539,6 @@ export class CollectorView {
       perfMark('peek');
       const game = this.selected;
       if (!game) return;
-      // Its logo for the switch-on as the shelf goes, loading meanwhile.
-      this.#prepareDropMark(game);
       // Its colours first (worked out from a tiny picture), then the rest, a frame each: all at
       // once was one long frame on a Pi (measured: 80 ms), most of it the page restyling.
       this.#tintSelected(game);
@@ -740,57 +724,6 @@ export class CollectorView {
     if (game?.id !== id) return;
     this.#showSelected(true);
     this.#scan.refreshed(game, this.#pictures());
-  }
-
-  /**
-   * The game stopped at, switched on as the shelf goes: its logo (loaded while the shelf was
-   * still up), else its name, lit in a line of light over the screen, as after a scrape.
-   */
-  #bootOnDrop(mark: HTMLElement | null): void {
-    const game = this.selected;
-    if (!game || !mark) return;
-    // Its colour as set on the view (reading the computed style here would restyle it all).
-    const colour = this.root.style.getPropertyValue('--game').trim() || 'var(--neon)';
-    boot(this.root, mark, 0, { colour });
-  }
-
-  /**
-   * The switch-on's mark for the game stopped at, its logo waited for a moment more if it is
-   * still loading (the shelf stays till then): its name only when it has no logo at all, and
-   * nothing (no switch-on) when its logo would not load.
-   */
-  #dropMarkNow(): HTMLElement | null | undefined {
-    const game = this.selected;
-    if (!game) return null;
-    this.#prepareDropMark(game);
-    const pending = this.#dropMark!;
-    if (pending.mark) return pending.mark;
-    if (!pending.src) return el('span', { class: 'boot-name' }, game.name);
-    return undefined;
-  }
-
-  /** The logo still loading: waited for a moment, else no switch-on. */
-  async #dropMarkLate(): Promise<HTMLElement | null> {
-    const game = this.selected;
-    const pending = this.#dropMark;
-    if (!game || !pending || pending.id !== game.id) return null;
-    const late = new Promise<null>((done) => setTimeout(() => done(null), DROP_MARK_WAIT_MS));
-    const mark = await Promise.race([pending.loading, late]);
-    return this.selected?.id === game.id ? mark : null;
-  }
-
-  #prepareDropMark(game: Game): void {
-    if (this.#dropMark?.id === game.id) return;
-    const media = this.#options.media;
-    const src = media(game, 'wheel', 560) ?? media(game, 'marquee', 560);
-    const id = game.id;
-    const loading = bootMarkLoaded(src, game.name, 8000).then((mark) =>
-      mark.classList.contains('boot-logo') ? mark : null
-    );
-    this.#dropMark = { id, src, mark: null, loading };
-    void loading.then((mark) => {
-      if (this.#dropMark?.id === id) this.#dropMark.mark = mark;
-    });
   }
 
   /** The game switched on over the view: its logo, or its name, lit in a line of light. */
