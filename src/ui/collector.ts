@@ -303,6 +303,8 @@ export class CollectorView {
    * step: measuring right after a step's class change made the page work out all its styles
    * and layout in the key press. */
   #shelfH = 0;
+  /** The game whose colours are on the page. */
+  #tinted: number | null = null;
   /** Which draw of a game is the latest: one whose pictures load after another began is dropped. */
   #drawRound = 0;
   /** The game whose pictures are loading to replace the one shown, if any. */
@@ -923,15 +925,22 @@ export class CollectorView {
     this.#left = false;
     this.#game = game;
     this.#angle = 0;
-    this.root.style.removeProperty('--game');
+    // Its colours, unless they are on already (the peek put them on): taken off and put back,
+    // the label and all in them flashed the default colour in between.
+    if (this.#tinted !== game.id) {
+      this.root.style.removeProperty('--game');
+      this.#tinted = null;
+    }
     this.#tint(game);
-    // The label's only: the box sizes itself as its pictures load, so its own are always new.
-    const label = this.#showcase.querySelector('.slab-label');
-    if (label)
-      keepPictures(
-        label,
-        showcase.filter((p) => p.classList.contains('slab-label'))
-      );
+    // The label, already showing this game (it follows each step), is kept as it is: drawn
+    // again, the same, it flickered. Otherwise its pictures only are kept where the same: the
+    // box sizes itself as its own load, so they are always new.
+    const label = this.#showcase.querySelector<HTMLElement>('.slab-label');
+    const at = showcase.findIndex((p) => p.classList.contains('slab-label'));
+    if (label && at >= 0) {
+      if (!fresh && label.dataset.id === String(game.id)) showcase[at] = label;
+      else keepPictures(label, [showcase[at]!]);
+    }
     this.#showcase.replaceChildren(...showcase);
     // Followed the shelf already: kept as it is, not drawn again, nor faded in again (it
     // flickered as the shelf went).
@@ -1074,7 +1083,9 @@ export class CollectorView {
     if (!colour) return;
     const id = game.id;
     void colour.then((c) => {
-      if (c && this.#game?.id === id) this.root.style.setProperty('--game', c);
+      if (!c || this.#game?.id !== id) return;
+      this.root.style.setProperty('--game', c);
+      this.#tinted = id;
     });
   }
 
@@ -1095,7 +1106,9 @@ export class CollectorView {
     if (!colour) return;
     const id = game.id;
     void colour.then((c) => {
-      if (c && this.selected?.id === id) this.root.style.setProperty('--game', c);
+      if (!c || this.selected?.id !== id) return;
+      this.root.style.setProperty('--game', c);
+      this.#tinted = id;
     });
   }
 

@@ -519,6 +519,18 @@ describe('the Collector view', () => {
     }
   });
 
+  it('keeps the label as it is when the game it follows is drawn whole', async () => {
+    const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
+    vi.advanceTimersByTime(2100);
+    v.select(1);
+    const label = v.root.querySelector('.slab-label');
+    expect(label?.querySelector('.what strong')?.textContent).toBe('Doom');
+    await vi.advanceTimersByTimeAsync(2000);
+    // Drawn whole by now (its case is Doom's): the label not drawn again.
+    expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).toContain('media/2/');
+    expect(v.root.querySelector('.slab-label')).toBe(label);
+  });
+
   it("keeps the label's system logo through the steps, not a new one blinking in", async () => {
     const wide = vi.spyOn(HTMLImageElement.prototype, 'naturalWidth', 'get').mockReturnValue(96);
     const done = vi.spyOn(HTMLImageElement.prototype, 'complete', 'get').mockReturnValue(true);
