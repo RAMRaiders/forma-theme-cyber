@@ -4061,7 +4061,8 @@ kbd {
   grid-area: footage-start / case-start / story-end / dossier-end;
   position: absolute;
   z-index: 5;
-  inset: 0;
+  /* A little past the footage's top and the story's bottom: more of the list in sight. */
+  inset: -1.6rem 0;
   /* Every spine as long, about a box spine's own shape at the row's height (so a spine picture is
      hardly trimmed), in the middle of the shelf. A slimmer box's spines make it longer
      (collector.ts sets it then). */
@@ -4094,18 +4095,31 @@ kbd {
   z-index: 1;
   left: calc(var(--mid) - var(--spine-len) / 2 - 0.8rem);
   width: calc(var(--spine-len) + 1.6rem);
-  height: 18%;
+  /* Long and soft: the rows sink away gradually, no edge where the list ends. */
+  height: 30%;
   pointer-events: none;
 }
 
 .shelf::before {
   top: 0;
-  background: linear-gradient(180deg, rgb(3 5 11 / 88%), rgb(3 5 11 / 0%));
+  background: linear-gradient(
+    180deg,
+    rgb(3 5 11 / 97%) 0%,
+    rgb(3 5 11 / 80%) 25%,
+    rgb(3 5 11 / 40%) 60%,
+    rgb(3 5 11 / 0%) 100%
+  );
 }
 
 .shelf::after {
   bottom: 0;
-  background: linear-gradient(0deg, rgb(3 5 11 / 88%), rgb(3 5 11 / 0%));
+  background: linear-gradient(
+    0deg,
+    rgb(3 5 11 / 97%) 0%,
+    rgb(3 5 11 / 80%) 25%,
+    rgb(3 5 11 / 40%) 60%,
+    rgb(3 5 11 / 0%) 100%
+  );
 }
 
 /* The rows glide as one to bring the selected to the middle: the compositor's work. */
