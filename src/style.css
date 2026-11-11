@@ -933,7 +933,9 @@ main {
      logo across the top; its hardware, the console and its games in the middle (its games down
      beside its story too); its story, then its curiosities, along the foot. */
   grid-template-columns: minmax(0, 18rem) minmax(0, 1fr) minmax(0, 18rem);
-  grid-template-rows: auto minmax(0, 1fr) auto 3.4rem;
+  /* Every row a fixed height: the console stays put whatever the logo, the timeline or the
+     length of the text under it; text too long for its box scrolls inside it. */
+  grid-template-rows: 5.2rem minmax(0, 1fr) 7.6rem 3.4rem;
   grid-template-areas:
     'about life maker'
     'hardware console games'
