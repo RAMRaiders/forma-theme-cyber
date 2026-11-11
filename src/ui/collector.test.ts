@@ -283,7 +283,18 @@ describe('the Collector view', () => {
     expect(v.root.querySelector('.dossier .dump')?.getAttribute('aria-label')).toBe(
       'Verified by No-Intro'
     );
+    expect(text('.dossier .dump .badge .verdict')).toEqual(['Verified']);
     expect(dumpText(null)).toBeNull();
+    // A file more than one catalogue lists: a badge each, in a row.
+    const both = dumpText([
+      { status: 'verified', catalogue: 'no-intro', name: 'Sonic (World)', region: null },
+      { status: 'crcOnly', catalogue: 'redump', name: 'Sonic (Japan)', region: null }
+    ]);
+    expect([...both!.querySelectorAll('.badge')].map((b) => b.textContent)).toEqual([
+      'No-IntroVerified',
+      'RedumpCRC32 match'
+    ]);
+    expect(both!.querySelector('.listed')?.textContent).toBe('Sonic (World)');
     expect(
       dumpText({ status: 'notCatalogued', catalogue: null, name: null, region: null })?.textContent
     ).toBe('Not catalogued');
