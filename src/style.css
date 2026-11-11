@@ -4070,11 +4070,10 @@ kbd {
   /* Over the footage (collector.ts measures it), though the shelf spans the whole view. */
   --mid: 50%;
   overflow: hidden;
-  /* Near black round the spines and all the way left (the case's side: only the sneak peek
-     shows there, over it); to the right the dossier shows. */
+  /* Near black only round the spines; beyond it the screen shows, dimmed, as a sneak peek. */
   background: linear-gradient(
     90deg,
-    rgb(3 5 11 / 94%) 0,
+    transparent calc(var(--mid) - var(--spine-len) / 2 - 3rem),
     rgb(3 5 11 / 94%) calc(var(--mid) - var(--spine-len) / 2 - 0.8rem),
     rgb(3 5 11 / 94%) calc(var(--mid) + var(--spine-len) / 2 + 0.8rem),
     transparent calc(var(--mid) + var(--spine-len) / 2 + 3rem)
@@ -4159,24 +4158,17 @@ kbd {
   transition-duration: 120ms;
 }
 
-/* Left of the shelf while it shows: the selected game's picture, framed and a little shaded;
-   it goes with the shelf when the game's details come. */
+/* Where the case was, while the shelf shows: the selected game's picture on a TV of its console's
+   day, drawn (no pictures, no filters: the Pi); it goes with the shelf when the details come.
+   Everything is sized off the TV's width (cqw), so each set keeps its proportions. */
 .nav-pic {
   grid-area: footage-start / case-start / story-end / case-end;
   position: relative;
-  /* Over the shelf's dark, which hides the case's side (a long spine never reaches it). */
   z-index: 6;
   display: grid;
   place-items: center;
   padding: 1.2rem;
-  /* Its size, for the picture to fit itself in (collector.ts gives it its shape). */
   container-type: size;
-  /* Out to the screen's left edge. */
-  margin-left: calc(-1 * var(--safe));
-  padding-left: calc(1.2rem + var(--safe));
-  /* Dark, nothing behind showing through: only the sneak peek. It thins out on its right,
-     into the shelf's light. */
-  background: linear-gradient(90deg, rgb(2 4 9) 0 78%, rgb(2 4 9 / 0%) 100%);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -4191,24 +4183,7 @@ kbd {
   transition: opacity 120ms ease;
 }
 
-.nav-pic img {
-  grid-area: 1 / 1;
-  /* Nearly as big as the side, its own shape kept (the frame is the picture's), the fog round it. */
-  --ar: 1.33;
-  width: min(88cqw, 88cqh * var(--ar));
-  height: auto;
-  aspect-ratio: var(--ar);
-  border: 1px solid color-mix(in srgb, var(--game) 60%, transparent);
-  border-radius: 0.25rem;
-  box-shadow:
-    0 0 0 0.25rem rgb(4 7 15 / 85%),
-    0 0 0 calc(0.25rem + 1px) color-mix(in srgb, var(--game) 30%, transparent),
-    0 1rem 2rem rgb(0 0 0 / 60%);
-  /* A little shaded, over the fog: a preview, under the shelf's own light. No filter (the Pi). */
-  opacity: 0.85;
-}
-
-/* The case is put away while the shelf shows: the sneak peek has its side to itself. */
+/* The case is put away while the shelf shows: the TV stands in its place. */
 .collector.browsing .bay.case {
   opacity: 0;
   transition: opacity 120ms ease;
@@ -4220,7 +4195,302 @@ kbd {
   z-index: 5;
 }
 
-.nav-pic img.waiting {
+/* The set's width over its height, for it to fit the side whole. */
+.tv {
+  --tv-ar: 1.15;
+  --ar: 1.33;
+  position: relative;
+  width: min(92cqw, 92cqh * var(--tv-ar));
+  container-type: inline-size;
+}
+
+.tv-set {
+  position: relative;
+  display: grid;
+  gap: 3cqw;
+  padding: 4cqw;
+  border-radius: 3cqw;
+  box-shadow: 0 3cqw 6cqw rgb(0 0 0 / 65%);
+}
+
+.tv-screen {
+  position: relative;
+  display: grid;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  /* A CRT's tube bulges: its corners round off. */
+  border-radius: 7cqw / 6cqw;
+  background: radial-gradient(ellipse at 50% 45%, #1a2a30 0%, #060a0d 75%);
+  box-shadow:
+    0 0 0 1.4cqw #141518,
+    0 0 0 1.8cqw rgb(0 0 0 / 50%);
+}
+
+.tv-screen img {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* A little shaded: a preview. */
+  opacity: 0.88;
+}
+
+.tv-screen img.waiting {
+  visibility: hidden;
+}
+
+/* The glass: a curve of light across it, faint scan lines, darker towards its edges. */
+.tv-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(150deg, rgb(255 255 255 / 13%) 0%, rgb(255 255 255 / 0%) 32%),
+    repeating-linear-gradient(0deg, rgb(0 0 0 / 22%) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 55%) 100%);
+  box-shadow: inset 0 0 4cqw rgb(0 0 0 / 70%);
+  pointer-events: none;
+}
+
+.tv-panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 3cqw;
+}
+
+.tv-panel .grille {
+  flex: 1;
+  align-self: stretch;
+  border-radius: 0.8cqw;
+  background: repeating-linear-gradient(0deg, rgb(0 0 0 / 55%) 0 0.6cqw, transparent 0.6cqw 1.4cqw);
+}
+
+.tv-panel .knob {
+  flex: none;
+  width: 6cqw;
+  height: 6cqw;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #d9d9d9, #6e6e6e 45%, #2a2a2a 100%);
+  box-shadow: 0 0.5cqw 1cqw rgb(0 0 0 / 60%);
+}
+
+.tv-panel .led {
+  flex: none;
+  width: 1.6cqw;
+  height: 1.6cqw;
+  border-radius: 50%;
+  background: #ff3b30;
+  box-shadow: 0 0 1.5cqw #ff3b30;
+}
+
+/* Late '70s, early '80s: a wood-grain cabinet, the dials and the speaker beside the screen, on
+   short legs. */
+.tv[data-era='wood'] {
+  --tv-ar: 1.55;
+}
+
+.tv[data-era='wood'] .tv-set {
+  grid-template-columns: 1fr 20cqw;
+  border: 0.8cqw solid #2b1a0b;
+  background:
+    linear-gradient(180deg, rgb(255 220 170 / 14%), rgb(0 0 0 / 25%)),
+    repeating-linear-gradient(
+      93deg,
+      #5b3a1d 0 0.9cqw,
+      #6d4626 0.9cqw 1.7cqw,
+      #4d2f16 1.7cqw 2.2cqw,
+      #67421f 2.2cqw 3.4cqw
+    );
+}
+
+.tv[data-era='wood'] .tv-panel {
+  flex-direction: column;
+  justify-content: center;
+  padding: 2.5cqw 2cqw;
+  border-radius: 1cqw;
+  background: linear-gradient(180deg, #2a2a2a, #161616);
+  box-shadow: inset 0 0 0 0.4cqw #8c8c8c;
+}
+
+.tv[data-era='wood'] .tv-panel .knob {
+  order: -1;
+  width: 9cqw;
+  height: 9cqw;
+}
+
+.tv[data-era='wood'] .tv-panel .grille {
+  width: 100%;
+  min-height: 14cqw;
+}
+
+.tv[data-era='wood'] .tv-panel .led {
+  display: none;
+}
+
+.tv[data-era='wood']::before,
+.tv[data-era='wood']::after {
+  content: '';
+  position: absolute;
+  bottom: -4cqw;
+  width: 4cqw;
+  height: 5cqw;
+  border-radius: 0 0 1cqw 1cqw;
+  background: #22150a;
+}
+
+.tv[data-era='wood']::before {
+  left: 10cqw;
+}
+
+.tv[data-era='wood']::after {
+  right: 10cqw;
+}
+
+/* Late '80s: a beige-grey plastic set, a strip of grille and buttons under the screen. */
+.tv[data-era='beige'] {
+  --tv-ar: 1.12;
+}
+
+.tv[data-era='beige'] .tv-set {
+  grid-template-rows: auto 8cqw;
+  background: linear-gradient(180deg, #d8d1c3 0%, #bdb5a5 100%);
+  box-shadow:
+    inset 0 0.6cqw 0 rgb(255 255 255 / 45%),
+    inset 0 -0.8cqw 0 rgb(0 0 0 / 18%),
+    0 3cqw 6cqw rgb(0 0 0 / 65%);
+}
+
+.tv[data-era='beige'] .tv-screen {
+  box-shadow:
+    0 0 0 1.8cqw #3b3d42,
+    0 0 0 2.2cqw rgb(0 0 0 / 35%);
+}
+
+.tv[data-era='beige'] .tv-panel .grille {
+  background: repeating-linear-gradient(90deg, #8f8778 0 0.6cqw, transparent 0.6cqw 1.6cqw);
+}
+
+.tv[data-era='beige'] .tv-panel .knob {
+  width: 4.5cqw;
+  height: 4.5cqw;
+  border-radius: 0.8cqw;
+  background: linear-gradient(180deg, #a9a192, #807868);
+}
+
+/* The '90s: a black set, silver round the screen, grilles either side under it. */
+.tv[data-era='black'] {
+  --tv-ar: 1.14;
+}
+
+.tv[data-era='black'] .tv-set {
+  grid-template-rows: auto 7cqw;
+  border-radius: 4cqw;
+  background: linear-gradient(180deg, #2b2d33 0%, #15161a 100%);
+  box-shadow:
+    inset 0 0.5cqw 0 rgb(255 255 255 / 12%),
+    0 3cqw 6cqw rgb(0 0 0 / 65%);
+}
+
+.tv[data-era='black'] .tv-screen {
+  box-shadow:
+    0 0 0 1.2cqw #0b0c0e,
+    0 0 0 1.7cqw #8b8f97;
+}
+
+.tv[data-era='black'] .tv-panel .grille {
+  background: repeating-linear-gradient(90deg, #070708 0 0.7cqw, #26282d 0.7cqw 1.4cqw);
+}
+
+.tv[data-era='black'] .tv-panel .knob {
+  width: 3cqw;
+  height: 3cqw;
+  background: radial-gradient(circle at 35% 30%, #9da1a8, #3a3c41);
+}
+
+/* From 2000: a flat screen, wide, on a stand. */
+.tv[data-era='flat'] {
+  --tv-ar: 1.55;
+}
+
+.tv[data-era='flat'] .tv-set {
+  padding: 2.2cqw;
+  border-radius: 1.2cqw;
+  background: linear-gradient(180deg, #1c1d21, #0d0e10);
+  box-shadow:
+    inset 0 0 0 0.3cqw #3a3c42,
+    0 3cqw 6cqw rgb(0 0 0 / 65%);
+}
+
+.tv[data-era='flat'] .tv-screen {
+  aspect-ratio: 16 / 9;
+  border-radius: 0.4cqw;
+  background: #020304;
+  box-shadow: none;
+}
+
+.tv[data-era='flat'] .tv-screen::after {
+  background: linear-gradient(150deg, rgb(255 255 255 / 9%) 0%, rgb(255 255 255 / 0%) 35%);
+  box-shadow: none;
+}
+
+.tv[data-era='flat'] .tv-panel {
+  position: absolute;
+  left: 50%;
+  bottom: -6cqw;
+  width: 6cqw;
+  height: 5cqw;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #1a1b1f, #303238, #1a1b1f);
+}
+
+.tv[data-era='flat'] .tv-panel::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -1.2cqw;
+  width: 30cqw;
+  height: 1.6cqw;
+  border-radius: 0.8cqw 0.8cqw 0.3cqw 0.3cqw;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #34363c, #111215);
+}
+
+.tv[data-era='flat'] .tv-panel > * {
+  display: none;
+}
+
+/* Other systems: the picture in a plain frame, its own shape. */
+.tv[data-era='plain'] {
+  --tv-ar: var(--ar);
+}
+
+.tv[data-era='plain'] .tv-set {
+  padding: 0;
+  box-shadow: 0 1rem 2rem rgb(0 0 0 / 60%);
+}
+
+.tv[data-era='plain'] .tv-screen {
+  aspect-ratio: var(--ar);
+  border: 1px solid color-mix(in srgb, var(--game) 60%, transparent);
+  border-radius: 0.25rem;
+  box-shadow:
+    0 0 0 0.25rem rgb(4 7 15 / 85%),
+    0 0 0 calc(0.25rem + 1px) color-mix(in srgb, var(--game) 30%, transparent);
+}
+
+.tv[data-era='plain'] .tv-screen img {
+  object-fit: fill;
+}
+
+.tv[data-era='plain'] .tv-screen::after,
+.tv[data-era='plain'] .tv-panel {
+  display: none;
+}
+
+/* Nothing to show: no frame, for a plain one; a TV stays, its screen dark. */
+.tv.empty[data-era='plain'] {
   visibility: hidden;
 }
 

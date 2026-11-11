@@ -154,7 +154,9 @@ export class App {
       return {
         name: system.summary.fullname || name,
         logo: system.logoSmall,
-        dark: system.logoDark
+        dark: system.logoDark,
+        category: system.category,
+        released: system.released
       };
     },
     prepare: (items) => void this.forma.library.prepareMedia(items as never).catch(() => {})

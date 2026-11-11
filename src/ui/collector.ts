@@ -58,8 +58,17 @@ export interface CollectorOptions {
   company?: (name: string) => string | null;
   /** The game's colour, from a small picture of it. */
   accent?: (url: string) => Promise<string | null>;
-  /** A system's name and small logo (`dark`: it needs a light plate). */
-  system?: (name: string) => { name: string; logo: string | null; dark: boolean } | null;
+  /**
+   * A system's name and small logo (`dark`: it needs a light plate); its category and the year it
+   * came out pick the TV its games are previewed on.
+   */
+  system?: (name: string) => {
+    name: string;
+    logo: string | null;
+    dark: boolean;
+    category?: string;
+    released?: number | null;
+  } | null;
   prepare?: (items: { gameId: number; kind: Kind; width: number }[]) => void;
   /**
    * Plays a game's video, full screen under the page (Forma's player); `playing` once it shows.
@@ -238,8 +247,29 @@ export class CollectorView {
   #peek: ReturnType<typeof setTimeout> | undefined;
   /** When the fan art and the label last followed a held shelf. */
   #previewedAt = 0;
-  /** Left of the shelf while it shows: the selected game's picture, framed and shaded. */
-  readonly #navPic = el('div', { class: 'nav-pic', 'aria-hidden': 'true' });
+  /**
+   * Where the case was, while the shelf shows: the selected game's picture, on a TV of its
+   * console's day (a plain frame for other systems).
+   */
+  readonly #navScreen = el('div', { class: 'tv-screen' });
+  readonly #tv = el(
+    'div',
+    { class: 'tv empty' },
+    el(
+      'div',
+      { class: 'tv-set' },
+      this.#navScreen,
+      el(
+        'div',
+        { class: 'tv-panel' },
+        el('i', { class: 'grille' }),
+        el('i', { class: 'knob' }),
+        el('i', { class: 'knob' }),
+        el('i', { class: 'led' })
+      )
+    )
+  );
+  readonly #navPic = el('div', { class: 'nav-pic', 'aria-hidden': 'true' }, this.#tv);
   #navPicSrc: string | null = null;
   /** Which draw of a game is the latest: one whose pictures load after another began is dropped. */
   #drawRound = 0;
@@ -1047,26 +1077,31 @@ export class CollectorView {
    * the next one in once decoded, the last kept until then, so it never goes blank.
    */
   #navPicFor(game: Game): void {
+    const system = this.#options.system?.(game.system);
+    this.#tv.dataset.era = tvEra(system?.category, system?.released);
     const media = this.#options.media;
     const src =
       media(game, 'image', 400) ?? media(game, 'titleshot', 400) ?? media(game, 'thumbnail', 640);
     if (src === this.#navPicSrc) return;
     this.#navPicSrc = src;
-    this.#navPic.querySelectorAll('img.waiting').forEach((n) => n.remove());
+    const screen = this.#navScreen;
+    screen.querySelectorAll('img.waiting').forEach((n) => n.remove());
     if (!src) {
-      this.#navPic.replaceChildren();
+      screen.replaceChildren();
+      this.#tv.classList.add('empty');
       return;
     }
     const img = picture(src, 'waiting');
-    this.#navPic.append(img);
+    screen.append(img);
     const show = () => {
       if (!img.isConnected) return;
-      // Its own shape, for the frame to fit it (style.css).
+      // Its own shape, for a plain frame to fit it (style.css).
       if (img.naturalWidth && img.naturalHeight) {
-        img.style.setProperty('--ar', String(img.naturalWidth / img.naturalHeight));
+        this.#tv.style.setProperty('--ar', String(img.naturalWidth / img.naturalHeight));
       }
-      for (const old of [...this.#navPic.children]) if (old !== img) old.remove();
+      for (const old of [...screen.children]) if (old !== img) old.remove();
       img.classList.remove('waiting');
+      this.#tv.classList.remove('empty');
     };
     img.addEventListener(
       'load',
@@ -1551,6 +1586,19 @@ export class CollectorView {
     }
     if (items.length) prepare(items);
   }
+}
+
+/**
+ * The TV a console's games are previewed on, from the year it came out: a wood-grain set for the
+ * late '70s and early '80s, a beige one for the late '80s, a black one for the '90s, a flat screen
+ * after. Other systems (handhelds, computers…): `plain`, the picture in a frame.
+ */
+export function tvEra(category?: string, released?: number | null): string {
+  if (category !== 'consoles' || !released) return 'plain';
+  if (released < 1984) return 'wood';
+  if (released < 1993) return 'beige';
+  if (released < 2000) return 'black';
+  return 'flat';
 }
 
 /**

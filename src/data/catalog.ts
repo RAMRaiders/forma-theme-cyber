@@ -173,6 +173,8 @@ export interface CyberSystem {
   magazines: { src: string; title: string }[];
   /** Its controllers and add-ons, cut out. */
   peripherals: { src: string; name: string }[];
+  /** The year it first came out (its info's `released`), if known. */
+  released: number | null;
 }
 
 function categoryOf(system: SystemSummary, info?: SystemInfo): CategoryId | null {
@@ -186,9 +188,12 @@ const art = (system: string, file: string) => `./systems/${encodeURIComponent(sy
 function cyberSystem(
   summary: SystemSummary,
   category: CategoryId,
-  own: SystemArt | undefined
+  own: SystemArt | undefined,
+  info?: SystemInfo
 ): CyberSystem {
+  const year = /\b(19|20)\d\d\b/.exec(info?.specs?.released ?? '');
   return {
+    released: year ? Number(year[0]) : null,
     summary,
     category,
     logo: own?.logo ? art(summary.name, own.logo) : null,
@@ -221,7 +226,7 @@ export function group(
     const id = categoryOf(s, infos.get(s.name));
     if (!id) continue;
     const list = by.get(id) ?? [];
-    list.push(cyberSystem(s, id, arts[s.name]));
+    list.push(cyberSystem(s, id, arts[s.name], infos.get(s.name)));
     by.set(id, list);
   }
   return CATEGORIES.filter((c) => by.has(c.id)).map((category) => ({

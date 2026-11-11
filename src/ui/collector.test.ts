@@ -6,17 +6,18 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LazyList } from '../logic/pager.js';
 import {
-  CollectorView,
-  type ScreenArea,
   boxHeight,
-  shelfShape,
-  paginate,
+  CollectorView,
   dumpText,
-  releaseOf,
-  versionText,
   gradeOf,
   hueOf,
-  serial
+  paginate,
+  releaseOf,
+  serial,
+  shelfShape,
+  tvEra,
+  type ScreenArea,
+  versionText
 } from './collector.js';
 import type { Kind } from './stage.js';
 
@@ -852,5 +853,16 @@ describe('collector words', () => {
     expect(serial(game(42, 'X'))).toBe('SEGA32X-000042');
     expect(hue('After Burner')).toBe(hue('After Burner'));
     expect(hue('After Burner')).not.toBe(hue('Doom'));
+  });
+});
+
+describe('tvEra', () => {
+  it("picks a console's TV from the year it came out, a plain frame for anything else", () => {
+    expect(tvEra('consoles', 1977)).toBe('wood');
+    expect(tvEra('consoles', 1986)).toBe('beige');
+    expect(tvEra('consoles', 1994)).toBe('black');
+    expect(tvEra('consoles', 2001)).toBe('flat');
+    expect(tvEra('consoles', null)).toBe('plain');
+    expect(tvEra('handhelds', 1989)).toBe('plain');
   });
 });
