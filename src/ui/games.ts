@@ -4,6 +4,7 @@ import { span } from './perf.js';
 import type { LazyList } from '../logic/pager.js';
 import { el, remPx } from './dom.js';
 import { Scan } from './scan.js';
+import { boot, bootMark } from './boot.js';
 import { STAGE_PICTURES, Stage, type StageOptions } from './stage.js';
 
 /** Row height in rem; rows are positioned by index, so only visible ones exist. */
@@ -48,7 +49,14 @@ export class GamesView {
   #pending = false;
 
   /** Over the selected game while the scraper is on it. */
-  readonly #scan = new Scan();
+  /** A scrape's new data in: shown by the game's boot, as on entering its list. */
+  readonly #scan = new Scan((id) => {
+    const game = this.selected;
+    return game?.id === id && this.#boot(game) > 0;
+  });
+  /** The system whose games were shown last, and whether the list has left the screen since. */
+  #shownSystem: string | null = null;
+  #away = true;
 
   constructor(options: StageOptions) {
     this.#options = options;
@@ -74,6 +82,20 @@ export class GamesView {
     this.#spacer.style.height = `${source.total * ROW_REM}rem`;
     this.#selected = -1;
     this.select(selected);
+    // Into a system's games (from the systems, or another system's): switched on, as a system is.
+    const now = source.get(selected);
+    if (now && (this.#away || now.system !== this.#shownSystem)) this.#boot(now);
+    this.#away = false;
+    this.#shownSystem = now?.system ?? null;
+  }
+
+  /** The game switched on over the view: its logo, or its name, lit in a line of light. */
+  #boot(game: Game): number {
+    const media = this.#options.media;
+    return boot(
+      this.root,
+      bootMark(media(game, 'wheel', 560) ?? media(game, 'marquee', 560), game.name)
+    );
   }
 
   get selected(): Game | undefined {
@@ -262,6 +284,7 @@ export class GamesView {
   }
 
   leave(): void {
+    this.#away = true;
     clearTimeout(this.#detailTimer);
     clearTimeout(this.#prepareTimer);
     this.#stage.clear();
@@ -269,6 +292,7 @@ export class GamesView {
 
   /** Back on the list after a game: the selected game's stage again. */
   resume(): void {
+    this.#away = false;
     if (this.#source) this.#showDetail();
   }
 }

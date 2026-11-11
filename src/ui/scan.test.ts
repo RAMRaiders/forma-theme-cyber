@@ -59,8 +59,8 @@ describe('the scan over a game being scraped', () => {
     const scan = new Scan();
     scan.progress(status(), game);
     scan.progress(status({ running: false, current: null, done: 1, found: 1 }), game);
-    // The library is slow to notice the new files: still waiting, however long.
-    await vi.advanceTimersByTimeAsync(15000);
+    // The library is slow to notice the new files: still waiting, a while.
+    await vi.advanceTimersByTimeAsync(6000);
     expect(scan.root.classList.contains('reveal')).toBe(false);
     let loaded = () => {};
     const backdrop = {
@@ -72,6 +72,31 @@ describe('the scan over a game being scraped', () => {
     loaded();
     await vi.advanceTimersByTimeAsync(0);
     expect(scan.root.classList.contains('reveal')).toBe(true);
+  });
+
+  it('never hangs: without a redraw, or with pictures that never load, it shows the game', async () => {
+    const scan = new Scan();
+    scan.progress(status(), game);
+    scan.progress(status({ running: false, current: null, done: 1, found: 1 }), game);
+    await vi.advanceTimersByTimeAsync(8000);
+    expect(scan.root.classList.contains('reveal')).toBe(true);
+    const stuck = new Scan();
+    stuck.progress(status(), game);
+    stuck.progress(status({ running: false, current: null, done: 1, found: 1 }), game);
+    stuck.shown(7, [{ decode: () => new Promise<void>(() => {}) } as unknown as HTMLImageElement]);
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(stuck.root.classList.contains('reveal')).toBe(true);
+  });
+
+  it("hands the reveal to the view's own (the game's boot), then goes at once", async () => {
+    const revealed: number[] = [];
+    const scan = new Scan((id) => (revealed.push(id), true));
+    scan.progress(status(), game);
+    scan.progress(status({ running: false, current: null, done: 1, found: 1 }), game);
+    scan.shown(7, []);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(revealed).toEqual([7]);
+    expect(scan.root.hidden).toBe(true);
   });
 
   it('covers a game whose pictures were just saved until the new ones have loaded', async () => {

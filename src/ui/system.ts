@@ -14,6 +14,7 @@ import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
 import { preload, ready } from './preload.js';
 import { awake } from './rest.js';
+import { boot } from './boot.js';
 
 /**
  * Words that take turns stay as long as they take to read from a sofa: a moment to look over,
@@ -44,8 +45,6 @@ const HELD_MS = 130;
 const SETTLE_MS = 600;
 /** How long the last page takes to fade under the next (as in style.css). */
 const PAGE_LEAVE_MS = 380;
-/** The power-on over a system's page: the line, the picture opening, the logo, the fade. */
-const BOOT_MS = 1500;
 /** How long each of its shelves (best sellers, magazines, peripherals) stays. */
 const SHELF_MS = 9000;
 /** The system's colours: a page keeps its own while it fades out. */
@@ -680,24 +679,13 @@ export class SystemView {
    * (just moved), the screen stays dark under it and the light comes as the strip goes.
    */
   #boot(system: CyberSystem): number {
-    for (const old of this.#panel.querySelectorAll('.boot')) old.remove();
-    if (document.documentElement.dataset.motion === 'off') return 0;
     const logo = logoImage(system, 'boot-logo', true);
     const name = el('span', { class: 'boot-name' }, system.summary.fullname || system.summary.name);
     logo?.addEventListener('error', () => logo.replaceWith(name));
-    const boot = el(
-      'div',
-      { class: 'boot', 'aria-hidden': 'true' },
-      el('span', { class: 'beam' }),
-      el('div', { class: 'boot-mark' }, logo ?? name)
-    );
     const wait = this.root.classList.contains('browsing')
       ? Math.max(0, DROP_MS - (performance.now() - this.#steppedAt))
       : 0;
-    boot.style.setProperty('--boot-wait', `${Math.round(wait)}ms`);
-    this.#panel.append(boot);
-    setTimeout(() => boot.remove(), wait + BOOT_MS);
-    return wait + BOOT_MS;
+    return boot(this.#panel, logo ?? name, wait);
   }
 
   /**

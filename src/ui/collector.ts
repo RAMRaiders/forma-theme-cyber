@@ -8,6 +8,7 @@ import { DEFAULT_BACK, DEFAULT_FRONT, hue } from './cover.js';
 import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
 import { Scan } from './scan.js';
+import { boot, bootMark } from './boot.js';
 import {
   ARCADE,
   type Achievements,
@@ -212,7 +213,11 @@ export class CollectorView {
   readonly #showcase = el('section', { class: 'showcase' });
   readonly #dossier = el('aside', { class: 'dossier' });
   /** Over it all while the scraper is on the selected game. */
-  readonly #scan = new Scan();
+  /** A scrape's new data in: shown by the game's boot, as on entering its list. */
+  readonly #scan = new Scan((id) => {
+    const game = this.#game;
+    return game?.id === id && this.#boot(game) > 0;
+  });
   readonly #options: CollectorOptions;
   #rows = new Map<number, HTMLElement>();
   #source: LazyList<Game> | null = null;
@@ -287,6 +292,8 @@ export class CollectorView {
       this.#sizeShelf(now.system, source, selected);
     }
     const same = !!now && !!this.#box && this.#game?.id === now.id && !this.#left;
+    // Into a system's games (from the systems, or another system's): switched on, as a system is.
+    const entering = !!now && !same && (this.#left || this.#game?.system !== now.system);
     this.select(selected, same);
     if (same && now) this.#update(now);
     else {
@@ -295,6 +302,7 @@ export class CollectorView {
       clearTimeout(this.#labelTimer);
       clearTimeout(this.#peek);
       this.#showSelected();
+      if (entering && now) this.#boot(now);
     }
     requestAnimationFrame(() => this.#track.classList.remove('still'));
   }
@@ -570,6 +578,15 @@ export class CollectorView {
     if (game?.id !== id) return;
     this.#showSelected(true);
     this.#scan.refreshed(game, this.#pictures());
+  }
+
+  /** The game switched on over the view: its logo, or its name, lit in a line of light. */
+  #boot(game: Game): number {
+    const media = this.#options.media;
+    return boot(
+      this.root,
+      bootMark(media(game, 'wheel', 560) ?? media(game, 'marquee', 560), game.name)
+    );
   }
 
   /** Every picture it shows now: behind it, its case, its dossier. */
