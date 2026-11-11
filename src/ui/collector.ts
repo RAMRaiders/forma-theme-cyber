@@ -1223,7 +1223,7 @@ export class CollectorView {
     // The ROM's own name first (it is the copy at hand), the scraper's data after.
     // The catalogue's name first (the dump it is), the file's after, the scraper's last.
     const rom = gameTags(game);
-    const tags = releaseOf(rom.version);
+    const tags = releaseOf(rom.version, rom.status);
     const regions = rom.regions.length ? rom.regions : codes(game.region);
     const languages = rom.languages.length ? rom.languages : codes(game.lang);
     const company = (name: string | null) => {
@@ -1260,11 +1260,11 @@ export class CollectorView {
       row('Genre', game.genre),
       row('Region', flags(flaggedRegions(regions), REGIONS, regionFlag)),
       // A hack or a homebrew game with no version is no "original release".
-      // What kind of release (the original, a prototype, a demo…), then its number apart. A
-      // hack or a homebrew game with neither is no "original release".
-      row('Release', tags.kind || !rom.status ? (tags.kind ?? 'Original') : null),
+      // What kind of release (the original, a prototype, a demo, homebrew, unlicensed…), then
+      // its number apart. A hack or a translation is no "original release": its status says.
+      row('Release', tags.kind || !tags.status ? (tags.kind ?? 'Original') : null),
       row('Version', tags.number),
-      row('Status', rom.status && versionText(rom.status)),
+      row('Status', tags.status && versionText(tags.status)),
       // By its version and status: a translation's language reads next to it.
       row('Languages', flags(languages, LANGUAGES, languageFlag)),
       // Whether the file is the dump No-Intro or Redump lists, once Forma has checked it.
@@ -1550,8 +1550,20 @@ function flagChip(name: string, flag: string | null): HTMLElement {
  * `Demo`…; `null` for the release itself) and its number (`Proto 2` → `2`, `v1.1` → `1.1`,
  * `Rev A` → `Revision A`).
  */
-export function releaseOf(version: string | null): { kind: string | null; number: string | null } {
+export function releaseOf(
+  version: string | null,
+  status: string | null = null
+): { kind: string | null; number: string | null; status: string | null } {
   const kinds: string[] = [];
+  // Released that way (homebrew, unlicensed, a pirate cart) is a kind of release; changed
+  // after (a hack, a translation) stays a status.
+  const changed: string[] = [];
+  const released: string[] = [];
+  for (const part of status?.split(' · ') ?? []) {
+    if (/^(unl|unlicensed|pirate|bootleg|aftermarket|homebrew)$/i.test(part)) {
+      released.push(versionWords(part));
+    } else changed.push(part);
+  }
   const numbers: string[] = [];
   for (const part of version?.split(' · ') ?? []) {
     const kind = /^(proto(?:type)?|alpha|beta|demo|sample|kiosk|promo|debug)\s*(\d+)?$/i.exec(part);
@@ -1573,7 +1585,7 @@ export function releaseOf(version: string | null): { kind: string | null; number
     numbers.push(versionWords(part));
   }
   const once = (list: string[]) => (list.length ? [...new Set(list)].join(' · ') : null);
-  return { kind: once(kinds), number: once(numbers) };
+  return { kind: once([...kinds, ...released]), number: once(numbers), status: once(changed) };
 }
 
 export function versionText(version: string | null): string {

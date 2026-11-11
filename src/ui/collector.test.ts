@@ -290,13 +290,18 @@ describe('the Collector view', () => {
   });
 
   it('takes the release kind and its number apart', () => {
-    expect(releaseOf(null)).toEqual({ kind: null, number: null });
-    expect(releaseOf('Proto 1')).toEqual({ kind: 'Prototype', number: '1' });
-    expect(releaseOf('Beta')).toEqual({ kind: 'Beta', number: null });
-    expect(releaseOf('Demo · Rev 1')).toEqual({ kind: 'Demo', number: 'Revision 1' });
-    expect(releaseOf('v1.1')).toEqual({ kind: null, number: '1.1' });
-    expect(releaseOf('Kiosk')).toEqual({ kind: 'Kiosk demo', number: null });
-    expect(releaseOf('Alt 2')).toEqual({ kind: null, number: 'Alternate 2' });
+    expect(releaseOf(null)).toEqual({ kind: null, number: null, status: null });
+    expect(releaseOf('Proto', 'Unl · Hack')).toEqual({
+      kind: 'Prototype · Unlicensed',
+      number: null,
+      status: 'Hack'
+    });
+    expect(releaseOf('Proto 1')).toEqual({ kind: 'Prototype', number: '1', status: null });
+    expect(releaseOf('Beta')).toEqual({ kind: 'Beta', number: null, status: null });
+    expect(releaseOf('Demo · Rev 1')).toEqual({ kind: 'Demo', number: 'Revision 1', status: null });
+    expect(releaseOf('v1.1')).toEqual({ kind: null, number: '1.1', status: null });
+    expect(releaseOf('Kiosk')).toEqual({ kind: 'Kiosk demo', number: null, status: null });
+    expect(releaseOf('Alt 2')).toEqual({ kind: null, number: 'Alternate 2', status: null });
   });
 
   it("says the dump's version in words", () => {
@@ -336,14 +341,17 @@ describe('the Collector view', () => {
       return Object.fromEntries(labels.map((label, i) => [label, values[i]]));
     };
     const both = await rows('Tanglewood (World) (v1.1) (Aftermarket) (Unl).md');
-    // Homebrew: no "original release", its own version.
-    expect(both['Release']).toBeUndefined();
+    // Homebrew and unlicensed are how it was released.
+    expect(both['Release']).toBe('Homebrew · Unlicensed');
     expect(both['Version']).toBe('1.1');
-    expect(both['Status']).toBe('Homebrew · Unlicensed');
+    expect(both['Status']).toBeUndefined();
     const noVersion = await rows('Tanglewood (World) (Aftermarket) (Unl).md');
-    expect(noVersion['Release']).toBeUndefined();
+    expect(noVersion['Release']).toBe('Homebrew · Unlicensed');
     expect(noVersion['Version']).toBeUndefined();
-    expect(noVersion['Status']).toBe('Homebrew · Unlicensed');
+    expect(noVersion['Status']).toBeUndefined();
+    // A hack is no release of its own: its status says.
+    const hack = await rows('Tanglewood (USA) [h1].md');
+    expect([hack['Release'], hack['Status']]).toEqual([undefined, 'Hack']);
     const plain = await rows('Tanglewood (USA).md');
     expect(plain['Release']).toBe('Original');
     expect(plain['Version']).toBeUndefined();
