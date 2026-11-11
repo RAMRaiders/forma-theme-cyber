@@ -3,7 +3,7 @@ import { span } from './perf.js';
 
 import type { LazyList } from '../logic/pager.js';
 import { ageRatings, asPegi } from '../logic/agerating.js';
-import { flaggedRegions, languageFlag, regionFlag, romName } from '../logic/romname.js';
+import { flaggedRegions, languageFlag, regionFlag, gameTags } from '../logic/romname.js';
 import { DEFAULT_BACK, DEFAULT_FRONT, hue } from './cover.js';
 import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
@@ -1221,7 +1221,8 @@ export class CollectorView {
     const row = (label: string, value: string | HTMLElement | null | undefined) =>
       value ? el('div', {}, el('dt', {}, label), el('dd', {}, value)) : null;
     // The ROM's own name first (it is the copy at hand), the scraper's data after.
-    const rom = romName(game.path);
+    // The catalogue's name first (the dump it is), the file's after, the scraper's last.
+    const rom = gameTags(game);
     const regions = rom.regions.length ? rom.regions : codes(game.region);
     const languages = rom.languages.length ? rom.languages : codes(game.lang);
     const company = (name: string | null) => {
@@ -1501,7 +1502,7 @@ function pegiMark(game: ShowGame): HTMLElement {
 
 /** The game's regions in words, from its ROM's name first, else the gamelist's. */
 function regionLine(game: Game): string | null {
-  const rom = romName(game.path).regions;
+  const rom = gameTags(game).regions;
   const list = rom.length ? rom : codes(game.region);
   return list.length ? names(list.join(','), REGIONS) : null;
 }
@@ -1542,9 +1543,16 @@ function versionWords(version: string): string {
   if (rev) return `Revision ${rev[1]!.toUpperCase()}`;
   const v = /^v\s*([\d.]+\w*)$/i.exec(version);
   if (v) return `Version ${v[1]}`;
+  const numbered = /^(proto|prototype|beta|alpha|demo)\s*(\d+)$/i.exec(version);
+  if (numbered) return `${versionWords(numbered[1]!)} ${numbered[2]}`;
   const words: Record<string, string> = {
     proto: 'Prototype',
+    prototype: 'Prototype',
+    alpha: 'Alpha',
     beta: 'Beta',
+    kiosk: 'Kiosk demo',
+    promo: 'Promotional',
+    debug: 'Debug build',
     demo: 'Demo',
     sample: 'Sample',
     unl: 'Unlicensed',
@@ -1640,11 +1648,21 @@ export function dumpText(dump: Game['dump'] | undefined): HTMLElement | null {
     dump.catalogue === 'redump' ? 'Redump' : dump.catalogue === 'no-intro' ? 'No-Intro' : '';
   const [text, kind] =
     dump.status === 'verified'
-      ? [`Verified · ${catalogue}`, 'verified']
+      ? ['Verified', 'verified']
       : dump.status === 'crcOnly'
-        ? [`CRC32 match · ${catalogue}`, 'doubtful']
+        ? ['CRC32 match', 'doubtful']
         : dump.status === 'badDump'
-          ? [`Bad dump · ${catalogue}`, 'doubtful']
+          ? ['Bad dump', 'doubtful']
           : ['Not catalogued', 'unknown'];
-  return el('span', { class: `dump ${kind}`, title: dump.name ?? '' }, text);
+  // The catalogue as its seal, the verdict by it; the catalogue's own name for it on hover.
+  return el(
+    'span',
+    {
+      class: `dump ${kind}`,
+      title: dump.name ?? '',
+      'aria-label': catalogue ? `${text} by ${catalogue}` : text
+    },
+    catalogue ? el('span', { class: `seal ${dump.catalogue}` }, catalogue) : null,
+    el('span', { class: 'verdict' }, text)
+  );
 }

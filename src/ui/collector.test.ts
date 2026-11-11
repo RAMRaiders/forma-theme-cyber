@@ -270,7 +270,11 @@ describe('the Collector view', () => {
       }
     ]);
     const dt = text('.dossier .specs dt');
-    expect(text('.dossier .specs dd')[dt.indexOf('Dump')]).toBe('Verified · No-Intro');
+    expect(text('.dossier .specs dd')[dt.indexOf('Dump')]).toBe('No-IntroVerified');
+    expect(text('.dossier .dump .seal')).toEqual(['No-Intro']);
+    expect(v.root.querySelector('.dossier .dump')?.getAttribute('aria-label')).toBe(
+      'Verified by No-Intro'
+    );
     expect(v.root.querySelector('.dossier .dump.verified')?.getAttribute('title')).toBe(
       'After Burner (USA)'
     );
@@ -284,6 +288,8 @@ describe('the Collector view', () => {
     expect(versionText(null)).toBe('Original release');
     expect(versionText('Rev 1')).toBe('Revision 1');
     expect(versionText('Rev a')).toBe('Revision A');
+    expect(versionText('Proto 2')).toBe('Prototype 2');
+    expect(versionText('Kiosk')).toBe('Kiosk demo');
     expect(versionText('v1.1')).toBe('Version 1.1');
     expect(versionText('Proto')).toBe('Prototype');
     expect(versionText('Beta 2')).toBe('Beta 2');

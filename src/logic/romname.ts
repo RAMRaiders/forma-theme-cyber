@@ -75,7 +75,7 @@ const languageCode = (tag: string) => {
   return code === 'pt-br' ? code : code.slice(0, 2);
 };
 const VERSION =
-  /^(rev\s*[\w.]+|v\s?\d[\w.]*|beta(\s*\d+)?|proto(type)?(\s*\d+)?|demo|sample|alt(\s*\d+)?)$/i;
+  /^(rev\s*[\w.]+|v\s?\d[\w.]*|alpha(\s*\d+)?|beta(\s*\d+)?|proto(type)?(\s*\d+)?|demo(\s*\d+)?|sample|kiosk|promo|debug|alt(\s*\d+)?)$/i;
 const STATUS = /^(unl|unlicensed|pirate|bootleg|aftermarket|homebrew|hack)$/i;
 
 /** GoodTools' square brackets, those that say a copy is not the official release. */
@@ -210,4 +210,30 @@ export function regionFlag(code: string): string | null {
 export function languageFlag(code: string): string | null {
   const file = LANGUAGE_FLAGS[code.toLowerCase()];
   return file && FLAGS.has(file) ? `./flags/${file}.svg` : null;
+}
+
+/** What a catalogue (No-Intro, Redump) calls a game's file, once Forma has matched it. */
+export interface Catalogued {
+  path: string;
+  dump?: { status: string; name: string | null } | null;
+}
+
+/**
+ * A game's tags, from the best source first: the catalogue's name when Forma matched its file to
+ * a No-Intro or Redump entry (it is the dump's own name, whatever the file is called), then the
+ * file's name for what that leaves out. Matched, its version and status are the catalogue's
+ * alone: none there means the original release, whatever the file says.
+ */
+export function gameTags(game: Catalogued): RomName & { fromCatalogue: boolean } {
+  const file = romName(game.path);
+  const name = game.dump && game.dump.status !== 'notCatalogued' ? game.dump.name : null;
+  if (!name) return { ...file, fromCatalogue: false };
+  const listed = romName(name);
+  return {
+    regions: listed.regions.length ? listed.regions : file.regions,
+    languages: listed.languages.length ? listed.languages : file.languages,
+    version: listed.version,
+    status: listed.status,
+    fromCatalogue: true
+  };
 }
