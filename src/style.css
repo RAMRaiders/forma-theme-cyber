@@ -4958,7 +4958,7 @@ kbd {
   flex-direction: column;
   align-items: stretch;
   min-width: 6.2em;
-  border: 1px solid var(--dump);
+  border: 1px solid color-mix(in srgb, var(--dump) 45%, transparent);
   clip-path: polygon(
     0 0,
     calc(100% - 0.5em) 0,
@@ -4967,19 +4967,20 @@ kbd {
     0.5em 100%,
     0 calc(100% - 0.5em)
   );
-  background: color-mix(in srgb, var(--dump) 8%, transparent);
+  background: rgb(255 255 255 / 4%);
   text-align: center;
 }
 
+/* Verified: a soft, light green; doubtful: a muted amber. */
 .dossier .dump .badge.verified {
-  --dump: var(--neon);
+  --dump: #9be3b4;
 }
 
 .dossier .dump .badge.doubtful {
-  --dump: #ffb547;
+  --dump: #e8c27e;
 }
 
-/* The catalogue's name: the badge's lit top band. */
+/* The catalogue's name: the badge's quiet top band. */
 .dossier .dump .seal {
   padding: 0.18em 0.6em 0.12em;
   font-family: var(--mono);
@@ -4987,27 +4988,16 @@ kbd {
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #04060c;
-  background: var(--dump);
+  color: rgb(235 242 250 / 88%);
+  background: rgb(255 255 255 / 9%);
 }
 
-/* Its verdict under it, with a lit dot. */
+/* Its verdict under it, in its colour. */
 .dossier .dump .verdict {
   padding: 0.2em 0.6em 0.22em;
   font-size: 0.78em;
   color: var(--dump);
   white-space: nowrap;
-}
-
-.dossier .dump .verdict::before {
-  content: '';
-  display: inline-block;
-  width: 0.45em;
-  height: 0.45em;
-  margin-right: 0.35em;
-  border-radius: 50%;
-  vertical-align: 0.08em;
-  background: var(--dump);
 }
 
 /* The catalogue's name for the dump, under the badges: small, one line. */
