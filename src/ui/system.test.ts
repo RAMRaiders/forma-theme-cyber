@@ -159,9 +159,9 @@ describe('a logo in the column', () => {
 
   describe('makerHeight', () => {
     it('gives a square emblem the area of a wordmark', () => {
-      expect(makerHeight(3)).toBeCloseTo(1.7, 1);
-      expect(makerHeight(0.91)).toBeGreaterThan(3);
-      expect(makerHeight(0.5)).toBe(3.2);
+      expect(makerHeight(3)).toBeCloseTo(1.9, 1);
+      expect(makerHeight(0.91)).toBeGreaterThan(3.4);
+      expect(makerHeight(0.5)).toBe(3.6);
       expect(makerHeight(8)).toBe(1.7);
     });
   });

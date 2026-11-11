@@ -879,13 +879,46 @@ function makerMark(maker: string | null | undefined, logos: readonly string[]): 
   return makers;
 }
 
+let deckId = 0;
+
+/**
+ * The floor's still lines, running from the front to where they would meet (the vanishing point,
+ * a seventh of the floor's depth above its horizon): drawn once, in the system's colour, fading
+ * toward the horizon, the front and the sides.
+ */
+function deckRays(): string {
+  const id = `deck-fade-${++deckId}`;
+  // The floor box as 320 × 46; its front line spans 640 wide at the bottom, centred.
+  const vy = -46 / 7;
+  const rays: string[] = [];
+  for (let k = 0; k <= 16; k++) {
+    const x = -160 + 40 * k;
+    const side = Math.max(0, 1 - Math.abs(x - 160) / 220);
+    if (side <= 0) continue;
+    rays.push(
+      `<line x1="160" y1="${vy.toFixed(2)}" x2="${x}" y2="46" stroke-opacity="${side.toFixed(2)}"/>`
+    );
+  }
+  return (
+    `<svg class="rays" viewBox="0 0 320 46" preserveAspectRatio="none">` +
+    `<defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="46">` +
+    `<stop offset="0" style="stop-color: rgb(var(--sys-rgb)); stop-opacity: 0.15"/>` +
+    `<stop offset="0.45" style="stop-color: rgb(var(--sys-rgb)); stop-opacity: 0.6"/>` +
+    `<stop offset="1" style="stop-color: rgb(var(--sys-rgb)); stop-opacity: 0"/>` +
+    `</linearGradient></defs>` +
+    `<g stroke="url(#${id})" stroke-width="1.5" vector-effect="non-scaling-stroke" fill="none">` +
+    rays.join('') +
+    `</g></svg>`
+  );
+}
+
 /**
  * How tall a maker's logo stands in the corner, in rem, for its width over its height: about the
- * same area for every one (SEGA's, 3:1 at 1.7rem), so a square emblem (Atari's) is not a speck
- * beside a wordmark; 1.7rem to 3.2rem.
+ * same area for every one (SEGA's, 3:1 at 1.9rem), so a square emblem (Atari's) is not a speck
+ * beside a wordmark; 1.7rem to 3.6rem.
  */
 export function makerHeight(aspect: number): number {
-  return Math.min(3.2, Math.max(1.7, Math.sqrt(8.7 / aspect)));
+  return Math.min(3.6, Math.max(1.7, Math.sqrt(11 / aspect)));
 }
 
 /** A system's logo; a dark one gets a light halo; none (or a broken file) leaves nothing. */
@@ -929,7 +962,10 @@ function stage(system: CyberSystem, name: string): HTMLElement {
   // A console on its own (no backdrop of its photo's) stands on a floor: a neon grid running
   // toward the player.
   if (system.photoKind === 'cutout') {
-    box.append(el('div', { class: 'deck', 'aria-hidden': 'true' }, el('div', { class: 'grid' })));
+    const deck = el('div', { class: 'deck', 'aria-hidden': 'true' });
+    deck.innerHTML = deckRays();
+    for (let i = 0; i < 6; i++) deck.append(el('div', { class: 'cross' }));
+    box.append(deck);
   }
   return box;
 }
