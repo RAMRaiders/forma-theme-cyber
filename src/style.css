@@ -937,7 +937,7 @@ main {
   grid-template-areas:
     'about life maker'
     'hardware console games'
-    '. reading games'
+    'tally reading games'
     'fact fact fact';
   gap: 1.4rem 2.6rem;
   --pad-x: 2.6rem;
@@ -1040,10 +1040,11 @@ main {
   content: '';
   position: absolute;
   z-index: -2;
-  inset: -1.4rem 0 0;
+  /* Up behind the timeline too, fading in from nothing there: no edge under it. */
+  inset: -9rem 0 0;
   background:
-    radial-gradient(ellipse 30% 85% at 50% 0%, rgb(255 255 255 / 11%), transparent 72%),
-    radial-gradient(ellipse 45% 70% at 50% 10%, rgb(var(--sys-rgb) / 12%), transparent 75%);
+    radial-gradient(ellipse 30% 50% at 50% 45%, rgb(255 255 255 / 10%), transparent),
+    radial-gradient(ellipse 48% 50% at 50% 45%, rgb(var(--sys-rgb) / 12%), transparent);
   pointer-events: none;
 }
 
@@ -1322,6 +1323,48 @@ main {
   color: #fff;
 }
 
+/* The bottom-left corner: its generation and how many were sold, side by side. */
+.system-panel .tally {
+  grid-area: tally;
+  align-self: end;
+  display: flex;
+  gap: 1.6rem;
+  margin: 0;
+}
+
+.system-panel .tally .cell {
+  position: relative;
+  padding-left: 0.7rem;
+}
+
+.system-panel .tally .cell::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.15rem;
+  bottom: 0.15rem;
+  width: 2px;
+  background: rgb(var(--sys2-rgb));
+  box-shadow: 0 0 0.4rem rgb(var(--sys2-rgb) / 45%);
+}
+
+.system-panel .tally dt {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.system-panel .tally dd {
+  margin: 0.25rem 0 0;
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: #fff;
+}
+
 /* Right of the console, in turn: its games (each its cartridge or disc with its name beside
    it), magazines about it, its peripherals. All in the same place, one showing at a time. */
 .system-panel .rotator {
@@ -1423,7 +1466,7 @@ main {
   overflow: hidden;
   padding-top: 0.25rem;
   text-align: center;
-  font-size: 0.72rem;
+  font-size: 0.6rem;
   line-height: 1.3;
   color: #fff;
 }
@@ -1470,6 +1513,9 @@ main {
 /* Its life: launch, abroad, the end, evenly along a lit line, the years over it. */
 .system-panel .life {
   grid-area: life;
+  align-self: center;
+  position: relative;
+  z-index: 1;
   min-width: 0;
 }
 
@@ -1517,9 +1563,7 @@ main {
   height: 0.7rem;
   border-radius: 50%;
   background: var(--sys);
-  box-shadow:
-    0 0 0 0.2rem rgb(4 6 12),
-    0 0 0.8rem var(--sys);
+  box-shadow: 0 0 0.8rem var(--sys);
 }
 
 .system-panel .life li:last-child .dot {

@@ -192,7 +192,8 @@ function makerRgb(maker: string): string | null {
 }
 
 /** The parts of the stage that change together when the selection moves. */
-type Slot = 'about' | 'maker' | 'life' | 'hardware' | 'console' | 'games' | 'reading' | 'fact';
+type Slot =
+  'about' | 'maker' | 'life' | 'hardware' | 'tally' | 'console' | 'games' | 'reading' | 'fact';
 
 /**
  * A category's systems: a strip of logos over the middle while moving, kept centred on the
@@ -602,15 +603,17 @@ export class SystemView {
       mark || maker ? el('div', { class: 'maker' }, mark ?? el('span', {}, maker ?? '')) : null
     ]);
     // How many of its games are here is on the strip of systems already.
-    parts.push([
-      'life',
-      lifeline(lifeEvents(released, info?.specs?.lifetime), [
-        info?.specs?.generation ? `${info.specs.generation} generation` : null,
-        sold ? `${soldShort(sold)} sold` : null
-      ])
-    ]);
+    parts.push(['life', lifeline(lifeEvents(released, info?.specs?.lifetime))]);
     // The middle band: its hardware, the console, its games.
     parts.push(['hardware', hardware(info?.specs)]);
+    // Under the hardware, in the bottom-left corner: its generation and how many were sold.
+    parts.push([
+      'tally',
+      tally([
+        ['Generation', info?.specs?.generation ?? null],
+        ['Sold', sold ? soldShort(sold) : null]
+      ])
+    ]);
     // Right of it, in turn: its best sellers, magazines about it, its peripherals.
     const shelves = [
       iconicGames(bestsellers(s.name, info?.bestsellers), info?.bestsellersBy !== 'classics'),
@@ -1054,12 +1057,11 @@ export function lifeEvents(
 }
 
 /** The life as a line of moments, evenly spaced, the years over it. `null` with fewer than two. */
-function lifeline(events: LifeEvent[], more: (string | null)[]): HTMLElement | null {
+function lifeline(events: LifeEvent[]): HTMLElement | null {
   if (events.length < 2) return null;
   return el(
     'div',
     { class: 'life' },
-    more.some(Boolean) ? el('h3', {}, more.filter(Boolean).join(' · ')) : null,
     el(
       'ol',
       { style: `--moments: ${events.length}` },
@@ -1112,6 +1114,17 @@ function hardware(specs: SystemInfo['specs']): HTMLElement | null {
     return value ? [el('div', { class: 'cell' }, el('dt', {}, label), scroller('dd', value))] : [];
   });
   return cells.length ? section('hardware', 'Hardware', el('dl', {}, ...cells)) : null;
+}
+
+/**
+ * The bottom-left corner: its generation and units sold, each a small name over a large value.
+ * `null` when neither is known.
+ */
+function tally(rows: [string, string | null][]): HTMLElement | null {
+  const cells = rows.flatMap(([label, value]) =>
+    value ? [el('div', { class: 'cell' }, el('dt', {}, label), el('dd', {}, value))] : []
+  );
+  return cells.length ? el('dl', { class: 'tally' }, ...cells) : null;
 }
 
 /**
