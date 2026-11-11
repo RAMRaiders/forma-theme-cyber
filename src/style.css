@@ -4183,10 +4183,17 @@ kbd {
   transition: opacity 120ms ease;
 }
 
-/* The case is put away while the shelf shows: the TV stands in its place. */
+/* The case is put away while the shelf shows (the TV stands in its place) and comes back only
+   once it has gone. Its fade-in as a new game is drawn waits too: an animation's opacity would
+   win over this, and the box show through the shelf. */
 .collector.browsing .bay.case {
   opacity: 0;
+  animation: none;
   transition: opacity 120ms ease;
+}
+
+.collector:not(.browsing) .bay.case {
+  transition: opacity 240ms ease;
 }
 
 /* The dossier stays lit beside the shelf, following the selection. */
