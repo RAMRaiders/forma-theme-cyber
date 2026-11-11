@@ -153,9 +153,10 @@ const STORY_PAGE_MS = 12_000;
 const STORY_FADE_MS = 300;
 /** The showcase behind the shelf waits for the selection to rest this long: made anew at each
  * step, it held up the shelf's glide on a Pi (measured: 20 to 46 ms of work, frames of up to
- * 146 ms, at a step every 350 ms). Longer than the time between taps, shorter than DROP_MS so
- * it is drawn before the shelf goes. */
-const SETTLE_MS = 450;
+ * 146 ms, at a step every 350 ms). Well over the time between unhurried presses (at 450 ms it
+ * was drawn between them, and the next press waited for it), shorter than DROP_MS so it is
+ * drawn before the shelf goes. The colours, the dossier and the TV come at the peek, sooner. */
+const SETTLE_MS = 900;
 /** The box and the cartridge sliding past each other, slowly (as in style.css). */
 const SLIDE_MS = 2200;
 /** On a game: the box first turns after this, then every `TURN_MS`. */
@@ -203,6 +204,30 @@ const motion = () => document.documentElement.dataset.motion !== 'off';
 
 function picture(src: string, cls: string): HTMLImageElement {
   return el('img', { src, alt: '', decoding: 'async', class: cls });
+}
+
+/**
+ * Pictures already on screen under `from` reused in `parts` (being drawn in its place) where
+ * they show the same thing: a new picture is blank until decoded, so a part drawn again at each
+ * step (the label's system logo, the dossier's flags and logos) blinked, and faded in again.
+ */
+function keepPictures(from: ParentNode, parts: Element[]): void {
+  const shown = new Map<string, HTMLImageElement>();
+  for (const img of from.querySelectorAll('img')) {
+    const src = img.getAttribute('src');
+    if (src && img.complete && img.naturalWidth && !shown.has(src)) shown.set(src, img);
+  }
+  if (!shown.size) return;
+  for (const part of parts) {
+    for (const img of part.querySelectorAll('img')) {
+      const src = img.getAttribute('src');
+      const old = src ? shown.get(src) : undefined;
+      if (!old || !src) continue;
+      shown.delete(src);
+      old.className = img.className;
+      img.replaceWith(old);
+    }
+  }
 }
 
 /**
@@ -274,6 +299,10 @@ export class CollectorView {
   readonly #navPic = el('div', { class: 'nav-pic', 'aria-hidden': 'true' }, this.#tv);
   #navPicSrc: string | null = null;
   #dossierTimer: ReturnType<typeof setTimeout> | undefined;
+  /** The shelf's height (px), measured once a list opens or the window is resized, not at each
+   * step: measuring right after a step's class change made the page work out all its styles
+   * and layout in the key press. */
+  #shelfH = 0;
   /** Which draw of a game is the latest: one whose pictures load after another began is dropped. */
   #drawRound = 0;
   /** The game whose pictures are loading to replace the one shown, if any. */
@@ -326,6 +355,7 @@ export class CollectorView {
 
   constructor(options: CollectorOptions) {
     this.#options = options;
+    window.addEventListener('resize', () => (this.#shelfH = 0));
     this.#shelf.append(this.#track);
     this.root.append(
       this.#backdrop,
@@ -339,6 +369,7 @@ export class CollectorView {
 
   show(source: LazyList<Game>, selected: number): void {
     this.#source = source;
+    this.#shelfH = 0;
     this.#rows.forEach((row) => row.remove());
     this.#rows.clear();
     this.#selected = -1;
@@ -366,14 +397,19 @@ export class CollectorView {
 
   /** With more games than the shelf shows at once, the last ones come before the first. */
   #loops(total: number, row: number): boolean {
-    const shown = this.#shelf.clientHeight;
+    const shown = this.#shelfHeight;
     return shown > 0 && total >= Math.ceil(shown / row) + 2;
+  }
+
+  get #shelfHeight(): number {
+    if (!this.#shelfH) this.#shelfH = this.#shelf.clientHeight;
+    return this.#shelfH;
   }
 
   /** The shelf's room above the first row, so any row can sit in the middle. */
   #measure(): void {
     const row = this.#rowRem * remPx();
-    this.#pad = Math.max(0, (this.#shelf.clientHeight - row) / 2);
+    this.#pad = Math.max(0, (this.#shelfHeight - row) / 2);
   }
 
   /**
@@ -428,7 +464,9 @@ export class CollectorView {
     const game = this.selected;
     const label = this.#showcase.querySelector('.slab-label');
     if (game && label && label.getAttribute('data-id') !== String(game.id)) {
-      label.replaceWith(this.#label(game));
+      const next = this.#label(game);
+      keepPictures(label, [next]);
+      label.replaceWith(next);
     }
   }
 
@@ -437,7 +475,7 @@ export class CollectorView {
   }
 
   pageSize(): number {
-    return Math.max(1, Math.floor(this.#shelf.clientHeight / (this.#rowRem * remPx())));
+    return Math.max(1, Math.floor(this.#shelfHeight / (this.#rowRem * remPx())));
   }
 
   /** `quiet`: the same game again (a reload), not a move: no shelf, nothing restarted. */
@@ -522,7 +560,7 @@ export class CollectorView {
     if (!source) return;
     const row = this.#rowRem * remPx();
     // Those in sight round the selected one, and a few more for the glide.
-    const half = Math.ceil(this.#shelf.clientHeight / row / 2) + OVERSCAN;
+    const half = Math.ceil(this.#shelfHeight / row / 2) + OVERSCAN;
     const loops = this.#loops(source.total, row);
     const at = loops ? this.#place : Math.max(0, this.#selected);
     const first = loops ? at - half : Math.max(0, at - half);
@@ -878,9 +916,17 @@ export class CollectorView {
     this.#angle = 0;
     this.root.style.removeProperty('--game');
     this.#tint(game);
+    // The label's only: the box sizes itself as its pictures load, so its own are always new.
+    const label = this.#showcase.querySelector('.slab-label');
+    if (label)
+      keepPictures(
+        label,
+        showcase.filter((p) => p.classList.contains('slab-label'))
+      );
     this.#showcase.replaceChildren(...showcase);
     // Followed the shelf already: kept as it is, not drawn again.
     if (fresh || this.#dossier.dataset.id !== String(game.id)) {
+      keepPictures(this.#dossier, dossier);
       this.#dossier.replaceChildren(...dossier);
       this.#dossier.dataset.id = String(game.id);
     }
@@ -1092,7 +1138,9 @@ export class CollectorView {
     const draw = () => {
       if (this.selected?.id !== game.id || this.#dossier.dataset.id === String(game.id)) return;
       this.#dossier.dataset.id = String(game.id);
-      this.#dossier.replaceChildren(...this.#dossierParts(game));
+      const parts = this.#dossierParts(game);
+      keepPictures(this.#dossier, parts);
+      this.#dossier.replaceChildren(...parts);
     };
     if (after > 0) this.#dossierTimer = setTimeout(draw, after);
     else draw();

@@ -492,7 +492,7 @@ describe('the Collector view', () => {
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
     expect(v.root.classList.contains('arriving')).toBe(false);
     // Rested, and its pictures loaded: then it replaces the last.
-    await vi.advanceTimersByTimeAsync(760);
+    await vi.advanceTimersByTimeAsync(910);
     expect(v.root.classList.contains('arriving')).toBe(true);
     vi.advanceTimersByTime(360);
     expect(v.root.classList.contains('arriving')).toBe(false);
@@ -508,7 +508,7 @@ describe('the Collector view', () => {
     });
     try {
       v.select(1);
-      await vi.advanceTimersByTimeAsync(800);
+      await vi.advanceTimersByTimeAsync(960);
       // Doom's pictures still loading: After Burner's case still there, nothing emptied.
       expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).toContain('media/1/');
       waiting.forEach((done) => done());
@@ -516,6 +516,23 @@ describe('the Collector view', () => {
       expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).toContain('media/2/');
     } finally {
       delete (HTMLImageElement.prototype as { decode?: unknown }).decode;
+    }
+  });
+
+  it("keeps the label's system logo through the steps, not a new one blinking in", async () => {
+    const wide = vi.spyOn(HTMLImageElement.prototype, 'naturalWidth', 'get').mockReturnValue(96);
+    const done = vi.spyOn(HTMLImageElement.prototype, 'complete', 'get').mockReturnValue(true);
+    try {
+      const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
+      vi.advanceTimersByTime(2100);
+      const logo = v.root.querySelector('.slab-label .mark img');
+      expect(logo).not.toBeNull();
+      v.select(1);
+      expect(v.root.querySelector('.slab-label .what strong')?.textContent).toBe('Doom');
+      expect(v.root.querySelector('.slab-label .mark img')).toBe(logo);
+    } finally {
+      wide.mockRestore();
+      done.mockRestore();
     }
   });
 
@@ -657,7 +674,7 @@ describe('the Collector view', () => {
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
     vi.advanceTimersByTime(600);
     expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).not.toBe(DEFAULT_FRONT);
-    await vi.advanceTimersByTimeAsync(200);
+    await vi.advanceTimersByTimeAsync(400);
     // Nothing to make a cover from: the default box, and static where the footage would be.
     expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).toBe(DEFAULT_FRONT);
     expect(text('.no-signal span')).toEqual(['No signal']);
