@@ -4170,13 +4170,12 @@ kbd {
   padding: 1.2rem;
   /* Its size, for the picture to fit itself in (collector.ts gives it its shape). */
   container-type: size;
-  /* A dark fog round the picture, thinning out to the edges: the case behind is lost in it. */
-  background: radial-gradient(
-    closest-side,
-    rgb(2 4 9 / 94%) 55%,
-    rgb(2 4 9 / 75%) 75%,
-    rgb(2 4 9 / 0%) 100%
-  );
+  /* Out to the screen's left edge. */
+  margin-left: calc(-1 * var(--safe));
+  padding-left: calc(1.2rem + var(--safe));
+  /* Dark, nothing behind showing through: only the sneak peek. It thins out on its right,
+     into the shelf's light. */
+  background: linear-gradient(90deg, rgb(2 4 9) 0 78%, rgb(2 4 9 / 0%) 100%);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -4206,6 +4205,12 @@ kbd {
     0 1rem 2rem rgb(0 0 0 / 60%);
   /* A little shaded, over the fog: a preview, under the shelf's own light. No filter (the Pi). */
   opacity: 0.85;
+}
+
+/* The case is put away while the shelf shows: the sneak peek has its side to itself. */
+.collector.browsing .bay.case {
+  opacity: 0;
+  transition: opacity 120ms ease;
 }
 
 /* The dossier stays lit beside the shelf, following the selection. */
