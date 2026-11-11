@@ -57,6 +57,9 @@ export class GamesView {
   /** The system whose games were shown last, and whether the list has left the screen since. */
   #shownSystem: string | null = null;
   #away = true;
+  /** The game last on stage, and whether the next one shown is switched on whichever it is. */
+  #lastShown: number | null = null;
+  #bootNext = false;
 
   constructor(options: StageOptions) {
     this.#options = options;
@@ -84,7 +87,7 @@ export class GamesView {
     this.select(selected);
     // Into a system's games (from the systems, or another system's): switched on, as a system is.
     const now = source.get(selected);
-    if (now && (this.#away || now.system !== this.#shownSystem)) this.#boot(now);
+    if (now && (this.#away || now.system !== this.#shownSystem)) this.#bootNext = true;
     this.#away = false;
     this.#shownSystem = now?.system ?? null;
   }
@@ -253,7 +256,11 @@ export class GamesView {
     if (game) {
       this.#stage.show(game);
       this.#scan.shown(game.id, this.#stage.images());
+      // Another game settled on (or a list entered): switched on, as a system is.
+      if (this.#bootNext || game.id !== this.#lastShown) this.#boot(game);
     } else this.#stage.clear();
+    this.#bootNext = false;
+    this.#lastShown = game?.id ?? null;
     clearTimeout(this.#prepareTimer);
     if (game) this.#prepareTimer = setTimeout(() => this.#prepareAround(), PREPARE_AFTER_MS);
   }

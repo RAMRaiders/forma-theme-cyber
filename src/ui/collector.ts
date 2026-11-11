@@ -270,6 +270,8 @@ export class CollectorView {
 
   /** Its animations were stopped by `leave`: the game shown next starts them again. */
   #left = false;
+  /** The next game shown is switched on even if it is the one shown before (a list entered). */
+  #bootNext = false;
 
   constructor(options: CollectorOptions) {
     this.#options = options;
@@ -301,8 +303,8 @@ export class CollectorView {
       clearTimeout(this.#settle);
       clearTimeout(this.#labelTimer);
       clearTimeout(this.#peek);
+      this.#bootNext = entering;
       this.#showSelected();
-      if (entering && now) this.#boot(now);
     }
     requestAnimationFrame(() => this.#track.classList.remove('still'));
   }
@@ -733,6 +735,10 @@ export class CollectorView {
     }
     this.#stop();
     if (!game) return;
+    // Another game settled on (or a list entered): switched on, as a system is. Not when the
+    // same one is drawn again (its details changed, back from playing it).
+    const switchOn = this.#bootNext || (!again && this.#game?.id !== game.id);
+    this.#bootNext = false;
     this.#left = false;
     this.#game = game;
     this.#angle = 0;
@@ -744,6 +750,7 @@ export class CollectorView {
     fadeInAsLoaded(this.#showcase);
     fadeInAsLoaded(this.#dossier);
     this.#scan.shown(game.id, this.#pictures());
+    if (switchOn) this.#boot(game);
     this.#arrive();
     requestAnimationFrame(() => {
       this.#fit?.();
