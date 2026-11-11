@@ -13,6 +13,7 @@ import { circuitSvg } from './circuit.js';
 import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
 import { preload, ready } from './preload.js';
+import { awake } from './rest.js';
 
 /**
  * Words that take turns stay as long as they take to read from a sofa: a moment to look over,
@@ -716,9 +717,9 @@ export class SystemView {
         shelf.classList.remove('still');
         shelf.classList.toggle('on', shelf === ready[at]);
       }
-      this.#shelfTimer = setTimeout(next, SHELF_MS);
+      this.#shelfTimer = setTimeout(awake(next), SHELF_MS);
     };
-    this.#shelfTimer = setTimeout(next, first);
+    this.#shelfTimer = setTimeout(awake(next), first);
   }
 
   /**
@@ -791,7 +792,10 @@ export class SystemView {
     if (all.length < 2 || !this.rotateFacts) return;
     const box = this.#slots.get('reading')?.querySelector<HTMLElement>('.description');
     const ms = stayMs(box, all[this.#read % all.length] ?? '');
-    this.#readTimer = setTimeout(() => this.#nextReading(), ms);
+    this.#readTimer = setTimeout(
+      awake(() => this.#nextReading()),
+      ms
+    );
   }
 
   #factStrip(): HTMLElement | null {
@@ -815,7 +819,10 @@ export class SystemView {
     const strip = this.#slots.get('fact');
     const ms = stayMs(strip?.querySelector<HTMLElement>('.scroll'), facts[this.#fact] ?? '');
     strip?.querySelector<HTMLElement>('.timer')?.style.setProperty('--fact-ms', `${ms}ms`);
-    this.#factTimer = setTimeout(() => this.nextFact(), ms);
+    this.#factTimer = setTimeout(
+      awake(() => this.nextFact()),
+      ms
+    );
   }
 }
 

@@ -47,6 +47,7 @@ import { SongCard } from './ui/music.js';
 import { preload } from './ui/preload.js';
 import { STAGE_PICTURES, accentOf } from './ui/stage.js';
 import { SystemView } from './ui/system.js';
+import { rest } from './ui/rest.js';
 
 /** One level of the path, and where the selection was, so going back returns to it. */
 interface Level {
@@ -278,8 +279,12 @@ export class App {
     });
     // Forma's screensaver stopped the selected game's video; when it goes, the game's stage
     // and its video come back, as after a game.
+    // While it shows, Cyber rests: nothing moves on its timers behind it (Forma pauses the
+    // CSS animations). A game view is drawn afresh after, its video with it.
     this.forma.events.on('screensaver', ({ active }) => {
-      if (!active && this.#list && this.#playing.hidden) this.#gameView.resume();
+      const redraw = !active && this.#list !== null && this.#playing.hidden === true;
+      rest(active, redraw);
+      if (redraw) this.#gameView.resume();
     });
     this.forma.events.on('game:end', ({ error }) => {
       this.#playing.hidden = true;

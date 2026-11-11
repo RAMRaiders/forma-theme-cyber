@@ -4,6 +4,7 @@ import { span } from './perf.js';
 import { romName } from '../logic/romname.js';
 import { DEFAULT_BACK, DEFAULT_FRONT } from './cover.js';
 import { el } from './dom.js';
+import { awake } from './rest.js';
 
 /**
  * The selected game on a stage of its own: it fills the screen and plays out in acts while
@@ -573,11 +574,11 @@ export class Stage {
   }
 
   #later(work: () => void, ms: number): void {
-    this.#timers.push(setTimeout(work, ms));
+    this.#timers.push(setTimeout(awake(work), ms));
   }
 
   #every(work: () => void, ms: number): void {
-    this.#intervals.push(setInterval(work, ms));
+    this.#intervals.push(setInterval(awake(work), ms));
   }
 
   #stop(): void {

@@ -25,6 +25,7 @@ import {
   players,
   playtime
 } from './stage.js';
+import { awake } from './rest.js';
 
 /**
  * The Collector view: a game list as a collector keeps one.
@@ -649,15 +650,18 @@ export class CollectorView {
   }
 
   #later(work: () => void, ms: number): void {
-    this.#timers.push(setTimeout(work, ms));
+    this.#timers.push(setTimeout(awake(work), ms));
   }
 
   /** Over and over, every `ms`; not while the shelf is up (a turn missed, not caught up). */
   #every(work: () => void, ms: number): void {
     this.#intervals.push(
-      setInterval(() => {
-        if (this.#resting()) work();
-      }, ms)
+      setInterval(
+        awake(() => {
+          if (this.#resting()) work();
+        }),
+        ms
+      )
     );
   }
 
