@@ -232,6 +232,9 @@ export class CollectorView {
   #peek: ReturnType<typeof setTimeout> | undefined;
   /** When the fan art and the label last followed a held shelf. */
   #previewedAt = 0;
+  /** Left of the shelf while it shows: the selected game's picture, framed and shaded. */
+  readonly #navPic = el('div', { class: 'nav-pic', 'aria-hidden': 'true' });
+  #navPicSrc: string | null = null;
   /** Which draw of a game is the latest: one whose pictures load after another began is dropped. */
   #drawRound = 0;
   #labelTimer: ReturnType<typeof setTimeout> | undefined;
@@ -283,7 +286,14 @@ export class CollectorView {
   constructor(options: CollectorOptions) {
     this.#options = options;
     this.#shelf.append(this.#track);
-    this.root.append(this.#backdrop, this.#shelf, this.#showcase, this.#dossier, this.#scan.root);
+    this.root.append(
+      this.#backdrop,
+      this.#shelf,
+      this.#navPic,
+      this.#showcase,
+      this.#dossier,
+      this.#scan.root
+    );
   }
 
   show(source: LazyList<Game>, selected: number): void {
@@ -424,6 +434,8 @@ export class CollectorView {
     if (!held) {
       this.#labelNow();
       this.#previewedAt = now;
+      const game = this.selected;
+      if (game) this.#navPicFor(game);
     } else this.#labelTimer = setTimeout(() => this.#labelNow(), LABEL_MS);
     // Held: the game passed now, every so often, behind and above the shelf.
     if (held && now - this.#previewedAt >= HELD_PREVIEW_MS) {
@@ -433,11 +445,13 @@ export class CollectorView {
         this.#labelNow();
         // One at a time: the fan art still loading finishes and shows, the next comes after.
         if (!this.#backdrop.querySelector('img.waiting')) this.#backdropFor(game);
+        if (!this.#navPic.querySelector('img.waiting')) this.#navPicFor(game);
       }
     }
     clearTimeout(this.#peek);
     this.#peek = setTimeout(() => {
       const game = this.selected;
+      if (game) this.#navPicFor(game);
       if (game) this.#backdropFor(game);
     }, PEEK_MS);
     clearTimeout(this.#settle);
@@ -976,6 +990,43 @@ export class CollectorView {
       () => {
         img.remove();
         this.#backdropSrc = null;
+      },
+      { once: true }
+    );
+  }
+
+  /**
+   * The game's picture left of the shelf (its screenshot, else its title screen, else its box):
+   * the next one in once decoded, the last kept until then, so it never goes blank.
+   */
+  #navPicFor(game: Game): void {
+    const media = this.#options.media;
+    const src =
+      media(game, 'image', 400) ?? media(game, 'titleshot', 400) ?? media(game, 'thumbnail', 640);
+    if (src === this.#navPicSrc) return;
+    this.#navPicSrc = src;
+    this.#navPic.querySelectorAll('img.waiting').forEach((n) => n.remove());
+    if (!src) {
+      this.#navPic.replaceChildren();
+      return;
+    }
+    const img = picture(src, 'waiting');
+    this.#navPic.append(img);
+    const show = () => {
+      if (!img.isConnected) return;
+      for (const old of [...this.#navPic.children]) if (old !== img) old.remove();
+      img.classList.remove('waiting');
+    };
+    img.addEventListener(
+      'load',
+      () => void (img.decode?.() ?? Promise.resolve()).catch(() => {}).then(show),
+      { once: true }
+    );
+    img.addEventListener(
+      'error',
+      () => {
+        img.remove();
+        if (this.#navPicSrc === src) this.#navPicSrc = null;
       },
       { once: true }
     );

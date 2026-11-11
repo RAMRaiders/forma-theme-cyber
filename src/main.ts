@@ -12,11 +12,24 @@ try {
     // Saved as a theme setting too, for reading off a device remotely.
     startPerfOverlay((stats) => void forma.settings.set('perf', stats));
   }
+  if (import.meta.env.DEV) await presetSettings(forma);
   await new App(forma, root).start();
   await forma.ready();
   if (import.meta.env.DEV) replayKeys();
 } catch (error) {
   root.textContent = `Could not connect to Forma: ${String(error)}`;
+}
+
+/**
+ * Development only (stripped from builds): `?set=gamesView:collector` sets those of Cyber's
+ * settings before start-up, so a headless browser can see any look.
+ */
+async function presetSettings(forma: Awaited<ReturnType<typeof connect>>): Promise<void> {
+  const pairs = new URLSearchParams(location.search).get('set')?.split(',') ?? [];
+  for (const pair of pairs) {
+    const [key, value] = pair.split(':');
+    if (key && value !== undefined) await forma.settings.set(key, value).catch(() => {});
+  }
 }
 
 /**

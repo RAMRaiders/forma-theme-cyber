@@ -518,6 +518,19 @@ describe('the Collector view', () => {
     }
   });
 
+  it("frames the selected game's picture left of the shelf while it shows", async () => {
+    const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
+    vi.advanceTimersByTime(2100);
+    v.select(1);
+    const pic = v.root.querySelector('.nav-pic img');
+    // Its picture (the box, where it has nothing else), coming in once decoded.
+    expect(pic?.getAttribute('src')).toContain('media/2/');
+    expect(v.root.classList.contains('browsing')).toBe(true);
+    vi.advanceTimersByTime(1500);
+    // The shelf gone, its picture goes with it (style.css: shown only while browsing).
+    expect(v.root.classList.contains('browsing')).toBe(false);
+  });
+
   it('stars a favourite in the label, and a reload of the same game moves nothing', async () => {
     const g = game(7, 'After Burner', BOXED);
     const { v } = await view([g]);

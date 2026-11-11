@@ -4158,6 +4158,49 @@ kbd {
   transition-duration: 120ms;
 }
 
+/* Left of the shelf while it shows: the selected game's picture, framed and a little shaded;
+   it goes with the shelf when the game's details come. */
+.nav-pic {
+  grid-area: footage-start / case-start / story-end / case-end;
+  position: relative;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 200ms ease,
+    visibility 0s linear 200ms;
+}
+
+.collector.browsing .nav-pic {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 120ms ease;
+}
+
+.nav-pic img {
+  grid-area: 1 / 1;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border: 1px solid color-mix(in srgb, var(--game) 55%, transparent);
+  border-radius: 0.3rem;
+  box-shadow:
+    0 0 0 0.35rem rgb(4 7 15 / 80%),
+    0 0 0 calc(0.35rem + 1px) color-mix(in srgb, var(--game) 30%, transparent),
+    0 1.2rem 2.4rem rgb(0 0 0 / 60%);
+  /* A little shaded, over the dimmed screen: a preview, under the shelf's own light. No filter
+     (the Pi). */
+  opacity: 0.82;
+}
+
+.nav-pic img.waiting {
+  visibility: hidden;
+}
+
 .spine-row {
   position: absolute;
   left: calc(var(--mid) - var(--spine-len) / 2);
