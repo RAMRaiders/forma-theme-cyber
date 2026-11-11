@@ -8,7 +8,7 @@ import { DEFAULT_BACK, DEFAULT_FRONT, hue } from './cover.js';
 import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
 import { Scan } from './scan.js';
-import { boot, scrapedMark } from './boot.js';
+import { boot, bootMarkLoaded, scrapedMark } from './boot.js';
 import {
   ARCADE,
   type Achievements,
@@ -285,6 +285,8 @@ export class CollectorView {
   readonly #navPic = el('div', { class: 'nav-pic', 'aria-hidden': 'true' }, this.#tv);
   #navPicSrc: string | null = null;
   #dossierTimer: ReturnType<typeof setTimeout> | undefined;
+  /** The logo for the switch-on as the shelf goes, once loaded, and whose it is. */
+  #dropMark: { id: number; mark: HTMLElement | null } | null = null;
   /** Which dossier draw is the latest: one whose pictures decode after another began is dropped. */
   #dossierRound = 0;
   /** The shelf's height (px), measured once a list opens or the window is resized, not at each
@@ -417,6 +419,7 @@ export class CollectorView {
     clearTimeout(this.#dropTimer);
     this.#dropTimer = setTimeout(() => {
       perfMark('drop');
+      this.#bootOnDrop();
       this.root.classList.remove('browsing');
       if (!this.#videoHeld) return;
       this.#videoHeld = false;
@@ -532,6 +535,8 @@ export class CollectorView {
       perfMark('peek');
       const game = this.selected;
       if (!game) return;
+      // Its logo for the switch-on as the shelf goes, loading meanwhile.
+      this.#prepareDropMark(game);
       // Its colours first (worked out from a tiny picture), then the rest, a frame each: all at
       // once was one long frame on a Pi (measured: 80 ms), most of it the page restyling.
       this.#tintSelected(game);
@@ -717,6 +722,31 @@ export class CollectorView {
     if (game?.id !== id) return;
     this.#showSelected(true);
     this.#scan.refreshed(game, this.#pictures());
+  }
+
+  /**
+   * The game stopped at, switched on as the shelf goes: its logo (loaded while the shelf was
+   * still up), else its name, lit in a line of light over the screen, as after a scrape.
+   */
+  #bootOnDrop(): void {
+    const game = this.selected;
+    if (!game || this.#left) return;
+    const ready = this.#dropMark?.id === game.id ? this.#dropMark.mark : null;
+    const mark = ready ?? el('span', { class: 'boot-name' }, game.name);
+    // Its colour as set on the view (reading the computed style here would restyle it all).
+    const colour = this.root.style.getPropertyValue('--game').trim() || 'var(--neon)';
+    boot(this.root, mark, 0, { colour });
+  }
+
+  #prepareDropMark(game: Game): void {
+    if (this.#dropMark?.id === game.id) return;
+    const media = this.#options.media;
+    const src = media(game, 'wheel', 560) ?? media(game, 'marquee', 560);
+    const id = game.id;
+    this.#dropMark = { id, mark: null };
+    void bootMarkLoaded(src, game.name, DROP_MS).then((mark) => {
+      if (this.#dropMark?.id === id) this.#dropMark.mark = mark;
+    });
   }
 
   /** The game switched on over the view: its logo, or its name, lit in a line of light. */

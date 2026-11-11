@@ -548,6 +548,18 @@ describe('the Collector view', () => {
     }
   });
 
+  it('switches the game stopped at on as the shelf goes, its name without a logo', async () => {
+    const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
+    vi.advanceTimersByTime(2100);
+    document.querySelectorAll('.boot').forEach((b) => b.remove());
+    v.select(1);
+    expect(document.querySelector('.boot')).toBeNull();
+    vi.advanceTimersByTime(1500);
+    expect(v.root.classList.contains('browsing')).toBe(false);
+    expect(document.querySelector('.boot.whole .boot-mark')?.textContent).toBe('Doom');
+    document.querySelectorAll('.boot').forEach((b) => b.remove());
+  });
+
   it("frames the selected game's picture left of the shelf while it shows", async () => {
     const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
     vi.advanceTimersByTime(2100);

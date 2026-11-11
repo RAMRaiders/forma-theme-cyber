@@ -63,7 +63,7 @@ export async function scrapedMark(
  * A logo for the boot from `src`, once it has loaded (up to `ms`): so the boot lights the logo,
  * not the name while it is still coming. `name` in its place when there is none or it fails.
  */
-async function bootMarkLoaded(
+export async function bootMarkLoaded(
   src: string | null | undefined,
   name: string,
   ms = 4000
@@ -72,7 +72,7 @@ async function bootMarkLoaded(
   if (!src) return words;
   const logo = el('img', { class: 'boot-logo', src, alt: '' });
   const loaded = await Promise.race([
-    logo.decode().then(
+    (typeof logo.decode === 'function' ? logo.decode() : Promise.resolve()).then(
       () => true,
       () => false
     ),
