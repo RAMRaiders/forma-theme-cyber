@@ -278,7 +278,6 @@ describe('the Collector view', () => {
     expect(text('.dossier .specs dd')[dt.indexOf('Dump')]).toBe(
       'No-IntroVerifiedAfter Burner (USA)'
     );
-    expect(text('.dossier .dump .listed')).toEqual(['After Burner (USA)']);
     expect(text('.dossier .dump .seal')).toEqual(['No-Intro']);
     expect(v.root.querySelector('.dossier .dump')?.getAttribute('aria-label')).toBe(
       'Verified by No-Intro'
@@ -294,7 +293,8 @@ describe('the Collector view', () => {
       'No-IntroVerified',
       'RedumpCRC32 match'
     ]);
-    expect(both!.querySelector('.listed')?.textContent).toBe('Sonic (World)');
+    // Just the labels: not the catalogue's name for the dump.
+    expect(both!.querySelector('.listed')).toBeNull();
     expect(
       dumpText({ status: 'notCatalogued', catalogue: null, name: null, region: null })?.textContent
     ).toBe('Not catalogued');

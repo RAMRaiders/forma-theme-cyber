@@ -4932,13 +4932,13 @@ kbd {
   text-overflow: ellipsis;
 }
 
-/* The dump check: a badge per catalogue that lists the file, in a row; each its catalogue's
-   name on a tinted band over its verdict, cut-corner like Cyber's panels. No glow (the Pi). */
+/* The dump check: a label per catalogue that lists the file, in a row; each the catalogue's
+   name on a quiet band joined to its verdict, tinted by it, cut-corner like Cyber's panels.
+   No glow (the Pi). */
 .dossier .dump {
   display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.3em;
+  flex-wrap: wrap;
+  gap: 0.45em;
   max-width: 100%;
 }
 
@@ -4946,29 +4946,21 @@ kbd {
   color: var(--muted);
 }
 
-.dossier .dump .badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4em;
-}
-
 .dossier .dump .badge {
   --dump: var(--muted);
   display: inline-flex;
-  flex-direction: column;
   align-items: stretch;
-  min-width: 6.2em;
-  border: 1px solid color-mix(in srgb, var(--dump) 45%, transparent);
+  border: 1px solid color-mix(in srgb, var(--dump) 40%, transparent);
   clip-path: polygon(
     0 0,
-    calc(100% - 0.5em) 0,
-    100% 0.5em,
+    calc(100% - 0.45em) 0,
+    100% 0.45em,
     100% 100%,
-    0.5em 100%,
-    0 calc(100% - 0.5em)
+    0.45em 100%,
+    0 calc(100% - 0.45em)
   );
-  background: rgb(255 255 255 / 4%);
-  text-align: center;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 /* Verified: a soft, light green; doubtful: a muted amber. */
@@ -4980,34 +4972,29 @@ kbd {
   --dump: #e8c27e;
 }
 
-/* The catalogue's name: the badge's quiet top band. */
+/* The catalogue's name: the label's quiet first half. */
 .dossier .dump .seal {
-  padding: 0.18em 0.6em 0.12em;
+  display: flex;
+  align-items: center;
+  padding: 0.38em 0.6em 0.32em 0.7em;
   font-family: var(--mono);
-  font-size: 0.68em;
+  font-size: 0.66em;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgb(235 242 250 / 88%);
-  background: rgb(255 255 255 / 9%);
+  color: rgb(235 242 250 / 85%);
+  background: rgb(255 255 255 / 8%);
 }
 
-/* Its verdict under it, in its colour. */
+/* Its verdict: the second half, tinted by it. */
 .dossier .dump .verdict {
-  padding: 0.2em 0.6em 0.22em;
-  font-size: 0.78em;
-  color: var(--dump);
-  white-space: nowrap;
-}
-
-/* The catalogue's name for the dump, under the badges: small, one line. */
-.dossier .dump .listed {
-  max-width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  padding: 0.3em 0.7em 0.28em 0.6em;
   font-size: 0.8em;
-  color: var(--muted);
+  font-weight: 600;
+  color: var(--dump);
+  background: color-mix(in srgb, var(--dump) 13%, transparent);
 }
 
 .collector .stars {

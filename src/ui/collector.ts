@@ -1744,8 +1744,7 @@ function verdictOf(status: string): [string, string] {
 
 /**
  * A game's dump checks as badges in a row, one per catalogue that lists the file: the
- * catalogue's name on top (No-Intro), its verdict under it (Verified); under the row, the
- * catalogue's own name for the dump, on screen as nothing hovers on a pad. One check or
+ * catalogue's name (No-Intro) joined to its verdict (Verified), as one label. One check or
  * several (a file more than one catalogue lists); nothing while unknown.
  */
 export function dumpText(
@@ -1777,8 +1776,7 @@ export function dumpText(
       class: `dump ${verdictOf(best.status)[1]}`,
       'aria-label': badges.map((b) => b.getAttribute('aria-label')).join(', ')
     },
-    el('span', { class: 'badges' }, ...badges),
-    best.name ? el('span', { class: 'listed' }, best.name) : null
+    ...badges
   );
 }
 
