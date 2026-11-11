@@ -136,16 +136,14 @@ const DROP_MS = 1400;
 const HELD_MS = 130;
 /** The fan art behind the shelf, a sneak peek, once the selection pauses this long: longer than
  * between two quick presses, or the whole screen changes at each of them. */
-const PEEK_MS = 220;
-/** While held, the label catches up this long after the last step. */
-const LABEL_MS = 300;
+const PEEK_MS = 180;
 /** While held, the fan art and the label follow the shelf this often: a preview of the games
  * run past, not only of the one stopped on. */
 const HELD_PREVIEW_MS = 500;
 /** Fan art kept decoded, the game shown and those round it: going to them is then at once. */
 const FANART_KEPT = 12;
 /** Longest the game shown stays while the next one's pictures load: then it is replaced anyway. */
-const SWAP_WAIT_MS = 1200;
+const SWAP_WAIT_MS = 700;
 /** On a game this long, its video plays in the footage bay. */
 const VIDEO_AFTER_MS = 2500;
 /** With no video, the footage bay shows the screenshots in turn. */
@@ -157,7 +155,7 @@ const STORY_FADE_MS = 300;
  * step, it held up the shelf's glide on a Pi (measured: 20 to 46 ms of work, frames of up to
  * 146 ms, at a step every 350 ms). Longer than the time between taps, shorter than DROP_MS so
  * it is drawn before the shelf goes. */
-const SETTLE_MS = 750;
+const SETTLE_MS = 450;
 /** The box and the cartridge sliding past each other, slowly (as in style.css). */
 const SLIDE_MS = 2200;
 /** On a game: the box first turns after this, then every `TURN_MS`. */
@@ -474,15 +472,13 @@ export class CollectorView {
     this.#stopVideo();
     // While held the shelf says which game it is; the label's pictures would only flicker past.
     clearTimeout(this.#labelTimer);
+    // A step loads nothing: games passed by quickly would queue their pictures on a Pi ahead of
+    // the one stopped at. The peek below brings it all, the moment the steps pause.
+    // Its label alone follows each step (words and the system's logo, cheap).
     if (!held) {
       this.#labelNow();
       this.#previewedAt = now;
-      const game = this.selected;
-      if (game) {
-        this.#navPicFor(game);
-        this.#dossierFor(game);
-      }
-    } else this.#labelTimer = setTimeout(() => this.#labelNow(), LABEL_MS);
+    }
     // Held: the game passed now, every so often, behind and above the shelf.
     if (held && now - this.#previewedAt >= HELD_PREVIEW_MS) {
       this.#previewedAt = now;
@@ -499,9 +495,13 @@ export class CollectorView {
     clearTimeout(this.#peek);
     this.#peek = setTimeout(() => {
       const game = this.selected;
-      if (game) this.#navPicFor(game);
-      if (game) this.#dossierFor(game);
-      if (game) this.#backdropFor(game);
+      if (!game) return;
+      // Its colours first (worked out from a tiny picture), then the rest.
+      this.#tintSelected(game);
+      this.#labelNow();
+      this.#dossierFor(game, 0);
+      this.#navPicFor(game);
+      this.#backdropFor(game);
     }, PEEK_MS);
     clearTimeout(this.#settle);
     this.#settle = setTimeout(() => this.#showSelected(), SETTLE_MS);
@@ -1020,6 +1020,16 @@ export class CollectorView {
     });
   }
 
+  /** The selected game's colours over the page as soon as they are known, before it is drawn. */
+  #tintSelected(game: Game): void {
+    const colour = this.#colourOf(game);
+    if (!colour) return;
+    const id = game.id;
+    void colour.then((c) => {
+      if (c && this.selected?.id === id) this.root.style.setProperty('--game', c);
+    });
+  }
+
   #fanartOf(game: Game): string | null {
     return (
       this.#options.media(game, 'fanart', BACKDROP_W) ?? this.#options.media(game, 'image', 400)
@@ -1077,13 +1087,15 @@ export class CollectorView {
    * shelf has faded in, not in the same frame (on a Pi, its redraw there made the shelf stutter
    * in); the latest game only, if several steps come meanwhile.
    */
-  #dossierFor(game: Game): void {
+  #dossierFor(game: Game, after = DOSSIER_MS): void {
     clearTimeout(this.#dossierTimer);
-    this.#dossierTimer = setTimeout(() => {
+    const draw = () => {
       if (this.selected?.id !== game.id || this.#dossier.dataset.id === String(game.id)) return;
       this.#dossier.dataset.id = String(game.id);
       this.#dossier.replaceChildren(...this.#dossierParts(game));
-    }, DOSSIER_MS);
+    };
+    if (after > 0) this.#dossierTimer = setTimeout(draw, after);
+    else draw();
   }
 
   /**

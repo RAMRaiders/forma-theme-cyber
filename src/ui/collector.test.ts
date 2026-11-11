@@ -523,11 +523,13 @@ describe('the Collector view', () => {
     const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
     vi.advanceTimersByTime(2100);
     v.select(1);
+    // Once the steps pause: games passed by quickly load nothing.
+    vi.advanceTimersByTime(200);
     const pic = v.root.querySelector('.nav-pic img');
     // Its picture (the box, where it has nothing else), coming in once decoded.
     expect(pic?.getAttribute('src')).toContain('media/2/');
     expect(v.root.classList.contains('browsing')).toBe(true);
-    vi.advanceTimersByTime(1500);
+    vi.advanceTimersByTime(1300);
     // The shelf gone, its picture goes with it (style.css: shown only while browsing).
     expect(v.root.classList.contains('browsing')).toBe(false);
   });
@@ -536,8 +538,8 @@ describe('the Collector view', () => {
     const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
     vi.advanceTimersByTime(2100);
     v.select(1);
-    // Just after the shelf has faded in, well before the selection rests.
-    vi.advanceTimersByTime(150);
+    // As soon as the steps pause, well before the selection rests.
+    vi.advanceTimersByTime(200);
     expect(v.root.querySelector('.dossier')?.textContent).toContain('Doom');
   });
 
