@@ -4,14 +4,10 @@ Front pages of magazines about each system, from the Internet Archive, shown on 
 screen. Built by `scripts/build-magazines.mjs`.
 
 - **jaguar**: [EDGE #022 (1995) - Supplement: Atari Jaguar](https://archive.org/details/EDGE.N022.1995.07.Supplement.Atari.Jaguar)
+- **jaguar**: [Atari Fan N°5 (Primavera 1995)](https://www.atarimania.com/magazines/134)
 - **jaguar**: [Electronic Games 1993-09](https://archive.org/details/Electronic-Games-1993-09)
 - **jaguar**: [Cat Rap: News Source for the Atari Jaguar — Issue 1 — September 1993](https://archive.org/details/cat-rap-01-1993-09)
 - **jaguar**: [Cat Rap: News Source for the Atari Jaguar — Issue 2 — January 1994](https://archive.org/details/cat-rap-02-1994-01)
-- **atari2600**: [Atari VCS Owners Club Bulletin - AB 23 (Atari International)](https://archive.org/details/Atari_VCS_Owners_Club_Bulletin_AB_23_1982-12_Atari_International_GB)
-- **atari2600**: [Atari VCS Owners Club Bulletin - AB 22 (Atari International)](https://archive.org/details/Atari_VCS_Owners_Club_Bulletin_AB_22_1982-09_Atari_International_GB)
-- **atari2600**: [Atari VCS Owners Club Bulletin - AB 21 (Atari International)](https://archive.org/details/Atari_VCS_Owners_Club_Bulletin_AB_21_1982-06_Atari_International_GB)
-- **atari2600**: [Atari Age Volume 1 Number 2](https://archive.org/details/atariage-1-2)
-- **atari2600**: [Atari Age Volume 1 Number 3](https://archive.org/details/atariage-1-3)
 - **3do**: [3DO Magazine](https://archive.org/details/3DOMagazineIssue10199605ParagonPublishingGB)
 - **3do**: [3DO Magazine - Issue 12](https://archive.org/details/3DO_Magazine_Issue_12_1996-07_Paragon_Publishing_GB)
 - **3do**: [3DO Magazine Special - Gold Issue 01](https://archive.org/details/3-do-gold-01)
@@ -23,12 +19,20 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **amstradcpc**: Amstrad Action 001-117
 - **amstradcpc**: Amstrad Action Issue 064
 - **astrocade**: Cursor / BASIC Express Newsletter for Bally Arcade / Astrocade Alternative ColorScans
+- **atari2600**: [Atari VCS Owners Club Bulletin - AB 23 (Atari International)](https://archive.org/details/Atari_VCS_Owners_Club_Bulletin_AB_23_1982-12_Atari_International_GB)
+- **atari2600**: [Atari VCS Owners Club Bulletin - AB 22 (Atari International)](https://archive.org/details/Atari_VCS_Owners_Club_Bulletin_AB_22_1982-09_Atari_International_GB)
+- **atari2600**: [Atari VCS Owners Club Bulletin - AB 21 (Atari International)](https://archive.org/details/Atari_VCS_Owners_Club_Bulletin_AB_21_1982-06_Atari_International_GB)
+- **atari2600**: [Atari Age Volume 1 Number 2](https://archive.org/details/atariage-1-2)
+- **atari2600**: [Atari Age Volume 1 Number 3](https://archive.org/details/atariage-1-3)
 - **atari5200**: [Atari Age Volumes 1 & 2](https://archive.org/details/AtariAgeIssues1-7)
 - **atari5200**: [Atari Age Vol 02num 03](https://archive.org/details/AtariAgeVol02num03)
 - **atari5200**: [Atari Age Volume 2 Number 2](https://archive.org/details/atariage-2-2)
 - **atari5200**: [Atari Age Volume 2 Number 5](https://archive.org/details/atariage-2-5)
 - **atari5200**: [Atari Age Volume 2 Number 4](https://archive.org/details/atariage-2-4)
 - **atari7800**: [Computer Entertainer issue 3-3](https://archive.org/details/computer-entertainer-3-3)
+- **atari7800**: [Atarian Issue 1 (May/June 1989)](https://www.atarimania.com/magazines/33/286)
+- **atari7800**: [Atarian Issue 2 (August 1989)](https://www.atarimania.com/magazines/33/287)
+- **atari7800**: [Atarian Issue 3 (October 1989)](https://www.atarimania.com/magazines/33/288)
 - **atari800**: [Atari Explorer (Atari)](https://archive.org/details/Atari_Explorer_1985-02_Atari_US)
 - **atari800**: [Antic Magazine Volume 3 Number 02 (Exploring the Atari XL)](https://archive.org/details/1984-06-anticmagazine)
 - **atari800**: [Analog Computing Magazine Issue 15 (Inside the 600XL)](https://archive.org/details/analog-computing-magazine-15)
@@ -76,6 +80,7 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **gbc**: Total Game Boy Issue 03
 - **gbc2players**: Total Game Boy Issue 01
 - **gbc2players**: Total Game Boy Issue 03
+- **jaguarcd**: [Atari Fan N°6 (Verano 1995)](https://www.atarimania.com/magazines/134)
 - **jaguarcd**: [A.P.E. — Atari Power Entertainment, No. 21, Fall Holiday 1995](https://archive.org/details/ape-atari-newsletter-issue-21)
 - **jaguarcd**: [A.P.E. — Atari Power Entertainment, No. 20, Summer 1995](https://archive.org/details/ape-atari-newsletter-issue-20)
 - **jaguarcd**: [A.P.E. — Atari Power Entertainment, No. 18, Winter 1995](https://archive.org/details/ape-atari-newsletter-issue-18)
@@ -153,6 +158,7 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **xegs**: [Antic Magazine Volume 7 Number 02 (Atari XE Game System)](https://archive.org/details/1988-06-anticmagazine)
 - **xegs**: [Antic Magazine Volume 6 Number 11 (Next Generation Game Machines)](https://archive.org/details/1988-03-anticmagazine)
 - **xegs**: [Antic Magazine Volume 7 Number 04 (Atari Home Turn-on)](https://archive.org/details/1988-08-anticmagazine)
+- **xegs**: [Atari Explorer - Volume 9 Number 6](https://archive.org/details/atari-explorer-november-december-1989)
 - **zxspectrum**: Your Sinclair 01-93
 - **zxspectrum**: Sinclair User Magazine Issue 045
 - **zxspectrum**: Sinclair User Magazine Issue 058

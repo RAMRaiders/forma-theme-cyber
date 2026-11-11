@@ -51,6 +51,11 @@
   "neogeo": ["neogeofreak0001", "neogeofreak0030", "neogeofreak0033"],
   "jaguar": [
     "EDGE.N022.1995.07.Supplement.Atari.Jaguar",
+    {
+      "url": "https://www.atarimania.com/mags/pdf/AtariFan-05.pdf",
+      "title": "Atari Fan N°5 (Primavera 1995)",
+      "page": "https://www.atarimania.com/magazines/134"
+    },
     "Electronic-Games-1993-09",
     "cat-rap-01-1993-09",
     "cat-rap-02-1994-01"
@@ -114,7 +119,24 @@
     "atariage-2-5",
     "atariage-2-4"
   ],
-  "atari7800": ["computer-entertainer-3-3"],
+  "atari7800": [
+    "computer-entertainer-3-3",
+    {
+      "url": "https://www.atarimania.com/mags/hi_res/atarian_issue_1.jpg",
+      "title": "Atarian Issue 1 (May/June 1989)",
+      "page": "https://www.atarimania.com/magazines/33/286"
+    },
+    {
+      "url": "https://www.atarimania.com/mags/hi_res/atarian_issue_2.jpg",
+      "title": "Atarian Issue 2 (August 1989)",
+      "page": "https://www.atarimania.com/magazines/33/287"
+    },
+    {
+      "url": "https://www.atarimania.com/mags/hi_res/atarian_issue_3.jpg",
+      "title": "Atarian Issue 3 (October 1989)",
+      "page": "https://www.atarimania.com/magazines/33/288"
+    }
+  ],
   "vectrex": [],
   "odyssey2": [],
   "ngpc": ["ngpc_20211014", "softv2"],
@@ -175,8 +197,18 @@
     "atari-user-uk-magazine-01",
     "1986-01-anticmagazine"
   ],
-  "xegs": ["1988-06-anticmagazine", "1988-03-anticmagazine", "1988-08-anticmagazine"],
+  "xegs": [
+    "1988-06-anticmagazine",
+    "1988-03-anticmagazine",
+    "1988-08-anticmagazine",
+    "atari-explorer-november-december-1989"
+  ],
   "jaguarcd": [
+    {
+      "url": "https://www.atarimania.com/mags/pdf/AtariFan-06.pdf",
+      "title": "Atari Fan N°6 (Verano 1995)",
+      "page": "https://www.atarimania.com/magazines/134"
+    },
     "ape-atari-newsletter-issue-21",
     "ape-atari-newsletter-issue-20",
     "ape-atari-newsletter-issue-18"

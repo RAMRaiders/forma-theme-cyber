@@ -350,6 +350,18 @@
       {
         "file": "mag-1.webp",
         "title": "Computer Entertainer issue 3-3"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Atarian Issue 1 (May/June 1989)"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Atarian Issue 2 (August 1989)"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Atarian Issue 3 (October 1989)"
       }
     ],
     "peripherals": [
@@ -1427,14 +1439,18 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "Electronic Games 1993-09"
+        "title": "Atari Fan N°5 (Primavera 1995)"
       },
       {
         "file": "mag-3.webp",
-        "title": "Cat Rap: News Source for the Atari Jaguar — Issue 1 — September 1993"
+        "title": "Electronic Games 1993-09"
       },
       {
         "file": "mag-4.webp",
+        "title": "Cat Rap: News Source for the Atari Jaguar — Issue 1 — September 1993"
+      },
+      {
+        "file": "mag-5.webp",
         "title": "Cat Rap: News Source for the Atari Jaguar — Issue 2 — January 1994"
       }
     ],
@@ -1476,14 +1492,18 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "A.P.E. — Atari Power Entertainment, No. 21, Fall Holiday 1995"
+        "title": "Atari Fan N°6 (Verano 1995)"
       },
       {
         "file": "mag-2.webp",
-        "title": "A.P.E. — Atari Power Entertainment, No. 20, Summer 1995"
+        "title": "A.P.E. — Atari Power Entertainment, No. 21, Fall Holiday 1995"
       },
       {
         "file": "mag-3.webp",
+        "title": "A.P.E. — Atari Power Entertainment, No. 20, Summer 1995"
+      },
+      {
+        "file": "mag-4.webp",
         "title": "A.P.E. — Atari Power Entertainment, No. 18, Winter 1995"
       }
     ],
@@ -3254,6 +3274,10 @@
       {
         "file": "mag-3.webp",
         "title": "Antic Magazine Volume 7 Number 04 (Atari Home Turn-on)"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Atari Explorer - Volume 9 Number 6"
       }
     ],
     "peripherals": [
