@@ -97,7 +97,9 @@ export class GamesView {
     const media = this.#options.media;
     return boot(
       this.root,
-      bootMark(media(game, 'wheel', 560) ?? media(game, 'marquee', 560), game.name)
+      bootMark(media(game, 'wheel', 560) ?? media(game, 'marquee', 560), game.name),
+      0,
+      { colour: getComputedStyle(this.root).getPropertyValue('--game').trim() || 'var(--neon)' }
     );
   }
 

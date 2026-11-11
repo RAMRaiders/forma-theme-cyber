@@ -9,17 +9,25 @@ const BOOT_MS = 1500;
  * then). Gone in `BOOT_MS`; opacity and transforms only (cheap on a Pi). Not with motion off.
  * Returns how long it will be up, 0 when not shown.
  */
-export function boot(host: HTMLElement, mark: HTMLElement, wait = 0): number {
-  for (const old of host.querySelectorAll(':scope > .boot')) old.remove();
+export function boot(
+  host: HTMLElement,
+  mark: HTMLElement,
+  wait = 0,
+  /** Over the whole screen, header and hints too, lit in this colour (a game's). */
+  whole?: { colour: string }
+): number {
+  const over = whole ? document.body : host;
+  for (const old of over.querySelectorAll(':scope > .boot')) old.remove();
   if (document.documentElement.dataset.motion === 'off') return 0;
   const screen = el(
     'div',
-    { class: 'boot', 'aria-hidden': 'true' },
+    { class: whole ? 'boot whole' : 'boot', 'aria-hidden': 'true' },
     el('span', { class: 'beam' }),
     el('div', { class: 'boot-mark' }, mark)
   );
   screen.style.setProperty('--boot-wait', `${Math.round(wait)}ms`);
-  host.append(screen);
+  if (whole) screen.style.setProperty('--sys', whole.colour);
+  over.append(screen);
   setTimeout(() => screen.remove(), wait + BOOT_MS);
   return wait + BOOT_MS;
 }

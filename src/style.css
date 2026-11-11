@@ -1605,10 +1605,11 @@ main {
   animation: boot-out 1500ms ease var(--boot-wait, 0ms) both;
 }
 
-/* Over a game: in its colour. */
-.games .boot,
-.collector .boot {
-  --sys: var(--game, var(--neon));
+/* Over a game: the whole screen, header and hints too, in the game's colour (boot.ts). */
+.boot.whole {
+  position: fixed;
+  z-index: 90;
+  border-radius: 0;
   --sys-45: color-mix(in srgb, var(--sys) 45%, transparent);
 }
 
