@@ -4010,7 +4010,7 @@ kbd {
 /* A new game's bays fade in, nothing else moving; well before its box turns or its video
    starts, so nothing moving sits under the fade. Backwards only: once in, no style is left. */
 .collector.arriving .bay,
-.collector.arriving .dossier {
+.collector.arriving .dossier:not(.kept) {
   animation: bay-in 360ms ease-out backwards;
 }
 
@@ -4163,14 +4163,6 @@ kbd {
   transition: opacity 200ms ease;
 }
 
-/* Behind the shelf, while it shows, nothing moves: the case's, the footage's and the dossier's
-   own animations wait where they are. */
-.collector.browsing .showcase *,
-.collector.browsing .dossier *,
-.collector.browsing .collector-backdrop * {
-  animation-play-state: paused !important;
-}
-
 .collector.browsing::after {
   opacity: 1;
   transition-duration: 120ms;
@@ -4204,17 +4196,17 @@ kbd {
 }
 
 /* The case is put away while the shelf shows (the TV stands in its place): first of all, on the
-   step itself, before the shelf and the TV fade in; back as the shelf goes. Visibility, never
-   opacity: that flattens the box's 3D, and it jumped as the shelf came. Every part of it, as
-   some set their own visibility (the box, once loaded). Its fade-in as a new game is drawn
-   waits too, or the box showed through the shelf. */
-.collector.browsing .bay.case,
-.collector.browsing .bay.case * {
-  visibility: hidden !important;
-  transition: none;
+   step itself, before the shelf and the TV fade in; back as the shelf goes. Moved off the
+   screen, its own layer kept, so it comes back as it was, nothing painted again: hidden
+   (visibility) its box was painted and uploaded anew as it came back, a long frame on a Pi
+   (measured: 80 ms), and opacity flattens its 3D. Its fade-in as a new game is drawn waits
+   too, or the box showed through the shelf. */
+.collector .bay.case {
+  will-change: transform;
 }
 
 .collector.browsing .bay.case {
+  transform: translateX(-300vw);
   animation: none;
 }
 
@@ -4648,10 +4640,13 @@ kbd {
   position: relative;
 }
 
-/* The label over the dimming while the shelf shows, dimmed too but less: the game picked, read
-   at a glance. */
-.collector.browsing .slab-label {
+/* The label over the dimming always (no layer change as the shelf comes and goes), dimmed
+   while the shelf shows but less: the game picked, read at a glance. */
+.collector .slab-label {
   z-index: 5;
+}
+
+.collector.browsing .slab-label {
   opacity: 0.6;
 }
 

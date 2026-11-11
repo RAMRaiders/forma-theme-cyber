@@ -31,6 +31,14 @@ export function span(label: string): () => void {
   };
 }
 
+/**
+ * Notes that `label` happened (perf mode only), with the frame it happened in: a slow frame
+ * lists the events in it, so a stall nothing measured ran in can still be pinned to one.
+ */
+export function mark(label: string): void {
+  if (tracing) inFrame.push(`@${label}`);
+}
+
 export interface PerfStats {
   /** Over the last few seconds. */
   fps: number;

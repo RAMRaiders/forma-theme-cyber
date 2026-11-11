@@ -1,5 +1,5 @@
 import type { Game, ScraperStatus } from '@ramraiders/forma-sdk';
-import { span } from './perf.js';
+import { mark as perfMark, span } from './perf.js';
 
 import type { LazyList } from '../logic/pager.js';
 import { ageRatings, asPegi } from '../logic/agerating.js';
@@ -426,6 +426,7 @@ export class CollectorView {
     }
     clearTimeout(this.#dropTimer);
     this.#dropTimer = setTimeout(() => {
+      perfMark('drop');
       this.root.classList.remove('browsing');
       if (!this.#videoHeld) return;
       this.#videoHeld = false;
@@ -442,9 +443,12 @@ export class CollectorView {
   #arrive(): void {
     clearTimeout(this.#arriving);
     this.root.classList.remove('arriving');
-    void this.root.offsetWidth;
-    this.root.classList.add('arriving');
-    this.#arriving = setTimeout(() => this.root.classList.remove('arriving'), ARRIVE_MS);
+    // Again from the next frame: reading the layout here to restart it at once made the browser
+    // lay the whole view out in the middle of drawing it (a long frame on a Pi).
+    requestAnimationFrame(() => {
+      this.root.classList.add('arriving');
+      this.#arriving = setTimeout(() => this.root.classList.remove('arriving'), ARRIVE_MS);
+    });
   }
 
   /**
@@ -532,14 +536,18 @@ export class CollectorView {
     }
     clearTimeout(this.#peek);
     this.#peek = setTimeout(() => {
+      perfMark('peek');
       const game = this.selected;
       if (!game) return;
-      // Its colours first (worked out from a tiny picture), then the rest.
+      // Its colours first (worked out from a tiny picture), then the rest, a frame each: all at
+      // once was one long frame on a Pi (measured: 80 ms), most of it the page restyling.
       this.#tintSelected(game);
       this.#labelNow();
-      this.#dossierFor(game, 0);
-      this.#navPicFor(game);
-      this.#backdropFor(game);
+      this.#inTurn(game, [
+        () => this.#dossierFor(game, 0),
+        () => this.#navPicFor(game),
+        () => this.#backdropFor(game)
+      ]);
     }, PEEK_MS);
     clearTimeout(this.#settle);
     this.#settle = setTimeout(() => this.#showSelected(), SETTLE_MS);
@@ -910,6 +918,7 @@ export class CollectorView {
   /** The game in the showcase and the dossier, its parts made: put in, and set going. */
   /** `fresh`: the dossier drawn anew even if it already shows this game (its details changed). */
   #draw(game: Game, showcase: HTMLElement[], dossier: HTMLElement[], fresh = false): void {
+    perfMark('draw');
     this.#stop();
     this.#left = false;
     this.#game = game;
@@ -924,8 +933,11 @@ export class CollectorView {
         showcase.filter((p) => p.classList.contains('slab-label'))
       );
     this.#showcase.replaceChildren(...showcase);
-    // Followed the shelf already: kept as it is, not drawn again.
-    if (fresh || this.#dossier.dataset.id !== String(game.id)) {
+    // Followed the shelf already: kept as it is, not drawn again, nor faded in again (it
+    // flickered as the shelf went).
+    const keep = !fresh && this.#dossier.dataset.id === String(game.id);
+    this.#dossier.classList.toggle('kept', keep);
+    if (!keep) {
       keepPictures(this.#dossier, dossier);
       this.#dossier.replaceChildren(...dossier);
       this.#dossier.dataset.id = String(game.id);
@@ -1064,6 +1076,17 @@ export class CollectorView {
     void colour.then((c) => {
       if (c && this.#game?.id === id) this.root.style.setProperty('--game', c);
     });
+  }
+
+  /** `steps`, one a frame, while `game` is still the one selected. */
+  #inTurn(game: Game, steps: (() => void)[]): void {
+    const next = () => {
+      const step = steps.shift();
+      if (!step || this.selected?.id !== game.id) return;
+      step();
+      if (steps.length) requestAnimationFrame(next);
+    };
+    next();
   }
 
   /** The selected game's colours over the page as soon as they are known, before it is drawn. */
