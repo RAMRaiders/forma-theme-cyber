@@ -609,10 +609,8 @@ export class App {
         : category
           ? [CATEGORIES.find((c) => c.id === category)?.label ?? category]
           : []),
-      // The system as its logo, where Cyber has one; else its name.
-      ...(found && name
-        ? [found.logoSmall ? { label: name, logo: found.logoSmall, dark: found.logoDark } : name]
-        : [])
+      // The system by its name, as the other steps: words on one line.
+      ...(found && name ? [name] : [])
     ];
   }
 

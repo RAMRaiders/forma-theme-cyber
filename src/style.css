@@ -124,7 +124,7 @@ h1.current {
 
 .trail {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   min-width: 0;
   white-space: nowrap;
 }
@@ -135,13 +135,15 @@ h1.current {
   text-overflow: ellipsis;
   font-family: var(--mono);
   font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   color: var(--muted);
 }
 
+/* Every step the same size and weight, on one line: where you are only lit. */
 .trail .crumb.current {
   flex: none;
   max-width: 60vw;
-  font-weight: 700;
   color: var(--neon);
   text-shadow: 0 0 0.5rem rgb(34 228 255 / 45%);
 }

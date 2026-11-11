@@ -88,7 +88,7 @@ describe('the default theme', () => {
     expect(text('.hint')).toEqual(['AOpen', 'StartMenu']);
   });
 
-  it('shows a system with a logo as its logo in the breadcrumb', async () => {
+  it('names a system in the breadcrumb, even one with a logo', async () => {
     const withLogo = new InfoStore((url) =>
       url === './systems/art.json'
         ? Promise.resolve({ nes: { logo: 'logo.webp', logoDark: true, picture: null } })
@@ -97,15 +97,10 @@ describe('the default theme', () => {
     const { press, root, text } = await start([], {}, withLogo);
     await press('confirm');
     await press('confirm');
-    await vi.waitFor(() => expect(root.querySelector('.trail .crumb-logo')).not.toBeNull());
-    const logo = root.querySelector<HTMLImageElement>('.trail .crumb.current .crumb-logo')!;
-    expect(logo.getAttribute('src')).toBe('./systems/nes/logo-small.webp');
-    expect(logo.alt).toBe('Nintendo Entertainment System');
-    expect(logo.classList.contains('dark')).toBe(true);
-    expect(text('.trail .crumb')[0]).toBe('Consoles');
-    // A logo that will not load: the name instead.
-    logo.dispatchEvent(new Event('error'));
-    expect(text('.trail .crumb.current')).toEqual(['Nintendo Entertainment System']);
+    await vi.waitFor(() =>
+      expect(text('.trail .crumb')).toEqual(['Consoles', 'Nintendo Entertainment System'])
+    );
+    expect(root.querySelector('.trail .crumb-logo')).toBeNull();
   });
 
   it('goes category → system → games, and back to where it was', async () => {
