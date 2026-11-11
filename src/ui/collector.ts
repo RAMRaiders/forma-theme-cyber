@@ -100,6 +100,15 @@ const SPINE_H_REM = 2.85;
 /** How much shorter than its shape asks a long spine is drawn. */
 const SPINE_SQUEEZE = 0.94;
 
+/** Spine pictures looked at, when a system's list opens, to size its shelf. */
+const SPINE_PROBES = 8;
+/** Games loaded ahead of those in sight, in the way the shelf is going: a long list's next page
+ * is there before the shelf reaches it, never rows of "…". */
+const LOAD_AHEAD = 60;
+
+/** Each system's spine length (rem), worked out once: its shelf never changes while browsed. */
+const spineLengths = new Map<string, number>();
+
 /** Row height of the shelf in rem: each a box on its side. */
 const ROW_REM = 3.2;
 const OVERSCAN = 10;
@@ -194,8 +203,7 @@ export class CollectorView {
   readonly root = el('div', { class: 'collector' });
   readonly #backdrop = el('div', { class: 'collector-backdrop', 'aria-hidden': 'true' });
   readonly #shelf = el('div', { class: 'shelf', role: 'listbox' });
-  /** The stubbiest of the list's spine pictures so far (height over width): the shelf's shape. */
-  #spineShape = 0;
+  /** The system whose shelf is sized; its spine length kept in `spineLengths`. */
   #shelfSystem: string | null = null;
   /** How long a spine can be, in rem, about the shelf's middle; 0 until measured. */
   #shelfRoom = 0;
@@ -276,8 +284,7 @@ export class CollectorView {
     const now = source.get(selected);
     if (now && now.system !== this.#shelfSystem) {
       this.#shelfSystem = now.system;
-      this.#spineShape = 0;
-      this.#shelf.style.removeProperty('--spine-len');
+      this.#sizeShelf(now.system, source, selected);
     }
     const same = !!now && !!this.#box && this.#game?.id === now.id && !this.#left;
     this.select(selected, same);
@@ -431,6 +438,11 @@ export class CollectorView {
     const at = loops ? this.#place : Math.max(0, this.#selected);
     const first = loops ? at - half : Math.max(0, at - half);
     const last = loops ? at + half : Math.min(source.total - 1, at + half);
+    // The pages beyond, both ways: loaded before the shelf gets there.
+    for (const i of [first - LOAD_AHEAD, last + LOAD_AHEAD]) {
+      if (loops) source.get(loopIndex(i, source.total));
+      else if (i >= 0 && i < source.total) source.get(i);
+    }
     for (const [i, node] of this.#rows) {
       if (i < first || i > last) {
         node.remove();
@@ -491,7 +503,6 @@ export class CollectorView {
     }
     if (!src) return parts;
     const img = picture(src, 'spine-pic');
-    img.addEventListener('load', () => this.#learnSpine(img), { once: true });
     img.addEventListener(
       'error',
       () => {
@@ -503,14 +514,36 @@ export class CollectorView {
     return [img, ...parts];
   }
 
-  /** A spine picture loaded: the shelf as long as the stubbiest spine of the list asks. */
-  #learnSpine(img: HTMLImageElement): void {
-    if (!img.naturalWidth || !img.naturalHeight) return;
-    const shape = img.naturalHeight / img.naturalWidth;
-    if (this.#spineShape && shape >= this.#spineShape) return;
-    this.#spineShape = shape;
-    if (!this.#shelfRoom) this.#centreShelf();
-    this.#shelf.style.setProperty('--spine-len', `${shelfShape(shape, this.#shelfRoom)}rem`);
+  /**
+   * The shelf's spine length for a system, the same for every list of it and fixed while it is
+   * browsed: worked out once, when its first list opens, from the spine pictures of the games
+   * loaded then (the stubbiest decides), and kept. Without spine pictures, the usual length.
+   * Only the length differs from system to system; the shelf moves the same for all.
+   */
+  #sizeShelf(system: string, source: LazyList<Game>, selected: number): void {
+    const known = spineLengths.get(system);
+    this.#shelf.style.setProperty('--spine-len', `${known ?? SPINE_LEN_REM}rem`);
+    if (known !== undefined) return;
+    const urls: string[] = [];
+    for (let i = 0; i < source.total && urls.length < SPINE_PROBES; i++) {
+      // The games round the one opened first: those are loaded.
+      const game = source.get(loopIndex(selected + i, source.total));
+      const url = game ? this.#options.media(game, 'boxside', 160) : null;
+      if (url) urls.push(url);
+    }
+    if (urls.length === 0) {
+      spineLengths.set(system, SPINE_LEN_REM);
+      return;
+    }
+    void Promise.all(urls.map(spineShapeOf)).then((shapes) => {
+      const known = shapes.filter((s): s is number => s !== null);
+      if (!this.#shelfRoom) this.#centreShelf();
+      const length = known.length ? shelfShape(Math.min(...known), this.#shelfRoom) : SPINE_LEN_REM;
+      spineLengths.set(system, length);
+      if (this.#shelfSystem === system) {
+        this.#shelf.style.setProperty('--spine-len', `${length}rem`);
+      }
+    });
   }
 
   /**
@@ -1722,4 +1755,15 @@ export function dumpText(dump: Game['dump'] | undefined): HTMLElement | null {
     ),
     dump.name ? el('span', { class: 'listed' }, dump.name) : null
   );
+}
+
+/** How many times as tall as wide a spine picture is; `null` if it will not load. */
+function spineShapeOf(url: string): Promise<number | null> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () =>
+      resolve(img.naturalWidth && img.naturalHeight ? img.naturalHeight / img.naturalWidth : null);
+    img.onerror = () => resolve(null);
+    img.src = url;
+  });
 }

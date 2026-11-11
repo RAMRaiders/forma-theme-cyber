@@ -696,6 +696,64 @@ describe('coming back to the same game', () => {
 });
 
 describe('the shelf in the shape of its spines', () => {
+  it('sizes a system’s shelf once, when its list opens, and never while it is browsed', async () => {
+    // Every spine picture a PC Engine HuCard's shape: 18.4 times as tall as wide.
+    const loaded: HTMLImageElement[] = [];
+    const Real = globalThis.Image;
+    globalThis.Image = class extends Real {
+      constructor() {
+        super();
+        loaded.push(this);
+        Object.defineProperty(this, 'naturalWidth', { value: 10 });
+        Object.defineProperty(this, 'naturalHeight', { value: 184 });
+        queueMicrotask(() => {
+          this.onload?.(new Event('load'));
+        });
+      }
+    };
+    try {
+      const games = Array.from({ length: 30 }, (_, i): Game => ({
+        ...game(i + 1, `Game ${i + 1}`, i % 3 ? {} : { boxside: 's' }),
+        system: 'pcengine'
+      }));
+      // A wide screen: room for long spines.
+      const rect = vi
+        .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+        .mockReturnValue({ left: 0, top: 0, width: 1600, height: 900 } as DOMRect);
+      const { v } = await view(games);
+      const shelf = v.root.querySelector<HTMLElement>('.shelf')!;
+      expect(shelf.style.getPropertyValue('--spine-len')).toBe('22rem');
+      for (let i = 0; i < 5; i++) await Promise.resolve();
+      rect.mockRestore();
+      expect(shelf.style.getPropertyValue('--spine-len')).toBe('49.29rem');
+      const sized = shelf.style.getPropertyValue('--spine-len');
+      expect(loaded.length).toBeLessThanOrEqual(8);
+      // Browsing loads no more pictures to measure, and the length stays.
+      for (let i = 1; i < 20; i++) v.select(i);
+      await Promise.resolve();
+      expect(shelf.style.getPropertyValue('--spine-len')).toBe(sized);
+      expect(loaded.length).toBeLessThanOrEqual(8);
+    } finally {
+      globalThis.Image = Real;
+    }
+  });
+
+  it('loads a long list’s pages ahead of the shelf', async () => {
+    const asked: number[] = [];
+    const games = Array.from({ length: 1000 }, (_, i) => game(i + 1, `Game ${i + 1}`));
+    const v = new CollectorView({ media, system: () => null });
+    document.body.replaceChildren(v.root);
+    const list = new LazyList<Game>((offset, limit) => {
+      asked.push(offset);
+      return Promise.resolve({ items: games.slice(offset, offset + limit), total: games.length });
+    }, 50);
+    await list.start(0);
+    v.show(list, 0);
+    v.select(5);
+    // More than the rows drawn ask for: the next page already on its way.
+    expect(Math.max(...asked.filter((o) => o < 500))).toBeGreaterThanOrEqual(50);
+  });
+
   it('keeps a Mega Drive spine as it was, makes a PC Engine one longer, as far as there is room', () => {
     expect(shelfShape(7.1, 100)).toBe(22);
     expect(shelfShape(18.4, 100)).toBe(49.29);
