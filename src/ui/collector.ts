@@ -122,6 +122,9 @@ const HELD_MS = 130;
 const PEEK_MS = 220;
 /** While held, the label catches up this long after the last step. */
 const LABEL_MS = 300;
+/** While held, the fan art and the label follow the shelf this often: a preview of the games
+ * run past, not only of the one stopped on. */
+const HELD_PREVIEW_MS = 500;
 /** Fan art kept decoded, the game shown and those round it: going to them is then at once. */
 const FANART_KEPT = 12;
 /** On a game this long, its video plays in the footage bay. */
@@ -225,6 +228,8 @@ export class CollectorView {
   #pending = false;
   #settle: ReturnType<typeof setTimeout> | undefined;
   #peek: ReturnType<typeof setTimeout> | undefined;
+  /** When the fan art and the label last followed a held shelf. */
+  #previewedAt = 0;
   #labelTimer: ReturnType<typeof setTimeout> | undefined;
   /** When the selection last moved. */
   #steppedAt = -Infinity;
@@ -412,8 +417,19 @@ export class CollectorView {
     this.#stopVideo();
     // While held the shelf says which game it is; the label's pictures would only flicker past.
     clearTimeout(this.#labelTimer);
-    if (!held) this.#labelNow();
-    else this.#labelTimer = setTimeout(() => this.#labelNow(), LABEL_MS);
+    if (!held) {
+      this.#labelNow();
+      this.#previewedAt = now;
+    } else this.#labelTimer = setTimeout(() => this.#labelNow(), LABEL_MS);
+    // Held: the game passed now, every so often, behind and above the shelf.
+    if (held && now - this.#previewedAt >= HELD_PREVIEW_MS) {
+      this.#previewedAt = now;
+      const game = this.selected;
+      if (game) {
+        this.#labelNow();
+        this.#backdropFor(game);
+      }
+    }
     clearTimeout(this.#peek);
     this.#peek = setTimeout(() => {
       const game = this.selected;

@@ -470,6 +470,19 @@ describe('the Collector view', () => {
     expect(held()).toBe(false);
   });
 
+  it('shows the games run past every half second while the direction is held', async () => {
+    const games = Array.from({ length: 12 }, (_, i) => game(i + 1, `Game ${i + 1}`, BOXED));
+    const { v, text } = await view(games);
+    vi.advanceTimersByTime(2100);
+    v.select(1);
+    for (let i = 2; i <= 8; i++) {
+      vi.advanceTimersByTime(100);
+      v.select(i);
+    }
+    // 700 ms held: the label has followed once on the way, not waited for the stop.
+    expect(text('.slab-label .what strong')).not.toEqual(['Game 2']);
+  });
+
   it('fades a new game in once the selection rests; the label alone follows each step', async () => {
     const { v, text } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
     vi.advanceTimersByTime(2100);
