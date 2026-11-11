@@ -263,12 +263,6 @@
         "title": "Atari VCS Owners Club Bulletin - AB 21 (Atari International)"
       }
     ],
-    "hues": [
-      5
-    ],
-    "consoleHues": [
-      25
-    ],
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -286,6 +280,12 @@
         "file": "gear-4.webp",
         "name": "Keyboard Controller"
       }
+    ],
+    "hues": [
+      5
+    ],
+    "consoleHues": [
+      24
     ]
   },
   "atari5200": {
@@ -314,7 +314,7 @@
       5
     ],
     "consoleHues": [
-      15
+      12
     ]
   },
   "atari800": {
@@ -451,15 +451,6 @@
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
-    "hues": [
-      10,
-      195,
-      45,
-      115
-    ],
-    "consoleHues": [
-      5
-    ],
     "magazines": [
       {
         "file": "mag-1.webp",
@@ -483,6 +474,12 @@
         "file": "gear-2.webp",
         "name": "1541 disk drive"
       }
+    ],
+    "hues": [
+      10,
+      195,
+      45,
+      115
     ]
   },
   "camplynx": {
@@ -751,15 +748,6 @@
         "title": "Official Dreamcast Magazine, The - Issue 01"
       }
     ],
-    "hues": [
-      215
-    ],
-    "consoleHues": [
-      53,
-      216,
-      5,
-      135
-    ],
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -773,6 +761,14 @@
         "file": "gear-3.webp",
         "name": "Keyboard"
       }
+    ],
+    "hues": [
+      215
+    ],
+    "consoleHues": [
+      186,
+      12,
+      53
     ]
   },
   "dxx-rebirth": {
@@ -1028,12 +1024,6 @@
         "title": "EGM's Unofficial Game Cube Guide - March 2002"
       }
     ],
-    "consoleHues": [
-      255,
-      44,
-      175,
-      351
-    ],
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -1043,6 +1033,9 @@
         "file": "gear-2.webp",
         "name": "Hori controller"
       }
+    ],
+    "consoleHues": [
+      249
     ]
   },
   "gamegear": {
@@ -1082,12 +1075,6 @@
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
-    "hues": [
-      225
-    ],
-    "consoleHues": [
-      85
-    ],
     "magazines": [
       {
         "file": "mag-1.webp",
@@ -1115,6 +1102,13 @@
         "file": "gear-2.webp",
         "name": "Link Cable"
       }
+    ],
+    "hues": [
+      225
+    ],
+    "consoleHues": [
+      84,
+      335
     ]
   },
   "gb2players": {
@@ -1157,9 +1151,6 @@
         "title": "GBA Master Guide Issue 01"
       }
     ],
-    "hues": [
-      245
-    ],
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -1173,6 +1164,9 @@
         "file": "gear-3.webp",
         "name": "Game Boy Player"
       }
+    ],
+    "hues": [
+      245
     ]
   },
   "gbc": {
@@ -1332,12 +1326,6 @@
         "title": "EDGE #022 (1995) - Supplement: Atari Jaguar"
       }
     ],
-    "hues": [
-      355
-    ],
-    "consoleHues": [
-      1
-    ],
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -1355,6 +1343,12 @@
         "file": "gear-4.webp",
         "name": "Memory Track"
       }
+    ],
+    "hues": [
+      355
+    ],
+    "consoleHues": [
+      2
     ]
   },
   "jaguarcd": {
@@ -1460,6 +1454,9 @@
     "hues": [
       45,
       5
+    ],
+    "consoleHues": [
+      34
     ]
   },
   "macintosh": {
@@ -1490,13 +1487,6 @@
     "logo": "logo.webp",
     "picture": "photo.webp",
     "kind": "cutout",
-    "hues": [
-      5,
-      215
-    ],
-    "consoleHues": [
-      2
-    ],
     "magazines": [
       {
         "file": "mag-1.webp",
@@ -1520,6 +1510,13 @@
         "file": "gear-2.webp",
         "name": "Control Stick"
       }
+    ],
+    "hues": [
+      5,
+      215
+    ],
+    "consoleHues": [
+      1
     ]
   },
   "mc10": {
@@ -1568,9 +1565,6 @@
         "title": "Sega Force Issue 16"
       }
     ],
-    "hues": [
-      216
-    ],
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -1584,6 +1578,9 @@
         "file": "gear-3.webp",
         "name": "Justifier light gun"
       }
+    ],
+    "hues": [
+      216
     ]
   },
   "megadrive-msu": {
@@ -1766,15 +1763,6 @@
         "title": "N64 Gamer - Issue 23"
       }
     ],
-    "hues": [
-      225
-    ],
-    "consoleHues": [
-      47,
-      5,
-      219,
-      143
-    ],
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -1792,6 +1780,15 @@
         "file": "gear-4.webp",
         "name": "Expansion Pak"
       }
+    ],
+    "hues": [
+      225
+    ],
+    "consoleHues": [
+      45,
+      221,
+      5,
+      147
     ]
   },
   "n64dd": {
@@ -1945,9 +1942,6 @@
         "title": "Nintendo Power Issue #3 November December 1988"
       }
     ],
-    "hues": [
-      5
-    ],
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -1965,6 +1959,9 @@
         "file": "gear-4.webp",
         "name": "NES Advantage"
       }
+    ],
+    "hues": [
+      5
     ]
   },
   "ngp": {
@@ -2094,13 +2091,6 @@
         "title": "Turbo Play"
       }
     ],
-    "hues": [
-      5
-    ],
-    "consoleHues": [
-      204,
-      56
-    ],
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -2114,6 +2104,12 @@
         "file": "gear-3.webp",
         "name": "CD-ROM² unit"
       }
+    ],
+    "hues": [
+      5
+    ],
+    "consoleHues": [
+      6
     ]
   },
   "pcenginecd": {
@@ -2272,12 +2268,6 @@
         "title": "Official US PlayStation Magazine - Volume 3 Issue 1"
       }
     ],
-    "hues": [
-      345,
-      45,
-      175,
-      215
-    ],
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -2291,6 +2281,12 @@
         "file": "gear-3.webp",
         "name": "Memory Card"
       }
+    ],
+    "hues": [
+      345,
+      45,
+      175,
+      215
     ]
   },
   "pv1000": {
@@ -2432,9 +2428,6 @@
         "title": "Sega Saturn Magazine - Issue 02"
       }
     ],
-    "hues": [
-      236
-    ],
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -2448,6 +2441,9 @@
         "file": "gear-3.webp",
         "name": "Net Link keyboard"
       }
+    ],
+    "hues": [
+      236
     ]
   },
   "sc3000": {
@@ -2525,9 +2521,6 @@
     ],
     "hues": [
       215
-    ],
-    "consoleHues": [
-      355
     ]
   },
   "segaai": {
@@ -2609,15 +2602,6 @@
         "title": "SNES Force Issue 01"
       }
     ],
-    "hues": [
-      355
-    ],
-    "consoleHues": [
-      53,
-      5,
-      209,
-      155
-    ],
     "peripherals": [
       {
         "file": "gear-1.webp",
@@ -2631,6 +2615,15 @@
         "file": "gear-3.webp",
         "name": "Controller"
       }
+    ],
+    "hues": [
+      355
+    ],
+    "consoleHues": [
+      48,
+      1,
+      215,
+      159
     ]
   },
   "snes-msu1": {
@@ -3157,7 +3150,7 @@
   },
   "ps2": {
     "logo": null,
-    "picture": null,
+    "picture": "photo.webp",
     "magazines": [
       {
         "file": "mag-1.webp",
@@ -3185,6 +3178,7 @@
         "file": "gear-3.webp",
         "name": "8 MB Memory Card"
       }
-    ]
+    ],
+    "kind": "cutout"
   }
 }

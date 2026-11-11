@@ -1,5 +1,5 @@
 {
-  "//": "Pictures from Wikimedia Commons for systems Batocera's carbon theme has none for. cut: a studio shot on a plain background, cut out like carbon's; otherwise shown framed.",
+  "//": "Pictures from Wikimedia Commons for systems Batocera's carbon theme has none for. cut: a studio shot on a plain background, cut out like carbon's; otherwise shown framed. transparent: already cut out. over: used even where carbon has one (carbon's PC Engine is a Core Grafx, read as a SuperGrafx).",
   "pictures": {
     "bk": {
       "file": "Bk0010-01-sideview.jpg",
@@ -72,6 +72,121 @@
     "tvc": {
       "file": "Videoton_TV-Computer_(1986)_(37650450314).jpg",
       "cut": false
+    },
+    "pcengine": {
+      "file": "PC-Engine-Console-Set.png",
+      "transparent": true,
+      "over": true
+    },
+    "megadrive": {
+      "file": "Sega-Mega-Drive-EU-Mk1-wController-FL.png",
+      "over": true,
+      "transparent": true
+    },
+    "nes": {
+      "file": "NES-Console-Set.png",
+      "over": true,
+      "cut": true
+    },
+    "snes": {
+      "file": "Nintendo-Super-Famicom-Set-FL.png",
+      "over": true,
+      "transparent": true
+    },
+    "psx": {
+      "file": "PSX-Console-wController.png",
+      "over": true,
+      "transparent": true
+    },
+    "n64": {
+      "file": "N64-Console-Set.png",
+      "over": true,
+      "transparent": true
+    },
+    "gb": {
+      "file": "Game-Boy-FL.png",
+      "over": true,
+      "transparent": true
+    },
+    "gba": {
+      "file": "Nintendo-Game-Boy-Advance-Purple-FL.png",
+      "over": true,
+      "transparent": true
+    },
+    "gbc": {
+      "file": "Nintendo-Game-Boy-Color-FL.png",
+      "over": true,
+      "transparent": true
+    },
+    "mastersystem": {
+      "file": "Sega-Master-System-Set.png",
+      "over": true,
+      "transparent": true
+    },
+    "atari2600": {
+      "file": "Atari-2600-Wood-4Sw-Set.png",
+      "over": true,
+      "transparent": true
+    },
+    "saturn": {
+      "file": "Sega-Saturn-Console-Set-Mk1.png",
+      "over": true,
+      "transparent": true
+    },
+    "dreamcast": {
+      "file": "Dreamcast-Console-Set.png",
+      "over": true,
+      "transparent": true
+    },
+    "c64": {
+      "file": "Commodore-64-Computer-FL.png",
+      "over": true,
+      "transparent": true
+    },
+    "neogeo": {
+      "file": "Neo-Geo-AES-Console-Set.png",
+      "over": true,
+      "transparent": true
+    },
+    "atari7800": {
+      "file": "Atari-7800-Console-Set.png",
+      "over": true,
+      "transparent": true
+    },
+    "gamecube": {
+      "file": "GameCube-Console-Set.png",
+      "over": true,
+      "transparent": true
+    },
+    "sega32x": {
+      "file": "Sega-Genesis-Model2-32X.png",
+      "over": true,
+      "transparent": true
+    },
+    "ps2": {
+      "file": "PS2-Fat-Console-Set.png",
+      "over": true,
+      "transparent": true
+    },
+    "lynx": {
+      "file": "Atari-Lynx-I-Handheld.png",
+      "over": true,
+      "transparent": true
+    },
+    "nds": {
+      "file": "Nintendo-DS-Lite-Black-Open.png",
+      "over": true,
+      "transparent": true
+    },
+    "psp": {
+      "file": "Sony-PSP-1000-Body.png",
+      "over": true,
+      "transparent": true
+    },
+    "jaguar": {
+      "file": "Atari-Jaguar-Console-Set.png",
+      "over": true,
+      "transparent": true
     }
   },
   "//logos": "Official logos from Wikimedia Commons for systems carbon has no logo for: the system's own, else its maker's.",

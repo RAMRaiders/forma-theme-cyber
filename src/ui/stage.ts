@@ -1,4 +1,5 @@
 import type { Game } from '@ramraiders/forma-sdk';
+import { span } from './perf.js';
 
 import { romName } from '../logic/romname.js';
 import { DEFAULT_BACK, DEFAULT_FRONT } from './cover.js';
@@ -238,6 +239,15 @@ export class Stage {
 
   /** Shows `game` from act 1; the same game again (a favourite toggled) keeps its act. */
   show(game: ShowGame, again = false): void {
+    const done = span('stage.show');
+    try {
+      this.#showTraced(game, again);
+    } finally {
+      done();
+    }
+  }
+
+  #showTraced(game: ShowGame, again = false): void {
     if (!again && this.#game?.id === game.id && this.#title && sameDetails(this.#game, game)) {
       this.#game = game;
       const title = this.#titleBlock(game);
@@ -278,6 +288,12 @@ export class Stage {
     this.#later(() => {
       if (!this.#startVideo(game, true)) this.#actThree(game);
     }, ACT_THREE_MS);
+  }
+
+  /** The pictures it shows now: its own, and the newest behind it. */
+  images(): HTMLImageElement[] {
+    const back = this.backdrop.lastElementChild;
+    return [...this.root.querySelectorAll('img'), ...(back ? back.querySelectorAll('img') : [])];
   }
 
   /** The game's colour, from its box (or fan art): Cyber's own until it is known. */

@@ -5,10 +5,11 @@ import type {
   Game,
   GameStart,
   InputEvent,
+  NavGame,
   SettingsChanged,
-  VersionGroup,
   ViewInfo
 } from '@ramraiders/forma-sdk';
+import { span } from './ui/perf.js';
 import { FormaError } from '@ramraiders/forma-sdk';
 
 import {
@@ -37,7 +38,7 @@ import { type Move, moveGrid, moveHome, moveList } from './logic/nav.js';
 import { LazyList } from './logic/pager.js';
 import { el } from './ui/dom.js';
 import { type Card, GridView } from './ui/grid.js';
-import { COLLECTOR_PICTURES, CollectorView, type OtherVersion } from './ui/collector.js';
+import { COLLECTOR_PICTURES, CollectorView } from './ui/collector.js';
 import { launchScreen } from './ui/launch.js';
 import { GamesView } from './ui/games.js';
 import { HomeView, type Shortcut, type Tile } from './ui/home.js';
@@ -130,7 +131,6 @@ export class App {
     stopVideo: () => void this.forma.video.stop().catch(() => {}),
     prepare: (items) => void this.forma.library.prepareMedia(items as never).catch(() => {})
   });
-  readonly #versions = new Map<string, Promise<VersionGroup[]>>();
   /** The Collector view of a game list: Select → View on a list. */
   readonly #collector = new CollectorView({
     media: (game, kind, width) =>
@@ -141,7 +141,6 @@ export class App {
       const { data } = await this.forma.ra.game(game.id);
       return { earned: data.earned, total: data.achievementCount };
     },
-    otherVersions: (game) => this.#otherVersions(game),
     play: (game, area) => this.forma.video.play(game.id, { area }),
     stopVideo: () => void this.forma.video.stop().catch(() => {}),
     // The game companies' logos first, then the hardware makers'.
@@ -251,8 +250,11 @@ export class App {
     });
     this.forma.input.on((e) => this.#onInput(e));
     this.forma.events.on('library:changed', () => {
-      this.#versions.clear();
       this.#reloadSoon();
+    });
+    // The scraper on the selected game: Cyber shows it at work, then what it brought.
+    this.forma.events.on('scraper:progress', (status) => {
+      if (this.#list) this.#gameView.scrapeProgress(status);
     });
     // A scrape replaced a game's pictures, often under the same names: nothing else says so.
     this.forma.events.on('media:changed', ({ game }) => {
@@ -265,6 +267,8 @@ export class App {
     });
     // Forma's views list would only ever offer Cyber's one view: back to its top.
     this.forma.events.on('nav:open', () => void this.#open(CYBER_VIEW));
+    // A game chosen in Forma's menu (its versions, sibling games): shown as if browsed to.
+    this.forma.events.on('nav:game', (chosen) => void this.#openGame(chosen));
     // Forma's menu changed one of Cyber's settings, or the screen margins.
     this.forma.events.on('settings:changed', (change) => void this.#settingChanged(change));
     this.forma.events.on('game:start', (game) => this.#showLaunch(game));
@@ -295,6 +299,26 @@ export class App {
   async #open(view: string): Promise<void> {
     this.#view = view;
     this.#stack = [{ path: [], index: 0 }];
+    await this.#load();
+  }
+
+  /**
+   * A game in its system's list, selected, its details up: home, its category, its system, as
+   * if browsed to, so back climbs out the usual way.
+   */
+  async #openGame({ game, system }: NavGame): Promise<void> {
+    const at = this.#groups.findIndex((g) => g.systems.some((s) => s.summary.name === system));
+    const group = this.#groups[at];
+    if (!group) return this.#notify('That game is not in Cyber’s lists');
+    this.#view = CYBER_VIEW;
+    this.#stack = [
+      { path: [], index: at },
+      {
+        path: [group.category.id],
+        index: group.systems.findIndex((s) => s.summary.name === system)
+      },
+      { path: [group.category.id, system], index: 0, game }
+    ];
     await this.#load();
   }
 
@@ -336,6 +360,8 @@ export class App {
     const remembered = this.#level.index;
     // A reload keeps to the game selected, wherever it now sorts: a scrape can rename it.
     const follow = reload && this.#list ? this.#gameView.selected?.id : this.#level.game;
+    // The same list, filtered or every game again since: shown, so the change is seen.
+    const wasFiltered = reload && this.#list ? this.#page?.filtered === true : null;
     this.#level.game = undefined;
     const { view, path } = target;
     const loading = this.#loading('Loading games…');
@@ -362,6 +388,7 @@ export class App {
         this.#level.index = Math.min(index, Math.max(0, list.total - 1));
         this.#main.replaceChildren(this.#gameView.root);
         this.#gameView.show(list, this.#level.index);
+        if (wasFiltered !== null && wasFiltered !== first.filtered) this.#gameView.reveal();
         this.#listPlace = { view, path };
         this.#prepareList(this.#level.index);
       } else {
@@ -618,10 +645,11 @@ export class App {
     const view = this.#views.find((v) => v.id === this.#view);
     // Breadcrumbs, for show: where you are. Categories is the root: named only when you are on it.
     this.#title.textContent = this.#view === CYBER_VIEW ? 'Categories' : (view?.name ?? this.#view);
-    const crumbs =
+    const trail =
       this.#view === CYBER_VIEW
         ? this.#cyberTrail()
         : (this.#page?.trail ?? []).map((c) => c.label);
+    const crumbs = this.#filtered() ? [...trail, 'Filtered'] : trail;
     this.#title.classList.toggle('current', crumbs.length === 0);
     this.#title.hidden = this.#view === CYBER_VIEW && crumbs.length > 0;
     this.#trail.replaceChildren(
@@ -648,7 +676,11 @@ export class App {
         : []),
       ...(games ? [['Y', 'Favourite'] as [string, string]] : []),
       ...(this.#mode === 'systems' ? [['Y', 'Next fact'] as [string, string]] : []),
-      ...(this.#stack.length > 1 ? [['B', 'Back'] as [string, string]] : []),
+      ...(this.#filtered()
+        ? [['B', 'All games'] as [string, string]]
+        : this.#stack.length > 1
+          ? [['B', 'Back'] as [string, string]]
+          : []),
       ['Start', 'Menu']
     ];
     this.#hints.replaceChildren(
@@ -657,6 +689,15 @@ export class App {
   }
 
   #onInput(e: InputEvent): void {
+    const done = span(`input ${e.action}`);
+    try {
+      this.#handleInput(e);
+    } finally {
+      done();
+    }
+  }
+
+  #handleInput(e: InputEvent): void {
     if (!e.pressed || !this.#playing.hidden) return;
 
     const move = MOVES[e.action];
@@ -780,6 +821,14 @@ export class App {
   }
 
   async #back(): Promise<void> {
+    // A list narrowed down in Forma's menu (a game's siblings, say): every game again,
+    // the game selected kept (Forma's change reloads the list).
+    if (this.#filtered()) {
+      await this.forma.nav.setFilter(null).catch((error: unknown) => {
+        this.#notify(FormaError.from(error).message);
+      });
+      return;
+    }
     if (this.#stack.length === 1) return;
     const { path, index } = this.#level;
     this.#places.set(path.join('/'), {
@@ -788,6 +837,11 @@ export class App {
     });
     this.#stack.pop();
     await this.#load();
+  }
+
+  /** The game list on screen narrowed down by Forma's filter. */
+  #filtered(): boolean {
+    return this.#mode === 'browse' && !!this.#list && this.#page?.filtered === true;
   }
 
   async #toggleFavorite(): Promise<void> {
@@ -823,17 +877,6 @@ export class App {
   }
 
   /** Library changes arrive in bursts (a scraper run); reload once they settle. */
-  /** Each system's versions, asked once until the library changes. */
-  async #otherVersions(game: Game): Promise<OtherVersion[]> {
-    let groups = this.#versions.get(game.system);
-    if (!groups) {
-      groups = this.forma.library.versions(game.system);
-      this.#versions.set(game.system, groups);
-    }
-    const group = (await groups).find((g) => g.games.some((v) => v.id === game.id));
-    return group?.games.filter((v) => v.id !== game.id) ?? [];
-  }
-
   #reloadSoon(): void {
     clearTimeout(this.#reloadTimer);
     this.#reloadTimer = setTimeout(() => void this.#load(true), 300);

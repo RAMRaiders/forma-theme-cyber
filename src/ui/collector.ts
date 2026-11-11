@@ -1,4 +1,5 @@
-import type { Game } from '@ramraiders/forma-sdk';
+import type { Game, ScraperStatus } from '@ramraiders/forma-sdk';
+import { span } from './perf.js';
 
 import type { LazyList } from '../logic/pager.js';
 import { ageRatings, asPegi } from '../logic/agerating.js';
@@ -6,6 +7,7 @@ import { flaggedRegions, languageFlag, regionFlag, romName } from '../logic/romn
 import { DEFAULT_BACK, DEFAULT_FRONT, hue } from './cover.js';
 import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
+import { Scan } from './scan.js';
 import {
   ARCADE,
   type Achievements,
@@ -47,17 +49,9 @@ export interface ScreenArea {
   height: number;
 }
 
-/** Another file of the same game, as the library's versions list gives it. */
-export interface OtherVersion {
-  path: string;
-  tags: string[];
-}
-
 export interface CollectorOptions {
   media: MediaUrl;
   achievements?: (game: Game) => Promise<Achievements | null>;
-  /** The other versions of this game in the library: only ones on disk. */
-  otherVersions?: (game: Game) => Promise<OtherVersion[]>;
   /** A developer's or publisher's logo, from its name; `null` where Cyber has none. */
   company?: (name: string) => string | null;
   /** The game's colour, from a small picture of it. */
@@ -81,6 +75,7 @@ const BACKDROP_W = 960;
 export const COLLECTOR_PICTURES: readonly (readonly [Kind, number])[] = [
   ['thumbnail', 640],
   ['boxside', 160],
+  ['marquee', 320],
   ['fanart', BACKDROP_W],
   ['wheel', 560],
   ['boxback', 640],
@@ -93,6 +88,17 @@ export const COLLECTOR_PICTURES: readonly (readonly [Kind, number])[] = [
   ['map', 400]
 ];
 
+/**
+ * A spine on the shelf, in rem, as style.css draws it: a Mega Drive box's shape. A list of
+ * slimmer boxes makes every spine longer: as long as its stubbiest box asks (a TurboGrafx-16
+ * case, about 11 times as tall as wide), the slimmer ones (a PC Engine HuCard's, about 18) fitted
+ * into that.
+ */
+const SPINE_LEN_REM = 22;
+const SPINE_H_REM = 2.85;
+/** How much shorter than its shape asks a long spine is drawn. */
+const SPINE_SQUEEZE = 0.94;
+
 /** Row height of the shelf in rem: each a box on its side. */
 const ROW_REM = 3.2;
 const OVERSCAN = 10;
@@ -103,20 +109,22 @@ const HELD_MS = 130;
 /** The fan art behind the shelf, a sneak peek, once the selection pauses this long: longer than
  * between two quick presses, or the whole screen changes at each of them. */
 const PEEK_MS = 220;
+/** While held, the label catches up this long after the last step. */
+const LABEL_MS = 300;
 /** Fan art kept decoded, the game shown and those round it: going to them is then at once. */
 const FANART_KEPT = 12;
 /** On a game this long, its video plays in the footage bay. */
 const VIDEO_AFTER_MS = 2500;
 /** With no video, the footage bay shows the screenshots in turn. */
 const SHOT_MS = 4000;
-/** This copy and the play record take turns, each this long, when they do not fit together. */
-const ALTERNATE_MS = 10_000;
 /** The story a page at a time: each this long, fading this long between. */
 const STORY_PAGE_MS = 12_000;
 const STORY_FADE_MS = 300;
 /** The showcase behind the shelf waits for the selection to rest this long: made anew at each
- * step, it held up the shelf's glide on a Pi. */
-const SETTLE_MS = 300;
+ * step, it held up the shelf's glide on a Pi (measured: 20 to 46 ms of work, frames of up to
+ * 146 ms, at a step every 350 ms). Longer than the time between taps, shorter than DROP_MS so
+ * it is drawn before the shelf goes. */
+const SETTLE_MS = 750;
 /** The box and the cartridge sliding past each other, slowly (as in style.css). */
 const SLIDE_MS = 2200;
 /** On a game: the box first turns after this, then every `TURN_MS`. */
@@ -185,10 +193,17 @@ export class CollectorView {
   readonly root = el('div', { class: 'collector' });
   readonly #backdrop = el('div', { class: 'collector-backdrop', 'aria-hidden': 'true' });
   readonly #shelf = el('div', { class: 'shelf', role: 'listbox' });
+  /** The stubbiest of the list's spine pictures so far (height over width): the shelf's shape. */
+  #spineShape = 0;
+  #shelfSystem: string | null = null;
+  /** How long a spine can be, in rem, about the shelf's middle; 0 until measured. */
+  #shelfRoom = 0;
   /** The rows, moved as one so the selected sits in the middle: a transform, gliding. */
   readonly #track = el('div', { class: 'track' });
   readonly #showcase = el('section', { class: 'showcase' });
   readonly #dossier = el('aside', { class: 'dossier' });
+  /** Over it all while the scraper is on the selected game. */
+  readonly #scan = new Scan();
   readonly #options: CollectorOptions;
   #rows = new Map<number, HTMLElement>();
   #source: LazyList<Game> | null = null;
@@ -196,6 +211,7 @@ export class CollectorView {
   #pending = false;
   #settle: ReturnType<typeof setTimeout> | undefined;
   #peek: ReturnType<typeof setTimeout> | undefined;
+  #labelTimer: ReturnType<typeof setTimeout> | undefined;
   /** When the selection last moved. */
   #steppedAt = -Infinity;
   /** The fan art behind the view, or on its way there. */
@@ -210,8 +226,6 @@ export class CollectorView {
   /** The shelf's colours, worked out one after another. */
   #colourQueue: Promise<void> = Promise.resolve();
   #achievements = new Map<number, Promise<Achievements | null>>();
-  /** Lays out this copy and the play record again: together if they fit, else in turn. */
-  #layDossier: (() => void) | null = null;
   #game: ShowGame | null = null;
   #box: HTMLElement | null = null;
   /** Sizes the box to its case, once the case is laid out. */
@@ -233,6 +247,8 @@ export class CollectorView {
   #dropTimer: ReturnType<typeof setTimeout> | undefined;
   /** A video asked for, until it is stopped. */
   #video = false;
+  /** Its video, stopped while the shelf is up: it plays again when the shelf goes. */
+  #videoHeld = false;
   /** Room above the first row and below the last, so any row can sit in the middle. */
   #pad = 0;
   /** The selected row's place on the track: past the ends when the shelf loops. */
@@ -244,7 +260,7 @@ export class CollectorView {
   constructor(options: CollectorOptions) {
     this.#options = options;
     this.#shelf.append(this.#track);
-    this.root.append(this.#backdrop, this.#shelf, this.#showcase, this.#dossier);
+    this.root.append(this.#backdrop, this.#shelf, this.#showcase, this.#dossier, this.#scan.root);
   }
 
   show(source: LazyList<Game>, selected: number): void {
@@ -257,12 +273,18 @@ export class CollectorView {
     // The same game as before (the list reloaded, after a favourite say): no shelf, the case
     // goes on as it was, only what changed about the game is shown.
     const now = source.get(selected);
+    if (now && now.system !== this.#shelfSystem) {
+      this.#shelfSystem = now.system;
+      this.#spineShape = 0;
+      this.#shelf.style.removeProperty('--spine-len');
+    }
     const same = !!now && !!this.#box && this.#game?.id === now.id && !this.#left;
     this.select(selected, same);
     if (same && now) this.#update(now);
     else {
       // Opening a list: its game shown at once; only moves along the shelf wait to rest.
       clearTimeout(this.#settle);
+      clearTimeout(this.#labelTimer);
       clearTimeout(this.#peek);
       this.#showSelected();
     }
@@ -283,12 +305,28 @@ export class CollectorView {
 
   /**
    * The shelf shows over the middle while the selection moves; a moment after the last move it
-   * fades, and the case has the screen. Only opacity changes.
+   * fades, and the case has the screen. Only opacity changes. While it shows, everything behind
+   * it rests (the box's turns, the screenshots, the story's pages, the video), and goes on once
+   * it is gone.
    */
   #browse(): void {
     this.root.classList.add('browsing');
+    if (this.#video) {
+      this.#stopVideo();
+      this.#videoHeld = true;
+    }
     clearTimeout(this.#dropTimer);
-    this.#dropTimer = setTimeout(() => this.root.classList.remove('browsing'), DROP_MS);
+    this.#dropTimer = setTimeout(() => {
+      this.root.classList.remove('browsing');
+      if (!this.#videoHeld) return;
+      this.#videoHeld = false;
+      if (this.#game && !this.#left) this.#startVideo(this.#game);
+    }, DROP_MS);
+  }
+
+  /** Nothing over the case: its animations may run. */
+  #resting(): boolean {
+    return !this.root.classList.contains('browsing');
   }
 
   /** A new game's bays fade in (not its label, which follows each step along the shelf). */
@@ -305,6 +343,15 @@ export class CollectorView {
    * only the label, cheap; the rest of the showcase waits for the selection to rest.
    */
   #labelNow(): void {
+    const done = span('collector.labelNow');
+    try {
+      this.#labelNowTraced();
+    } finally {
+      done();
+    }
+  }
+
+  #labelNowTraced(): void {
     const game = this.selected;
     const label = this.#showcase.querySelector('.slab-label');
     if (game && label && label.getAttribute('data-id') !== String(game.id)) {
@@ -322,6 +369,15 @@ export class CollectorView {
 
   /** `quiet`: the same game again (a reload), not a move: no shelf, nothing restarted. */
   select(index: number, quiet = false): void {
+    const done = span('collector.select');
+    try {
+      this.#selectTraced(index, quiet);
+    } finally {
+      done();
+    }
+  }
+
+  #selectTraced(index: number, quiet = false): void {
     const changed = index !== this.#selected;
     const from = this.#selected;
     this.#selected = index;
@@ -342,7 +398,9 @@ export class CollectorView {
     this.#browse();
     this.#stopVideo();
     // While held the shelf says which game it is; the label's pictures would only flicker past.
+    clearTimeout(this.#labelTimer);
     if (!held) this.#labelNow();
+    else this.#labelTimer = setTimeout(() => this.#labelNow(), LABEL_MS);
     clearTimeout(this.#peek);
     this.#peek = setTimeout(() => {
       const game = this.selected;
@@ -354,6 +412,15 @@ export class CollectorView {
 
   /** The visible shelf, from whatever is loaded; again as pages arrive. */
   render(): void {
+    const done = span('collector.render');
+    try {
+      this.#renderTraced();
+    } finally {
+      done();
+    }
+  }
+
+  #renderTraced(): void {
     const source = this.#source;
     if (!source) return;
     const row = ROW_REM * remPx();
@@ -396,8 +463,9 @@ export class CollectorView {
 
   /**
    * A game on the shelf: its own spine picture lying on its side, where it has one (its name
-   * still there for screen readers); else a spine in its colour with its name. Every row as long
-   * as the others, the picture filling it.
+   * still there for screen readers); else a spine in its colour, with its marquee (its logo) on
+   * it where it has one, else its name. Every row as long as the others, a spine picture
+   * filling it.
    */
   #shelfRow(game: Game, node: HTMLElement): HTMLElement[] {
     const parts = [
@@ -406,8 +474,23 @@ export class CollectorView {
     ];
     const src = this.#options.media(game, 'boxside', 160);
     node.classList.toggle('pictured', !!src);
+    const marquee = src ? null : this.#options.media(game, 'marquee', 320);
+    node.classList.toggle('marked', !!marquee);
+    if (marquee) {
+      const logo = picture(marquee, 'spine-mark');
+      logo.addEventListener(
+        'error',
+        () => {
+          logo.remove();
+          node.classList.remove('marked');
+        },
+        { once: true }
+      );
+      return [parts[0]!, logo, parts[1]!];
+    }
     if (!src) return parts;
     const img = picture(src, 'spine-pic');
+    img.addEventListener('load', () => this.#learnSpine(img), { once: true });
     img.addEventListener(
       'error',
       () => {
@@ -419,13 +502,54 @@ export class CollectorView {
     return [img, ...parts];
   }
 
+  /** A spine picture loaded: the shelf as long as the stubbiest spine of the list asks. */
+  #learnSpine(img: HTMLImageElement): void {
+    if (!img.naturalWidth || !img.naturalHeight) return;
+    const shape = img.naturalHeight / img.naturalWidth;
+    if (this.#spineShape && shape >= this.#spineShape) return;
+    this.#spineShape = shape;
+    if (!this.#shelfRoom) this.#centreShelf();
+    this.#shelf.style.setProperty('--spine-len', `${shelfShape(shape, this.#shelfRoom)}rem`);
+  }
+
+  /**
+   * The shelf's middle over the footage, as wide as the whole view: a long spine reaches over
+   * the case and the dossier, which are dimmed behind it anyway.
+   */
+  #centreShelf(): void {
+    const bay = this.root.querySelector('.bay.footage');
+    const shelf = this.#shelf.getBoundingClientRect();
+    const footage = bay?.getBoundingClientRect();
+    if (!footage?.width || !shelf.width) return;
+    const mid = footage.left + footage.width / 2 - shelf.left;
+    this.#shelf.style.setProperty('--mid', `${mid}px`);
+    this.#shelfRoom = (2 * Math.min(mid, shelf.width - mid)) / remPx();
+  }
+
   /** A game's pictures were replaced: draws again its spine and, if it is the one shown, its case. */
   mediaChanged(id: number): void {
     for (const node of this.#rows.values()) {
       if (node.dataset.key === String(id)) node.dataset.key = '';
     }
     this.render();
-    if (this.selected?.id === id) this.#showSelected(true);
+    const game = this.selected;
+    if (game?.id !== id) return;
+    this.#showSelected(true);
+    this.#scan.refreshed(game, this.#pictures());
+  }
+
+  /** Every picture it shows now: behind it, its case, its dossier. */
+  #pictures(): HTMLImageElement[] {
+    return [
+      ...this.#backdrop.querySelectorAll('img'),
+      ...this.#showcase.querySelectorAll('img'),
+      ...this.#dossier.querySelectorAll('img')
+    ];
+  }
+
+  /** A scraper run moved on: the scan over the selected game follows it. */
+  scrapeProgress(status: ScraperStatus): void {
+    this.#scan.progress(status, this.selected);
   }
 
   refreshSelected(game: Game): void {
@@ -439,7 +563,7 @@ export class CollectorView {
   #update(game: Game): void {
     const changed = !!this.#game && !sameDetails(this.#game, game);
     this.#game = game;
-    if (changed) return this.#showSelected(true);
+    if (changed) return this.#scan.redraw(game.id, () => this.#showSelected(true));
     this.#showcase.querySelector('.slab-label .fav')?.classList.toggle('on', game.favorite);
   }
 
@@ -451,8 +575,14 @@ export class CollectorView {
     this.#turnTo(direction);
   }
 
+  /** The shelf shown a while, as if moved along: the list changed (filtered, or every game again). */
+  reveal(): void {
+    this.#browse();
+  }
+
   leave(): void {
     clearTimeout(this.#settle);
+    clearTimeout(this.#labelTimer);
     clearTimeout(this.#peek);
     clearTimeout(this.#dropTimer);
     this.root.classList.remove('browsing');
@@ -465,6 +595,7 @@ export class CollectorView {
   }
 
   #stop(): void {
+    this.#videoHeld = false;
     this.#timers.forEach(clearTimeout);
     this.#intervals.forEach(clearInterval);
     this.#timers = [];
@@ -475,6 +606,11 @@ export class CollectorView {
 
   /** Asks Forma for the game's video; once it plays, the page lets it through behind the case. */
   #startVideo(game: Game): void {
+    // The shelf is up: it plays once the shelf goes.
+    if (!this.#resting()) {
+      this.#videoHeld = true;
+      return;
+    }
     const play = this.#options.play;
     const area = this.#footage ? screenArea(this.#footage) : null;
     if (!this.previews || !play || !area || !this.#options.media(game, 'video')) return;
@@ -516,12 +652,26 @@ export class CollectorView {
     this.#timers.push(setTimeout(work, ms));
   }
 
+  /** Over and over, every `ms`; not while the shelf is up (a turn missed, not caught up). */
   #every(work: () => void, ms: number): void {
-    this.#intervals.push(setInterval(work, ms));
+    this.#intervals.push(
+      setInterval(() => {
+        if (this.#resting()) work();
+      }, ms)
+    );
   }
 
   /** The selected game in the showcase; the one already there stays as it is, unless `again`. */
   #showSelected(again = false): void {
+    const done = span('collector.showSelected');
+    try {
+      this.#showSelectedTraced(again);
+    } finally {
+      done();
+    }
+  }
+
+  #showSelectedTraced(again = false): void {
     const game = this.selected;
     this.#pending = !game;
     if (game && !again && !this.#left && this.#game?.id === game.id && this.#box) {
@@ -539,11 +689,15 @@ export class CollectorView {
     this.#dossier.replaceChildren(...this.#dossierParts(game));
     fadeInAsLoaded(this.#showcase);
     fadeInAsLoaded(this.#dossier);
+    this.#scan.shown(game.id, this.#pictures());
     this.#arrive();
-    requestAnimationFrame(() => this.#fit?.());
+    requestAnimationFrame(() => {
+      this.#fit?.();
+      this.#centreShelf();
+    });
     if (motion()) {
       this.#later(() => {
-        this.#turnTo(1);
+        if (this.#resting()) this.#turnTo(1);
         this.#every(() => this.#turnTo(1), TURN_MS);
       }, FIRST_TURN_MS);
     }
@@ -561,6 +715,15 @@ export class CollectorView {
    * already turned to its pose. Everything goes one way, left to right.
    */
   #turnTo(direction: 1 | -1): void {
+    const done = span('collector.turnTo');
+    try {
+      this.#turnToTraced(direction);
+    } finally {
+      done();
+    }
+  }
+
+  #turnToTraced(direction: 1 | -1): void {
     const box = this.#box;
     const display = this.#display;
     if (!box) return;
@@ -1090,12 +1253,9 @@ export class CollectorView {
       row('Region', flags(flaggedRegions(regions), REGIONS, regionFlag)),
       // A hack or a homebrew game with no version is no "original release".
       row('Version', rom.version || !rom.status ? versionText(rom.version) : null),
-      row('Status', rom.status && versionText(rom.status))
-    );
-    const copy = section(
-      'This copy',
-      row('Languages', flags(languages, LANGUAGES, languageFlag)),
-      row('Media', this.#archive(game))
+      row('Status', rom.status && versionText(rom.status)),
+      // By its version and status: a translation's language reads next to it.
+      row('Languages', flags(languages, LANGUAGES, languageFlag))
     );
     const record =
       section(
@@ -1104,68 +1264,26 @@ export class CollectorView {
         row('Time', game.gameTime > 0 ? playtime(game.gameTime) : null),
         row('Last', game.lastPlayed ? ago(game.lastPlayed) : null)
       ) ?? el('section', { class: 'part' });
-    this.#achievementsInto(game, record);
-    const versions = release ?? copy;
-    if (versions) this.#versionsInto(game, versions, row);
 
-    // This copy and the play record one under the other when the dossier has room for both,
-    // else taking turns in one place. Asked again as it grows (achievements arrive later).
-    const turns = [copy, record].filter((p): p is HTMLElement => p !== null);
-    turns[0]?.classList.add('shown');
-    const alternate = el('div', { class: 'alternate' }, ...turns);
-    this.#layDossier = null;
-    if (turns.length > 1) {
-      const dossier = this.#dossier;
-      const lay = () => {
-        alternate.classList.add('together');
-        const fits = dossier.scrollHeight <= dossier.clientHeight + 1;
-        alternate.classList.toggle('together', fits);
-        return fits;
-      };
-      this.#layDossier = lay;
-      requestAnimationFrame(() => {
-        if (dossier.contains(alternate)) lay();
-      });
-      let at = 0;
-      this.#every(() => {
-        if (lay()) return;
-        turns[at]?.classList.remove('shown');
-        at = (at + 1) % turns.length;
-        turns[at]?.classList.add('shown');
-      }, ALTERNATE_MS);
-    }
-    const parts = [head, this.#marks(game), release, alternate].filter(
-      (p): p is HTMLElement => p !== null
-    );
+    // The play record in the place its pair once shared (its styles still say `alternate`).
+    record.classList.add('shown');
+    const alternate = el('div', { class: 'alternate' }, record);
+    const marks = this.#marks(game);
+    this.#achievementsInto(game, marks);
+    const parts = [head, marks, release, alternate].filter((p): p is HTMLElement => p !== null);
 
     return parts;
   }
 
-  /** What pictures and extras the game has, in short: lit when there, faint when not. */
-  #archive(game: ShowGame): HTMLElement {
-    const has = (...kinds: Kind[]) => kinds.some((k) => this.#options.media(game, k) !== null);
-    const items: [string, boolean][] = [
-      ['Box', has('thumbnail')],
-      ['Back', has('boxback')],
-      ['Spine', has('boxside')],
-      [ARCADE.has(game.system) ? 'Board' : 'Cart', has('cartridge')],
-      ['Shots', has('titleshot', 'image')],
-      ['Video', has('video')],
-      ['Fan art', has('fanart')],
-      ['Manual', has('manual')]
-    ];
-    return el(
-      'span',
-      { class: 'archive' },
-      ...items.map(([label, on]) => el('span', { class: on ? 'on' : '' }, label))
-    );
-  }
-
   /**
-   * What the game offers and what it is, as tiles: how many play, achievements, a manual (lit
-   * when it has it, faint when not), and its age rating as PEGI's badge.
+   * What the game offers and what it is, as tiles, always all four (faded where it has none):
+   * how many play, its manual, its achievements (filled in when they arrive), and its age
+   * rating as PEGI's badge.
    */
   #marks(game: ShowGame): HTMLElement {
+    const cheevos = mark('cheevos', ICONS.cheevos, '– / –', false);
+    cheevos.setAttribute('aria-label', 'No achievements');
+    const manual = !!this.#options.media(game, 'manual');
     return el(
       'ul',
       { class: 'marks' },
@@ -1175,30 +1293,14 @@ export class CollectorView {
         game.players ? players(game.players) : 'Players ?',
         !!game.players
       ),
-      mark('cheevos', ICONS.cheevos, 'Achievements', game.raGameId !== null),
+      mark('manual', ICONS.manual, manual ? 'Manual' : 'No manual', manual),
+      cheevos,
       pegiMark(game)
     );
   }
 
-  /** "Also owned", in this copy's details, for a game with other versions in the library. */
-  #versionsInto(
-    game: Game,
-    part: HTMLElement,
-    row: (label: string, value: string) => HTMLElement | null
-  ): void {
-    const fetch = this.#options.otherVersions;
-    if (!fetch) return;
-    const id = game.id;
-    void fetch(game)
-      .catch(() => [])
-      .then((others) => {
-        const text = versionsText(others);
-        const line = text ? row('Also owned', text) : null;
-        if (line && this.#game?.id === id) part.querySelector('.specs')?.append(line);
-      });
-  }
-
-  #achievementsInto(game: Game, record: HTMLElement): void {
+  /** How many of its achievements are won, in their tile, once known. */
+  #achievementsInto(game: Game, marks: HTMLElement): void {
     const fetch = this.#options.achievements;
     if (game.raGameId === null || !fetch) return;
     let progress = this.#achievements.get(game.id);
@@ -1209,17 +1311,9 @@ export class CollectorView {
     const id = game.id;
     void progress.then((a) => {
       if (!a || a.total === 0 || this.#game?.id !== id) return;
-      const bar = el('div', { class: 'bar' });
-      bar.style.setProperty('--done', String(a.earned / a.total));
-      record.append(
-        el(
-          'div',
-          { class: 'achievements' },
-          el('span', {}, glyph(ICONS.cheevos), `${a.earned} / ${a.total}`),
-          bar
-        )
-      );
-      this.#layDossier?.();
+      const tile = mark('cheevos', ICONS.cheevos, `${a.earned} / ${a.total}`, true);
+      tile.setAttribute('aria-label', `${a.earned} of ${a.total} achievements`);
+      marks.querySelector('.mark.cheevos')?.replaceWith(tile);
     });
   }
 
@@ -1240,6 +1334,17 @@ export class CollectorView {
     }
     if (items.length) prepare(items);
   }
+}
+
+/**
+ * How long a shelf's spines are, in rem, for pictures `shape` times as tall as wide, with `room`
+ * about the shelf's middle: as long as their shape asks at the usual height, as far as there is
+ * room, a touch shorter (a spine squeezed that little does not show it). Never shorter than the
+ * usual, nor thinner: rows of spines with gaps between look wrong.
+ */
+export function shelfShape(shape: number, room: number): number {
+  const most = Math.max(SPINE_LEN_REM, room - 4);
+  return Math.round(clamp(SPINE_H_REM * shape * SPINE_SQUEEZE, SPINE_LEN_REM, most) * 100) / 100;
 }
 
 /**
@@ -1372,7 +1477,12 @@ export function serial(game: Game): string {
 function pegiMark(game: ShowGame): HTMLElement {
   const all = ageRatings(game.ageRating);
   const pegi = asPegi(all);
-  if (!pegi) return el('li', { class: 'mark pegi none', 'aria-hidden': 'true' });
+  if (!pegi) {
+    // No badge to show: a tile like the others, faded.
+    const none = mark('rating', ICONS.rating, 'No rating', false);
+    none.setAttribute('aria-label', 'No age rating');
+    return none;
+  }
   const words = all.map((r) => `${r.board} ${r.rating}`).join(', ');
   const colour = pegi.age <= 7 ? 'green' : pegi.age <= 16 ? 'orange' : 'red';
   const note = pegi.from ? `PEGI ${pegi.age}, from ${pegi.from.board} ${pegi.from.rating}` : words;
@@ -1444,6 +1554,10 @@ function versionWords(version: string): string {
 
 /** Line icons for the marks, in Cyber's style. */
 const ICONS = {
+  /** A shield with an age's place on it, for a game with no rating. */
+  rating: '<path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M9.5 12.5h5"/>',
+  manual:
+    '<path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M9 7h6M9 10.5h6"/>',
   players:
     '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.2c2.8.2 5 2.3 5 5.8"/>',
   cheevos:
@@ -1458,8 +1572,14 @@ function glyph(icon: string): HTMLElement {
   return span;
 }
 
+/** A tile: lit where the game has it, faded where not. */
 function mark(cls: string, icon: string, label: string, on: boolean): HTMLElement {
-  return el('li', { class: `mark ${cls}${on ? ' on' : ''}` }, glyph(icon), el('span', {}, label));
+  return el(
+    'li',
+    { class: `mark ${cls} ${on ? 'on' : 'off'}` },
+    glyph(icon),
+    el('span', {}, label)
+  );
 }
 
 /** A front made up: the fan art (or a screenshot) under its logo (or its name). */
@@ -1505,25 +1625,4 @@ function madeBack(game: Game, media: MediaUrl): HTMLElement[] {
       el('p', {}, captions(game.description ?? '')[0] ?? game.name)
     )
   ];
-}
-
-/**
- * The other versions in a line: `Japan, USA · English patch ×8`. Long lists stop at three kinds
- * and say how many more. Empty when there are none.
- */
-export function versionsText(others: OtherVersion[]): string {
-  const counts = new Map<string, number>();
-  for (const other of others) {
-    const rom = romName(other.path);
-    const region = rom.regions[0];
-    const place = region ? (REGIONS[region] ?? region.toUpperCase()) : null;
-    const patched = other.tags.some((t) => /^(t-en|translated en)/i.test(t));
-    const about = [rom.version, rom.status].filter(Boolean).join(' · ');
-    const kind = patched ? 'English patch' : about && versionText(about);
-    const label = [place, kind].filter(Boolean).join(' · ') || (other.tags[0] ?? 'Other version');
-    counts.set(label, (counts.get(label) ?? 0) + 1);
-  }
-  const labels = [...counts].map(([label, n]) => (n > 1 ? `${label} ×${n}` : label));
-  const extra = labels.length - 3;
-  return extra > 0 ? `${labels.slice(0, 3).join(', ')} +${extra}` : labels.join(', ');
 }

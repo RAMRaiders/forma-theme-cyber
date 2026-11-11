@@ -5,11 +5,11 @@ import type { CollectorOptions } from './collector.js';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LazyList } from '../logic/pager.js';
-import { versionsText } from './collector.js';
 import {
   CollectorView,
   type ScreenArea,
   boxHeight,
+  shelfShape,
   paginate,
   versionText,
   gradeOf,
@@ -85,6 +85,8 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
+/** A game whose file names its languages: it has a "this copy". */
+
 describe('the Collector view', () => {
   it('puts the box in the case from its front, spine and back, its cartridge behind it', async () => {
     const { v, src, text } = await view([game(7, 'After Burner', BOXED)]);
@@ -153,7 +155,7 @@ describe('the Collector view', () => {
       'PEGI 3, from ESRB E'
     );
     const unrated = await view([game(10, 'Kolibri')]);
-    expect(unrated.v.root.querySelector('.dossier .pegi.none')).not.toBeNull();
+    expect(unrated.text('.dossier .mark.rating.off')).toEqual(['No rating']);
   });
 
   it('labels the case with its grade, system and serial', async () => {
@@ -166,6 +168,22 @@ describe('the Collector view', () => {
     expect(v.root.querySelector('.slab-label .grade .stars')?.getAttribute('aria-label')).toBe(
       '3.5 of 5'
     );
+  });
+
+  it('rests behind the shelf while it shows, and turns again once it is gone', async () => {
+    const { v } = await view([game(7, 'After Burner', BOXED), game(8, 'Space Harrier', BOXED)]);
+    const box = v.root.querySelector<HTMLElement>('.cbox')!;
+    vi.advanceTimersByTime(2500);
+    // A step and back just before its first turn: the shelf is up over the same game.
+    v.select(1);
+    v.select(0);
+    expect(v.root.classList.contains('browsing')).toBe(true);
+    vi.advanceTimersByTime(1000);
+    expect(box.dataset.pose).toBe('front');
+    // The shelf gone, the box turns again.
+    vi.advanceTimersByTime(4500);
+    expect(v.root.classList.contains('browsing')).toBe(false);
+    expect(box.dataset.pose).toBe('spine');
   });
 
   it('turns the box by itself, and the way the player turns it', async () => {
@@ -188,7 +206,7 @@ describe('the Collector view', () => {
     const { v, text } = await view([
       { ...game(7, 'After Burner', BOXED), path: 'After Burner (USA, Japan) (En,Ja) (Rev 1).7z' }
     ]);
-    expect(text('.dossier .part h3')).toEqual(['Release', 'This copy', 'Play record']);
+    expect(text('.dossier .part h3')).toEqual(['Release', 'Play record']);
     expect(text('.dossier .specs dt')).toEqual([
       'Released',
       'Developer',
@@ -197,7 +215,6 @@ describe('the Collector view', () => {
       'Region',
       'Version',
       'Languages',
-      'Media',
       'Played',
       'Time'
     ]);
@@ -211,18 +228,13 @@ describe('the Collector view', () => {
     expect([...flags(1)].map((c) => c.getAttribute('title'))).toEqual(['English', 'Japanese']);
     expect(text('.dossier .specs .flags')).toEqual(['', '']);
     expect(dd[5]).toBe('Revision 1');
-    // What it has, lit; what it lacks, faint.
-    expect(text('.dossier .archive .on')).toEqual([
-      'Box',
-      'Back',
-      'Spine',
-      'Cart',
-      'Shots',
-      'Fan art'
-    ]);
-    expect(dd.slice(8)).toEqual(['2×', '10 min']);
-    // What it offers: players and no manual, no achievements.
+    // Its pictures are not listed: they are on the screen.
+    expect(v.root.querySelector('.dossier .archive')).toBeNull();
+    expect(dd.slice(7)).toEqual(['2×', '10 min']);
+    // What it offers: players; no manual, achievements nor rating: their tiles there, faded.
     expect(text('.dossier .mark.on')).toEqual(['1 player']);
+    expect(text('.dossier .mark.off')).toEqual(['No manual', '– / –', 'No rating']);
+    expect(v.root.querySelector('.dossier .achievements')).toBeNull();
     // The bays: the case, the footage (its screenshots until the video), the story.
     expect(text('.bay-tag')).toEqual(['Case', 'Footage', 'Story']);
     expect(text('.bay.story .text')).toEqual([
@@ -230,24 +242,18 @@ describe('the Collector view', () => {
     ]);
   });
 
-  it('shows this copy and the play record together when they fit', async () => {
-    const { v } = await view([game(7, 'After Burner', BOXED)]);
-    vi.advanceTimersByTime(20);
-    expect(v.root.querySelector('.dossier .alternate')!.classList.contains('together')).toBe(true);
-  });
-
-  it('shows this copy and the play record in turn when they do not fit', async () => {
-    vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(500);
-    vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(300);
-    const { v, text } = await view([game(7, 'After Burner', BOXED)]);
-    vi.advanceTimersByTime(20);
-    expect(v.root.querySelector('.dossier .alternate')!.classList.contains('together')).toBe(false);
-    expect(text('.dossier .alternate .part.shown h3')).toEqual(['This copy']);
-    vi.advanceTimersByTime(10_000);
-    expect(text('.dossier .alternate .part.shown h3')).toEqual(['Play record']);
-    vi.advanceTimersByTime(10_000);
-    expect(text('.dossier .alternate .part.shown h3')).toEqual(['This copy']);
-    vi.restoreAllMocks();
+  it('puts the languages by the version and status, a translation’s language by it', async () => {
+    const { v, text } = await view([
+      { ...game(7, 'After Burner', BOXED), path: 'After Burner (Japan) (T-En by Someone).md' }
+    ]);
+    const dt = text('.dossier .specs dt');
+    expect(dt.slice(dt.indexOf('Status'), dt.indexOf('Status') + 2)).toEqual([
+      'Status',
+      'Languages'
+    ]);
+    expect(v.root.querySelector('.dossier .specs .flags')).not.toBeNull();
+    // A manual: a mark by the players, not a row.
+    expect(text('.dossier .part h3')).toEqual(['Release', 'Play record']);
   });
 
   it("says the dump's version in words", () => {
@@ -266,10 +272,15 @@ describe('the Collector view', () => {
     const { v } = await view([{ ...game(7, 'After Burner', BOXED), raGameId: 9 }], {
       achievements: () => Promise.resolve({ earned: 0, total: 30 } as never)
     });
-    await vi.waitFor(() => expect(v.root.querySelector('.dossier .achievements')).not.toBeNull());
-    const line = v.root.querySelector('.dossier .achievements span')!;
-    expect(line.querySelector('svg')).not.toBeNull();
-    expect(line.textContent).toBe('0 / 30');
+    await vi.waitFor(() =>
+      expect(v.root.querySelector('.dossier .mark.cheevos.on')).not.toBeNull()
+    );
+    // A tile of its own, before the age rating's: the count, no bar.
+    const tile = v.root.querySelector('.dossier .mark.cheevos')!;
+    expect(tile.querySelector('svg')).not.toBeNull();
+    expect(tile.textContent).toBe('0 / 30');
+    expect(tile.nextElementSibling?.matches('.pegi, .rating')).toBe(true);
+    expect(v.root.querySelector('.dossier .bar')).toBeNull();
   });
 
   it('keeps what kind of copy it is apart from its version', async () => {
@@ -359,7 +370,7 @@ describe('the Collector view', () => {
     vi.advanceTimersByTime(230);
     expect(imgs()).toHaveLength(2);
     // Showing the same game once it has rested adds no second picture of it.
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(750);
     expect(imgs()).toHaveLength(2);
     // On to another before Doom's had loaded: Doom's is dropped.
     const doom = imgs()[1];
@@ -398,7 +409,7 @@ describe('the Collector view', () => {
     v.select(1);
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
     expect(v.root.classList.contains('arriving')).toBe(false);
-    vi.advanceTimersByTime(310);
+    vi.advanceTimersByTime(760);
     expect(v.root.classList.contains('arriving')).toBe(true);
     vi.advanceTimersByTime(360);
     expect(v.root.classList.contains('arriving')).toBe(false);
@@ -474,6 +485,22 @@ describe('the Collector view', () => {
     tall.mockRestore();
   });
 
+  it('puts a game’s marquee on its spine where it has no spine picture', async () => {
+    const { v } = await view([
+      game(1, 'After Burner', BOXED),
+      game(2, 'Doom', { marquee: 'banner' }),
+      game(3, 'Kolibri')
+    ]);
+    const row = (name: string) =>
+      [...v.root.querySelectorAll<HTMLElement>('.spine-row')].find(
+        (r) => r.querySelector('.title')?.textContent === name
+      )!;
+    expect(row('After Burner').querySelector('.spine-mark')).toBeNull();
+    expect(row('Doom').classList.contains('marked')).toBe(true);
+    expect(row('Doom').querySelector('.spine-mark')?.getAttribute('src')).toContain('/2/marquee');
+    expect(row('Kolibri').classList.contains('marked')).toBe(false);
+  });
+
   it('keeps every game on the shelf, the selected one pulled out', async () => {
     const { v, text } = await view([
       game(1, 'After Burner', BOXED),
@@ -488,13 +515,14 @@ describe('the Collector view', () => {
     expect(text('.spine-row.selected .title')).toEqual(['Doom']);
     // The label at once, lit over the shelf; the rest of the showcase once the selection rests.
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
-    vi.advanceTimersByTime(200);
+    vi.advanceTimersByTime(600);
     expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).not.toBe(DEFAULT_FRONT);
     vi.advanceTimersByTime(200);
     // Nothing to make a cover from: the default box, and static where the footage would be.
     expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).toBe(DEFAULT_FRONT);
     expect(text('.no-signal span')).toEqual(['No signal']);
-    expect(text('.dossier .mark')).toHaveLength(3);
+    // All four tiles, whatever it has: what it lacks faded.
+    expect(text('.dossier .mark')).toHaveLength(4);
   });
 });
 
@@ -608,26 +636,13 @@ describe('coming back to the same game', () => {
   });
 });
 
-describe('other versions of a game', () => {
-  it('sums them up by place and kind', () => {
-    const patched = (n: number) => ({
-      path: `Game (USA) (T-En by Someone v${n}).md`,
-      tags: ['USA', `T-En by Someone v${n}`]
-    });
-    expect(versionsText([])).toBe('');
-    expect(versionsText([{ path: 'Game (Japan).md', tags: ['Japan'] }])).toBe('Japan');
-    expect(versionsText([patched(1), patched(2)])).toBe('USA · English patch ×2');
-    expect(versionsText([{ path: 'Game (World) (v2) (Unl).md', tags: [] }])).toBe(
-      'World · Version 2 · Unlicensed'
-    );
-  });
-
-  it('stops at three kinds', () => {
-    const others = ['Japan', 'USA', 'Europe', 'Brazil', 'Korea'].map((r) => ({
-      path: `Game (${r}).md`,
-      tags: [r]
-    }));
-    expect(versionsText(others)).toBe('Japan, USA, Europe +2');
+describe('the shelf in the shape of its spines', () => {
+  it('keeps a Mega Drive spine as it was, makes a PC Engine one longer, as far as there is room', () => {
+    expect(shelfShape(7.1, 100)).toBe(22);
+    expect(shelfShape(18.4, 100)).toBe(49.29);
+    expect(shelfShape(18.4, 40)).toBe(36);
+    // Not measured yet, or a narrow screen: never shorter than the usual.
+    expect(shelfShape(18.4, 0)).toBe(22);
   });
 });
 

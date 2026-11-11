@@ -120,7 +120,7 @@ describe('the default theme', () => {
       'PlayStation',
       'Homebrew'
     ]);
-    // The system's own page: Cyber's info, its specs, a curiosity, and its board behind.
+    // The system's own page: Cyber's info, its maker, a curiosity, and its board behind.
     await vi.waitFor(() =>
       expect(text('.system-panel > :not(.leaving) .description')).toEqual(['An 8-bit console.'])
     );
@@ -128,10 +128,15 @@ describe('the default theme', () => {
     expect(text('.system-panel > :not(.leaving) .reading .description')).toEqual([
       'An 8-bit console.'
     ]);
-    expect(text('.system-panel > :not(.leaving) .sheet dd')).toEqual(['Nintendo', '1985']);
-    expect(text('.system-panel > :not(.leaving) .specs dd')).toEqual(['Ricoh 2A03']);
-    // The stage: a callout on the left.
-    expect(text('.system-panel > :not(.leaving) .specs-left dt')).toEqual(['CPU']);
+    // Beside the console: its maker.
+    expect(text('.system-panel > :not(.leaving) .maker')).toEqual(['Nintendo']);
+    // Left of the console, its hardware.
+    expect(text('.system-panel > :not(.leaving) .hardware dt')).toEqual(['CPU']);
+    expect(text('.system-panel > :not(.leaving) .hardware dd')).toEqual(['Ricoh 2A03']);
+    // Not how many of its games are here: the strip of systems says.
+    expect(root.querySelector('.system-panel .owned')).toBeNull();
+    // Switched on as it comes: its logo or name, lit, over the page a moment.
+    expect(root.querySelector('.system-panel > .boot')).not.toBeNull();
     expect(text('.system-panel > :not(.leaving) > .fact:not(.leaving) p')).toEqual(['First fact.']);
     await press('north');
     expect(text('.system-panel > :not(.leaving) > .fact:not(.leaving) p')).toEqual([
@@ -221,6 +226,63 @@ describe('the default theme', () => {
     await backend.invoke('shell_open_view', { view: 'manufacturer-system' });
     await vi.waitFor(() => expect(text('h1')).toEqual(['Categories']));
     await vi.waitFor(() => expect(text('.categories .tile').length).toBeGreaterThan(0));
+  });
+
+  it('shows a game Forma’s menu chose, in its system, as if browsed to', async () => {
+    const { press, text, backend } = await start();
+    const [hit] = await backend.invoke<{ id: number; name: string; system: string }[]>(
+      'library_search',
+      { query: 'sonic' }
+    );
+    await backend.invoke('shell_open_game', { id: hit!.id });
+    await vi.waitFor(() => expect(text('.row.selected')).toEqual([hit!.name]));
+    // Back climbs out the usual way: its system, among the others.
+    await press('back');
+    await vi.waitFor(() => expect(text('.system-list li.selected .name')).toEqual(['Mega Drive']));
+  });
+
+  it('shows the Collector’s shelf when its list is narrowed down, and when Back undoes it', async () => {
+    const { press, text, backend, root, fire } = await start();
+    const [hit] = await backend.invoke<{ id: number; name: string }[]>('library_search', {
+      query: 'sonic'
+    });
+    await backend.invoke('shell_open_game', { id: hit!.id });
+    await vi.waitFor(() => expect(text('.row.selected')).toEqual([hit!.name]));
+    fire('settings:changed', { scope: 'theme', key: 'gamesView', value: 'collector' });
+    await vi.waitFor(() => expect(root.querySelector('.collector')).not.toBeNull());
+    const shelf = () => root.querySelector('.collector.browsing') !== null;
+    await vi.waitFor(() => expect(shelf()).toBe(false), { timeout: 3000 });
+    await backend.invoke('nav_set_filter', { filter: { games: [hit!.id] } });
+    await vi.waitFor(() => expect(text('.crumb.current')).toEqual(['Filtered']));
+    expect(shelf()).toBe(true);
+    await vi.waitFor(() => expect(shelf()).toBe(false), { timeout: 3000 });
+    await press('back');
+    await vi.waitFor(() => expect(text('.crumb.current')).not.toEqual(['Filtered']));
+    expect(shelf()).toBe(true);
+  });
+
+  it('shows only the games Forma’s menu narrowed the list to; Back, every game again', async () => {
+    const { press, text, backend, root } = await start();
+    const [hit] = await backend.invoke<{ id: number; name: string }[]>('library_search', {
+      query: 'sonic'
+    });
+    await backend.invoke('shell_open_game', { id: hit!.id });
+    await vi.waitFor(() => expect(text('.row.selected')).toEqual([hit!.name]));
+    const every = text('.row .name').length;
+    expect(every).toBeGreaterThan(1);
+    // Select > Versions and duplicates: only them.
+    await backend.invoke('nav_set_filter', { filter: { games: [hit!.id] } });
+    await vi.waitFor(() => expect(text('.row .name')).toEqual([hit!.name]));
+    expect(text('.crumb.current')).toEqual(['Filtered']);
+    // Back: the whole list again, on the same game, shown so the change is seen; Back once more
+    // climbs out.
+    root.querySelector('.games')?.classList.add('resting');
+    await press('back');
+    await vi.waitFor(() => expect(text('.row .name')).toHaveLength(every));
+    expect(root.querySelector('.games')?.classList.contains('resting')).toBe(false);
+    expect(text('.row.selected')).toEqual([hit!.name]);
+    await press('back');
+    await vi.waitFor(() => expect(text('.system-list li.selected .name')).toEqual(['Mega Drive']));
   });
 
   /** Down from the categories until a shortcut is selected, then right to `label`. */

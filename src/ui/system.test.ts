@@ -2,14 +2,12 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import {
-  gear,
+  lifeEvents,
   logoHeight,
-  press,
   readingMs,
-  releaseDates,
+  soldShort,
   SystemView,
-  systemColours,
-  turnCover
+  systemColours
 } from './system.js';
 import type { CyberSystem, InfoStore } from '../data/catalog.js';
 
@@ -159,70 +157,33 @@ describe('a logo in the column', () => {
   });
 });
 
-describe('the press and the gear', () => {
-  const mag = (n: number) => ({ src: `./systems/x/mag-${n}.webp`, title: `Issue ${n}` });
-
-  /** The covers' titles, front one first. */
-  const order = (stand: HTMLElement) =>
-    [...stand.querySelectorAll<HTMLElement>('.cover')]
-      .sort((a, b) => Number(a.dataset.pos) - Number(b.dataset.pos))
-      .map((c) => c.querySelector('img')?.getAttribute('alt'));
-
-  it('stacks five magazines at most, the first in front, with no words', () => {
-    const stand = press({ magazines: [mag(1), mag(2), mag(3), mag(4), mag(5), mag(6)] })!;
-    expect(order(stand)).toEqual(['Issue 1', 'Issue 2', 'Issue 3', 'Issue 4', 'Issue 5']);
-    expect(stand.textContent).toBe('');
-  });
-
-  it('turns the front cover away and puts it at the back', () => {
-    vi.useFakeTimers();
-    try {
-      const stand = press({ magazines: [mag(1), mag(2), mag(3)] })!;
-      turnCover(stand);
-      expect(stand.querySelector('.cover.turning img')?.getAttribute('alt')).toBe('Issue 1');
-      vi.runAllTimers();
-      expect(stand.querySelector('.cover.turning')).toBeNull();
-      expect(order(stand)).toEqual(['Issue 2', 'Issue 3', 'Issue 1']);
-    } finally {
-      vi.useRealTimers();
-    }
-  });
-
-  it('names up to four peripherals', () => {
-    const p = (n: number) => ({ src: `./systems/x/gear-${n}.webp`, name: `Pad ${n}` });
-    const box = gear({ peripherals: [p(1), p(2), p(3), p(4), p(5)] })!;
-    expect([...box.querySelectorAll('figcaption')].map((c) => c.textContent)).toEqual([
-      'Pad 1',
-      'Pad 2',
-      'Pad 3',
-      'Pad 4'
+describe('a system’s life', () => {
+  it('is its launch, its releases abroad, and its end', () => {
+    expect(lifeEvents('1987 JP · 1989 NA', '1987–1994 (7 years)')).toEqual([
+      { year: 1987, what: 'Launch', regions: ['JP'] },
+      { year: 1989, what: 'North America', regions: ['NA'] },
+      { year: 1994, what: 'Last made', regions: [] }
     ]);
   });
 
-  it('is nothing for a system with none', () => {
-    expect(press({ magazines: [] })).toBeNull();
-    expect(gear({ peripherals: [] })).toBeNull();
+  it('has one moment a year, its regions together', () => {
+    expect(lifeEvents('1994 JP · 1995 NA · 1995 EU', '1994–2006 (12 years)')).toEqual([
+      { year: 1994, what: 'Launch', regions: ['JP'] },
+      { year: 1995, what: 'Abroad', regions: ['NA', 'EU'] },
+      { year: 2006, what: 'Last made', regions: [] }
+    ]);
+  });
+
+  it('is nothing when nothing is known', () => {
+    expect(lifeEvents(null, null)).toEqual([]);
   });
 });
 
-describe('release dates', () => {
-  it('shows each region as its flag and keeps the rest of the words', () => {
-    const parts = releaseDates('1985 JP (Mark III) · 1986 NA · 1987 EU');
-    const flags = parts.filter((p): p is HTMLImageElement => typeof p !== 'string');
-    expect(flags.map((f) => f.getAttribute('src'))).toEqual([
-      './flags/jp.svg',
-      './flags/us.svg',
-      './flags/eu.svg'
-    ]);
-    expect(parts.filter((p) => typeof p === 'string')).toEqual([
-      '1985 ',
-      ' (Mark III) · 1986 ',
-      ' · 1987 ',
-      ''
-    ]);
-  });
-
-  it('leaves a date with no region as it is', () => {
-    expect(releaseDates('1982')).toEqual(['1982']);
+describe('units sold', () => {
+  it('keeps the number and its word only', () => {
+    expect(soldShort('~61.9 million')).toBe('61.9 million');
+    expect(soldShort('About 118.69 million (Game Boy and Game Boy Color combined)')).toBe(
+      '118.69 million'
+    );
   });
 });

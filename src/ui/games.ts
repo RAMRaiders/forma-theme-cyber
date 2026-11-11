@@ -1,7 +1,9 @@
-import type { Game } from '@ramraiders/forma-sdk';
+import type { Game, ScraperStatus } from '@ramraiders/forma-sdk';
+import { span } from './perf.js';
 
 import type { LazyList } from '../logic/pager.js';
 import { el, remPx } from './dom.js';
+import { Scan } from './scan.js';
 import { STAGE_PICTURES, Stage, type StageOptions } from './stage.js';
 
 /** Row height in rem; rows are positioned by index, so only visible ones exist. */
@@ -45,11 +47,14 @@ export class GamesView {
   #lastMove = 0;
   #pending = false;
 
+  /** Over the selected game while the scraper is on it. */
+  readonly #scan = new Scan();
+
   constructor(options: StageOptions) {
     this.#options = options;
     this.#stage = new Stage(options);
     this.#list.append(this.#spacer);
-    this.root.append(this.#stage.backdrop, this.#stage.root, this.#list);
+    this.root.append(this.#stage.backdrop, this.#stage.root, this.#scan.root, this.#list);
     this.#list.addEventListener('scroll', () => this.render(), { passive: true });
   }
 
@@ -81,6 +86,15 @@ export class GamesView {
   }
 
   select(index: number): void {
+    const done = span('games.select');
+    try {
+      this.#selectTraced(index);
+    } finally {
+      done();
+    }
+  }
+
+  #selectTraced(index: number): void {
     const changed = index !== this.#selected;
     this.#selected = index;
     const row = ROW_REM * remPx();
@@ -112,6 +126,15 @@ export class GamesView {
 
   /** Draws the visible rows, from whatever is loaded; called again as pages arrive. */
   render(): void {
+    const done = span('games.render');
+    try {
+      this.#renderTraced();
+    } finally {
+      done();
+    }
+  }
+
+  #renderTraced(): void {
     const source = this.#source;
     if (!source) return;
     const row = ROW_REM * remPx();
@@ -172,7 +195,15 @@ export class GamesView {
     }
     this.render();
     const game = this.selected;
-    if (game?.id === id) this.#stage.show(game, true);
+    if (game?.id === id) {
+      this.#stage.show(game, true);
+      this.#scan.refreshed(game, this.#stage.images());
+    }
+  }
+
+  /** A scraper run moved on: the scan over the selected game follows it. */
+  scrapeProgress(status: ScraperStatus): void {
+    this.#scan.progress(status, this.selected);
   }
 
   /** Redraws the selected game after it changed, e.g. a favourite toggled. */
@@ -183,10 +214,24 @@ export class GamesView {
   }
 
   #showDetail(): void {
+    const done = span('games.showDetail');
+    try {
+      // The game being scraped is drawn again once, when the library has gone quiet.
+      const game = this.selected;
+      if (game) this.#scan.redraw(game.id, () => this.#showDetailTraced());
+      else this.#showDetailTraced();
+    } finally {
+      done();
+    }
+  }
+
+  #showDetailTraced(): void {
     const game = this.selected;
     this.#pending = !game;
-    if (game) this.#stage.show(game);
-    else this.#stage.clear();
+    if (game) {
+      this.#stage.show(game);
+      this.#scan.shown(game.id, this.#stage.images());
+    } else this.#stage.clear();
     clearTimeout(this.#prepareTimer);
     if (game) this.#prepareTimer = setTimeout(() => this.#prepareAround(), PREPARE_AFTER_MS);
   }
@@ -211,6 +256,11 @@ export class GamesView {
   }
 
   /** The list leaves the screen (another view, or a game starts): its video stops. */
+  /** The list shown a while, as if moved along: it changed (filtered, or every game again). */
+  reveal(): void {
+    this.#wake();
+  }
+
   leave(): void {
     clearTimeout(this.#detailTimer);
     clearTimeout(this.#prepareTimer);

@@ -1,4 +1,5 @@
 import { type Bestseller, bestsellers } from '../data/bestsellers.js';
+import { span } from './perf.js';
 import {
   type CategoryId,
   type CyberSystem,
@@ -35,10 +36,17 @@ const STRIP_ITEM_REM = 6.8;
 const DROP_MS = 1400;
 /** Steps closer together than this are the direction held: the strip then runs evenly. */
 const HELD_MS = 130;
-/** The page changes, under the strip, once the selection has rested this long. */
-const SETTLE_MS = 300;
+/**
+ * The page is drawn, unseen in the dark under the strip, once the selection has rested this
+ * long: quick steps through the systems draw nothing but the strip.
+ */
+const SETTLE_MS = 600;
 /** How long the last page takes to fade under the next (as in style.css). */
 const PAGE_LEAVE_MS = 380;
+/** The power-on over a system's page: the line, the picture opening, the logo, the fade. */
+const BOOT_MS = 1500;
+/** How long each of its shelves (best sellers, magazines, peripherals) stays. */
+const SHELF_MS = 9000;
 /** The system's colours: a page keeps its own while it fades out. */
 const SYSTEM_COLOURS = [
   '--sys',
@@ -52,9 +60,6 @@ const SYSTEM_COLOURS = [
   '--sys-45',
   '--sys-70'
 ];
-/** The magazines' front cover turns away this often, taking this long (as in style.css). */
-const COVER_MS = 7000;
-const COVER_TURN_MS = 650;
 /** At most this long waiting for the next system's pictures (when not preloaded yet). */
 const DECODE_MS = 250;
 /** Text too long for its box scrolls through at this speed, in px per second. */
@@ -80,30 +85,6 @@ function stayMs(box: HTMLElement | null | undefined, text: string): number {
   const scroll = over > 2 ? SCROLL_START_MS + scrollSeconds(over) * 1000 : 0;
   return Math.max(readingMs(text), scroll);
 }
-
-type Spec = keyof NonNullable<SystemInfo['specs']>;
-
-/** The callouts round the console, as on a schematic: two each side. */
-const LEFT: [Spec, string][] = [
-  ['cpu', 'CPU'],
-  ['memory', 'Memory']
-];
-const RIGHT: [Spec, string][] = [
-  ['graphics', 'Graphics'],
-  ['sound', 'Sound']
-];
-
-/** What the technical sheet beside the logo adds to its maker and dates, as far as it has room. */
-const SHEET: [Spec, string][] = [
-  ['generation', 'Generation:'],
-  ['lifetime', 'Lifetime:'],
-  ['unitsSold', 'Units sold:'],
-  ['engine', 'Engine:'],
-  ['language', 'Language:'],
-  ['license', 'License:']
-];
-/** The sheet's rows: all that fit beside the logo. */
-const SHEET_ROWS = 5;
 
 /** Each category's own colour, as on its home tile. */
 const CATEGORY_RGB: Record<CategoryId, string> = {
@@ -210,13 +191,15 @@ function makerRgb(maker: string): string | null {
 }
 
 /** The parts of the stage that change together when the selection moves. */
-type Slot = 'intro' | 'reading' | 'press' | 'showcase' | 'best' | 'gear' | 'fact';
+type Slot = 'about' | 'maker' | 'life' | 'hardware' | 'console' | 'games' | 'reading' | 'fact';
 
 /**
  * A category's systems: a strip of logos over the middle while moving, kept centred on the
  * selection, gone a moment after the last move; and the
- * selected system on a stage: its console, lit and reflected on a neon floor (a photo in a frame,
- * or its logo, when there is no cut-out), its specs as callouts round it, its story above and its curiosities on a strip below. Moving on, the last system slides
+ * selected system on a stage, switched on as it comes (a line of light opening on its logo): its
+ * console large, lit on a neon floor (a photo in a frame, or its logo, when there is no cut-out);
+ * beside it its logo, maker, how many of its games are here and its life from launch to the end,
+ * its story under that and its curiosities on a strip below. Moving on, the last system slides
  * away as the next comes in from the side it is moved toward, and the screen's colour (its
  * maker's) glides to the next. Nothing on it is boxed in: the circuit board shows through.
  */
@@ -246,9 +229,9 @@ export class SystemView {
   /** Which of the description and the story's chapters shows under the logo. */
   #read = 0;
   #readTimer: ReturnType<typeof setTimeout> | undefined;
-  #coverTimer: ReturnType<typeof setInterval> | undefined;
   #boardTimer: ReturnType<typeof setTimeout> | undefined;
   #dropTimer: ReturnType<typeof setTimeout> | undefined;
+  #shelfTimer: ReturnType<typeof setTimeout> | undefined;
   #settle: ReturnType<typeof setTimeout> | undefined;
   #steppedAt = 0;
   /** Between `show` and `hide`. */
@@ -332,6 +315,15 @@ export class SystemView {
    * `quiet`: the user did not move, so the strip stays away.
    */
   select(index: number, now = false, quiet = false): void {
+    const done = span('system.select');
+    try {
+      this.#selectTraced(index, now, quiet);
+    } finally {
+      done();
+    }
+  }
+
+  #selectTraced(index: number, now = false, quiet = false): void {
     const from = this.#selected;
     const moved = index !== from;
     this.#selected = index;
@@ -389,12 +381,19 @@ export class SystemView {
 
   /**
    * The strip of logos over the middle of the stage while moving; a moment after the last
-   * move it fades, the page already changed under it. Only opacity changes.
+   * move it fades, the page already changed under it. Only opacity changes. Under it the
+   * screen is dark, and what is under the dark (the page, the board behind) is not drawn at
+   * all meanwhile: on a Pi, repainting it at every step made the strip stutter.
    */
   #browse(): void {
-    this.root.classList.add('browsing');
+    this.#browsing(true);
     clearTimeout(this.#dropTimer);
-    this.#dropTimer = setTimeout(() => this.root.classList.remove('browsing'), DROP_MS);
+    this.#dropTimer = setTimeout(() => this.#browsing(false), DROP_MS);
+  }
+
+  #browsing(on: boolean): void {
+    this.root.classList.toggle('browsing', on);
+    document.documentElement.classList.toggle('systems-browsing', on);
   }
 
   /** Stops the curiosity timer when the screen goes away. */
@@ -403,11 +402,11 @@ export class SystemView {
     this.#drawnFor = null;
     clearTimeout(this.#dropTimer);
     clearTimeout(this.#settle);
-    this.root.classList.remove('browsing');
+    this.#browsing(false);
     clearTimeout(this.#factTimer);
     clearTimeout(this.#readTimer);
-    clearInterval(this.#coverTimer);
     clearTimeout(this.#boardTimer);
+    clearTimeout(this.#shelfTimer);
   }
 
   /** With more systems than the strip shows at once, the last ones come before the first. */
@@ -418,6 +417,15 @@ export class SystemView {
 
   /** The logos on the track: every one, or when it loops, those round the selected one. */
   #drawStrip(): void {
+    const done = span('system.drawStrip');
+    try {
+      this.#drawStripTraced();
+    } finally {
+      done();
+    }
+  }
+
+  #drawStripTraced(): void {
     const total = this.#systems.length;
     const loops = this.#loops();
     const half = Math.ceil(this.#rail.clientHeight / (STRIP_ITEM_REM * remPx()) / 2) + 2;
@@ -516,6 +524,15 @@ export class SystemView {
    * fades out: one blend of two layers, each drawn once.
    */
   #turnPage(parts: [Slot, HTMLElement | null][], animate: boolean): void {
+    const done = span('system.turnPage');
+    try {
+      this.#turnPageTraced(parts, animate);
+    } finally {
+      done();
+    }
+  }
+
+  #turnPageTraced(parts: [Slot, HTMLElement | null][], animate: boolean): void {
     const old = this.#page;
     for (const gone of this.#panel.querySelectorAll('.stage-page.leaving')) gone.remove();
     const page = el('div', { class: animate ? 'stage-page entering' : 'stage-page' });
@@ -546,6 +563,15 @@ export class SystemView {
   }
 
   #render(system: CyberSystem, animate: boolean, ticket: number): void {
+    const done = span('system.render');
+    try {
+      this.#renderTraced(system, animate, ticket);
+    } finally {
+      done();
+    }
+  }
+
+  #renderTraced(system: CyberSystem, animate: boolean, ticket: number): void {
     const s = system.summary;
     const info = this.#info;
     const maker = info?.specs?.maker ?? s.manufacturer;
@@ -554,58 +580,59 @@ export class SystemView {
     const title = el('h2', { class: 'name' }, info?.name ?? s.fullname ?? s.name);
     const year = s.releaseYear ? String(s.releaseYear) : null;
     const released = info?.specs?.released ?? year;
-    const sheet = technicalSheet(maker, makerLogos(maker, this.#makers), released, info?.specs);
-
-    const callouts = (side: 'left' | 'right', specs: [Spec, string][]) => {
-      const items = specs.flatMap(([key, label], n) => {
-        const value = info?.specs?.[key];
-        return value
-          ? [
-              el(
-                'div',
-                { class: 'spec', style: `--n: ${n}` },
-                el('dt', {}, label),
-                scroller('dd', value)
-              )
-            ]
-          : [];
-      });
-      return items.length ? el('dl', { class: `specs specs-${side}` }, ...items) : null;
-    };
+    const mark = makerMark(maker, makerLogos(maker, this.#makers));
+    const sold = info?.specs?.unitsSold;
 
     const parts: [Slot, HTMLElement | null][] = [];
+    // Switched on, it settles into this: the console large on the left; on the right its logo
+    // and maker, how many of its games are here, and its life from launch to the end.
+    parts.push(['console', el('div', { class: 'stage' }, stage(system, title.textContent ?? ''))]);
     parts.push([
-      'intro',
+      'about',
       el(
         'div',
-        { class: 'intro' },
-        el(
-          'div',
-          { class: 'heading' },
-          el('div', { class: 'brand' }, logoImage(system, 'logo'), title),
-          sheet
-        )
+        { class: 'about' },
+        el('div', { class: 'brand' }, logoImage(system, 'logo', true), title)
       )
     ]);
+    // Its maker's logo, small, in the opposite corner.
+    parts.push([
+      'maker',
+      mark || maker ? el('div', { class: 'maker' }, mark ?? el('span', {}, maker ?? '')) : null
+    ]);
+    // How many of its games are here is on the strip of systems already.
+    parts.push([
+      'life',
+      lifeline(lifeEvents(released, info?.specs?.lifetime), [
+        info?.specs?.generation ? `${info.specs.generation} generation` : null,
+        sold ? `${soldShort(sold)} sold` : null
+      ])
+    ]);
+    // The middle band: its hardware, the console, its games.
+    parts.push(['hardware', hardware(info?.specs)]);
+    // Right of it, in turn: its best sellers, magazines about it, its peripherals.
+    const shelves = [
+      iconicGames(bestsellers(s.name, info?.bestsellers), info?.bestsellersBy !== 'classics'),
+      shelf(
+        'mags',
+        'Magazines',
+        system.magazines.slice(0, 3).map((m) => ({ src: m.src, name: m.title }))
+      ),
+      shelf('gear', 'Peripherals', system.peripherals.slice(0, 3))
+    ].filter((part) => part !== null);
+    const showcase = shelves.length ? el('div', { class: 'rotator' }, ...shelves) : null;
+    parts.push(['games', showcase]);
     parts.push(['reading', this.#readingPart()]);
-    parts.push([
-      'best',
-      bestsellerShelf(bestsellers(s.name, info?.bestsellers), info?.bestsellersBy !== 'classics')
-    ]);
-    parts.push([
-      'showcase',
-      el(
-        'div',
-        { class: 'showcase' },
-        callouts('left', LEFT),
-        stage(system, title.textContent ?? ''),
-        callouts('right', RIGHT)
-      )
-    ]);
-    parts.push(['press', press(system)]);
-    parts.push(['gear', gear(system)]);
     parts.push(['fact', this.#factStrip()]);
     const apply = () => {
+      const done = span('system.apply');
+      try {
+        applyNow();
+      } finally {
+        done();
+      }
+    };
+    const applyNow = () => {
       if (ticket !== this.#ticket) return;
       // The system's own colours, on the page root: the backdrop, outside this view, takes
       // them too.
@@ -627,17 +654,71 @@ export class SystemView {
       // A third and fourth where it has them; else its two again, the other way round.
       root.setProperty('--sys3-rgb', third ?? accent);
       root.setProperty('--sys4-rgb', fourth ?? rgb);
+      const entering = this.#shown !== this.#selected;
       this.#shown = this.#selected;
       this.#turnPage(parts, animate);
+      const booted = entering ? this.#boot(system) : 0;
+      this.#rotateShelves(showcase, booted + SHELF_MS);
       this.#scrollOverflow();
       this.#scheduleFact();
       this.#scheduleReading();
-      this.#scheduleCover();
     };
     // The next system shows whole, its pictures ready, rather than its words first.
     if (!animate) return apply();
     const images = parts.flatMap(([, part]) => (part ? [...part.querySelectorAll('img')] : []));
     void settle(images).then(apply);
+  }
+
+  /**
+   * The system switched on: dark, a line of light across the middle opening into the picture,
+   * its logo lit in it, then the page underneath. Over the page, gone in `BOOT_MS`; opacity and
+   * transforms only (cheap on a Pi). Not with motion off. While the strip of logos is still up
+   * (just moved), the screen stays dark under it and the light comes as the strip goes.
+   */
+  #boot(system: CyberSystem): number {
+    for (const old of this.#panel.querySelectorAll('.boot')) old.remove();
+    if (document.documentElement.dataset.motion === 'off') return 0;
+    const logo = logoImage(system, 'boot-logo', true);
+    const name = el('span', { class: 'boot-name' }, system.summary.fullname || system.summary.name);
+    logo?.addEventListener('error', () => logo.replaceWith(name));
+    const boot = el(
+      'div',
+      { class: 'boot', 'aria-hidden': 'true' },
+      el('span', { class: 'beam' }),
+      el('div', { class: 'boot-mark' }, logo ?? name)
+    );
+    const wait = this.root.classList.contains('browsing')
+      ? Math.max(0, DROP_MS - (performance.now() - this.#steppedAt))
+      : 0;
+    boot.style.setProperty('--boot-wait', `${Math.round(wait)}ms`);
+    this.#panel.append(boot);
+    setTimeout(() => boot.remove(), wait + BOOT_MS);
+    return wait + BOOT_MS;
+  }
+
+  /**
+   * The column right of the console: its first shelf there with the page from the start, still;
+   * after `first`, the next, fading and sliding in, each for `SHELF_MS`, round and round. A
+   * shelf whose pictures all failed is passed over.
+   */
+  #rotateShelves(box: HTMLElement | null, first: number): void {
+    clearTimeout(this.#shelfTimer);
+    if (!box) return;
+    let at = 0;
+    const shelves = [...box.children];
+    shelves[0]?.classList.add('on', 'still');
+    const next = () => {
+      if (!box.isConnected) return;
+      const ready = shelves.filter((shelf) => shelf.querySelector('li'));
+      if (ready.length < 2) return;
+      at = (at + 1) % ready.length;
+      for (const shelf of shelves) {
+        shelf.classList.remove('still');
+        shelf.classList.toggle('on', shelf === ready[at]);
+      }
+      this.#shelfTimer = setTimeout(next, SHELF_MS);
+    };
+    this.#shelfTimer = setTimeout(next, first);
   }
 
   /**
@@ -720,25 +801,11 @@ export class SystemView {
     return el(
       'aside',
       { class: 'fact' },
-      el(
-        'span',
-        { class: 'label' },
-        `Did you know? ${(this.#fact % facts.length) + 1}/${facts.length}`
-      ),
+      el('span', { class: 'label' }, 'Did you know?'),
       scroller('p', fact),
       // How long until the next one, when they move on by themselves (see `#scheduleFact`).
       facts.length > 1 && this.rotateFacts ? el('span', { class: 'timer' }) : null
     );
-  }
-
-  #scheduleCover(): void {
-    clearInterval(this.#coverTimer);
-    if (this.rotateFacts) {
-      this.#coverTimer = setInterval(() => {
-        const stand = this.#slots.get('press');
-        if (stand) turnCover(stand);
-      }, COVER_MS);
-    }
   }
 
   #scheduleFact(): void {
@@ -750,34 +817,6 @@ export class SystemView {
     strip?.querySelector<HTMLElement>('.timer')?.style.setProperty('--fact-ms', `${ms}ms`);
     this.#factTimer = setTimeout(() => this.nextFact(), ms);
   }
-}
-
-/**
- * The system's best sellers (or its classics), as pictures of their real cartridges or discs, ranked. A game
- * whose picture does not load is left out; nothing when there are none.
- */
-function bestsellerShelf(best: Bestseller[], ranked: boolean): HTMLElement | null {
-  if (!best.length) return null;
-  return el(
-    'div',
-    { class: 'bestsellers' },
-    el('span', { class: 'label' }, ranked ? 'Best sellers' : 'Classics'),
-    el(
-      'ol',
-      {},
-      ...best.map((game) => {
-        const art = el('img', { src: game.art, alt: game.name, decoding: 'async' });
-        const item = el(
-          'li',
-          {},
-          el('span', { class: 'pic' }, art),
-          el('span', { class: 'name' }, game.name)
-        );
-        art.addEventListener('error', () => item.remove());
-        return item;
-      })
-    )
-  );
 }
 
 /** Text in a box that scrolls it through when it is too long (see `#scrollOverflow`). */
@@ -810,53 +849,6 @@ const REGION_FLAGS: Record<string, string> = {
   KR: 'kr',
   TW: 'tw'
 };
-
-/** A release date with each region's code as its flag: "1988 JP · 1989 NA". */
-export function releaseDates(text: string): (string | HTMLElement)[] {
-  return text
-    .split(/\b(JP|NA|EU|UK|DE|KR|TW)\b/)
-    .map((part, n) =>
-      n % 2
-        ? el('img', { class: 'flag', src: `./flags/${REGION_FLAGS[part]}.svg`, alt: part })
-        : part
-    );
-}
-
-/**
- * The technical sheet beside the logo: who made it (its logo where Cyber has one), when, and
- * what else is known. `null` when nothing is.
- */
-function technicalSheet(
-  maker: string | null | undefined,
-  logos: readonly string[],
-  released: string | null | undefined,
-  specs: SystemInfo['specs']
-): HTMLElement | null {
-  const row = (label: string, value: HTMLElement) =>
-    el('div', { class: 'sheet-row' }, el('dt', {}, label), value);
-  const rows: HTMLElement[] = [];
-  if (maker) {
-    const mark = makerMark(maker, logos);
-    rows.push(row('Manufacturer:', mark ? el('dd', {}, mark) : scroller('dd', maker)));
-  }
-  if (released) {
-    rows.push(
-      row(
-        'Release date:',
-        el(
-          'dd',
-          { class: 'scroll' },
-          el('span', { class: 'scroll-inner' }, ...releaseDates(released))
-        )
-      )
-    );
-  }
-  for (const [key, label] of SHEET) {
-    const value = specs?.[key];
-    if (value) rows.push(row(label, scroller('dd', value)));
-  }
-  return rows.length ? el('dl', { class: 'sheet' }, ...rows.slice(0, SHEET_ROWS)) : null;
-}
 
 /** The maker's logos; `null` where Cyber has none (its name is used). */
 function makerMark(maker: string | null | undefined, logos: readonly string[]): HTMLElement | null {
@@ -913,74 +905,6 @@ function stage(system: CyberSystem, name: string): HTMLElement {
   return box;
 }
 
-/** A figure for the press or the gear: taken away if its picture will not load. */
-function shelfFigure(cls: string, src: string, alt: string, caption?: string): HTMLElement {
-  const fig = el(
-    'figure',
-    { class: cls },
-    el('img', { src, alt, decoding: 'async' }),
-    caption ? el('figcaption', {}, caption) : null
-  );
-  fig.querySelector('img')?.addEventListener('error', () => fig.remove(), { once: true });
-  return fig;
-}
-
-/**
- * Magazines about the system, a stack of up to five, the front one whole and big enough to
- * read, the start of each of the others showing behind it. `null` for a system with none.
- */
-export function press(system: Pick<CyberSystem, 'magazines'>): HTMLElement | null {
-  const mags = system.magazines.slice(0, 5);
-  if (!mags.length) return null;
-  return el(
-    'div',
-    { class: 'stand', 'aria-label': 'In the press' },
-    ...mags.map((m, n) => {
-      const fig = shelfFigure('cover', m.src, m.title);
-      fig.dataset.pos = String(n);
-      return fig;
-    })
-  );
-}
-
-/**
- * The front cover turns away like a page and goes to the back of the stack; those behind it
- * come forward. Transform and opacity only.
- */
-export function turnCover(stand: HTMLElement): void {
-  const covers = [...stand.querySelectorAll<HTMLElement>('.cover')].sort(
-    (a, b) => Number(a.dataset.pos) - Number(b.dataset.pos)
-  );
-  const [front, next, ...rest] = covers;
-  if (!front || !next) return;
-  front.classList.add('turning');
-  [next, ...rest].forEach((cover, n) => {
-    cover.dataset.pos = String(n);
-  });
-  setTimeout(() => {
-    // Straight to the back, unseen, then the stack's own moves again.
-    front.classList.add('parked');
-    front.classList.remove('turning');
-    front.dataset.pos = String(rest.length + 1);
-    requestAnimationFrame(() => requestAnimationFrame(() => front.classList.remove('parked')));
-  }, COVER_TURN_MS);
-}
-
-/**
- * The system's peripherals, up to four, two by two, each on its lit spot of floor and named.
- * `null` for a system with none.
- */
-export function gear(system: Pick<CyberSystem, 'peripherals'>): HTMLElement | null {
-  const items = system.peripherals.slice(0, 4);
-  if (!items.length) return null;
-  return el(
-    'div',
-    { class: `gear n${items.length}` },
-    el('h3', {}, 'Peripherals'),
-    ...items.map((p) => shelfFigure('item', p.src, p.name, p.name))
-  );
-}
-
 /**
  * How tall a logo stands in the column, in rem, for its width over its height: the same area for
  * every one (about 3 × 11rem), so a wide logo is low and a square one taller; 1.5rem to 3rem.
@@ -1007,4 +931,157 @@ function row(system: CyberSystem): HTMLElement {
     if (aspect > 0) logo.style.setProperty('--logo-h', `${logoHeight(aspect).toFixed(2)}rem`);
   });
   return item;
+}
+
+/** One moment of a system's life: a year, and what happened (where, as flags). */
+export interface LifeEvent {
+  year: number;
+  what: string;
+  regions: string[];
+}
+
+const REGION_NAMES: Record<string, string> = {
+  JP: 'Japan',
+  NA: 'North America',
+  EU: 'Europe',
+  UK: 'UK',
+  DE: 'Germany',
+  KR: 'Korea',
+  TW: 'Taiwan'
+};
+
+/**
+ * Its life from what the info says: launched where and when ("1987 JP · 1989 NA"), and when it
+ * ended ("1987–1994 (7 years)"). One moment a year; none known, none.
+ */
+export function lifeEvents(
+  released: string | null | undefined,
+  lifetime: string | null | undefined
+): LifeEvent[] {
+  const events: LifeEvent[] = [];
+  for (const m of (released ?? '').matchAll(/(\d{4})\s*(JP|NA|EU|UK|DE|KR|TW)?/g)) {
+    const year = Number(m[1]);
+    const region = m[2];
+    let event = events.find((e) => e.year === year);
+    if (!event) {
+      event = { year, what: '', regions: [] };
+      events.push(event);
+    }
+    if (region && !event.regions.includes(region)) event.regions.push(region);
+  }
+  events.sort((a, b) => a.year - b.year);
+  events.forEach((e, n) => {
+    e.what =
+      n === 0
+        ? 'Launch'
+        : e.regions.length === 1
+          ? REGION_NAMES[e.regions[0]!]!
+          : e.regions.length
+            ? 'Abroad'
+            : 'Release';
+  });
+  const end = /\d{4}\s*[–-]\s*(\d{4})/.exec(lifetime ?? '')?.[1];
+  const last = events.at(-1);
+  if (end && last && Number(end) > last.year) {
+    events.push({ year: Number(end), what: 'Last made', regions: [] });
+  }
+  return events;
+}
+
+/** The life as a line of moments, evenly spaced, the years over it. `null` with fewer than two. */
+function lifeline(events: LifeEvent[], more: (string | null)[]): HTMLElement | null {
+  if (events.length < 2) return null;
+  return el(
+    'div',
+    { class: 'life' },
+    more.some(Boolean) ? el('h3', {}, more.filter(Boolean).join(' · ')) : null,
+    el(
+      'ol',
+      { style: `--moments: ${events.length}` },
+      ...events.map((e) =>
+        el(
+          'li',
+          {},
+          el('span', { class: 'year' }, String(e.year)),
+          el('span', { class: 'dot' }),
+          el(
+            'span',
+            { class: 'what' },
+            ...e.regions.map((r) =>
+              el('img', { class: 'flag', src: `./flags/${REGION_FLAGS[r]}.svg`, alt: r })
+            ),
+            e.what
+          )
+        )
+      )
+    )
+  );
+}
+
+/** "~61.9 million", "About 118.69 million (Game Boy and …)": the number and its word only. */
+export function soldShort(text: string): string {
+  const m = /([\d.,]+)\s*(million|thousand|billion)?/i.exec(text);
+  return m ? `${m[1]}${m[2] ? ` ${m[2].toLowerCase()}` : ''}` : text;
+}
+
+/** The hardware's parts, in this order, as far as the info knows. */
+const HARDWARE: [keyof NonNullable<SystemInfo['specs']>, string][] = [
+  ['cpu', 'CPU'],
+  ['memory', 'Memory'],
+  ['graphics', 'Graphics'],
+  ['sound', 'Sound']
+];
+
+/** A section of the page: its small title over what it holds. */
+function section(cls: string, title: string, ...body: (HTMLElement | null)[]): HTMLElement {
+  return el('section', { class: `part ${cls}` }, el('h3', {}, title), ...body);
+}
+
+/**
+ * Left of the console: its hardware, part by part, each one's name small over its value (a long
+ * value scrolls in its place). `null` when nothing is known.
+ */
+function hardware(specs: SystemInfo['specs']): HTMLElement | null {
+  const cells = HARDWARE.flatMap(([key, label]) => {
+    const value = specs?.[key];
+    return value ? [el('div', { class: 'cell' }, el('dt', {}, label), scroller('dd', value))] : [];
+  });
+  return cells.length ? section('hardware', 'Hardware', el('dl', {}, ...cells)) : null;
+}
+
+/**
+ * Right of the console: its best sellers (or classics), each its real cartridge or disc with its
+ * name beside it. A game whose picture will not load is left out; `null`
+ * with none.
+ */
+function iconicGames(best: Bestseller[], ranked: boolean): HTMLElement | null {
+  return shelf(
+    'sellers',
+    ranked ? 'Best sellers' : 'Classics',
+    best.map((game) => ({ src: game.art, name: game.name }))
+  );
+}
+
+/**
+ * One shelf of the column right of the console: each thing's picture with its name beside it,
+ * zigzagging. One whose picture will not load is left out; `null` with none.
+ */
+function shelf(
+  cls: string,
+  title: string,
+  things: { src: string; name: string }[]
+): HTMLElement | null {
+  if (!things.length) return null;
+  const items = things.map((thing, n) => {
+    const art = el('img', { src: thing.src, alt: '', decoding: 'async' });
+    const item = el(
+      'li',
+      { style: `--i: ${n}` },
+      el('span', { class: 'pic' }, art),
+      el('span', { class: 'game' }, thing.name)
+    );
+    art.addEventListener('error', () => item.remove(), { once: true });
+    return item;
+  });
+  return section(`rack ${cls}`, title, el('ol', {}, ...items));
 }

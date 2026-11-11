@@ -251,12 +251,18 @@ async function commonsPicture(system) {
   const { file, credit } = await commons(source.file);
   const out = join(OUT, system.id, 'photo.webp');
   if (source.cut) await cutOut(file, out);
+  else if (source.transparent)
+    await sharp(file)
+      .trim({ threshold: 1 })
+      .resize({ width: PICTURE_MAX, height: PICTURE_MAX, fit: 'inside', withoutEnlargement: true })
+      .webp({ quality: 88, alphaQuality: 100 })
+      .toFile(out);
   else
     await sharp(file)
       .resize({ width: PICTURE_MAX, height: PICTURE_MAX, fit: 'inside', withoutEnlargement: true })
       .webp({ quality: 85 })
       .toFile(out);
-  return { kind: source.cut ? 'cutout' : 'framed', credit };
+  return { kind: source.cut || source.transparent ? 'cutout' : 'framed', credit };
 }
 
 const art = {};
@@ -268,7 +274,10 @@ const credits = [];
 for (const system of systems) {
   mkdirSync(join(OUT, system.id), { recursive: true });
   const l = await logo(system);
-  const p = (await carbonPicture(system)) ?? (await commonsPicture(system));
+  // Commons first where carbon's picture is the wrong console (art-sources.json, `over`).
+  const p = sources.pictures[system.id]?.over
+    ? await commonsPicture(system)
+    : ((await carbonPicture(system)) ?? (await commonsPicture(system)));
   art[system.id] = {
     logo: l ? 'logo.webp' : null,
     ...(l?.dark ? { logoDark: true } : {}),

@@ -19,6 +19,7 @@ Built by `scripts/build-art.mjs`.
 - **Casio Loopy** (`loopy`), picture: [Casio-Loopy-Console-Set.jpg](https://commons.wikimedia.org/wiki/File:Casio-Loopy-Console-Set.jpg), by Evan-Amos, Public domain.
 - **MC-10** (`mc10`), picture: [TRS-80 MC-10 Microcomputer.jpg](https://commons.wikimedia.org/wiki/File:TRS-80_MC-10_Microcomputer.jpg), by unknown, CC BY-SA 3.0.
 - **MC-10** (`mc10`), logo: [TRS-80 MC-10 badge.svg](https://commons.wikimedia.org/wiki/File:TRS-80_MC-10_badge.svg), by Tandy Corporation, Public domain.
+- **PC Engine** (`pcengine`), picture: [PC-Engine-Console-Set.png](https://commons.wikimedia.org/wiki/File:PC-Engine-Console-Set.png), by Evan-Amos, Public domain.
 - **Sharp MZ-2000** (`mz2000`), picture: [Sharp MZ-2000.jpg](https://commons.wikimedia.org/wiki/File:Sharp_MZ-2000.jpg), by Darklanlan, CC BY 4.0.
 - **Sharp MZ-2000** (`mz2000`), logo: [Logo of the Sharp Corporation.svg](https://commons.wikimedia.org/wiki/File:Logo_of_the_Sharp_Corporation.svg), by Sharp, Public domain.
 - **Sharp MZ-2500** (`mz2500`), logo: [Logo of the Sharp Corporation.svg](https://commons.wikimedia.org/wiki/File:Logo_of_the_Sharp_Corporation.svg), by Sharp, Public domain.
@@ -43,3 +44,25 @@ Built by `scripts/build-art.mjs`.
 - **TRS-80** (`trs80`), picture: [Radioshack TRS80-IMG 7206.jpg](https://commons.wikimedia.org/wiki/File:Radioshack_TRS80-IMG_7206.jpg), by Rama &amp; Musée Bolo, CC BY-SA 2.0 fr.
 - **TRS-80** (`trs80`), logo: [TRS-80 logo.svg](https://commons.wikimedia.org/wiki/File:TRS-80_logo.svg), by Tandy Corporation, Public domain.
 - **Videoton TVC** (`tvc`), picture: [Videoton TV-Computer (1986) (37650450314).jpg](https://commons.wikimedia.org/wiki/File:Videoton_TV-Computer_(1986)_(37650450314).jpg), by Wolfgang Stief from Tittmoning, Germany, CC0.
+- **Atari 2600** (`atari2600`), picture: [Atari-2600-Wood-4Sw-Set.png](https://commons.wikimedia.org/wiki/File:Atari-2600-Wood-4Sw-Set.png), by Evan-Amos, Public domain.
+- **Atari 7800** (`atari7800`), picture: [Atari-7800-Console-Set.png](https://commons.wikimedia.org/wiki/File:Atari-7800-Console-Set.png), by Evan-Amos, CC BY-SA 3.0.
+- **Commodore 64** (`c64`), picture: [Commodore-64-Computer-FL.png](https://commons.wikimedia.org/wiki/File:Commodore-64-Computer-FL.png), by Evan-Amos, Public domain.
+- **Dreamcast** (`dreamcast`), picture: [Dreamcast-Console-Set.png](https://commons.wikimedia.org/wiki/File:Dreamcast-Console-Set.png), by Evan-Amos, CC BY-SA 3.0.
+- **GameCube** (`gamecube`), picture: [GameCube-Console-Set.png](https://commons.wikimedia.org/wiki/File:GameCube-Console-Set.png), by Evan-Amos, Public domain.
+- **Game Boy** (`gb`), picture: [Game-Boy-FL.png](https://commons.wikimedia.org/wiki/File:Game-Boy-FL.png), by Evan-Amos (background removed by a Commons contributor), Public domain.
+- **Game Boy Advance** (`gba`), picture: [Nintendo-Game-Boy-Advance-Purple-FL.png](https://commons.wikimedia.org/wiki/File:Nintendo-Game-Boy-Advance-Purple-FL.png), by Evan-Amos, Public domain.
+- **Game Boy Color** (`gbc`), picture: [Nintendo-Game-Boy-Color-FL.png](https://commons.wikimedia.org/wiki/File:Nintendo-Game-Boy-Color-FL.png), by Evan-Amos, modified by Gunnar.offel, Public domain.
+- **Jaguar** (`jaguar`), picture: [Atari-Jaguar-Console-Set.png](https://commons.wikimedia.org/wiki/File:Atari-Jaguar-Console-Set.png), by Evan-Amos, CC BY-SA 3.0.
+- **Atari Lynx** (`lynx`), picture: [Atari-Lynx-I-Handheld.png](https://commons.wikimedia.org/wiki/File:Atari-Lynx-I-Handheld.png), by Evan-Amos, Public domain.
+- **Master System** (`mastersystem`), picture: [Sega-Master-System-Set.png](https://commons.wikimedia.org/wiki/File:Sega-Master-System-Set.png), by Evan-Amos, Public domain.
+- **Mega Drive** (`megadrive`), picture: [Sega-Mega-Drive-EU-Mk1-wController-FL.png](https://commons.wikimedia.org/wiki/File:Sega-Mega-Drive-EU-Mk1-wController-FL.png), by Evan-Amos, Public domain.
+- **Nintendo 64** (`n64`), picture: [N64-Console-Set.png](https://commons.wikimedia.org/wiki/File:N64-Console-Set.png), by Evan-Amos, Public domain.
+- **Nintendo DS** (`nds`), picture: [Nintendo-DS-Lite-Black-Open.png](https://commons.wikimedia.org/wiki/File:Nintendo-DS-Lite-Black-Open.png), by Evan-Amos, Public domain.
+- **Neo-Geo** (`neogeo`), picture: [Neo-Geo-AES-Console-Set.png](https://commons.wikimedia.org/wiki/File:Neo-Geo-AES-Console-Set.png), by Evan-Amos, CC BY-SA 3.0.
+- **Nintendo Entertainment System** (`nes`), picture: [NES-Console-Set.png](https://commons.wikimedia.org/wiki/File:NES-Console-Set.png), by Evan-Amos, Public domain.
+- **ps2** (`ps2`), picture: [PS2-Fat-Console-Set.png](https://commons.wikimedia.org/wiki/File:PS2-Fat-Console-Set.png), by Evan-Amos, Public domain.
+- **PlayStation Portable** (`psp`), picture: [Sony-PSP-1000-Body.png](https://commons.wikimedia.org/wiki/File:Sony-PSP-1000-Body.png), by Evan-Amos, Public domain.
+- **PlayStation** (`psx`), picture: [PSX-Console-wController.png](https://commons.wikimedia.org/wiki/File:PSX-Console-wController.png), by Evan-Amos, Public domain.
+- **Saturn** (`saturn`), picture: [Sega-Saturn-Console-Set-Mk1.png](https://commons.wikimedia.org/wiki/File:Sega-Saturn-Console-Set-Mk1.png), by Evan-Amos, Public domain.
+- **32x** (`sega32x`), picture: [Sega-Genesis-Model2-32X.png](https://commons.wikimedia.org/wiki/File:Sega-Genesis-Model2-32X.png), by Evan-Amos, Public domain.
+- **Super Nintendo Entertainment System** (`snes`), picture: [Nintendo-Super-Famicom-Set-FL.png](https://commons.wikimedia.org/wiki/File:Nintendo-Super-Famicom-Set-FL.png), by Evan-Amos, Public domain.
