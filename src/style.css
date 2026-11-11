@@ -1084,7 +1084,8 @@ main {
   left: 50%;
   /* Its horizon a little above the console's feet. */
   top: calc(100% - 1.6rem);
-  width: min(52rem, 200%);
+  /* The same width for every system, not the console's: a narrow one (the 5200) had less. */
+  width: 52rem;
   height: 4.6rem;
   translate: -50% 0;
   overflow: hidden;
