@@ -237,6 +237,8 @@ export class CollectorView {
   #navPicSrc: string | null = null;
   /** Which draw of a game is the latest: one whose pictures load after another began is dropped. */
   #drawRound = 0;
+  /** The game whose pictures are loading to replace the one shown, if any. */
+  #drawing: number | null = null;
   #labelTimer: ReturnType<typeof setTimeout> | undefined;
   /** When the selection last moved. */
   #steppedAt = -Infinity;
@@ -288,8 +290,8 @@ export class CollectorView {
     this.#shelf.append(this.#track);
     this.root.append(
       this.#backdrop,
-      this.#shelf,
       this.#navPic,
+      this.#shelf,
       this.#showcase,
       this.#dossier,
       this.#scan.root
@@ -435,7 +437,10 @@ export class CollectorView {
       this.#labelNow();
       this.#previewedAt = now;
       const game = this.selected;
-      if (game) this.#navPicFor(game);
+      if (game) {
+        this.#navPicFor(game);
+        this.#dossierFor(game);
+      }
     } else this.#labelTimer = setTimeout(() => this.#labelNow(), LABEL_MS);
     // Held: the game passed now, every so often, behind and above the shelf.
     if (held && now - this.#previewedAt >= HELD_PREVIEW_MS) {
@@ -446,12 +451,14 @@ export class CollectorView {
         // One at a time: the fan art still loading finishes and shows, the next comes after.
         if (!this.#backdrop.querySelector('img.waiting')) this.#backdropFor(game);
         if (!this.#navPic.querySelector('img.waiting')) this.#navPicFor(game);
+        this.#dossierFor(game);
       }
     }
     clearTimeout(this.#peek);
     this.#peek = setTimeout(() => {
       const game = this.selected;
       if (game) this.#navPicFor(game);
+      if (game) this.#dossierFor(game);
       if (game) this.#backdropFor(game);
     }, PEEK_MS);
     clearTimeout(this.#settle);
@@ -768,7 +775,11 @@ export class CollectorView {
     if (game && !again && !this.#left && this.#game?.id === game.id && this.#box) {
       return this.#labelNow();
     }
+    // Already on its way (the list reloaded meanwhile, as it does while Forma checks the
+    // library): that draw goes on, not started again, or on a Pi it never finished.
+    if (game && !again && this.#drawing === game.id) return;
     const round = ++this.#drawRound;
+    this.#drawing = null;
     if (!game) {
       this.#stop();
       return;
@@ -778,9 +789,10 @@ export class CollectorView {
     const dossier = this.#dossierParts(game);
     // Drawn again where it is (its pictures just replaced, its details changed): at once.
     // Or nothing shown to keep (a list just opened, back from elsewhere): at once too.
-    if (again || !this.#game || this.#left) return this.#draw(game, showcase, dossier);
+    if (again || !this.#game || this.#left) return this.#draw(game, showcase, dossier, true);
     // Another game: the one shown stays until the next's pictures have loaded, then is
     // replaced by it whole, rather than emptied first and filled in as they come.
+    this.#drawing = game.id;
     const images = [...showcase, ...dossier].flatMap((part) => [
       ...(part instanceof HTMLImageElement ? [part] : []),
       ...part.querySelectorAll('img')
@@ -792,13 +804,16 @@ export class CollectorView {
       Promise.all(loaded),
       new Promise((done) => setTimeout(done, SWAP_WAIT_MS))
     ]).then(() => {
-      if (round !== this.#drawRound || this.selected?.id !== game.id) return;
+      if (round !== this.#drawRound) return;
+      this.#drawing = null;
+      if (this.selected?.id !== game.id) return;
       this.#draw(game, showcase, dossier);
     });
   }
 
   /** The game in the showcase and the dossier, its parts made: put in, and set going. */
-  #draw(game: Game, showcase: HTMLElement[], dossier: HTMLElement[]): void {
+  /** `fresh`: the dossier drawn anew even if it already shows this game (its details changed). */
+  #draw(game: Game, showcase: HTMLElement[], dossier: HTMLElement[], fresh = false): void {
     this.#stop();
     this.#left = false;
     this.#game = game;
@@ -806,7 +821,11 @@ export class CollectorView {
     this.root.style.removeProperty('--game');
     this.#tint(game);
     this.#showcase.replaceChildren(...showcase);
-    this.#dossier.replaceChildren(...dossier);
+    // Followed the shelf already: kept as it is, not drawn again.
+    if (fresh || this.#dossier.dataset.id !== String(game.id)) {
+      this.#dossier.replaceChildren(...dossier);
+      this.#dossier.dataset.id = String(game.id);
+    }
     fadeInAsLoaded(this.#showcase);
     fadeInAsLoaded(this.#dossier);
     this.#scan.shown(game.id, this.#pictures());
@@ -993,6 +1012,13 @@ export class CollectorView {
       },
       { once: true }
     );
+  }
+
+  /** The dossier of the game selected, at once, as the shelf moves: it stays lit beside it. */
+  #dossierFor(game: Game): void {
+    if (this.#dossier.dataset.id === String(game.id)) return;
+    this.#dossier.dataset.id = String(game.id);
+    this.#dossier.replaceChildren(...this.#dossierParts(game));
   }
 
   /**
@@ -1476,7 +1502,7 @@ export class CollectorView {
     }
     const id = game.id;
     void progress.then((a) => {
-      if (!a || a.total === 0 || this.#game?.id !== id) return;
+      if (!a || a.total === 0 || this.#dossier.dataset.id !== String(id)) return;
       const tile = mark('cheevos', ICONS.cheevos, `${a.earned} / ${a.total}`, true);
       tile.setAttribute('aria-label', `${a.earned} of ${a.total} achievements`);
       marks.querySelector('.mark.cheevos')?.replaceWith(tile);

@@ -531,6 +531,14 @@ describe('the Collector view', () => {
     expect(v.root.classList.contains('browsing')).toBe(false);
   });
 
+  it('keeps the dossier lit and following the selection while the shelf shows', async () => {
+    const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
+    vi.advanceTimersByTime(2100);
+    v.select(1);
+    // At once, before the selection rests.
+    expect(v.root.querySelector('.dossier')?.textContent).toContain('Doom');
+  });
+
   it('stars a favourite in the label, and a reload of the same game moves nothing', async () => {
     const g = game(7, 'After Burner', BOXED);
     const { v } = await view([g]);

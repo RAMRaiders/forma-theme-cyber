@@ -4163,10 +4163,14 @@ kbd {
 .nav-pic {
   grid-area: footage-start / case-start / story-end / case-end;
   position: relative;
-  z-index: 6;
+  /* Over the dimmed screen, under the shelf (before it): a long spine still reads over it. */
+  z-index: 5;
   display: grid;
   place-items: center;
-  padding: 1rem;
+  padding: 0.6rem;
+  border-radius: 0.4rem;
+  /* Really dark: the case behind is gone, only the picture shows. */
+  background: rgb(2 4 9 / 96%);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -4183,8 +4187,9 @@ kbd {
 
 .nav-pic img {
   grid-area: 1 / 1;
-  max-width: 100%;
-  max-height: 100%;
+  /* As big as the side allows. */
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   border: 1px solid color-mix(in srgb, var(--game) 55%, transparent);
   border-radius: 0.3rem;
@@ -4195,6 +4200,12 @@ kbd {
   /* A little shaded, over the dimmed screen: a preview, under the shelf's own light. No filter
      (the Pi). */
   opacity: 0.82;
+}
+
+/* The dossier stays lit beside the shelf, following the selection. */
+.collector.browsing .dossier {
+  position: relative;
+  z-index: 5;
 }
 
 .nav-pic img.waiting {
