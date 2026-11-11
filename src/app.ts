@@ -48,6 +48,7 @@ import { preload } from './ui/preload.js';
 import { STAGE_PICTURES, accentOf } from './ui/stage.js';
 import { SystemView } from './ui/system.js';
 import { rest } from './ui/rest.js';
+import { boot, bootMark } from './ui/boot.js';
 
 /** One level of the path, and where the selection was, so going back returns to it. */
 interface Level {
@@ -581,12 +582,21 @@ export class App {
           logo: url('wheel', DETAIL_WIDTH) ?? url('marquee', DETAIL_WIDTH)
         });
         this.#playing.replaceChildren(screen);
+        // Switched on over it: dark, a line of light, the game's logo lit, then the launch screen.
+        boot(this.#playing, bootMark(url('wheel', 560) ?? url('marquee', 560), name), 0, {
+          colour: 'var(--neon)',
+          top: true
+        });
         // The boot sequence in the game's own colour, once that is known.
         const probe = url('thumbnail', 64) ?? url('fanart', 64);
         if (probe) {
           void accentOf(probe)
             .then((colour) => {
-              if (colour) screen.style.setProperty('--launch-accent', colour);
+              if (!colour) return;
+              screen.style.setProperty('--launch-accent', colour);
+              document
+                .querySelector<HTMLElement>('body > .boot.top')
+                ?.style.setProperty('--sys', colour);
             })
             .catch(() => {});
         }

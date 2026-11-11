@@ -13,15 +13,18 @@ export function boot(
   host: HTMLElement,
   mark: HTMLElement,
   wait = 0,
-  /** Over the whole screen, header and hints too, lit in this colour (a game's). */
-  whole?: { colour: string }
+  /**
+   * Over the whole screen, header and hints too, lit in this colour (a game's); `top`: over the
+   * launch screen too.
+   */
+  whole?: { colour: string; top?: boolean }
 ): number {
   const over = whole ? document.body : host;
   for (const old of over.querySelectorAll(':scope > .boot')) old.remove();
   if (document.documentElement.dataset.motion === 'off') return 0;
   const screen = el(
     'div',
-    { class: whole ? 'boot whole' : 'boot', 'aria-hidden': 'true' },
+    { class: whole ? `boot whole${whole.top ? ' top' : ''}` : 'boot', 'aria-hidden': 'true' },
     el('span', { class: 'beam' }),
     el('div', { class: 'boot-mark' }, mark)
   );
