@@ -4829,6 +4829,10 @@ kbd {
 
 .slab-label {
   width: 100%;
+  /* One height whatever the game, its words cut to a line each: a long name on two lines made
+     the bar, and the whole view under it, jump as the shelf went by. */
+  height: 5.2rem;
+  overflow: hidden;
   display: grid;
   /* The system, the game's name and details, its star; the seals at the right end. */
   grid-template-columns: auto minmax(0, max-content) auto minmax(0, 1fr);
@@ -4876,14 +4880,20 @@ kbd {
 }
 
 .slab-label .what strong {
-  /* The whole name, on two lines if it needs them. */
-  display: -webkit-box;
+  /* One line, cut short if need be (the dossier has it whole). */
   overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-size: 1.1rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+.slab-label .line,
+.slab-label .serial {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .slab-label .line {
