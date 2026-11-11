@@ -4,7 +4,7 @@ import { span } from './perf.js';
 import type { LazyList } from '../logic/pager.js';
 import { el, remPx } from './dom.js';
 import { Scan } from './scan.js';
-import { boot, bootMarkLoaded } from './boot.js';
+import { boot, scrapedMark } from './boot.js';
 import { STAGE_PICTURES, Stage, type StageOptions } from './stage.js';
 
 /** Row height in rem; rows are positioned by index, so only visible ones exist. */
@@ -85,9 +85,10 @@ export class GamesView {
   async #boot(game: Game): Promise<number> {
     const media = this.#options.media;
     // Its logo as the scrape just brought it, loaded before the boot lights it.
-    const mark = await bootMarkLoaded(
-      media(game, 'wheel', 560) ?? media(game, 'marquee', 560),
-      game.name
+    const mark = await scrapedMark(
+      game,
+      (g) => media(g, 'wheel', 560) ?? media(g, 'marquee', 560),
+      this.#options.fresh
     );
     if (this.selected?.id !== game.id) return 0;
     return boot(this.root, mark, 0, {

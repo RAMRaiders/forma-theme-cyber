@@ -123,6 +123,7 @@ export class App {
       (game.media as Partial<Record<string, string>>)[kind]
         ? this.forma.library.mediaUrl(game.id, kind, width)
         : null,
+    fresh: (id) => this.forma.library.game(id),
     achievements: async (game) => {
       const { data } = await this.forma.ra.game(game.id);
       return { earned: data.earned, total: data.achievementCount };
@@ -138,6 +139,7 @@ export class App {
       (game.media as Partial<Record<string, string>>)[kind]
         ? this.forma.library.mediaUrl(game.id, kind, width)
         : null,
+    fresh: (id) => this.forma.library.game(id),
     achievements: async (game) => {
       const { data } = await this.forma.ra.game(game.id);
       return { earned: data.earned, total: data.achievementCount };

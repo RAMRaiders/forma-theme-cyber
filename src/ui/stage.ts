@@ -61,6 +61,8 @@ export interface Achievements {
 
 export interface StageOptions {
   media: MediaUrl;
+  /** The game as Forma has it now (its media just scraped, say), not the list's copy. */
+  fresh?: (id: number) => Promise<Game | null>;
   /** The game's RetroAchievements progress, if it has any. */
   achievements?: (game: Game) => Promise<Achievements | null>;
   /** The game's colour, from a small picture of it; `null` keeps Cyber's own. */
