@@ -4203,15 +4203,15 @@ kbd {
   transition: opacity 120ms ease;
 }
 
-/* The case is put away while the shelf shows (the TV stands in its place), once the TV has
-   faded in over it, and is back as the shelf goes, the TV fading off it. Visibility, never
+/* The case is put away while the shelf shows (the TV stands in its place): first of all, on the
+   step itself, before the shelf and the TV fade in; back as the shelf goes. Visibility, never
    opacity: that flattens the box's 3D, and it jumped as the shelf came. Every part of it, as
    some set their own visibility (the box, once loaded). Its fade-in as a new game is drawn
    waits too, or the box showed through the shelf. */
 .collector.browsing .bay.case,
 .collector.browsing .bay.case * {
   visibility: hidden !important;
-  transition: visibility 0s linear 140ms;
+  transition: none;
 }
 
 .collector.browsing .bay.case {
