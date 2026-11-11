@@ -536,7 +536,8 @@ describe('the Collector view', () => {
     const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
     vi.advanceTimersByTime(2100);
     v.select(1);
-    // At once, before the selection rests.
+    // Just after the shelf has faded in, well before the selection rests.
+    vi.advanceTimersByTime(150);
     expect(v.root.querySelector('.dossier')?.textContent).toContain('Doom');
   });
 

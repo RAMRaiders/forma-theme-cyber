@@ -108,6 +108,8 @@ export const COLLECTOR_PICTURES: readonly (readonly [Kind, number])[] = [
  * into that.
  */
 const SPINE_LEN_REM = 22;
+/** How long after a step the dossier follows it: once the shelf has faded in. */
+const DOSSIER_MS = 140;
 const SPINE_H_REM = 2.85;
 /** Systems whose spines are drawn a little bigger, rows and all: Atari's short cartridge labels
  * read small at the usual size. */
@@ -273,6 +275,7 @@ export class CollectorView {
   );
   readonly #navPic = el('div', { class: 'nav-pic', 'aria-hidden': 'true' }, this.#tv);
   #navPicSrc: string | null = null;
+  #dossierTimer: ReturnType<typeof setTimeout> | undefined;
   /** Which draw of a game is the latest: one whose pictures load after another began is dropped. */
   #drawRound = 0;
   /** The game whose pictures are loading to replace the one shown, if any. */
@@ -486,8 +489,9 @@ export class CollectorView {
       const game = this.selected;
       if (game) {
         this.#labelNow();
-        // One at a time: the fan art still loading finishes and shows, the next comes after.
-        if (!this.#backdrop.querySelector('img.waiting')) this.#backdropFor(game);
+        // The TV is the sneak peek: only its small picture follows (one at a time, the one
+        // loading finishes first). The fan art waits for a pause: decoding it at every step
+        // made scrolling stutter on a Pi.
         if (!this.#navPic.querySelector('img.waiting')) this.#navPicFor(game);
         this.#dossierFor(game);
       }
@@ -1068,11 +1072,18 @@ export class CollectorView {
     );
   }
 
-  /** The dossier of the game selected, at once, as the shelf moves: it stays lit beside it. */
+  /**
+   * The dossier of the game selected, as the shelf moves: it stays lit beside it. Just after the
+   * shelf has faded in, not in the same frame (on a Pi, its redraw there made the shelf stutter
+   * in); the latest game only, if several steps come meanwhile.
+   */
   #dossierFor(game: Game): void {
-    if (this.#dossier.dataset.id === String(game.id)) return;
-    this.#dossier.dataset.id = String(game.id);
-    this.#dossier.replaceChildren(...this.#dossierParts(game));
+    clearTimeout(this.#dossierTimer);
+    this.#dossierTimer = setTimeout(() => {
+      if (this.selected?.id !== game.id || this.#dossier.dataset.id === String(game.id)) return;
+      this.#dossier.dataset.id = String(game.id);
+      this.#dossier.replaceChildren(...this.#dossierParts(game));
+    }, DOSSIER_MS);
   }
 
   /**

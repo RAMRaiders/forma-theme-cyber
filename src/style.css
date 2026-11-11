@@ -4081,6 +4081,8 @@ kbd {
   );
   opacity: 0;
   visibility: hidden;
+  /* Its layer ready before it shows: one made as it comes is a stutter on a Pi. */
+  will-change: opacity;
   transition:
     opacity 200ms ease,
     visibility 0s 200ms;
@@ -4156,6 +4158,7 @@ kbd {
   background: rgb(2 4 10 / 50%);
   opacity: 0;
   pointer-events: none;
+  will-change: opacity;
   transition: opacity 200ms ease;
 }
 
@@ -4186,6 +4189,8 @@ kbd {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  /* Its layer ready before it shows: one made as the shelf comes is a stutter on a Pi. */
+  will-change: opacity;
   transition:
     opacity 200ms ease,
     visibility 0s linear 200ms;
@@ -4197,21 +4202,24 @@ kbd {
   transition: opacity 120ms ease;
 }
 
-/* The case is put away while the shelf shows (the TV stands in its place) and comes back only
-   once it has gone. Its fade-in as a new game is drawn waits too: an animation's opacity would
-   win over this, and the box show through the shelf. */
+/* The case is put away while the shelf shows (the TV stands in its place), once the TV has
+   faded in over it, and is back as the shelf goes, the TV fading off it. Visibility, never
+   opacity: that flattens the box's 3D, and it jumped as the shelf came. Every part of it, as
+   some set their own visibility (the box, once loaded). Its fade-in as a new game is drawn
+   waits too, or the box showed through the shelf. */
+.collector.browsing .bay.case,
+.collector.browsing .bay.case * {
+  visibility: hidden !important;
+  transition: visibility 0s linear 140ms;
+}
+
 .collector.browsing .bay.case {
-  opacity: 0;
   animation: none;
-  transition: opacity 120ms ease;
 }
 
-.collector:not(.browsing) .bay.case {
-  transition: opacity 240ms ease;
-}
-
-/* The dossier stays lit beside the shelf, following the selection. */
-.collector.browsing .dossier {
+/* The dossier stays lit beside the shelf, following the selection: over the dim always, so
+   nothing about it changes as the shelf comes. */
+.collector .dossier {
   position: relative;
   z-index: 5;
 }
