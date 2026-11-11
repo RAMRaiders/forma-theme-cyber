@@ -110,6 +110,8 @@ export const COLLECTOR_PICTURES: readonly (readonly [Kind, number])[] = [
 const SPINE_LEN_REM = 22;
 /** How long after a step the dossier follows it: once the shelf has faded in. */
 const DOSSIER_MS = 140;
+/** Longest a new dossier waits for its pictures to decode before it is put in anyway. */
+const DOSSIER_WAIT_MS = 150;
 const SPINE_H_REM = 2.85;
 /** Systems whose spines are drawn a little bigger, rows and all: Atari's short cartridge labels
  * read small at the usual size. */
@@ -283,6 +285,8 @@ export class CollectorView {
   readonly #navPic = el('div', { class: 'nav-pic', 'aria-hidden': 'true' }, this.#tv);
   #navPicSrc: string | null = null;
   #dossierTimer: ReturnType<typeof setTimeout> | undefined;
+  /** Which dossier draw is the latest: one whose pictures decode after another began is dropped. */
+  #dossierRound = 0;
   /** The shelf's height (px), measured once a list opens or the window is resized, not at each
    * step: measuring right after a step's class change made the page work out all its styles
    * and layout in the key press. */
@@ -686,8 +690,8 @@ export class CollectorView {
   }
 
   /**
-   * The shelf's middle over the footage, as wide as the whole view: a long spine reaches over
-   * the case and the dossier, which are dimmed behind it anyway.
+   * The shelf's middle over the footage; a long spine may reach over the case's side (put away
+   * while the shelf shows), never over the dossier, lit beside it (a PC Engine's ran into it).
    */
   #centreShelf(): void {
     const bay = this.root.querySelector('.bay.footage');
@@ -696,7 +700,11 @@ export class CollectorView {
     if (!footage?.width || !shelf.width) return;
     const mid = footage.left + footage.width / 2 - shelf.left;
     this.#shelf.style.setProperty('--mid', `${mid}px`);
-    this.#shelfRoom = (2 * Math.min(mid, shelf.width - mid)) / remPx();
+    const dossier = this.#dossier.getBoundingClientRect();
+    // Up to the dossier, when it is beside the footage (not laid out yet: the whole view).
+    const edge = dossier.left - shelf.left;
+    const right = dossier.width && edge > mid ? edge : shelf.width;
+    this.#shelfRoom = (2 * Math.min(mid, right - mid)) / remPx();
   }
 
   /** A game's pictures were replaced: draws again its spine and, if it is the one shown, its case. */
@@ -1193,12 +1201,27 @@ export class CollectorView {
    */
   #dossierFor(game: Game, after = DOSSIER_MS): void {
     clearTimeout(this.#dossierTimer);
+    const round = ++this.#dossierRound;
     const draw = () => {
       if (this.selected?.id !== game.id || this.#dossier.dataset.id === String(game.id)) return;
-      this.#dossier.dataset.id = String(game.id);
       const parts = this.#dossierParts(game);
       keepPictures(this.#dossier, parts);
-      this.#dossier.replaceChildren(...parts);
+      const swap = () => {
+        if (round !== this.#dossierRound || this.selected?.id !== game.id) return;
+        this.#dossier.dataset.id = String(game.id);
+        this.#dossier.replaceChildren(...parts);
+      };
+      // Its new pictures (flags, makers' logos) decoded first, a moment at most: put in still
+      // decoding, they were blank a frame or two and popped in, the dossier flickering.
+      const decoding = parts
+        .flatMap((p) => [...p.querySelectorAll('img')])
+        .filter((img) => !img.complete && typeof img.decode === 'function')
+        .map((img) => img.decode().catch(() => undefined));
+      if (!decoding.length) return swap();
+      void Promise.race([
+        Promise.all(decoding),
+        new Promise((done) => setTimeout(done, DOSSIER_WAIT_MS))
+      ]).then(swap);
     };
     if (after > 0) this.#dossierTimer = setTimeout(draw, after);
     else draw();
