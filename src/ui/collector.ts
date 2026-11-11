@@ -1223,6 +1223,7 @@ export class CollectorView {
     // The ROM's own name first (it is the copy at hand), the scraper's data after.
     // The catalogue's name first (the dump it is), the file's after, the scraper's last.
     const rom = gameTags(game);
+    const tags = releaseOf(rom.version);
     const regions = rom.regions.length ? rom.regions : codes(game.region);
     const languages = rom.languages.length ? rom.languages : codes(game.lang);
     const company = (name: string | null) => {
@@ -1259,7 +1260,10 @@ export class CollectorView {
       row('Genre', game.genre),
       row('Region', flags(flaggedRegions(regions), REGIONS, regionFlag)),
       // A hack or a homebrew game with no version is no "original release".
-      row('Version', rom.version || !rom.status ? versionText(rom.version) : null),
+      // What kind of release (the original, a prototype, a demo…), then its number apart. A
+      // hack or a homebrew game with neither is no "original release".
+      row('Release', tags.kind || !rom.status ? (tags.kind ?? 'Original') : null),
+      row('Version', tags.number),
       row('Status', rom.status && versionText(rom.status)),
       // By its version and status: a translation's language reads next to it.
       row('Languages', flags(languages, LANGUAGES, languageFlag)),
@@ -1541,6 +1545,37 @@ function flagChip(name: string, flag: string | null): HTMLElement {
  * The dump's version, as its file name gives it, in words: `Rev 1` → `Revision 1`, `v1.1` →
  * `Version 1.1`, `Unl` → `Unlicensed`; with none, the first release as it came out.
  */
+/**
+ * The dump's version tags taken apart: what kind of release it is (`Prototype`, `Beta`,
+ * `Demo`…; `null` for the release itself) and its number (`Proto 2` → `2`, `v1.1` → `1.1`,
+ * `Rev A` → `Revision A`).
+ */
+export function releaseOf(version: string | null): { kind: string | null; number: string | null } {
+  const kinds: string[] = [];
+  const numbers: string[] = [];
+  for (const part of version?.split(' · ') ?? []) {
+    const kind = /^(proto(?:type)?|alpha|beta|demo|sample|kiosk|promo|debug)\s*(\d+)?$/i.exec(part);
+    if (kind) {
+      kinds.push(versionWords(kind[1]!));
+      if (kind[2]) numbers.push(kind[2]);
+      continue;
+    }
+    const v = /^v\s*([\d.]+\w*)$/i.exec(part);
+    if (v) {
+      numbers.push(v[1]!);
+      continue;
+    }
+    const alt = /^alt\s*(\d+)?$/i.exec(part);
+    if (alt) {
+      numbers.push(alt[1] ? `Alternate ${alt[1]}` : 'Alternate');
+      continue;
+    }
+    numbers.push(versionWords(part));
+  }
+  const once = (list: string[]) => (list.length ? [...new Set(list)].join(' · ') : null);
+  return { kind: once(kinds), number: once(numbers) };
+}
+
 export function versionText(version: string | null): string {
   if (!version) return 'Original release';
   return [...new Set(version.split(' · ').map(versionWords))].join(' · ');

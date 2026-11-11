@@ -12,6 +12,7 @@ import {
   shelfShape,
   paginate,
   dumpText,
+  releaseOf,
   versionText,
   gradeOf,
   hueOf,
@@ -216,6 +217,7 @@ describe('the Collector view', () => {
       'Publisher',
       'Genre',
       'Region',
+      'Release',
       'Version',
       'Languages',
       'Played',
@@ -231,10 +233,10 @@ describe('the Collector view', () => {
     expect([...flags(0)].map((c) => c.textContent)).toEqual(['USA', 'Japan']);
     expect([...flags(1)].map((c) => c.textContent)).toEqual(['English', 'Japanese']);
     expect(v.root.querySelectorAll('.dossier .specs .flags .flag')).toHaveLength(4);
-    expect(dd[5]).toBe('Revision 1');
+    expect(dd.slice(5, 7)).toEqual(['Original', 'Revision 1']);
     // Its pictures are not listed: they are on the screen.
     expect(v.root.querySelector('.dossier .archive')).toBeNull();
-    expect(dd.slice(7)).toEqual(['2×', '10 min']);
+    expect(dd.slice(8)).toEqual(['2×', '10 min']);
     // What it offers: players; no manual, achievements nor rating: their tiles there, faded.
     expect(text('.dossier .mark.on')).toEqual(['1 player']);
     expect(text('.dossier .mark.off')).toEqual(['No manual', '– / –', 'No rating']);
@@ -287,6 +289,16 @@ describe('the Collector view', () => {
     ).toBe('Not catalogued');
   });
 
+  it('takes the release kind and its number apart', () => {
+    expect(releaseOf(null)).toEqual({ kind: null, number: null });
+    expect(releaseOf('Proto 1')).toEqual({ kind: 'Prototype', number: '1' });
+    expect(releaseOf('Beta')).toEqual({ kind: 'Beta', number: null });
+    expect(releaseOf('Demo · Rev 1')).toEqual({ kind: 'Demo', number: 'Revision 1' });
+    expect(releaseOf('v1.1')).toEqual({ kind: null, number: '1.1' });
+    expect(releaseOf('Kiosk')).toEqual({ kind: 'Kiosk demo', number: null });
+    expect(releaseOf('Alt 2')).toEqual({ kind: null, number: 'Alternate 2' });
+  });
+
   it("says the dump's version in words", () => {
     expect(versionText(null)).toBe('Original release');
     expect(versionText('Rev 1')).toBe('Revision 1');
@@ -324,13 +336,19 @@ describe('the Collector view', () => {
       return Object.fromEntries(labels.map((label, i) => [label, values[i]]));
     };
     const both = await rows('Tanglewood (World) (v1.1) (Aftermarket) (Unl).md');
-    expect(both['Version']).toBe('Version 1.1');
+    // Homebrew: no "original release", its own version.
+    expect(both['Release']).toBeUndefined();
+    expect(both['Version']).toBe('1.1');
     expect(both['Status']).toBe('Homebrew · Unlicensed');
     const noVersion = await rows('Tanglewood (World) (Aftermarket) (Unl).md');
+    expect(noVersion['Release']).toBeUndefined();
     expect(noVersion['Version']).toBeUndefined();
     expect(noVersion['Status']).toBe('Homebrew · Unlicensed');
     const plain = await rows('Tanglewood (USA).md');
-    expect(plain['Version']).toBe('Original release');
+    expect(plain['Release']).toBe('Original');
+    expect(plain['Version']).toBeUndefined();
+    const proto = await rows('Tanglewood (USA) (Proto 2).md');
+    expect([proto['Release'], proto['Version']]).toEqual(['Prototype', '2']);
     expect(plain['Status']).toBeUndefined();
   });
 
