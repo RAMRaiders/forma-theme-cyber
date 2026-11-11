@@ -11,6 +11,7 @@ import {
   boxHeight,
   shelfShape,
   paginate,
+  dumpText,
   versionText,
   gradeOf,
   hueOf,
@@ -254,6 +255,29 @@ describe('the Collector view', () => {
     expect(v.root.querySelector('.dossier .specs .flags')).not.toBeNull();
     // A manual: a mark by the players, not a row.
     expect(text('.dossier .part h3')).toEqual(['Release', 'Play record']);
+  });
+
+  it('says whether the file is a catalogued dump, once Forma has checked it', async () => {
+    const { v, text } = await view([
+      {
+        ...game(7, 'After Burner', BOXED),
+        dump: {
+          status: 'verified',
+          catalogue: 'no-intro',
+          name: 'After Burner (USA)',
+          region: 'USA'
+        }
+      }
+    ]);
+    const dt = text('.dossier .specs dt');
+    expect(text('.dossier .specs dd')[dt.indexOf('Dump')]).toBe('Verified · No-Intro');
+    expect(v.root.querySelector('.dossier .dump.verified')?.getAttribute('title')).toBe(
+      'After Burner (USA)'
+    );
+    expect(dumpText(null)).toBeNull();
+    expect(
+      dumpText({ status: 'notCatalogued', catalogue: null, name: null, region: null })?.textContent
+    ).toBe('Not catalogued');
   });
 
   it("says the dump's version in words", () => {

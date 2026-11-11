@@ -1255,7 +1255,9 @@ export class CollectorView {
       row('Version', rom.version || !rom.status ? versionText(rom.version) : null),
       row('Status', rom.status && versionText(rom.status)),
       // By its version and status: a translation's language reads next to it.
-      row('Languages', flags(languages, LANGUAGES, languageFlag))
+      row('Languages', flags(languages, LANGUAGES, languageFlag)),
+      // Whether the file is the dump No-Intro or Redump lists, once Forma has checked it.
+      row('Dump', dumpText(game.dump))
     );
     const record =
       section(
@@ -1625,4 +1627,20 @@ function madeBack(game: Game, media: MediaUrl): HTMLElement[] {
       el('p', {}, captions(game.description ?? '')[0] ?? game.name)
     )
   ];
+}
+
+/** A game's dump check in words: `Verified · No-Intro`; nothing while unknown. */
+export function dumpText(dump: Game['dump'] | undefined): HTMLElement | null {
+  if (!dump) return null;
+  const catalogue =
+    dump.catalogue === 'redump' ? 'Redump' : dump.catalogue === 'no-intro' ? 'No-Intro' : '';
+  const [text, kind] =
+    dump.status === 'verified'
+      ? [`Verified · ${catalogue}`, 'verified']
+      : dump.status === 'crcOnly'
+        ? [`CRC32 match · ${catalogue}`, 'doubtful']
+        : dump.status === 'badDump'
+          ? [`Bad dump · ${catalogue}`, 'doubtful']
+          : ['Not catalogued', 'unknown'];
+  return el('span', { class: `dump ${kind}`, title: dump.name ?? '' }, text);
 }

@@ -41,6 +41,7 @@ const game = (
   region: 'us',
   lang: 'en,fr',
   ageRating: null,
+  dump: null,
   media,
   ...over
 });

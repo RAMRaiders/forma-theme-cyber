@@ -4738,6 +4738,26 @@ kbd {
   text-overflow: ellipsis;
 }
 
+/* The dump check: a lit dot before the words, no glow (the Pi). */
+.dossier .dump::before {
+  content: '';
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  margin-right: 0.45em;
+  border-radius: 50%;
+  vertical-align: 0.08em;
+  background: var(--muted);
+}
+
+.dossier .dump.verified::before {
+  background: var(--neon);
+}
+
+.dossier .dump.doubtful::before {
+  background: #ffb547;
+}
+
 .collector .stars {
   position: relative;
   font-size: 0.9rem;
