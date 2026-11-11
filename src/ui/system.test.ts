@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   lifeEvents,
   logoHeight,
+  makerHeight,
   readingMs,
   soldShort,
   SystemView,
@@ -154,6 +155,15 @@ describe('a logo in the column', () => {
     expect(logoHeight(3.5)).toBeCloseTo(3, 0);
     expect(logoHeight(6)).toBeLessThan(logoHeight(3));
     expect(logoHeight(40)).toBe(1.5);
+  });
+
+  describe('makerHeight', () => {
+    it('gives a square emblem the area of a wordmark', () => {
+      expect(makerHeight(3)).toBeCloseTo(1.7, 1);
+      expect(makerHeight(0.91)).toBeGreaterThan(3);
+      expect(makerHeight(0.5)).toBe(3.2);
+      expect(makerHeight(8)).toBe(1.7);
+    });
   });
 });
 

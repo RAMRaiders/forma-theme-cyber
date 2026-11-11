@@ -867,8 +867,25 @@ function makerMark(maker: string | null | undefined, logos: readonly string[]): 
   const makers = el('span', { class: 'makers', role: 'img', 'aria-label': maker }, ...imgs);
   for (const img of imgs) {
     img.addEventListener('error', () => makers.replaceWith(maker), { once: true });
+    img.addEventListener(
+      'load',
+      () => {
+        const aspect = img.naturalWidth / img.naturalHeight;
+        if (aspect > 0) img.style.setProperty('--maker-h', `${makerHeight(aspect).toFixed(2)}rem`);
+      },
+      { once: true }
+    );
   }
   return makers;
+}
+
+/**
+ * How tall a maker's logo stands in the corner, in rem, for its width over its height: about the
+ * same area for every one (SEGA's, 3:1 at 1.7rem), so a square emblem (Atari's) is not a speck
+ * beside a wordmark; 1.7rem to 3.2rem.
+ */
+export function makerHeight(aspect: number): number {
+  return Math.min(3.2, Math.max(1.7, Math.sqrt(8.7 / aspect)));
 }
 
 /** A system's logo; a dark one gets a light halo; none (or a broken file) leaves nothing. */

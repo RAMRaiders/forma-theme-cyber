@@ -1603,7 +1603,7 @@ main {
 }
 
 .system-panel .maker .maker-logo {
-  height: 1.7rem;
+  height: var(--maker-h, 1.7rem);
   max-width: 9.5rem;
   object-fit: contain;
   object-position: right center;
