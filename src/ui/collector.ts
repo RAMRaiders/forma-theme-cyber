@@ -456,7 +456,10 @@ export class CollectorView {
     if (game && label && label.getAttribute('data-id') !== String(game.id)) {
       const next = this.#label(game);
       keepPictures(label, [next]);
-      label.replaceWith(next);
+      // Its contents changed, the bar itself kept: a new bar is a new layer on a Pi, blank for a
+      // frame before it is painted, and the bar blinked at each step.
+      label.replaceChildren(...next.childNodes);
+      label.setAttribute('data-id', String(game.id));
     }
   }
 
@@ -944,10 +947,23 @@ export class CollectorView {
     const label = this.#showcase.querySelector<HTMLElement>('.slab-label');
     const at = showcase.findIndex((p) => p.classList.contains('slab-label'));
     if (label && at >= 0) {
-      if (!fresh && label.dataset.id === String(game.id)) showcase[at] = label;
-      else keepPictures(label, [showcase[at]!]);
+      if (fresh || label.dataset.id !== String(game.id)) {
+        // Another game's: the bar given this one's contents, the bar itself kept.
+        const next = showcase[at]!;
+        keepPictures(label, [next]);
+        label.replaceChildren(...next.childNodes);
+        label.dataset.id = String(game.id);
+      }
+      showcase[at] = label;
     }
-    this.#showcase.replaceChildren(...showcase);
+    if (label && showcase[at] === label) {
+      // Left where it is, the rest round it: taken out and put back, it was a new layer again.
+      for (const part of [...this.#showcase.children]) if (part !== label) part.remove();
+      label.before(...showcase.slice(0, at));
+      label.after(...showcase.slice(at + 1));
+    } else {
+      this.#showcase.replaceChildren(...showcase);
+    }
     // Followed the shelf already: kept as it is, not drawn again, nor faded in again (it
     // flickered as the shelf went).
     const keep = !fresh && this.#dossier.dataset.id === String(game.id);
