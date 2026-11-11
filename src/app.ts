@@ -48,7 +48,6 @@ import { preload } from './ui/preload.js';
 import { STAGE_PICTURES, accentOf } from './ui/stage.js';
 import { SystemView } from './ui/system.js';
 import { rest } from './ui/rest.js';
-import { boot, bootMark } from './ui/boot.js';
 
 /** One level of the path, and where the selection was, so going back returns to it. */
 interface Level {
@@ -104,7 +103,7 @@ const MOVES: Partial<Record<Action, Move>> = {
 };
 
 /** Moved this far through a list, Forma is asked again for the pictures around the selection. */
-const PREPARE_AGAIN = 100;
+const PREPARE_AGAIN = 10;
 
 /** One step of the breadcrumb: a name, or a system's logo (`label`: its name, for screen readers). */
 type Crumb = string | { label: string; logo: string; dark: boolean };
@@ -582,11 +581,6 @@ export class App {
           logo: url('wheel', DETAIL_WIDTH) ?? url('marquee', DETAIL_WIDTH)
         });
         this.#playing.replaceChildren(screen);
-        // Switched on over it: dark, a line of light, the game's logo lit, then the launch screen.
-        boot(this.#playing, bootMark(url('wheel', 560) ?? url('marquee', 560), name), 0, {
-          colour: 'var(--neon)',
-          top: true
-        });
         // The boot sequence in the game's own colour, once that is known.
         const probe = url('thumbnail', 64) ?? url('fanart', 64);
         if (probe) {

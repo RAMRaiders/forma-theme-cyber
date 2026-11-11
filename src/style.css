@@ -1613,11 +1613,6 @@ main {
   --sys-45: color-mix(in srgb, var(--sys) 45%, transparent);
 }
 
-/* A game starting: over its launch screen, which shows as the boot fades. */
-.boot.whole.top {
-  z-index: 110;
-}
-
 /* Scanlines over it all, as on a tube. */
 .boot::after {
   content: '';

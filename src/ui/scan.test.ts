@@ -99,6 +99,19 @@ describe('the scan over a game being scraped', () => {
     expect(scan.root.hidden).toBe(true);
   });
 
+  it('stays over the game until the view is ready to show it (its logo loaded)', async () => {
+    let ready = (_: boolean) => {};
+    const scan = new Scan(() => new Promise<boolean>((done) => (ready = done)));
+    scan.progress(status(), game);
+    scan.progress(status({ running: false, current: null, done: 1, found: 1 }), game);
+    scan.shown(7, []);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(scan.root.hidden).toBe(false);
+    ready(true);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(scan.root.hidden).toBe(true);
+  });
+
   it('covers a game whose pictures were just saved until the new ones have loaded', async () => {
     const scan = new Scan();
     let loaded = () => {};

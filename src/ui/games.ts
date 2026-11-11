@@ -4,7 +4,7 @@ import { span } from './perf.js';
 import type { LazyList } from '../logic/pager.js';
 import { el, remPx } from './dom.js';
 import { Scan } from './scan.js';
-import { boot, bootMark } from './boot.js';
+import { boot, bootMarkLoaded } from './boot.js';
 import { STAGE_PICTURES, Stage, type StageOptions } from './stage.js';
 
 /** Row height in rem; rows are positioned by index, so only visible ones exist. */
@@ -50,9 +50,9 @@ export class GamesView {
 
   /** Over the selected game while the scraper is on it. */
   /** A scrape's new data in: shown by the game's boot, as on entering its list. */
-  readonly #scan = new Scan((id) => {
+  readonly #scan = new Scan(async (id) => {
     const game = this.selected;
-    return game?.id === id && this.#boot(game) > 0;
+    return game?.id === id && (await this.#boot(game)) > 0;
   });
 
   constructor(options: StageOptions) {
@@ -82,14 +82,17 @@ export class GamesView {
   }
 
   /** The game switched on over the view: its logo, or its name, lit in a line of light. */
-  #boot(game: Game): number {
+  async #boot(game: Game): Promise<number> {
     const media = this.#options.media;
-    return boot(
-      this.root,
-      bootMark(media(game, 'wheel', 560) ?? media(game, 'marquee', 560), game.name),
-      0,
-      { colour: getComputedStyle(this.root).getPropertyValue('--game').trim() || 'var(--neon)' }
+    // Its logo as the scrape just brought it, loaded before the boot lights it.
+    const mark = await bootMarkLoaded(
+      media(game, 'wheel', 560) ?? media(game, 'marquee', 560),
+      game.name
     );
+    if (this.selected?.id !== game.id) return 0;
+    return boot(this.root, mark, 0, {
+      colour: getComputedStyle(this.root).getPropertyValue('--game').trim() || 'var(--neon)'
+    });
   }
 
   get selected(): Game | undefined {

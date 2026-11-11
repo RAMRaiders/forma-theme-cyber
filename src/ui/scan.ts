@@ -48,7 +48,7 @@ export class Scan {
    * `reveal`: shows the game `id` in its own way once its new pictures are in (returns whether
    * it did), the scan then going at once; else the beam crosses once more.
    */
-  constructor(private readonly reveal?: (id: number) => boolean) {
+  constructor(private readonly reveal?: (id: number) => boolean | Promise<boolean>) {
     this.root.hidden = true;
     this.root.append(
       el('span', { class: 'scan-shade' }),
@@ -198,7 +198,26 @@ export class Scan {
 
   /** All in: the beam crosses once more and the scan lifts off the new pictures. */
   #reveal(): void {
-    if (this.#game !== null && this.reveal?.(this.#game)) return this.#stop();
+    const game = this.#game;
+    if (game !== null && this.reveal) {
+      // The view's own reveal, once it is ready (its logo loaded): the scan stays till then.
+      this.#state = 'revealing';
+      this.#phase.textContent = 'Ready';
+      const round = ++this.#round;
+      void Promise.resolve(this.reveal(game))
+        .catch(() => false)
+        .then((shown) => {
+          if (round !== this.#round || this.#game !== game) return;
+          if (shown) this.#stop();
+          else this.#crossOnce();
+        });
+      return;
+    }
+    this.#crossOnce();
+  }
+
+  /** The beam crosses once more and the scan lifts off the new pictures. */
+  #crossOnce(): void {
     this.#state = 'revealing';
     this.#phase.textContent = 'Ready';
     this.root.classList.add('reveal');
