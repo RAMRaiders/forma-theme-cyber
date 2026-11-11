@@ -98,6 +98,10 @@ export const COLLECTOR_PICTURES: readonly (readonly [Kind, number])[] = [
  */
 const SPINE_LEN_REM = 22;
 const SPINE_H_REM = 2.85;
+/** Systems whose spines are drawn a little bigger, rows and all: Atari's short cartridge labels
+ * read small at the usual size. */
+const BIGGER_SPINES = /^atari/;
+const BIGGER_SCALE = 1.12;
 /** How much shorter than its shape asks a long spine is drawn. */
 const SPINE_SQUEEZE = 0.94;
 
@@ -211,6 +215,8 @@ export class CollectorView {
   readonly #shelf = el('div', { class: 'shelf', role: 'listbox' });
   /** The system whose shelf is sized; its spine length kept in `spineLengths`. */
   #shelfSystem: string | null = null;
+  /** How much bigger than usual this system's spines are (BIGGER_SPINES). */
+  #spineScale = 1;
   /** How long a spine can be, in rem, about the shelf's middle; 0 until measured. */
   #shelfRoom = 0;
   /** The rows, moved as one so the selected sits in the middle: a transform, gliding. */
@@ -333,7 +339,7 @@ export class CollectorView {
 
   /** The shelf's room above the first row, so any row can sit in the middle. */
   #measure(): void {
-    const row = ROW_REM * remPx();
+    const row = this.#rowRem * remPx();
     this.#pad = Math.max(0, (this.#shelf.clientHeight - row) / 2);
   }
 
@@ -398,7 +404,7 @@ export class CollectorView {
   }
 
   pageSize(): number {
-    return Math.max(1, Math.floor(this.#shelf.clientHeight / (ROW_REM * remPx())));
+    return Math.max(1, Math.floor(this.#shelf.clientHeight / (this.#rowRem * remPx())));
   }
 
   /** `quiet`: the same game again (a reload), not a move: no shelf, nothing restarted. */
@@ -419,7 +425,7 @@ export class CollectorView {
     const held = changed && !quiet && now - this.#steppedAt < HELD_MS;
     if (changed) this.#steppedAt = now;
     this.#track.classList.toggle('held', held);
-    const row = ROW_REM * remPx();
+    const row = this.#rowRem * remPx();
     this.#measure();
     // The selected row in the middle, at the ends of the list too; the rows glide there. Whole
     // pixels: text on a layer moved by a fraction of one shimmers.
@@ -478,7 +484,7 @@ export class CollectorView {
   #renderTraced(): void {
     const source = this.#source;
     if (!source) return;
-    const row = ROW_REM * remPx();
+    const row = this.#rowRem * remPx();
     // Those in sight round the selected one, and a few more for the glide.
     const half = Math.ceil(this.#shelf.clientHeight / row / 2) + OVERSCAN;
     const loops = this.#loops(source.total, row);
@@ -501,7 +507,7 @@ export class CollectorView {
       let node = this.#rows.get(i);
       if (!node) {
         node = el('div', { class: 'spine-row', role: 'option' });
-        node.style.top = `${i * ROW_REM}rem`;
+        node.style.top = `${Math.round(i * this.#rowRem * 1000) / 1000}rem`;
         this.#track.append(node);
         this.#rows.set(i, node);
       }
@@ -568,8 +574,11 @@ export class CollectorView {
    * Only the length differs from system to system; the shelf moves the same for all.
    */
   #sizeShelf(system: string, source: LazyList<Game>, selected: number): void {
+    this.#spineScale = BIGGER_SPINES.test(system) ? BIGGER_SCALE : 1;
+    if (this.#spineScale === 1) this.#shelf.style.removeProperty('--spine-h');
+    else this.#shelf.style.setProperty('--spine-h', `${this.#len(SPINE_H_REM)}rem`);
     const known = spineLengths.get(system);
-    this.#shelf.style.setProperty('--spine-len', `${known ?? SPINE_LEN_REM}rem`);
+    this.#shelf.style.setProperty('--spine-len', `${known ?? this.#len(SPINE_LEN_REM)}rem`);
     if (known !== undefined) return;
     const urls: string[] = [];
     for (let i = 0; i < source.total && urls.length < SPINE_PROBES; i++) {
@@ -579,18 +588,30 @@ export class CollectorView {
       if (url) urls.push(url);
     }
     if (urls.length === 0) {
-      spineLengths.set(system, SPINE_LEN_REM);
+      spineLengths.set(system, this.#len(SPINE_LEN_REM));
       return;
     }
     void Promise.all(urls.map(spineShapeOf)).then((shapes) => {
       const known = shapes.filter((s): s is number => s !== null);
       if (!this.#shelfRoom) this.#centreShelf();
-      const length = known.length ? shelfShape(Math.min(...known), this.#shelfRoom) : SPINE_LEN_REM;
+      const length = this.#len(
+        known.length ? shelfShape(Math.min(...known), this.#shelfRoom) : SPINE_LEN_REM
+      );
       spineLengths.set(system, length);
       if (this.#shelfSystem === system) {
         this.#shelf.style.setProperty('--spine-len', `${length}rem`);
       }
     });
+  }
+
+  /** A spine length (rem) at this system's spine size. */
+  #len(rem: number): number {
+    return Math.round(rem * this.#spineScale * 100) / 100;
+  }
+
+  /** The distance (rem) from one row to the next, at this system's spine size. */
+  get #rowRem(): number {
+    return ROW_REM * this.#spineScale;
   }
 
   /**

@@ -591,6 +591,18 @@ describe('the Collector view', () => {
     ]);
   });
 
+  it("draws an Atari's spines a little bigger, rows and all", async () => {
+    const { v } = await view([
+      { ...game(1, 'Asteroids'), system: 'atari7800' },
+      { ...game(2, 'Xevious'), system: 'atari7800' }
+    ]);
+    const shelf = v.root.querySelector<HTMLElement>('.shelf')!;
+    expect(shelf.style.getPropertyValue('--spine-h')).toBe('3.19rem');
+    expect(shelf.style.getPropertyValue('--spine-len')).toBe('24.64rem');
+    const rows = [...v.root.querySelectorAll<HTMLElement>('.spine-row')].map((r) => r.style.top);
+    expect(rows).toContain('3.584rem');
+  });
+
   it('with more games than it shows, puts the last ones before the first', async () => {
     const tall = vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(320);
     const { v, text } = await view(

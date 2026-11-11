@@ -4070,10 +4070,11 @@ kbd {
   /* Over the footage (collector.ts measures it), though the shelf spans the whole view. */
   --mid: 50%;
   overflow: hidden;
-  /* Near black only round the spines; beyond it the screen shows, dimmed, as a sneak peek. */
+  /* Near black round the spines and all the way left (the case's side: only the sneak peek
+     shows there, over it); to the right the dossier shows. */
   background: linear-gradient(
     90deg,
-    transparent calc(var(--mid) - var(--spine-len) / 2 - 3rem),
+    rgb(3 5 11 / 94%) 0,
     rgb(3 5 11 / 94%) calc(var(--mid) - var(--spine-len) / 2 - 0.8rem),
     rgb(3 5 11 / 94%) calc(var(--mid) + var(--spine-len) / 2 + 0.8rem),
     transparent calc(var(--mid) + var(--spine-len) / 2 + 3rem)
@@ -4163,8 +4164,8 @@ kbd {
 .nav-pic {
   grid-area: footage-start / case-start / story-end / case-end;
   position: relative;
-  /* Over the dimmed screen, under the shelf (before it): a long spine still reads over it. */
-  z-index: 5;
+  /* Over the shelf's dark, which hides the case's side (a long spine never reaches it). */
+  z-index: 6;
   display: grid;
   place-items: center;
   padding: 1.2rem;
