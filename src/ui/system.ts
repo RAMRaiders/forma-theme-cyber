@@ -894,8 +894,9 @@ function deckRays(): string {
   // The floor box as 320 × 46; its front line spans 640 wide at the bottom, centred.
   const vy = -46 / 7;
   const rays: string[] = [];
-  for (let k = 0; k <= 16; k++) {
-    const x = -160 + 40 * k;
+  // Close together: the floor is wide, and stretched to it.
+  for (let k = 0; k <= 30; k++) {
+    const x = -200 + 24 * k;
     const side = Math.max(0, 1 - Math.abs(x - 160) / 220);
     if (side <= 0) continue;
     rays.push(
