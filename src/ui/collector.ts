@@ -279,23 +279,7 @@ export class CollectorView {
    * console's day (a plain frame for other systems).
    */
   readonly #navScreen = el('div', { class: 'tv-screen' });
-  readonly #tv = el(
-    'div',
-    { class: 'tv empty' },
-    el(
-      'div',
-      { class: 'tv-set' },
-      this.#navScreen,
-      el(
-        'div',
-        { class: 'tv-panel' },
-        el('i', { class: 'grille' }),
-        el('i', { class: 'knob' }),
-        el('i', { class: 'knob' }),
-        el('i', { class: 'led' })
-      )
-    )
-  );
+  readonly #tv = tvSet(this.#navScreen, 'tv empty');
   readonly #navPic = el('div', { class: 'nav-pic', 'aria-hidden': 'true' }, this.#tv);
   #navPicSrc: string | null = null;
   #dossierTimer: ReturnType<typeof setTimeout> | undefined;
@@ -1309,9 +1293,24 @@ export class CollectorView {
     return [
       this.#label(game),
       bay('case', 'Case', display, this.#dots),
-      bay('footage', 'Footage', this.#footage),
+      bay('footage', 'Footage', this.#footageSet(game, this.#footage)),
       this.#storyBay(game)
     ];
+  }
+
+  /**
+   * The footage's screen in a TV of its console's day (the same as the shelf's preview), the
+   * screen its tube: the video plays in the screen's own box, the TV's body over its corners.
+   * Other systems: the screen in its plain monitor bezel.
+   */
+  #footageSet(game: ShowGame, screen: HTMLElement): HTMLElement {
+    const system = this.#options.system?.(game.system);
+    const era = tvEra(system?.category, system?.released);
+    if (era === 'plain') return screen;
+    const tube = el('div', { class: 'tv-screen' }, screen);
+    const set = tvSet(tube);
+    set.dataset.era = era;
+    return set;
   }
 
   /**
@@ -1696,6 +1695,27 @@ export class CollectorView {
     }
     if (items.length) prepare(items);
   }
+}
+
+/** A drawn TV round `screen` (its tube): style.css draws it as its `data-era` says. */
+function tvSet(screen: HTMLElement, cls = 'tv'): HTMLElement {
+  return el(
+    'div',
+    { class: cls },
+    el(
+      'div',
+      { class: 'tv-set' },
+      screen,
+      el(
+        'div',
+        { class: 'tv-panel' },
+        el('i', { class: 'grille' }),
+        el('i', { class: 'knob' }),
+        el('i', { class: 'knob' }),
+        el('i', { class: 'led' })
+      )
+    )
+  );
 }
 
 /**

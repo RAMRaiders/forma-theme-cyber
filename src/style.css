@@ -4688,6 +4688,8 @@ kbd {
   grid-area: footage;
   display: grid;
   place-items: center;
+  /* Its size its grid area's, not its content's: a TV in it sizes itself to fit (cq units). */
+  container-type: size;
   /* Room round the screen for its bezel. */
   padding: 2.3rem 1.6rem 1.3rem;
 }
@@ -4780,6 +4782,32 @@ kbd {
 .collector.video-on .bay.footage .screen img,
 .collector.video-on .bay.footage .screen::after,
 .collector.video-on .bay.footage .no-signal {
+  visibility: hidden;
+}
+
+/* A console's footage in a TV of its day (the TVs are drawn with the shelf's preview): as big
+   as the bay lets it, the screen filling its tube, the TV's body round it. */
+.bay.footage .tv {
+  width: min(100cqw, 100cqh * var(--tv-ar));
+}
+
+.bay.footage .tv .screen {
+  position: absolute;
+  inset: 0;
+  height: auto;
+  max-width: none;
+  aspect-ratio: auto;
+  border-radius: inherit;
+  box-shadow: none;
+}
+
+/* The video's window: the tube lets Forma's player through too, nothing half see-through over
+   it (the glass's glare and lines go). The TV's body stays, over the video's corners. */
+.collector.video-on .bay.footage .tv-screen {
+  background: transparent;
+}
+
+.collector.video-on .bay.footage .tv-screen::after {
   visibility: hidden;
 }
 
