@@ -1263,7 +1263,6 @@ export class CollectorView {
       row('Status', rom.status && versionText(rom.status)),
       // By its version and status: a translation's language reads next to it.
       row('Languages', flags(languages, LANGUAGES, languageFlag)),
-      row('Age rating', ratingNote(game)),
       // Whether the file is the dump No-Intro or Redump lists, once Forma has checked it.
       row('Dump', dumpText(game.dump))
     );
@@ -1484,11 +1483,8 @@ export function serial(game: Game): string {
  * The age rating as PEGI gives it, among the marks as its badge alone, in PEGI's colours (green to 7, orange to 16, red at
  * 18): its own PEGI rating, else the nearest from another board's, that one in its title.
  */
-/**
- * The age rating in words, for the Release section (nothing hovers on a pad): every board's
- * rating, the PEGI one first; a PEGI age worked out from another board says from which.
- */
-export function ratingNote(game: Pick<Game, 'ageRating'>): string | null {
+/** The age rating in words, for a screen reader; the badge shows it. */
+function ratingNote(game: Pick<Game, 'ageRating'>): string | null {
   const all = ageRatings(game.ageRating);
   const pegi = asPegi(all);
   if (!pegi) return null;

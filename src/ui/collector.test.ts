@@ -150,14 +150,12 @@ describe('the Collector view', () => {
     const seal = v.root.querySelector('.dossier .pegi');
     expect(seal?.classList.contains('red')).toBe(true);
     expect(seal?.getAttribute('aria-label')).toBe('Age rating ESRB M · PEGI 18');
-    // In words too, under Release: nothing hovers on a pad.
-    const dt = text('.dossier .specs dt');
-    expect(text('.dossier .specs dd')[dt.indexOf('Age rating')]).toBe('ESRB M · PEGI 18');
+    // The badge says it: no row for it under Release.
+    expect(text('.dossier .specs dt')).not.toContain('Age rating');
     const esrb = await view([{ ...game(9, 'After Burner'), ageRating: 'ESRB:E' }]);
     expect(esrb.text('.dossier .pegi strong')).toEqual(['3PEGI']);
-    const esrbDt = esrb.text('.dossier .specs dt');
-    expect(esrb.text('.dossier .specs dd')[esrbDt.indexOf('Age rating')]).toBe(
-      'PEGI 3, from ESRB E'
+    expect(esrb.v.root.querySelector('.dossier .pegi')?.getAttribute('aria-label')).toBe(
+      'Age rating PEGI 3, from ESRB E'
     );
     const unrated = await view([game(10, 'Kolibri')]);
     expect(unrated.text('.dossier .mark.rating.off')).toEqual(['No rating']);
