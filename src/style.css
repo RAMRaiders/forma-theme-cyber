@@ -4167,10 +4167,16 @@ kbd {
   z-index: 5;
   display: grid;
   place-items: center;
-  padding: 0.6rem;
-  border-radius: 0.4rem;
-  /* Really dark: the case behind is gone, only the picture shows. */
-  background: rgb(2 4 9 / 96%);
+  padding: 1.2rem;
+  /* Its size, for the picture to fit itself in (collector.ts gives it its shape). */
+  container-type: size;
+  /* A dark fog round the picture, thinning out to the edges: the case behind is lost in it. */
+  background: radial-gradient(
+    closest-side,
+    rgb(2 4 9 / 94%) 55%,
+    rgb(2 4 9 / 75%) 75%,
+    rgb(2 4 9 / 0%) 100%
+  );
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -4187,19 +4193,19 @@ kbd {
 
 .nav-pic img {
   grid-area: 1 / 1;
-  /* As big as the side allows. */
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border: 1px solid color-mix(in srgb, var(--game) 55%, transparent);
-  border-radius: 0.3rem;
+  /* Nearly as big as the side, its own shape kept (the frame is the picture's), the fog round it. */
+  --ar: 1.33;
+  width: min(88cqw, 88cqh * var(--ar));
+  height: auto;
+  aspect-ratio: var(--ar);
+  border: 1px solid color-mix(in srgb, var(--game) 60%, transparent);
+  border-radius: 0.25rem;
   box-shadow:
-    0 0 0 0.35rem rgb(4 7 15 / 80%),
-    0 0 0 calc(0.35rem + 1px) color-mix(in srgb, var(--game) 30%, transparent),
-    0 1.2rem 2.4rem rgb(0 0 0 / 60%);
-  /* A little shaded, over the dimmed screen: a preview, under the shelf's own light. No filter
-     (the Pi). */
-  opacity: 0.82;
+    0 0 0 0.25rem rgb(4 7 15 / 85%),
+    0 0 0 calc(0.25rem + 1px) color-mix(in srgb, var(--game) 30%, transparent),
+    0 1rem 2rem rgb(0 0 0 / 60%);
+  /* A little shaded, over the fog: a preview, under the shelf's own light. No filter (the Pi). */
+  opacity: 0.85;
 }
 
 /* The dossier stays lit beside the shelf, following the selection. */

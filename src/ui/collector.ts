@@ -1040,6 +1040,10 @@ export class CollectorView {
     this.#navPic.append(img);
     const show = () => {
       if (!img.isConnected) return;
+      // Its own shape, for the frame to fit it (style.css).
+      if (img.naturalWidth && img.naturalHeight) {
+        img.style.setProperty('--ar', String(img.naturalWidth / img.naturalHeight));
+      }
       for (const old of [...this.#navPic.children]) if (old !== img) old.remove();
       img.classList.remove('waiting');
     };
