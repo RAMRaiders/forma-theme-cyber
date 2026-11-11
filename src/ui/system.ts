@@ -909,6 +909,11 @@ function stage(system: CyberSystem, name: string): HTMLElement {
   const photo = el('img', { class: 'photo', src: system.photo, alt: '' });
   photo.addEventListener('error', fallback);
   box.append(photo);
+  // A console on its own (no backdrop of its photo's) stands on a floor: a neon grid running
+  // toward the player.
+  if (system.photoKind === 'cutout') {
+    box.append(el('div', { class: 'deck', 'aria-hidden': 'true' }, el('div', { class: 'grid' })));
+  }
   return box;
 }
 
