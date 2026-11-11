@@ -4232,9 +4232,10 @@ kbd {
      be cut in the body alone: the tube's corners, over it, still round the video off. */
   isolation: isolate;
   display: grid;
-  gap: 3cqw;
-  padding: 4cqw;
-  border-radius: 3cqw;
+  /* Slim: the screen as big as the set allows, its day told by the body's look, not its bulk. */
+  gap: 2cqw;
+  padding: 2.6cqw;
+  border-radius: 2.4cqw;
   box-shadow: 0 3cqw 6cqw rgb(0 0 0 / 65%);
 }
 
@@ -4254,12 +4255,12 @@ kbd {
   aspect-ratio: 4 / 3;
   overflow: hidden;
   /* A CRT's tube bulges: its corners round off. */
-  border-radius: 7cqw / 6cqw;
+  border-radius: 5cqw / 4.4cqw;
   background: radial-gradient(ellipse at 50% 45%, #1a2a30 0%, #060a0d 75%);
   --bezel: #141518;
   box-shadow:
-    0 0 0 1.4cqw var(--bezel),
-    0 0 0 1.8cqw rgb(0 0 0 / 50%);
+    0 0 0 1.1cqw var(--bezel),
+    0 0 0 1.4cqw rgb(0 0 0 / 50%);
 }
 
 /* The tube's corners, outside its curve, in the bezel's colour: over a video (a rectangle,
@@ -4336,12 +4337,12 @@ kbd {
 /* Late '70s, early '80s: a wood-grain cabinet, the dials and the speaker beside the screen, on
    short legs. */
 .tv[data-era='wood'] {
-  --tv-ar: 1.55;
+  --tv-ar: 1.44;
 }
 
 .tv[data-era='wood'] .tv-set {
-  grid-template-columns: 1fr 20cqw;
-  border: 0.8cqw solid #2b1a0b;
+  grid-template-columns: 1fr 11cqw;
+  border: 0.6cqw solid #2b1a0b;
 }
 
 .tv[data-era='wood'] .tv-set::before {
@@ -4359,21 +4360,21 @@ kbd {
 .tv[data-era='wood'] .tv-panel {
   flex-direction: column;
   justify-content: center;
-  padding: 2.5cqw 2cqw;
-  border-radius: 1cqw;
+  padding: 1.6cqw 1.2cqw;
+  border-radius: 0.8cqw;
   background: linear-gradient(180deg, #2a2a2a, #161616);
   box-shadow: inset 0 0 0 0.4cqw #8c8c8c;
 }
 
 .tv[data-era='wood'] .tv-panel .knob {
   order: -1;
-  width: 9cqw;
-  height: 9cqw;
+  width: 6.5cqw;
+  height: 6.5cqw;
 }
 
 .tv[data-era='wood'] .tv-panel .grille {
   width: 100%;
-  min-height: 14cqw;
+  min-height: 9cqw;
 }
 
 .tv[data-era='wood'] .tv-panel .led {
@@ -4384,28 +4385,28 @@ kbd {
 .tv[data-era='wood']::after {
   content: '';
   position: absolute;
-  bottom: -4cqw;
-  width: 4cqw;
-  height: 5cqw;
+  bottom: -2.6cqw;
+  width: 3cqw;
+  height: 3.2cqw;
   border-radius: 0 0 1cqw 1cqw;
   background: #22150a;
 }
 
 .tv[data-era='wood']::before {
-  left: 10cqw;
+  left: 12cqw;
 }
 
 .tv[data-era='wood']::after {
-  right: 10cqw;
+  right: 12cqw;
 }
 
 /* Late '80s: a beige-grey plastic set, a strip of grille and buttons under the screen. */
 .tv[data-era='beige'] {
-  --tv-ar: 1.12;
+  --tv-ar: 1.2;
 }
 
 .tv[data-era='beige'] .tv-set {
-  grid-template-rows: auto 8cqw;
+  grid-template-rows: auto 5cqw;
   box-shadow: 0 3cqw 6cqw rgb(0 0 0 / 65%);
 }
 
@@ -4419,8 +4420,8 @@ kbd {
 .tv[data-era='beige'] .tv-screen {
   --bezel: #3b3d42;
   box-shadow:
-    0 0 0 1.8cqw #3b3d42,
-    0 0 0 2.2cqw rgb(0 0 0 / 35%);
+    0 0 0 1.3cqw #3b3d42,
+    0 0 0 1.6cqw rgb(0 0 0 / 35%);
 }
 
 .tv[data-era='beige'] .tv-panel .grille {
@@ -4428,20 +4429,20 @@ kbd {
 }
 
 .tv[data-era='beige'] .tv-panel .knob {
-  width: 4.5cqw;
-  height: 4.5cqw;
-  border-radius: 0.8cqw;
+  width: 3.4cqw;
+  height: 3.4cqw;
+  border-radius: 0.6cqw;
   background: linear-gradient(180deg, #a9a192, #807868);
 }
 
 /* The '90s: a black set, silver round the screen, grilles either side under it. */
 .tv[data-era='black'] {
-  --tv-ar: 1.14;
+  --tv-ar: 1.2;
 }
 
 .tv[data-era='black'] .tv-set {
-  grid-template-rows: auto 7cqw;
-  border-radius: 4cqw;
+  grid-template-rows: auto 4.6cqw;
+  border-radius: 3cqw;
   box-shadow: 0 3cqw 6cqw rgb(0 0 0 / 65%);
 }
 
@@ -4453,8 +4454,8 @@ kbd {
 .tv[data-era='black'] .tv-screen {
   --bezel: #0b0c0e;
   box-shadow:
-    0 0 0 1.2cqw #0b0c0e,
-    0 0 0 1.7cqw #8b8f97;
+    0 0 0 1cqw #0b0c0e,
+    0 0 0 1.4cqw #8b8f97;
 }
 
 .tv[data-era='black'] .tv-panel .grille {
@@ -4462,19 +4463,19 @@ kbd {
 }
 
 .tv[data-era='black'] .tv-panel .knob {
-  width: 3cqw;
-  height: 3cqw;
+  width: 2.4cqw;
+  height: 2.4cqw;
   background: radial-gradient(circle at 35% 30%, #9da1a8, #3a3c41);
 }
 
 /* From 2000: a flat screen, wide, on a stand. */
 .tv[data-era='flat'] {
-  --tv-ar: 1.55;
+  --tv-ar: 1.62;
 }
 
 .tv[data-era='flat'] .tv-set {
-  padding: 2.2cqw;
-  border-radius: 1.2cqw;
+  padding: 1.4cqw;
+  border-radius: 1cqw;
   box-shadow: 0 3cqw 6cqw rgb(0 0 0 / 65%);
 }
 
@@ -4503,9 +4504,9 @@ kbd {
 .tv[data-era='flat'] .tv-panel {
   position: absolute;
   left: 50%;
-  bottom: -6cqw;
-  width: 6cqw;
-  height: 5cqw;
+  bottom: -4.4cqw;
+  width: 5cqw;
+  height: 4.4cqw;
   transform: translateX(-50%);
   background: linear-gradient(90deg, #1a1b1f, #303238, #1a1b1f);
 }
@@ -4515,8 +4516,8 @@ kbd {
   position: absolute;
   left: 50%;
   bottom: -1.2cqw;
-  width: 30cqw;
-  height: 1.6cqw;
+  width: 24cqw;
+  height: 1.4cqw;
   border-radius: 0.8cqw 0.8cqw 0.3cqw 0.3cqw;
   transform: translateX(-50%);
   background: linear-gradient(180deg, #34363c, #111215);
