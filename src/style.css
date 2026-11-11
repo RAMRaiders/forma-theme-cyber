@@ -4940,7 +4940,21 @@ kbd {
   object-position: left center;
 }
 
-/* Regions and languages: their flags alone. */
+/* The logo, then the name in words. */
+.dossier .company-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.dossier .company-line > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Regions and languages: each flag with its name. */
 .dossier .specs .flags {
   display: flex;
   flex-wrap: wrap;
@@ -4952,6 +4966,10 @@ kbd {
   align-items: center;
   gap: 0.3rem;
   white-space: nowrap;
+}
+
+.dossier .chip .name {
+  font-size: 0.85em;
 }
 
 .dossier .flag {

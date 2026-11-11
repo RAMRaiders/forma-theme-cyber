@@ -1229,9 +1229,11 @@ export class CollectorView {
       if (!name) return null;
       const src = this.#options.company?.(name);
       if (!src) return name;
-      const img = el('img', { class: 'company', src, alt: name, title: name, decoding: 'async' });
-      img.addEventListener('error', () => img.replaceWith(name), { once: true });
-      return img;
+      // The logo with its name beside it: a logo alone may not say whose it is.
+      const img = el('img', { class: 'company', src, alt: '', decoding: 'async' });
+      const line = el('span', { class: 'company-line' }, img, el('span', {}, name));
+      img.addEventListener('error', () => img.remove(), { once: true });
+      return line;
     };
     const flags = (
       list: string[],
@@ -1261,6 +1263,7 @@ export class CollectorView {
       row('Status', rom.status && versionText(rom.status)),
       // By its version and status: a translation's language reads next to it.
       row('Languages', flags(languages, LANGUAGES, languageFlag)),
+      row('Age rating', ratingNote(game)),
       // Whether the file is the dump No-Intro or Redump lists, once Forma has checked it.
       row('Dump', dumpText(game.dump))
     );
@@ -1481,6 +1484,18 @@ export function serial(game: Game): string {
  * The age rating as PEGI gives it, among the marks as its badge alone, in PEGI's colours (green to 7, orange to 16, red at
  * 18): its own PEGI rating, else the nearest from another board's, that one in its title.
  */
+/**
+ * The age rating in words, for the Release section (nothing hovers on a pad): every board's
+ * rating, the PEGI one first; a PEGI age worked out from another board says from which.
+ */
+export function ratingNote(game: Pick<Game, 'ageRating'>): string | null {
+  const all = ageRatings(game.ageRating);
+  const pegi = asPegi(all);
+  if (!pegi) return null;
+  if (pegi.from) return `PEGI ${pegi.age}, from ${pegi.from.board} ${pegi.from.rating}`;
+  return all.map((r) => `${r.board} ${r.rating}`).join(' · ');
+}
+
 function pegiMark(game: ShowGame): HTMLElement {
   const all = ageRatings(game.ageRating);
   const pegi = asPegi(all);
@@ -1490,12 +1505,11 @@ function pegiMark(game: ShowGame): HTMLElement {
     none.setAttribute('aria-label', 'No age rating');
     return none;
   }
-  const words = all.map((r) => `${r.board} ${r.rating}`).join(', ');
   const colour = pegi.age <= 7 ? 'green' : pegi.age <= 16 ? 'orange' : 'red';
-  const note = pegi.from ? `PEGI ${pegi.age}, from ${pegi.from.board} ${pegi.from.rating}` : words;
+  const note = ratingNote(game) ?? '';
   return el(
     'li',
-    { class: `mark pegi ${colour}`, title: note, 'aria-label': `Age rating ${note}` },
+    { class: `mark pegi ${colour}`, 'aria-label': `Age rating ${note}` },
     el('strong', {}, String(pegi.age), el('span', {}, 'PEGI'))
   );
 }
@@ -1515,17 +1529,15 @@ function codes(list: string | null): string[] {
     .map((c) => c.toLowerCase());
 }
 
-/** A region or language: its flag where there is one, its name beside. */
-/** A region or a language as its flag alone, its name for a screen reader; its name where it has no flag. */
+/** A region or a language: its flag where there is one, its name beside it, always. */
 function flagChip(name: string, flag: string | null): HTMLElement {
-  const chip = el('span', { class: 'chip', title: name });
-  if (!flag) {
-    chip.append(name);
-    return chip;
+  const chip = el('span', { class: 'chip' });
+  if (flag) {
+    const img = el('img', { src: flag, alt: '', class: 'flag' });
+    img.addEventListener('error', () => img.remove(), { once: true });
+    chip.append(img);
   }
-  const img = el('img', { src: flag, alt: name, class: 'flag' });
-  img.addEventListener('error', () => img.replaceWith(name), { once: true });
-  chip.append(img);
+  chip.append(el('span', { class: 'name' }, name));
   return chip;
 }
 

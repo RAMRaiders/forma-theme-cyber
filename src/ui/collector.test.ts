@@ -149,10 +149,14 @@ describe('the Collector view', () => {
     expect(text('.dossier .marks .mark:last-child.pegi strong')).toEqual(['18PEGI']);
     const seal = v.root.querySelector('.dossier .pegi');
     expect(seal?.classList.contains('red')).toBe(true);
-    expect(seal?.getAttribute('aria-label')).toBe('Age rating ESRB M, PEGI 18');
+    expect(seal?.getAttribute('aria-label')).toBe('Age rating ESRB M · PEGI 18');
+    // In words too, under Release: nothing hovers on a pad.
+    const dt = text('.dossier .specs dt');
+    expect(text('.dossier .specs dd')[dt.indexOf('Age rating')]).toBe('ESRB M · PEGI 18');
     const esrb = await view([{ ...game(9, 'After Burner'), ageRating: 'ESRB:E' }]);
     expect(esrb.text('.dossier .pegi strong')).toEqual(['3PEGI']);
-    expect(esrb.v.root.querySelector('.dossier .pegi')?.getAttribute('title')).toBe(
+    const esrbDt = esrb.text('.dossier .specs dt');
+    expect(esrb.text('.dossier .specs dd')[esrbDt.indexOf('Age rating')]).toBe(
       'PEGI 3, from ESRB E'
     );
     const unrated = await view([game(10, 'Kolibri')]);
@@ -225,9 +229,10 @@ describe('the Collector view', () => {
     // From the ROM's name, before the gamelist's: flags alone, their names for screen readers.
     const flags = (n: number) =>
       [...v.root.querySelectorAll('.dossier .specs .flags')][n]!.querySelectorAll('.chip');
-    expect([...flags(0)].map((c) => c.getAttribute('title'))).toEqual(['USA', 'Japan']);
-    expect([...flags(1)].map((c) => c.getAttribute('title'))).toEqual(['English', 'Japanese']);
-    expect(text('.dossier .specs .flags')).toEqual(['', '']);
+    // Each flag with its name on screen.
+    expect([...flags(0)].map((c) => c.textContent)).toEqual(['USA', 'Japan']);
+    expect([...flags(1)].map((c) => c.textContent)).toEqual(['English', 'Japanese']);
+    expect(v.root.querySelectorAll('.dossier .specs .flags .flag')).toHaveLength(4);
     expect(dd[5]).toBe('Revision 1');
     // Its pictures are not listed: they are on the screen.
     expect(v.root.querySelector('.dossier .archive')).toBeNull();
