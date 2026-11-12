@@ -3995,7 +3995,7 @@ kbd {
   display: grid;
   /* Bays: the label over them all; the case on the left, the footage and the story in the
      middle, the dossier on the right. */
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr) 21rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr) 18.5rem;
   grid-template-rows: auto minmax(0, 1fr) minmax(0, 0.62fr);
   grid-template-areas:
     'label label label'
@@ -5503,7 +5503,7 @@ kbd {
 
 .dossier .specs > div {
   display: grid;
-  grid-template-columns: 6rem minmax(0, 1fr);
+  grid-template-columns: 5.2rem minmax(0, 1fr);
   align-items: center;
   min-height: 1.3rem;
   font-size: 0.76rem;
