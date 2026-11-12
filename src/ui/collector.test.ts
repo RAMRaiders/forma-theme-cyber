@@ -166,6 +166,7 @@ describe('the Collector view', () => {
   it('labels the case with its grade, system and serial', async () => {
     const { v, text } = await view([game(7, 'After Burner', BOXED)]);
     expect(text('.slab-label .what strong')).toEqual(['After Burner']);
+    expect(text('.slab-label .publisher')).toEqual(['Sega of America']);
     expect(text('.slab-label .line')).toEqual(['1995 · Sega 32X']);
     expect(text('.slab-label .serial')).toEqual(['SEGA32X-000007']);
     expect(text('.slab-label .grade strong')).toEqual(['3.5/5']);

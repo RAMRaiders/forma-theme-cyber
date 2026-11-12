@@ -5055,11 +5055,21 @@ kbd {
   text-transform: uppercase;
 }
 
+.slab-label .publisher,
 .slab-label .line,
 .slab-label .serial {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+/* Its publisher, under its name: a line of its own, kept when unknown. */
+.slab-label .publisher {
+  min-height: 1lh;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #dbe7f0;
 }
 
 .slab-label .line {

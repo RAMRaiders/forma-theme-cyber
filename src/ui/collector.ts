@@ -1568,6 +1568,8 @@ export class CollectorView {
         'div',
         { class: 'what' },
         el('strong', {}, game.name),
+        // Who put it out, under its name; the line kept when unknown (the bar's lines stay put).
+        el('span', { class: 'publisher' }, game.publisher ?? ''),
         el(
           'span',
           { class: 'line' },
