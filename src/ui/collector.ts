@@ -134,8 +134,6 @@ const ROW_REM = 3.2;
 const OVERSCAN = 10;
 /** The shelf over the middle while moving; this long after the last move it fades. */
 const DROP_MS = 1400;
-/** The details' fade in from the dark as the shelf goes (the CSS's `collector-land`). */
-const LAND_MS = 340;
 /** Steps closer together than this are the direction held: the shelf runs at an even speed. */
 const HELD_MS = 130;
 /** The fan art behind the shelf, a sneak peek, once the selection pauses this long: longer than
@@ -349,7 +347,6 @@ export class CollectorView {
   /** The game's video behind the case after a moment; Interface → Video previews. */
   previews = true;
   #dropTimer: ReturnType<typeof setTimeout> | undefined;
-  #landing: ReturnType<typeof setTimeout> | undefined;
   /** When the direction began to be held, and whether the shelf is racing (#race). */
   #heldSince = 0;
   /** The box drawn under the shelf: its turns start as the shelf goes. */
@@ -450,10 +447,10 @@ export class CollectorView {
     clearTimeout(this.#dropTimer);
     this.#dropTimer = setTimeout(() => {
       perfMark('drop');
-      // The details faded in from the dark, a moment: opacity only, one layer.
-      this.root.classList.add('landing');
-      clearTimeout(this.#landing);
-      this.#landing = setTimeout(() => this.root.classList.remove('landing'), LAND_MS);
+      // The case, footage and dossier fade in by themselves, and the shade off the fan art
+      // (style.css). No fade from the dark over the whole screen on top: an animation on the
+      // shade, which has a transition of its own, it came back for a frame as it ended on a Pi
+      // (recorded: one dark frame 320 ms in, at every drop).
       this.root.classList.remove('browsing');
       if (this.#turnsDue) this.#startTurns();
       if (!this.#videoHeld) return;

@@ -4192,22 +4192,6 @@ kbd {
   transition-duration: 120ms;
 }
 
-/* The shelf gone: the case and footage fade in from the dark. */
-.collector.landing::after {
-  background: #02040a;
-  animation: collector-land 320ms ease-out both;
-}
-
-@keyframes collector-land {
-  from {
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0;
-  }
-}
-
 /* Where the case was, while the shelf shows: the selected game's picture on a TV of its console's
    day, drawn (no pictures, no filters: the Pi); it goes with the shelf when the details come.
    Everything is sized off the TV's width (cqw), so each set keeps its proportions. */
