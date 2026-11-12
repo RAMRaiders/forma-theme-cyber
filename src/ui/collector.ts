@@ -1479,7 +1479,8 @@ export class CollectorView {
       el(
         'div',
         { class: 'what' },
-        el('span', { class: 'brand' }, 'CYBER · COLLECTOR GRADE'),
+        // Its genre over its name (the dossier leaves it out); the line kept when it has none.
+        el('span', { class: 'genre' }, game.genre ?? ''),
         el('strong', {}, game.name),
         el(
           'span',
@@ -1686,7 +1687,6 @@ export class CollectorView {
       row('Released', released),
       row('Developer', company(game.developer)),
       row('Publisher', company(game.publisher)),
-      row('Genre', game.genre),
       row('Region', flags(flaggedRegions(regions), REGIONS, regionFlag)),
       // A hack or a homebrew game with no version is no "original release".
       // What kind of release (the original, a prototype, a demo, homebrew, unlicensed…), then
@@ -1699,6 +1699,8 @@ export class CollectorView {
       // Whether the file is the dump No-Intro or Redump lists, once Forma has checked it.
       row('Dump', dumpText(game.dump))
     );
+    // Its own room, as if every row were there: the play record below never moves.
+    release?.classList.add('release');
     const record =
       section(
         'Play record',
