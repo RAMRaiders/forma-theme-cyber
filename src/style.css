@@ -5007,18 +5007,6 @@ kbd {
   line-height: 1.25;
 }
 
-.slab-label .genre {
-  min-height: 1em;
-  overflow: hidden;
-  font-family: var(--mono);
-  font-size: 0.56rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  color: var(--game);
-}
-
 .slab-label .what strong {
   /* One line, cut short if need be (the dossier has it whole). */
   overflow: hidden;

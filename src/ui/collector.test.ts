@@ -166,7 +166,7 @@ describe('the Collector view', () => {
   it('labels the case with its grade, system and serial', async () => {
     const { v, text } = await view([game(7, 'After Burner', BOXED)]);
     expect(text('.slab-label .what strong')).toEqual(['After Burner']);
-    expect(text('.slab-label .line')).toEqual(['1995 · Sega 32X']);
+    expect(text('.slab-label .line')).toEqual(['Shooter · 1995 · Sega 32X']);
     expect(text('.slab-label .serial')).toEqual(['SEGA32X-000007']);
     expect(text('.slab-label .grade strong')).toEqual(['3.5/5']);
     expect(text('.slab-label .grade .word')).toEqual(['Excellent']);
@@ -223,8 +223,8 @@ describe('the Collector view', () => {
       'Played',
       'Time'
     ]);
-    // Its genre over its name on the label, not in the dossier.
-    expect(text('.slab-label .genre')).toEqual(['Shooter']);
+    // Its genre under its name on the label, not in the dossier.
+    expect(text('.slab-label .line')[0]).toMatch(/^Shooter · /);
     const dd = text('.dossier .specs dd');
     expect(dd[0]).toMatch(/^13 Jan 1995 · \d+ years ago$/);
     expect(dd[1]).toBe('Rutubo Games');
