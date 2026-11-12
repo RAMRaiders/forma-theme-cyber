@@ -4281,10 +4281,11 @@ kbd {
   justify-self: start;
 }
 
-.collector .dossier .release {
+.collector .dossier .about,
+.collector .dossier .copy {
   flex: none;
-  /* Its title, then nine rows of 1.3rem, 0.22rem apart. */
-  min-height: calc(0.6rem * 1.2 + 0.3rem + 10 * 1.3rem + 9 * 0.22rem);
+  /* Its title, then five rows of 1.3rem, 0.22rem apart. */
+  min-height: calc(0.6rem * 1.2 + 0.3rem + 5 * 1.3rem + 4 * 0.22rem);
 }
 
 /* The set's width over its height, for it to fit the side whole. */

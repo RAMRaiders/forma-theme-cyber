@@ -234,24 +234,24 @@ describe('the Collector view', () => {
     const { v, text } = await view([
       { ...game(7, 'After Burner', BOXED), path: 'After Burner (USA, Japan) (En,Ja) (Rev 1).7z' }
     ]);
-    expect(text('.dossier .part h3')).toEqual(['Release', 'Play record']);
+    expect(text('.dossier .part h3')).toEqual(['Game', 'Dump', 'Play record']);
     expect(text('.dossier .specs dt')).toEqual([
-      'Released',
-      'Developer',
-      'Publisher',
       'Genre',
+      'Developer',
+      'Released',
       'Region',
-      'Release',
+      'Publisher',
+      'Type',
       'Version',
       'Languages',
       'Played',
       'Time'
     ]);
     const dd = text('.dossier .specs dd');
-    // Its genre in the release, after who made it.
-    expect(dd[3]).toBe('Shooter');
-    expect(dd[0]).toMatch(/^13 Jan 1995 · \d+ years ago$/);
+    // The game first: its genre, who made it, when, where; who sold it.
+    expect(dd[0]).toBe('Shooter');
     expect(dd[1]).toBe('Rutubo Games');
+    expect(dd[2]).toMatch(/^13 Jan 1995 · \d+ years ago$/);
     // From the ROM's name, before the gamelist's: flags alone, their names for screen readers.
     const flags = (n: number) =>
       [...v.root.querySelectorAll('.dossier .specs .flags')][n]!.querySelectorAll('.chip');
@@ -285,7 +285,7 @@ describe('the Collector view', () => {
     ]);
     expect(v.root.querySelector('.dossier .specs .flags')).not.toBeNull();
     // A manual: a mark by the players, not a row.
-    expect(text('.dossier .part h3')).toEqual(['Release', 'Play record']);
+    expect(text('.dossier .part h3')).toEqual(['Game', 'Dump', 'Play record']);
   });
 
   it('says whether the file is a catalogued dump, once Forma has checked it', async () => {
@@ -301,7 +301,7 @@ describe('the Collector view', () => {
       }
     ]);
     const dt = text('.dossier .specs dt');
-    expect(text('.dossier .specs dd')[dt.indexOf('Dump')]).toBe('No-IntroVerified');
+    expect(text('.dossier .specs dd')[dt.indexOf('Integrity')]).toBe('No-IntroVerified');
     expect(text('.dossier .dump .seal')).toEqual(['No-Intro']);
     expect(v.root.querySelector('.dossier .dump')?.getAttribute('aria-label')).toBe(
       'Verified by No-Intro'
@@ -377,21 +377,21 @@ describe('the Collector view', () => {
     };
     const both = await rows('Tanglewood (World) (v1.1) (Aftermarket) (Unl).md');
     // Homebrew and unlicensed are how it was released.
-    expect(both['Release']).toBe('Homebrew · Unlicensed');
+    expect(both['Type']).toBe('Homebrew · Unlicensed');
     expect(both['Version']).toBe('1.1');
     expect(both['Status']).toBeUndefined();
     const noVersion = await rows('Tanglewood (World) (Aftermarket) (Unl).md');
-    expect(noVersion['Release']).toBe('Homebrew · Unlicensed');
+    expect(noVersion['Type']).toBe('Homebrew · Unlicensed');
     expect(noVersion['Version']).toBeUndefined();
     expect(noVersion['Status']).toBeUndefined();
     // A hack is no release of its own: its status says.
     const hack = await rows('Tanglewood (USA) [h1].md');
-    expect([hack['Release'], hack['Status']]).toEqual([undefined, 'Hack']);
+    expect([hack['Type'], hack['Status']]).toEqual([undefined, 'Hack']);
     const plain = await rows('Tanglewood (USA).md');
-    expect(plain['Release']).toBe('Original');
+    expect(plain['Type']).toBe('Original');
     expect(plain['Version']).toBeUndefined();
     const proto = await rows('Tanglewood (USA) (Proto 2).md');
-    expect([proto['Release'], proto['Version']]).toEqual(['Prototype', '2']);
+    expect([proto['Type'], proto['Version']]).toEqual(['Prototype', '2']);
     expect(plain['Status']).toBeUndefined();
   });
 

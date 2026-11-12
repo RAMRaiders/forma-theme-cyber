@@ -1771,26 +1771,30 @@ export class CollectorView {
       ? `${date(game.releaseDate)} · ${ago(game.releaseDate).toLowerCase()}`
       : null;
 
-    const release = section(
-      'Release',
-      row('Released', released),
-      row('Developer', company(game.developer)),
-      row('Publisher', company(game.publisher)),
+    // The game itself, as made and sold.
+    const about = section(
+      'Game',
       row('Genre', game.genre),
+      row('Developer', company(game.developer)),
+      row('Released', released),
       row('Region', flags(flaggedRegions(regions), REGIONS, regionFlag)),
-      // A hack or a homebrew game with no version is no "original release".
-      // What kind of release (the original, a prototype, a demo, homebrew, unlicensed…), then
-      // its number apart. A hack or a translation is no "original release": its status says.
-      row('Release', tags.kind || !tags.status ? (tags.kind ?? 'Original') : null),
+      row('Publisher', company(game.publisher))
+    );
+    // The copy at hand: what kind of release (the original, a prototype, a demo, homebrew,
+    // unlicensed…), its number apart, what was done to it (a hack or a translation is no
+    // "original release": its status says), in what languages, and whether the file is the dump
+    // No-Intro or Redump lists, once Forma has checked it.
+    const dump = section(
+      'Dump',
+      row('Type', tags.kind || !tags.status ? (tags.kind ?? 'Original') : null),
       row('Version', tags.number),
       row('Status', tags.status && versionText(tags.status)),
-      // By its version and status: a translation's language reads next to it.
       row('Languages', flags(languages, LANGUAGES, languageFlag)),
-      // Whether the file is the dump No-Intro or Redump lists, once Forma has checked it.
-      row('Dump', dumpText(game.dump))
+      row('Integrity', dumpText(game.dump))
     );
-    // Its own room, as if every row were there: the play record below never moves.
-    release?.classList.add('release');
+    // Each its own room, as if every row were there: the play record below never moves.
+    about?.classList.add('about');
+    dump?.classList.add('copy');
     const record =
       section(
         'Play record',
@@ -1804,7 +1808,7 @@ export class CollectorView {
     const alternate = el('div', { class: 'alternate' }, record);
     const marks = this.#marks(game);
     this.#achievementsInto(game, marks);
-    const parts = [head, marks, release, alternate].filter((p): p is HTMLElement => p !== null);
+    const parts = [head, marks, about, dump, alternate].filter((p): p is HTMLElement => p !== null);
 
     return parts;
   }
