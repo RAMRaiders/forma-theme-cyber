@@ -29,3 +29,12 @@ describe('age ratings', () => {
     expect(asPegi([])).toBeNull();
   });
 });
+
+describe('ESRB Kids to Adults', () => {
+  it('is read as scrapers write it, KA or K-A (BC Racers on 32X)', () => {
+    for (const value of ['ESRB:KA', 'ESRB:K-A']) {
+      expect(ageRatings(value)[0]?.age).toBe(0);
+      expect(asPegi(ageRatings(value))?.age).toBe(3);
+    }
+  });
+});

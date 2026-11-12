@@ -10,9 +10,12 @@ export interface AgeRating {
   age: number | null;
 }
 
-/** Each board's ratings to the age they ask for. Numeric ratings (PEGI 12, USK 16) are ages. */
+/**
+ * Each board's ratings to the age they ask for. Numeric ratings (PEGI 12, USK 16) are ages.
+ * Looked up without hyphens: scrapers write ESRB's Kids to Adults as `KA` or `K-A`.
+ */
 const AGES: Record<string, Record<string, number>> = {
-  ESRB: { EC: 3, E: 0, 'K-A': 0, E10: 10, 'E10+': 10, T: 13, M: 17, AO: 18 },
+  ESRB: { EC: 3, E: 0, KA: 0, E10: 10, 'E10+': 10, T: 13, M: 17, AO: 18 },
   CERO: { A: 0, ALL: 0, B: 12, C: 15, D: 17, Z: 18 },
   ACB: { G: 0, PG: 8, M: 15, MA15: 15, 'MA15+': 15, R18: 18, 'R18+': 18 },
   GRAC: { ALL: 0 },
@@ -30,7 +33,7 @@ export function ageRatings(value: string | null | undefined): AgeRating[] {
 }
 
 function ageOf(board: string, rating: string): number | null {
-  const known = AGES[board]?.[rating];
+  const known = AGES[board]?.[rating.replaceAll('-', '')];
   if (known !== undefined) return known;
   const n = /^(\d{1,2})\+?$/.exec(rating);
   return n ? Number(n[1]) : null;
@@ -42,7 +45,7 @@ const PEGI_AGES = [3, 7, 12, 16, 18];
 const ESRB_AS_PEGI: Record<string, number> = {
   EC: 3,
   E: 3,
-  'K-A': 3,
+  KA: 3,
   E10: 7,
   'E10+': 7,
   T: 12,
@@ -59,7 +62,7 @@ export function asPegi(ratings: AgeRating[]): { age: number; from: AgeRating | n
   const own = ratings.find((r) => r.board === 'PEGI' && r.age !== null);
   if (own) return { age: own.age!, from: null };
   for (const r of ratings) {
-    const esrb = r.board === 'ESRB' ? ESRB_AS_PEGI[r.rating] : undefined;
+    const esrb = r.board === 'ESRB' ? ESRB_AS_PEGI[r.rating.replaceAll('-', '')] : undefined;
     if (esrb !== undefined) return { age: esrb, from: r };
     if (r.age !== null) {
       return { age: PEGI_AGES.find((a) => a >= r.age!) ?? 18, from: r };
