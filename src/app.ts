@@ -171,6 +171,9 @@ export class App {
     return this.#prefs.gamesView === 'collector' ? this.#collector : this.#games;
   }
 
+  /** Until when a system's switch-on covers the screen (its games opening under it). */
+  #bootedUntil = 0;
+
   /** The game list on screen, for Forma to make its pictures ahead. */
   #listPlace: { view: string; path: string[] } | null = null;
   #preparedAround = 0;
@@ -418,6 +421,10 @@ export class App {
         this.#level.index = Math.min(index, Math.max(0, list.total - 1));
         this.#main.replaceChildren(this.#gameView.root);
         this.#gameView.show(list, this.#level.index);
+        if (this.#gameView instanceof CollectorView) {
+          this.#gameView.holdShelf(this.#bootedUntil - performance.now());
+        }
+        this.#bootedUntil = 0;
         if (wasFiltered !== null && wasFiltered !== first.filtered) this.#gameView.reveal();
         this.#listPlace = { view, path };
         this.#prepareList(this.#level.index);
@@ -837,6 +844,9 @@ export class App {
     if (this.#mode === 'systems') {
       const system = this.#systemView.selected;
       if (!system) return;
+      // Switched on as its games open (not as the systems go by); the list's shelf stays up
+      // past it.
+      this.#bootedUntil = performance.now() + this.#systemView.bootSelected();
       return this.#enter([...this.#level.path, system.summary.name]);
     }
     if (this.#list) {

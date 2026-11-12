@@ -657,11 +657,9 @@ export class SystemView {
       // A third and fourth where it has them; else its two again, the other way round.
       root.setProperty('--sys3-rgb', third ?? accent);
       root.setProperty('--sys4-rgb', fourth ?? rgb);
-      const entering = this.#shown !== this.#selected;
       this.#shown = this.#selected;
       this.#turnPage(parts, animate);
-      const booted = entering ? this.#boot(system) : 0;
-      this.#rotateShelves(showcase, booted + SHELF_MS);
+      this.#rotateShelves(showcase, SHELF_MS);
       this.#scrollOverflow();
       this.#scheduleFact();
       this.#scheduleReading();
@@ -673,19 +671,20 @@ export class SystemView {
   }
 
   /**
-   * The system switched on: dark, a line of light across the middle opening into the picture,
-   * its logo lit in it, then the page underneath. Over the page, gone in `BOOT_MS`; opacity and
-   * transforms only (cheap on a Pi). Not with motion off. While the strip of logos is still up
-   * (just moved), the screen stays dark under it and the light comes as the strip goes.
+   * The selected system switched on as its games open: dark, a line of light across the middle
+   * opening into the picture, its logo lit in it in its colour, then its games underneath. Over
+   * the whole screen (the game list takes this view's place under it); gone in `BOOT_MS`. Only
+   * then: moving from one system to the next, its page just changes.
    */
-  #boot(system: CyberSystem): number {
+  bootSelected(): number {
+    const system = this.selected;
+    if (!system) return 0;
     const logo = logoImage(system, 'boot-logo', true);
     const name = el('span', { class: 'boot-name' }, system.summary.fullname || system.summary.name);
     logo?.addEventListener('error', () => logo.replaceWith(name));
-    const wait = this.root.classList.contains('browsing')
-      ? Math.max(0, DROP_MS - (performance.now() - this.#steppedAt))
-      : 0;
-    return boot(this.#panel, logo ?? name, wait);
+    // Its colour as this view put it on the page (no style worked out to read it).
+    const colour = document.documentElement.style.getPropertyValue('--sys').trim() || '#fff';
+    return boot(this.root, logo ?? name, 0, { colour });
   }
 
   /**

@@ -130,8 +130,8 @@ describe('the default theme', () => {
     expect(text('.system-panel > :not(.leaving) .hardware dd')).toEqual(['Ricoh 2A03']);
     // Not how many of its games are here: the strip of systems says.
     expect(root.querySelector('.system-panel .owned')).toBeNull();
-    // Switched on as it comes: its logo or name, lit, over the page a moment.
-    expect(root.querySelector('.system-panel > .boot')).not.toBeNull();
+    // Its page just shows: the system is switched on as its games open, not as it comes.
+    expect(document.querySelector('.boot')).toBeNull();
     expect(text('.system-panel > :not(.leaving) > .fact:not(.leaving) p')).toEqual(['First fact.']);
     await press('north');
     expect(text('.system-panel > :not(.leaving) > .fact:not(.leaving) p')).toEqual([
@@ -153,6 +153,8 @@ describe('the default theme', () => {
     await press('up');
 
     await press('confirm'); // A opens it at once, the strip or not
+    // Switched on as its games open: its logo or name, lit, over the whole screen a moment.
+    expect(document.querySelector('body > .boot.whole')).not.toBeNull();
     expect(text('.trail .crumb')).toEqual(['Consoles', 'Nintendo Entertainment System']);
     // Breadcrumbs: the step you are on is the lit one.
     expect(text('.trail .crumb.current')).toEqual(['Nintendo Entertainment System']);

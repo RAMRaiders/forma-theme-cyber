@@ -597,6 +597,22 @@ describe('the Collector view', () => {
     expect(v.root.classList.contains('browsing')).toBe(false);
   });
 
+  it('keeps the shelf up past a switch-on the list opened under', async () => {
+    const games = ['After Burner', 'Doom'].map((n, i) => game(i + 1, n, BOXED));
+    const { v } = await view(games);
+    const browsing = () => v.root.classList.contains('browsing');
+    expect(browsing()).toBe(true);
+    v.holdShelf(1500);
+    // Past its usual time, still up; gone the usual time after the switch-on.
+    await vi.advanceTimersByTimeAsync(2100);
+    expect(browsing()).toBe(true);
+    await vi.advanceTimersByTimeAsync(900);
+    expect(browsing()).toBe(false);
+    // At rest, nothing to hold.
+    v.holdShelf(1500);
+    expect(browsing()).toBe(false);
+  });
+
   it('draws the dossier once, for the game stopped at, dimmed meanwhile', async () => {
     const games = ['After Burner', 'Doom', 'Echo'].map((n, i) => game(i + 1, n, BOXED));
     const { v } = await view(games);

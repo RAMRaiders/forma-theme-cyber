@@ -439,18 +439,31 @@ export class CollectorView {
       this.#videoHeld = true;
     }
     clearTimeout(this.#dropTimer);
-    this.#dropTimer = setTimeout(() => {
-      perfMark('drop');
-      // The case, footage and dossier fade in by themselves, and the shade off the fan art
-      // (style.css). No fade from the dark over the whole screen on top: an animation on the
-      // shade, which has a transition of its own, it came back for a frame as it ended on a Pi
-      // (recorded: one dark frame 320 ms in, at every drop).
-      this.root.classList.remove('browsing');
-      if (this.#turnsDue) this.#startTurns();
-      if (!this.#videoHeld) return;
-      this.#videoHeld = false;
-      if (this.#game && !this.#left) this.#startVideo(this.#game);
-    }, DROP_MS);
+    this.#dropTimer = setTimeout(() => this.#drop(), DROP_MS);
+  }
+
+  /**
+   * The shelf kept up `ms` more before it goes as after any move: the list opened under the
+   * system's switch-on (app.ts), whose dark hid it for most of its usual time.
+   */
+  holdShelf(ms: number): void {
+    if (this.#resting() || ms <= 0) return;
+    clearTimeout(this.#dropTimer);
+    this.#dropTimer = setTimeout(() => this.#drop(), ms + DROP_MS);
+  }
+
+  /** The shelf goes, the selection at rest. */
+  #drop(): void {
+    perfMark('drop');
+    // The case, footage and dossier fade in by themselves, and the shade off the fan art
+    // (style.css). No fade from the dark over the whole screen on top: an animation on the
+    // shade, which has a transition of its own, it came back for a frame as it ended on a Pi
+    // (recorded: one dark frame 320 ms in, at every drop).
+    this.root.classList.remove('browsing');
+    if (this.#turnsDue) this.#startTurns();
+    if (!this.#videoHeld) return;
+    this.#videoHeld = false;
+    if (this.#game && !this.#left) this.#startVideo(this.#game);
   }
 
   /** Nothing over the case: its animations may run. */
