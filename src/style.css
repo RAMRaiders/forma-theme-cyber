@@ -22,7 +22,10 @@
   font-size: calc(min(calc(100vh / 45), calc(100vw / 64)) * var(--scale));
 }
 
-@media (max-height: 800px) {
+/* Smaller screens than a TV's 720p (a handheld's): the words a little larger for their size.
+   A 720p screen is drawn as 1080p is, only smaller: one layout for both (from 800px tall, 720p
+   had it all larger and out of place). */
+@media (max-height: 700px) {
   :root {
     font-size: calc(min(calc(100vh / 36), calc(100vw / 52)) * var(--scale));
     --safe: 1.6rem;
