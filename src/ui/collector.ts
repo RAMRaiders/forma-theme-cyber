@@ -1781,12 +1781,12 @@ export class CollectorView {
       row('Publisher', company(game.publisher))
     );
     // The copy at hand: what kind of release (the original, a prototype, a demo, homebrew,
-    // unlicensed…), its number apart, what was done to it (a hack or a translation is no
+    // unlicensed…; a plain one is a release), its number apart, what was done to it (a hack or a translation is no
     // "original release": its status says), in what languages, and whether the file is the dump
     // No-Intro or Redump lists, once Forma has checked it.
     const dump = section(
       'Dump',
-      row('Type', tags.kind || !tags.status ? (tags.kind ?? 'Original') : null),
+      row('Type', tags.kind || !tags.status ? (tags.kind ?? 'Release') : null),
       row('Version', tags.number),
       row('Status', tags.status && versionText(tags.status)),
       row('Languages', flags(languages, LANGUAGES, languageFlag)),

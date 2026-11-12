@@ -259,7 +259,7 @@ describe('the Collector view', () => {
     expect([...flags(0)].map((c) => c.textContent)).toEqual(['USA', 'Japan']);
     expect([...flags(1)].map((c) => c.textContent)).toEqual(['English', 'Japanese']);
     expect(v.root.querySelectorAll('.dossier .specs .flags .flag')).toHaveLength(4);
-    expect(dd.slice(5, 7)).toEqual(['Original', 'Revision 1']);
+    expect(dd.slice(5, 7)).toEqual(['Release', 'Revision 1']);
     // Its pictures are not listed: they are on the screen.
     expect(v.root.querySelector('.dossier .archive')).toBeNull();
     expect(dd.slice(8)).toEqual(['2×', '10 min']);
@@ -388,7 +388,7 @@ describe('the Collector view', () => {
     const hack = await rows('Tanglewood (USA) [h1].md');
     expect([hack['Type'], hack['Status']]).toEqual([undefined, 'Hack']);
     const plain = await rows('Tanglewood (USA).md');
-    expect(plain['Type']).toBe('Original');
+    expect(plain['Type']).toBe('Release');
     expect(plain['Version']).toBeUndefined();
     const proto = await rows('Tanglewood (USA) (Proto 2).md');
     expect([proto['Type'], proto['Version']]).toEqual(['Prototype', '2']);
