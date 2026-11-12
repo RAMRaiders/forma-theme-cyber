@@ -4316,7 +4316,8 @@ kbd {
   grid-area: 1 / 1;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  /* The whole screen filled, as a tube shows a picture: a little of a wider one's sides cut. */
+  object-fit: cover;
   /* A little shaded: a preview. */
   opacity: 0.88;
 }
