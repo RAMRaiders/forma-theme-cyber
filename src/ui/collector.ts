@@ -287,6 +287,8 @@ export class CollectorView {
   readonly #navPic = el('div', { class: 'nav-pic', 'aria-hidden': 'true' }, this.#tv);
   #navPicSrc: string | null = null;
   #dossierTimer: ReturnType<typeof setTimeout> | undefined;
+  /** The selected game's colour, as on its parts (#paint); `null` for the view's own. */
+  #colour: string | null = null;
   /** Which dossier draw is the latest: one whose pictures decode after another began is dropped. */
   #dossierRound = 0;
   /** The shelf's height (px), measured once a list opens or the window is resized, not at each
@@ -604,6 +606,9 @@ export class CollectorView {
       }
       const selected = i === (loops ? at : this.#selected);
       node.classList.toggle('selected', selected);
+      // The game's colour on the selected spine alone (see #paint).
+      if (selected && this.#colour) node.style.setProperty('--game', this.#colour);
+      else node.style.removeProperty('--game');
       node.setAttribute('aria-selected', String(selected));
     }
     if (this.#pending && this.selected) this.#showSelected();
@@ -737,7 +742,7 @@ export class CollectorView {
     );
     if (this.selected?.id !== game.id) return 0;
     return boot(this.root, mark, 0, {
-      colour: getComputedStyle(this.root).getPropertyValue('--game').trim() || 'var(--neon)'
+      colour: this.#colour ?? 'var(--neon)'
     });
   }
 
@@ -965,7 +970,7 @@ export class CollectorView {
     // Its colours, unless they are on already (the peek put them on): taken off and put back,
     // the label and all in them flashed the default colour in between.
     if (this.#tinted !== game.id) {
-      this.root.style.removeProperty('--game');
+      this.#paint(null);
       this.#tinted = null;
     }
     this.#tint(game);
@@ -1128,13 +1133,29 @@ export class CollectorView {
     return queued;
   }
 
+  /**
+   * The selected game's colour (`--game`) on the parts that show it: the showcase (the label
+   * and the bays), the dossier, the shelf's TV and its selected spine. Not on the whole view: a
+   * custom property changed there restyled every spine on the shelf at each game (a Pi frame
+   * or more). `null`: the view's own (neon) again.
+   */
+  #paint(colour: string | null): void {
+    this.#colour = colour;
+    const selected = this.#shelf.querySelector<HTMLElement>('.spine-row.selected');
+    for (const part of [this.#showcase, this.#dossier, this.#navPic, selected]) {
+      if (!part) continue;
+      if (colour) part.style.setProperty('--game', colour);
+      else part.style.removeProperty('--game');
+    }
+  }
+
   #tint(game: Game): void {
     const colour = this.#colourOf(game);
     if (!colour) return;
     const id = game.id;
     void colour.then((c) => {
       if (!c || this.#game?.id !== id) return;
-      this.root.style.setProperty('--game', c);
+      this.#paint(c);
       this.#tinted = id;
     });
   }
@@ -1157,7 +1178,7 @@ export class CollectorView {
     const id = game.id;
     void colour.then((c) => {
       if (!c || this.selected?.id !== id) return;
-      this.root.style.setProperty('--game', c);
+      this.#paint(c);
       this.#tinted = id;
     });
   }
@@ -1253,7 +1274,9 @@ export class CollectorView {
    */
   #navPicFor(game: Game): void {
     const system = this.#options.system?.(game.system);
-    this.#tv.dataset.era = tvEra(system?.category, system?.released);
+    // Set only when it changes: set again, even the same, the TV was styled anew at each step.
+    const era = tvEra(system?.category, system?.released);
+    if (this.#tv.dataset.era !== era) this.#tv.dataset.era = era;
     const media = this.#options.media;
     const src =
       media(game, 'image', 400) ?? media(game, 'titleshot', 400) ?? media(game, 'thumbnail', 640);
@@ -1272,7 +1295,8 @@ export class CollectorView {
       if (!img.isConnected) return;
       // Its own shape, for a plain frame to fit it (style.css).
       if (img.naturalWidth && img.naturalHeight) {
-        this.#tv.style.setProperty('--ar', String(img.naturalWidth / img.naturalHeight));
+        const ar = (img.naturalWidth / img.naturalHeight).toFixed(3);
+        if (this.#tv.style.getPropertyValue('--ar') !== ar) this.#tv.style.setProperty('--ar', ar);
       }
       for (const old of [...screen.children]) if (old !== img) old.remove();
       img.classList.remove('waiting');

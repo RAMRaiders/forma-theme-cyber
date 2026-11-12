@@ -48,6 +48,8 @@ export interface PerfStats {
   dropped: number;
   frames: number;
   at: string;
+  /** All the time spent in slow frames so far. */
+  slowMs?: number;
   /** The slowest pieces of work so far, and the latest slow frames with what ran in them. */
   work?: string[];
   slow?: { ms: number; t: number; ran: string[]; moving: boolean }[];
@@ -68,6 +70,7 @@ export function startPerfOverlay(report: (stats: PerfStats) => void = () => {}):
   let count = 0;
   let lastPaint = 0;
   let lastReport = 0;
+  let slowTotal = 0;
 
   const tick = (now: number) => {
     const ms = now - last;
@@ -76,6 +79,7 @@ export function startPerfOverlay(report: (stats: PerfStats) => void = () => {}):
     count += 1;
     if (ms > DROPPED_MS) dropped += 1;
     if (ms > SLOW_MS) {
+      slowTotal += ms;
       const moving = document.querySelector('.browsing') !== null;
       slow.push({ ms: Math.round(ms), t: Math.round(now), ran: inFrame.slice(0, 16), moving });
       if (slow.length > 60) slow.shift();
@@ -92,6 +96,7 @@ export function startPerfOverlay(report: (stats: PerfStats) => void = () => {}):
         p95Ms: Math.round((sorted[Math.floor(sorted.length * 0.95)] ?? 0) * 10) / 10,
         worstMs: Math.round(Math.max(...frames)),
         dropped,
+        slowMs: Math.round(slowTotal),
         frames: count,
         at: new Date().toISOString(),
         work: [...totals]

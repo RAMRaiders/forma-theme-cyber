@@ -11,6 +11,10 @@ try {
   if (location.hash === '#perf') {
     // Saved as a theme setting too, for reading off a device remotely.
     startPerfOverlay((stats) => void forma.settings.set('perf', stats));
+    // Perf mode only: parts of the look left out (the theme setting `perfOff`, a list of
+    // words), to measure what each one costs a Pi.
+    const off = await forma.settings.get('perfOff').catch(() => null);
+    if (typeof off === 'string') document.documentElement.dataset.perfOff = off;
   }
   if (import.meta.env.DEV) await presetSettings(forma);
   await new App(forma, root).start();

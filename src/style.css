@@ -4216,19 +4216,30 @@ kbd {
   place-items: center;
   padding: 1.2rem;
   container-type: size;
+  /* Faded out, never hidden: hidden, it was painted anew each time the shelf came (as the case
+     was, measured: 80 ms on a Pi). Its layer is kept, ready, painted once. */
   opacity: 0;
-  visibility: hidden;
   pointer-events: none;
-  /* Its layer ready before it shows: one made as the shelf comes is a stutter on a Pi. */
   will-change: opacity;
-  transition:
-    opacity 200ms ease,
-    visibility 0s linear 200ms;
+  transition: opacity 200ms ease;
+}
+
+/* The footage and the story faded out under the shelf (the TV stands in their place): seen
+   dimmed through it, they were drawn at every frame of it for nothing (measured: a fifth of the
+   shelf's slow frames on a Pi). Faded, not hidden: their layers are kept, nothing painted anew
+   as the shelf goes. */
+.collector .showcase > .bay:not(.case) {
+  transition: opacity 200ms ease;
+}
+
+.collector.browsing .showcase > .bay:not(.case) {
+  opacity: 0;
+  transition-duration: 120ms;
+  animation: none;
 }
 
 .collector.browsing .nav-pic {
   opacity: 1;
-  visibility: visible;
   transition: opacity 120ms ease;
 }
 
@@ -4339,6 +4350,10 @@ kbd {
 
 .tv-screen img {
   grid-area: 1 / 1;
+  /* A layer of its own: a new picture is that alone uploaded, not the whole set painted again
+     round it (its wood, its bezel, its shadows; measured: the TV was a third of the shelf's
+     slow frames on a Pi). */
+  will-change: transform;
   width: 100%;
   height: 100%;
   /* The whole screen filled, as a tube shows a picture: a little of a wider one's sides cut. */
@@ -4968,6 +4983,9 @@ kbd {
      the bar, and the whole view under it, jump as the shelf went by. */
   height: 5.2rem;
   overflow: hidden;
+  /* Walled off: its words, changed at each step along the shelf, are laid out and painted in
+     it alone, not the whole showcase round it again. */
+  contain: strict;
   display: grid;
   /* The system, the game's name and details, its star; the seals at the right end. */
   grid-template-columns: auto minmax(0, max-content) auto minmax(0, 1fr);
@@ -5743,4 +5761,38 @@ kbd {
 
 :root[data-motion='off'] .cbox {
   transition: none;
+}
+
+/* Perf mode only (main.ts, `perfOff`): parts of the Collector's look left out, to measure them. */
+[data-perf-off~='shadows'] .collector *,
+[data-perf-off~='shadows'] .collector *::before,
+[data-perf-off~='shadows'] .collector *::after {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+[data-perf-off~='navpic'] .collector .nav-pic,
+[data-perf-off~='fades'] .collector .shelf::before,
+[data-perf-off~='fades'] .collector .shelf::after,
+[data-perf-off~='backdrop'] .collector .collector-backdrop,
+[data-perf-off~='dim'] .collector::after {
+  display: none !important;
+}
+
+[data-perf-off~='spines'] .collector .shelf img {
+  visibility: hidden !important;
+}
+
+[data-perf-off~='gradients'] .collector * {
+  background-image: none !important;
+}
+
+[data-perf-off~='anims'] .collector.browsing .showcase *,
+[data-perf-off~='anims'] .collector.browsing .showcase *::before,
+[data-perf-off~='anims'] .collector.browsing .showcase *::after {
+  animation-play-state: paused !important;
+}
+
+[data-perf-off~='under'] .collector.browsing .showcase {
+  visibility: hidden !important;
 }
