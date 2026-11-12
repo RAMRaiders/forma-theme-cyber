@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { flaggedRegions, gameTags, languageFlag, regionFlag, romName } from './romname.js';
+import { flaggedRegions, gameTags, languageFlag, patchBy, regionFlag, romName } from './romname.js';
 
 describe('a ROM’s file name', () => {
   it('gives No-Intro’s regions, languages and revision', () => {
@@ -147,5 +147,16 @@ describe('gameTags', () => {
     for (const tag of ['Kiosk', 'Promo', 'Debug', 'Alpha 1', 'Demo 2']) {
       expect(romName(`Game (USA) (${tag}).bin`).version).toBe(tag);
     }
+  });
+});
+
+describe('patchBy', () => {
+  it('credits who made a fan translation, as its name does', () => {
+    expect(patchBy('Bare Knuckle III (Japan) [T-En by Twilight Translations v1.0].zip')).toBe(
+      'Twilight Translations v1.0'
+    );
+    expect(patchBy('A (Japan) [T-En by Ann & Bo v0.99] [n].zip')).toBe('Ann & Bo v0.99');
+    expect(patchBy('Bare Knuckle III (Japan) (Translated En).zip')).toBeNull();
+    expect(patchBy('Sonic (USA) (by Sega).zip')).toBeNull();
   });
 });

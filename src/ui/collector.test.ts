@@ -275,15 +275,22 @@ describe('the Collector view', () => {
     ]);
   });
 
-  it('puts the languages by the version and status, a translation’s language by it', async () => {
+  it('says a fan translation is one, who made its patch, and into what', async () => {
     const { v, text } = await view([
-      { ...game(7, 'After Burner', BOXED), path: 'After Burner (Japan) (T-En by Someone).md' }
+      {
+        ...game(7, 'After Burner', BOXED),
+        path: 'After Burner (Japan) [T-En by Twilight Translations v1.0].md'
+      }
     ]);
     const dt = text('.dossier .specs dt');
-    expect(dt.slice(dt.indexOf('Status'), dt.indexOf('Status') + 2)).toEqual([
-      'Status',
+    const dd = text('.dossier .specs dd');
+    expect(dt.slice(dt.indexOf('Type'), dt.indexOf('Type') + 3)).toEqual([
+      'Type',
+      'Patch',
       'Languages'
     ]);
+    expect(dd[dt.indexOf('Type')]).toBe('Fan translation');
+    expect(dd[dt.indexOf('Patch')]).toBe('Twilight Translations v1.0');
     expect(v.root.querySelector('.dossier .specs .flags')).not.toBeNull();
     // A manual: a mark by the players, not a row.
     expect(text('.dossier .part h3')).toEqual(['Game', 'Dump', 'Play record']);
@@ -380,20 +387,20 @@ describe('the Collector view', () => {
     // Homebrew and unlicensed are how it was released.
     expect(both['Type']).toBe('Homebrew · Unlicensed');
     expect(both['Version']).toBe('1.1');
-    expect(both['Status']).toBeUndefined();
     const noVersion = await rows('Tanglewood (World) (Aftermarket) (Unl).md');
     expect(noVersion['Type']).toBe('Homebrew · Unlicensed');
     expect(noVersion['Version']).toBeUndefined();
-    expect(noVersion['Status']).toBeUndefined();
-    // A hack is no release of its own: its status says.
+    // Changed since: a hack, a translation, what it was released as before it.
     const hack = await rows('Tanglewood (USA) [h1].md');
-    expect([hack['Type'], hack['Status']]).toEqual([undefined, 'Hack']);
+    expect(hack['Type']).toBe('Hack');
+    const translated = await rows('Tanglewood (China) (Unl) (Translated En).md');
+    expect(translated['Type']).toBe('Unlicensed · Fan translation');
+    expect(translated['Patch']).toBeUndefined();
     const plain = await rows('Tanglewood (USA).md');
     expect(plain['Type']).toBe('Release');
     expect(plain['Version']).toBeUndefined();
     const proto = await rows('Tanglewood (USA) (Proto 2).md');
     expect([proto['Type'], proto['Version']]).toEqual(['Prototype', '2']);
-    expect(plain['Status']).toBeUndefined();
   });
 
   it('changes the fan art at each stop as the shelf moves, the new one over the old', async () => {

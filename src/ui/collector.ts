@@ -3,7 +3,7 @@ import { mark as perfMark, span } from './perf.js';
 
 import type { LazyList } from '../logic/pager.js';
 import { ageRatings, asPegi } from '../logic/agerating.js';
-import { flaggedRegions, languageFlag, regionFlag, gameTags } from '../logic/romname.js';
+import { flaggedRegions, languageFlag, regionFlag, gameTags, patchBy } from '../logic/romname.js';
 import { DEFAULT_BACK, DEFAULT_FRONT, hue } from './cover.js';
 import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
@@ -1782,15 +1782,18 @@ export class CollectorView {
       row('Region', flags(flaggedRegions(regions), REGIONS, regionFlag)),
       row('Publisher', company(game.publisher))
     );
-    // The copy at hand: what kind of release (the original, a prototype, a demo, homebrew,
-    // unlicensed…; a plain one is a release), its number apart, what was done to it (a hack or a translation is no
-    // "original release": its status says), in what languages, and whether the file is the dump
-    // No-Intro or Redump lists, once Forma has checked it.
+    // The copy at hand: what kind it is, as released (a release, a prototype, a demo, homebrew,
+    // unlicensed…) and as changed since (a fan translation, a hack), together; its number
+    // apart; who made a translation's patch; in what languages; and whether the file is the
+    // dump No-Intro or Redump lists, once Forma has checked it.
+    const changed = tags.status
+      ? versionText(tags.status).replace(/\bTranslation\b/, 'Fan translation')
+      : null;
     const dump = section(
       'Dump',
-      row('Type', tags.kind || !tags.status ? (tags.kind ?? 'Release') : null),
+      row('Type', [tags.kind, changed].filter(Boolean).join(' · ') || 'Release'),
       row('Version', tags.number),
-      row('Status', tags.status && versionText(tags.status)),
+      row('Patch', patchBy(game.path)),
       row('Languages', flags(languages, LANGUAGES, languageFlag)),
       row('Integrity', dumpText(game.dump))
     );

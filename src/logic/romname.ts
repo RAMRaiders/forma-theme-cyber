@@ -112,6 +112,20 @@ function translatedInto(group: string): string | null {
   return tag.length === 2 ? tag : (GOODTOOLS_LANGUAGES[tag] ?? '');
 }
 
+/**
+ * Who made a fan translation's patch, as its name credits them: `Twilight Translations v1.0`
+ * from `[T-En by Twilight Translations v1.0]`; `null` when it credits no one.
+ */
+export function patchBy(path: string): string | null {
+  const file = path.split('/').pop() ?? path;
+  for (const [, group = ''] of file.matchAll(/[([]([^()[\]]*)[)\]]/g)) {
+    if (translatedInto(group) === null) continue;
+    const by = /\bby\s+(.+)$/i.exec(group.trim())?.[1]?.trim();
+    if (by) return by;
+  }
+  return null;
+}
+
 export function romName(path: string): RomName {
   const file = path.split('/').pop() ?? path;
   const regions: string[] = [];
