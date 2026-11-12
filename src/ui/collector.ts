@@ -408,6 +408,8 @@ export class CollectorView {
       clearTimeout(this.#labelTimer);
       clearTimeout(this.#peek);
       this.#showSelected();
+      // Its shot on the shelf's TV too: the stop that puts it there was just called off.
+      if (now) this.#navPicFor(now);
     }
     requestAnimationFrame(() => this.#track.classList.remove('still'));
   }

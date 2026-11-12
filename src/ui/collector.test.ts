@@ -208,6 +208,12 @@ describe('the Collector view', () => {
     expect(box.style.transform).toBe('rotateY(90deg)');
   });
 
+  it("puts the first game's shot on the shelf's TV as the list opens", async () => {
+    const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
+    const img = v.root.querySelector<HTMLImageElement>('.nav-pic .tv-screen img');
+    expect(img?.getAttribute('src')).toBe('forma://media/1/image?w=400');
+  });
+
   it("starts a new game's box on its front, whatever the last one's turn", async () => {
     const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
     await vi.advanceTimersByTimeAsync(4700);
