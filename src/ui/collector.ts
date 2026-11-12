@@ -1777,10 +1777,11 @@ export class CollectorView {
     const about = section(
       'Game',
       row('Genre', game.genre),
-      row('Developer', company(game.developer)),
-      row('Released', released),
       row('Region', flags(flaggedRegions(regions), REGIONS, regionFlag)),
-      row('Publisher', company(game.publisher))
+      // Who made it and who sold it, together.
+      row('Developer', company(game.developer)),
+      row('Publisher', company(game.publisher)),
+      row('Released', released)
     );
     // The copy at hand: what kind it is, as released (a release, a prototype, a demo, homebrew,
     // unlicensed…) and as changed since (a fan translation, a hack), together; its number

@@ -238,10 +238,10 @@ describe('the Collector view', () => {
     expect(text('.dossier .part h3')).toEqual(['Game', 'Dump', 'Play record']);
     expect(text('.dossier .specs dt')).toEqual([
       'Genre',
-      'Developer',
-      'Released',
       'Region',
+      'Developer',
       'Publisher',
+      'Released',
       'Type',
       'Version',
       'Languages',
@@ -249,10 +249,10 @@ describe('the Collector view', () => {
       'Time'
     ]);
     const dd = text('.dossier .specs dd');
-    // The game first: its genre, who made it, when, where; who sold it.
+    // The game first: its genre, where, who made it and who sold it, when.
     expect(dd[0]).toBe('Shooter');
-    expect(dd[1]).toBe('Rutubo Games');
-    expect(dd[2]).toMatch(/^13 Jan 1995 · \d+ years ago$/);
+    expect(dd[2]).toBe('Rutubo Games');
+    expect(dd[4]).toMatch(/^13 Jan 1995 · \d+ years ago$/);
     // From the ROM's name, before the gamelist's: flags alone, their names for screen readers.
     const flags = (n: number) =>
       [...v.root.querySelectorAll('.dossier .specs .flags')][n]!.querySelectorAll('.chip');
