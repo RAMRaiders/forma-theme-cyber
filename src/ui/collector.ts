@@ -1554,9 +1554,9 @@ export class CollectorView {
       mark.append(el('span', {}, system?.name ?? game.system.toUpperCase()));
     }
     const grade = gradeOf(game.rating);
-    // Its genre first (the dossier leaves it out), then its year, system and regions.
+    // Its genre on a line of its own, in its colours (the dossier leaves it out); then its year,
+    // system and regions.
     const details = [
-      game.genre,
       game.releaseDate?.slice(0, 4),
       system?.name ?? game.system,
       regionLine(game)
@@ -1569,6 +1569,7 @@ export class CollectorView {
         'div',
         { class: 'what' },
         el('strong', {}, game.name),
+        el('span', { class: 'genre' }, game.genre ?? ''),
         el(
           'span',
           { class: 'line' },

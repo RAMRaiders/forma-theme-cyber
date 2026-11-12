@@ -5054,11 +5054,24 @@ kbd {
   text-transform: uppercase;
 }
 
+.slab-label .genre,
 .slab-label .line,
 .slab-label .serial {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+/* Its genre, a line of its own in the game's colour (the theme's, without one). Its height kept
+   when it has none: the bar's lines stay where they are from game to game. */
+.slab-label .genre {
+  min-height: 1lh;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--game, var(--neon));
 }
 
 .slab-label .line {
