@@ -195,7 +195,8 @@ describe('the Collector view', () => {
     const { v } = await view([game(7, 'After Burner', BOXED)]);
     const box = v.root.querySelector<HTMLElement>('.cbox')!;
     expect(box.dataset.pose).toBe('front');
-    await vi.advanceTimersByTimeAsync(3300);
+    // The list opens with the shelf shown a moment: it turns from when it goes.
+    await vi.advanceTimersByTimeAsync(4700);
     expect(box.dataset.pose).toBe('spine');
     v.turn(1);
     expect(box.dataset.pose).toBe('back');
@@ -205,6 +206,22 @@ describe('the Collector view', () => {
     v.turn(-1);
     expect(box.dataset.pose).toBe('spine');
     expect(box.style.transform).toBe('rotateY(90deg)');
+  });
+
+  it("starts a new game's box on its front, whatever the last one's turn", async () => {
+    const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
+    await vi.advanceTimersByTimeAsync(4700);
+    expect(v.root.querySelector<HTMLElement>('.cbox')!.dataset.pose).toBe('spine');
+    v.select(1);
+    await vi.advanceTimersByTimeAsync(1500);
+    const box = v.root.querySelector<HTMLElement>('.cbox')!;
+    expect(box.dataset.pose).toBe('front');
+    expect(box.style.transform).toBe('rotateY(0deg)');
+    // Turning from when it is seen, the shelf gone.
+    await vi.advanceTimersByTimeAsync(2000);
+    expect(box.dataset.pose).toBe('front');
+    await vi.advanceTimersByTimeAsync(1500);
+    expect(box.dataset.pose).toBe('spine');
   });
 
   it('shows the dossier: what is known, what it offers, what was played', async () => {
@@ -371,58 +388,29 @@ describe('the Collector view', () => {
     expect(plain['Status']).toBeUndefined();
   });
 
-  it('fades the new fan art in over the old, which goes once covered: never a dip to dark', async () => {
+  it('changes the fan art as the shelf goes: the old one, hidden under it, gone at once', async () => {
     const art = { ...BOXED, fanart: 'art' };
     const { v } = await view([game(1, 'After Burner', art), game(2, 'Doom', art)]);
     const imgs = () => [...v.root.querySelectorAll<HTMLImageElement>('.collector-backdrop img')];
-    const settle = async () => {
-      await Promise.resolve();
-      await Promise.resolve();
-    };
     // The list opens with the shelf shown a moment: the fan art comes as it goes.
     await vi.advanceTimersByTimeAsync(2100);
     imgs()[0]!.dispatchEvent(new Event('load'));
-    await settle();
+    await Promise.resolve();
+    await Promise.resolve();
     expect(imgs()[0]!.classList.contains('waiting')).toBe(false);
     v.select(1);
-    // Not while the shelf shows: as it goes, under the fade from the dark.
-    expect(imgs()).toHaveLength(1);
+    // Not while the shelf shows (it is hidden under it).
     await vi.advanceTimersByTimeAsync(1000);
     expect(imgs()).toHaveLength(1);
     await vi.advanceTimersByTimeAsync(450);
-    const [first, next] = imgs();
-    expect(next?.classList.contains('waiting')).toBe(true);
-    // The old one stays whole while the new one loads and fades in over it.
-    expect(first?.classList.contains('leaving')).toBe(false);
+    // As it goes: the new one alone, put in whole (no crossfade of its own).
+    const [next] = imgs();
+    expect(imgs()).toHaveLength(1);
+    expect(next!.classList.contains('instant')).toBe(true);
     next!.dispatchEvent(new Event('load'));
-    await settle();
+    await Promise.resolve();
+    await Promise.resolve();
     expect(next!.classList.contains('waiting')).toBe(false);
-    expect(first!.classList.contains('leaving')).toBe(false);
-    // Not on a clock alone: gone when the fade has really ended.
-    await vi.advanceTimersByTimeAsync(600);
-    expect(imgs()).toEqual([first, next]);
-    next!.dispatchEvent(new Event('transitionend'));
-    expect(imgs()).toEqual([next]);
-  });
-
-  it('removes the old fan art in the end, even if the fade never reports', async () => {
-    const art = { ...BOXED, fanart: 'art' };
-    const { v } = await view([game(1, 'After Burner', art), game(2, 'Doom', art)]);
-    const imgs = () => [...v.root.querySelectorAll<HTMLImageElement>('.collector-backdrop img')];
-    const settle = async () => {
-      await Promise.resolve();
-      await Promise.resolve();
-    };
-    await vi.advanceTimersByTimeAsync(2100);
-    imgs()[0]!.dispatchEvent(new Event('load'));
-    await settle();
-    v.select(1);
-    await vi.advanceTimersByTimeAsync(1450);
-    const next = imgs()[1]!;
-    next.dispatchEvent(new Event('load'));
-    await settle();
-    await vi.advanceTimersByTimeAsync(900);
-    expect(imgs()).toEqual([next]);
   });
 
   it('leaves the fan art alone when the game is shown again, and drops any passed by', async () => {
@@ -440,16 +428,16 @@ describe('the Collector view', () => {
     await Promise.resolve();
     v.select(1);
     await vi.advanceTimersByTimeAsync(1450);
-    expect(imgs()).toHaveLength(2);
+    expect(imgs()).toHaveLength(1);
     // Showing the same game once it has rested adds no second picture of it.
     await vi.advanceTimersByTimeAsync(750);
-    expect(imgs()).toHaveLength(2);
+    expect(imgs()).toHaveLength(1);
     // On to another before Doom's had loaded: Doom's is dropped.
     const doom = imgs()[1];
     v.select(2);
     await vi.advanceTimersByTimeAsync(1450);
     expect(imgs()).not.toContain(doom);
-    expect(imgs()).toHaveLength(2);
+    expect(imgs()).toHaveLength(1);
   });
 
   it('runs at an even speed while the direction is held, and only then', async () => {
@@ -472,6 +460,32 @@ describe('the Collector view', () => {
     expect(text('.slab-label .what strong')).toEqual(['Quake']);
     v.select(1);
     expect(held()).toBe(false);
+  });
+
+  it('races when the direction is held a second: nothing loaded, the letter on the TV', async () => {
+    const names = ['Alien', 'Bomb', 'Crash', 'Doom', 'Echo', 'Fury', 'Gun', 'Hex', 'Ion', 'Jet'];
+    const games = [...names, ...names.map((n) => `${n} 2`), '3 Ninjas'].map((n, i) =>
+      game(i + 1, n, BOXED)
+    );
+    const { v } = await view(games);
+    await vi.advanceTimersByTimeAsync(2100);
+    const racing = () => v.root.classList.contains('racing');
+    const letter = () => v.root.querySelector('.tv-letter')?.textContent;
+    for (let i = 1; i <= 13; i++) {
+      v.select(i);
+      await vi.advanceTimersByTimeAsync(90);
+    }
+    // Over a second held: racing, the TV and the dossier empty, the letter the shelf is at.
+    expect(racing()).toBe(true);
+    expect(letter()).toBe('D');
+    expect(v.root.querySelector('.nav-pic .tv-screen img')).toBeNull();
+    expect(v.root.querySelector('.dossier')!.children).toHaveLength(0);
+    v.select(20);
+    expect(letter()).toBe('#');
+    // Let go: the game stopped at loads as after any step.
+    await vi.advanceTimersByTimeAsync(400);
+    expect(racing()).toBe(false);
+    expect(v.root.querySelector('.dossier h2')?.textContent).toBe('3 Ninjas');
   });
 
   it('shows the games run past every half second while the direction is held', async () => {

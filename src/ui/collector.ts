@@ -144,6 +144,8 @@ const PEEK_MS = 180;
 /** While held, the fan art and the label follow the shelf this often: a preview of the games
  * run past, not only of the one stopped on. */
 const HELD_PREVIEW_MS = 500;
+/** Held this long, the shelf races: nothing is loaded till it stops (#race). */
+const RACE_MS = 1000;
 /** Fan art kept decoded, the game shown and those round it: going to them is then at once. */
 const FANART_KEPT = 12;
 /** Longest the game shown stays while the next one's pictures load: then it is replaced anyway. */
@@ -349,6 +351,13 @@ export class CollectorView {
   #dropTimer: ReturnType<typeof setTimeout> | undefined;
   #landing: ReturnType<typeof setTimeout> | undefined;
   #backdropDue: Game | null = null;
+  /** When the direction began to be held, and whether the shelf is racing (#race). */
+  #heldSince = 0;
+  /** The box drawn under the shelf: its turns start as the shelf goes. */
+  #turnsDue = false;
+  #racing = false;
+  /** The letter the shelf is at, on the TV while it races. */
+  readonly #letter = el('b', { class: 'tv-letter', 'aria-hidden': 'true' });
   /** A video asked for, until it is stopped. */
   #video = false;
   /** Its video, stopped while the shelf is up: it plays again when the shelf goes. */
@@ -365,6 +374,7 @@ export class CollectorView {
     this.#options = options;
     window.addEventListener('resize', () => (this.#shelfH = 0));
     this.#shelf.append(this.#track, this.#lens);
+    this.#navScreen.append(this.#letter);
     this.root.append(
       this.#backdrop,
       this.#navPic,
@@ -443,13 +453,14 @@ export class CollectorView {
         const due = this.#backdropDue;
         this.#backdropDue = null;
         this.root.classList.remove('browsing');
-        this.#backdropFor(due);
+        this.#backdropFor(due, true);
       }
       // The details faded in from the dark, a moment: opacity only, one layer.
       this.root.classList.add('landing');
       clearTimeout(this.#landing);
       this.#landing = setTimeout(() => this.root.classList.remove('landing'), LAND_MS);
       this.root.classList.remove('browsing');
+      if (this.#turnsDue) this.#startTurns();
       if (!this.#videoHeld) return;
       this.#videoHeld = false;
       if (this.#game && !this.#left) this.#startVideo(this.#game);
@@ -546,8 +557,14 @@ export class CollectorView {
       this.#labelNow();
       this.#previewedAt = now;
     }
+    // Held a while: racing through the list. Nothing is loaded (the TV blank, the dossier empty):
+    // the TV shows the letter the shelf is at, and all comes for the game stopped at.
+    if (!held) this.#heldSince = now;
+    else if (now - this.#heldSince >= RACE_MS) this.#race();
     // Held: the game passed now, every so often, behind and above the shelf.
-    if (held && now - this.#previewedAt >= HELD_PREVIEW_MS) {
+    if (this.#racing) {
+      // (the letter only, above)
+    } else if (held && now - this.#previewedAt >= HELD_PREVIEW_MS) {
       this.#previewedAt = now;
       const game = this.selected;
       if (game) {
@@ -562,6 +579,8 @@ export class CollectorView {
     clearTimeout(this.#peek);
     this.#peek = setTimeout(() => {
       perfMark('peek');
+      // Let go: the race is over, the game stopped at loads as after any step.
+      this.#endRace();
       const game = this.selected;
       if (!game) return;
       // Its colours first (worked out from a tiny picture), then the rest, a frame each: all at
@@ -576,6 +595,27 @@ export class CollectorView {
     }, PEEK_MS);
     clearTimeout(this.#settle);
     this.#settle = setTimeout(() => this.#showSelected(), SETTLE_MS);
+  }
+
+  /** Racing through the list: the TV blank but for the letter the shelf is at, the dossier empty. */
+  #race(): void {
+    const game = this.selected;
+    const letter = game ? initial(game.name) : '';
+    if (this.#letter.textContent !== letter) this.#letter.textContent = letter;
+    if (this.#racing) return;
+    this.#racing = true;
+    clearTimeout(this.#dossierTimer);
+    this.#navScreen.querySelectorAll('img').forEach((img) => img.remove());
+    this.#navPicSrc = null;
+    this.#dossier.replaceChildren();
+    this.#dossier.dataset.id = '';
+    this.root.classList.add('racing');
+  }
+
+  #endRace(): void {
+    if (!this.#racing) return;
+    this.#racing = false;
+    this.root.classList.remove('racing');
   }
 
   /** The visible shelf, from whatever is loaded; again as pages arrive. */
@@ -811,6 +851,7 @@ export class CollectorView {
   }
 
   leave(): void {
+    this.#endRace();
     clearTimeout(this.#settle);
     clearTimeout(this.#labelTimer);
     clearTimeout(this.#peek);
@@ -839,6 +880,7 @@ export class CollectorView {
 
   #stop(): void {
     this.#videoHeld = false;
+    this.#turnsDue = false;
     this.#timers.forEach(clearTimeout);
     this.#intervals.forEach(clearInterval);
     this.#timers = [];
@@ -1036,17 +1078,25 @@ export class CollectorView {
       this.#fit?.();
       this.#centreShelf();
     });
+    // Its turns from when it is first seen: drawn under the shelf, it waits there on its front
+    // (it had turned to its spine or back under the shelf, and came out so).
     if (motion()) {
-      this.#later(() => {
-        if (this.#resting()) this.#turnTo(1);
-        this.#every(() => this.#turnTo(1), TURN_MS);
-      }, FIRST_TURN_MS);
+      if (this.#resting()) this.#startTurns();
+      else this.#turnsDue = true;
     }
     this.#later(() => {
       this.#prepareAround();
       this.#keepFanartAround();
     }, PREPARE_AFTER_MS);
     this.#later(() => this.#startVideo(game), VIDEO_AFTER_MS);
+  }
+
+  #startTurns(): void {
+    this.#turnsDue = false;
+    this.#later(() => {
+      if (this.#resting()) this.#turnTo(1);
+      this.#every(() => this.#turnTo(1), TURN_MS);
+    }, FIRST_TURN_MS);
   }
 
   /**
@@ -1214,7 +1264,7 @@ export class CollectorView {
    * over the old, once decoded (a picture decoded mid-fade caught on a Pi); the old goes when
    * it is covered. Both are opaque, so the screen stays as bright all through the fade.
    */
-  #backdropFor(game: Game): void {
+  #backdropFor(game: Game, instant = false): void {
     // While the shelf shows, the fan art waits for it to go, and changes under the fade from the
     // dark then: crossfaded at each stop under the shelf, two full-screen pictures were drawn
     // over each other at every frame of it, and the new one sent to the GPU, as the shelf moved.
@@ -1230,6 +1280,10 @@ export class CollectorView {
     this.#backdrop.querySelectorAll('img.waiting').forEach((n) => n.remove());
     const old = [...this.#backdrop.children];
     const removeOld = () => old.forEach((n) => n.remove());
+    // As the shelf goes (the fan art hidden under it): the old one unseen, gone at once, and the
+    // new one put in whole, the backdrop fading in with it. No crossfade of two full-screen
+    // pictures for nothing (measured: a cluster of long frames at every stop on a Pi).
+    if (instant) removeOld();
     // A little over the fade: on a busy Pi it can start late, and the old must not go first.
     const removeOldLater = () => setTimeout(removeOld, BACKDROP_FADE_MS + 200);
     if (!src) {
@@ -1237,7 +1291,7 @@ export class CollectorView {
       removeOldLater();
       return;
     }
-    const img = picture(src, 'waiting');
+    const img = picture(src, instant ? 'waiting instant' : 'waiting');
     img.addEventListener('transitionend', removeOld, { once: true });
     this.#backdrop.append(img);
     img.addEventListener(
@@ -1313,7 +1367,7 @@ export class CollectorView {
     const screen = this.#navScreen;
     screen.querySelectorAll('img.waiting').forEach((n) => n.remove());
     if (!src) {
-      screen.replaceChildren();
+      screen.querySelectorAll('img').forEach((n) => n.remove());
       this.#tv.classList.add('empty');
       return;
     }
@@ -1326,7 +1380,7 @@ export class CollectorView {
         const ar = (img.naturalWidth / img.naturalHeight).toFixed(3);
         if (this.#tv.style.getPropertyValue('--ar') !== ar) this.#tv.style.setProperty('--ar', ar);
       }
-      for (const old of [...screen.children]) if (old !== img) old.remove();
+      for (const old of [...screen.querySelectorAll('img')]) if (old !== img) old.remove();
       img.classList.remove('waiting');
       this.#tv.classList.remove('empty');
     };
@@ -1572,8 +1626,11 @@ export class CollectorView {
    */
   #caseOf(game: ShowGame): HTMLElement {
     const media = this.#options.media;
+    // On its front, a new box: its angle reset here where it is built (reset only once drawn, it
+    // began at the last box's turn, its spine or its back, and was turned on from there).
+    this.#angle = 0;
     const box = el('div', { class: 'cbox', 'data-pose': 'front' });
-    box.style.transform = boxTransform(this.#angle);
+    box.style.transform = boxTransform(0);
     const size = { ratio: FRONT_RATIO, depth: SPINE_RATIO };
     const resize = () => {
       const display = box.closest<HTMLElement>('.display');
@@ -2273,4 +2330,10 @@ function spineShapeOf(url: string): Promise<number | null> {
     img.onerror = () => resolve(null);
     img.src = url;
   });
+}
+
+/** A name's first letter, for the race's index: a digit or sign is `#`. */
+function initial(name: string): string {
+  const c = name.trim().charAt(0).toUpperCase();
+  return /\p{L}/u.test(c) ? c : '#';
 }
