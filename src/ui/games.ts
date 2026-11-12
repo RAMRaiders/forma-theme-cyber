@@ -208,6 +208,9 @@ export class GamesView {
     row.prepend(logo);
   }
 
+  /** A game whose pictures a scraper run replaced: drawn again whole, when it next is. */
+  #mediaStale: number | null = null;
+
   /** A game's pictures were replaced: draws again its row and, if it is the one shown, the rest. */
   mediaChanged(id: number): void {
     for (const node of this.#rows.values()) {
@@ -215,10 +218,15 @@ export class GamesView {
     }
     this.render();
     const game = this.selected;
-    if (game?.id === id) {
-      this.#stage.show(game, true);
-      this.#scan.refreshed(game, this.#stage.images());
+    if (game?.id !== id) return;
+    // A scraper run on it: drawn again as its scan says, once the run is done with it, its
+    // pictures then read anew whichever redraw it is (the library's may come after).
+    if (this.#scan.busyWith(id)) {
+      this.#mediaStale = id;
+      return this.#scan.redraw(id, () => this.#showDetailTraced());
     }
+    this.#stage.show(game, true);
+    this.#scan.refreshed(game, this.#stage.images());
   }
 
   /** A scraper run moved on: the scan over the selected game follows it. */
@@ -249,7 +257,8 @@ export class GamesView {
     const game = this.selected;
     this.#pending = !game;
     if (game) {
-      this.#stage.show(game);
+      this.#stage.show(game, this.#mediaStale === game.id);
+      this.#mediaStale = null;
       this.#scan.shown(game.id, this.#stage.images());
     } else this.#stage.clear();
     clearTimeout(this.#prepareTimer);

@@ -33,6 +33,24 @@ describe('the scan over a game being scraped', () => {
     expect(scan.root.querySelector('.scan-name')?.textContent).toBe('Bonk');
   });
 
+  it('is busy with its game from the run until it lifts, so new pictures wait for it', async () => {
+    const scan = new Scan();
+    expect(scan.busyWith(7)).toBe(false);
+    scan.progress(status(), game);
+    expect(scan.busyWith(7)).toBe(true);
+    expect(scan.busyWith(8)).toBe(false);
+    // Its pictures came while the run was on it: drawn once the run is done with it.
+    const draw = vi.fn();
+    scan.redraw(7, draw);
+    expect(draw).not.toHaveBeenCalled();
+    scan.progress(status({ running: false, current: null, done: 1, found: 1 }), game);
+    await vi.advanceTimersByTimeAsync(1300);
+    expect(draw).toHaveBeenCalledTimes(1);
+    scan.shown(7, []);
+    await vi.advanceTimersByTimeAsync(2000);
+    expect(scan.busyWith(7)).toBe(false);
+  });
+
   it('says when nothing came, then goes', () => {
     const scan = new Scan();
     scan.progress(status(), game);

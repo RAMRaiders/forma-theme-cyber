@@ -116,13 +116,16 @@ describe('the default theme', () => {
       'Homebrew'
     ]);
     // The system's own page: Cyber's info, its maker, a curiosity, and its board behind.
+    // The description, then the story's chapters: one text, each its own paragraph.
     await vi.waitFor(() =>
-      expect(text('.system-panel > :not(.leaving) .description')).toEqual(['An 8-bit console.'])
+      expect(text('.system-panel > :not(.leaving) .reading .para')).toEqual([
+        'An 8-bit console.',
+        'It began.',
+        'It sold.',
+        'It lasted.'
+      ])
     );
-    // The description first; the story's chapters take turns with it.
-    expect(text('.system-panel > :not(.leaving) .reading .description')).toEqual([
-      'An 8-bit console.'
-    ]);
+    expect(document.querySelector('.system-panel .reading .page')).toBeNull();
     // Beside the console: its maker.
     expect(text('.system-panel > :not(.leaving) .maker')).toEqual(['Nintendo']);
     // Left of the console, its hardware.

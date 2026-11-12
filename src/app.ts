@@ -309,8 +309,9 @@ export class App {
       rest(open);
       if (this.#list && this.#playing.hidden) this.#gameView.menu(open);
     });
-    this.forma.events.on('game:end', ({ error }) => {
+    this.forma.events.on('game:end', ({ gameId, error }) => {
       this.#playing.hidden = true;
+      this.#collector.played(gameId);
       if (this.#list) this.#gameView.resume();
       if (error) this.#notify(`The game could not run: ${error}`);
     });

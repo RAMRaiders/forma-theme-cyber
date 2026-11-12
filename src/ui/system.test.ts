@@ -62,6 +62,20 @@ describe('the strip of logos', () => {
     tall.mockRestore();
   });
 
+  it('lights the selection frame in the next system’s colour on the step itself', () => {
+    const { view } = strip(3);
+    const rail = view.root.querySelector<HTMLElement>('.system-rail')!;
+    const before = rail.style.getPropertyValue('--sys');
+    view.select(1);
+    const after = rail.style.getPropertyValue('--sys');
+    // Set at once, before the page is drawn; and a different colour from the first system's.
+    expect(after).toMatch(/^rgb\(/);
+    expect(after).not.toBe(before);
+    view.select(2);
+    expect(rail.style.getPropertyValue('--sys')).not.toBe(after);
+    view.hide();
+  });
+
   it('with few systems stays a plain list, each once', () => {
     const tall = vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(320);
     const { view, place } = strip(3);

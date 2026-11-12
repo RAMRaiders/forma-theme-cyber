@@ -705,6 +705,12 @@ main {
 
 /* The column: logos down the middle of the screen, fading toward its ends. */
 .system-rail {
+  /* The selection frame's tints, from the strip's own colour: set at each step (system.ts),
+     ahead of the page's. */
+  --sys-10: color-mix(in srgb, var(--sys) 10%, transparent);
+  --sys-30: color-mix(in srgb, var(--sys) 30%, transparent);
+  --sys-70: color-mix(in srgb, var(--sys) 70%, transparent);
+
   position: absolute;
   z-index: 3;
   top: 0;
@@ -962,8 +968,8 @@ main {
   display: block;
 }
 
-/* Under the logo, in turn, the description and the chapters of the system's story: always the
-   same height, so nothing moves as one fades into the next. */
+/* Under the logo, the description and the chapters of the system's story, one text: longer than
+   its four lines, it scrolls slowly to its end and starts again (loopscroll.ts). */
 .system-panel .reading {
   grid-area: reading;
   position: relative;
@@ -975,7 +981,6 @@ main {
   width: min(100%, 46rem);
   min-width: 0;
   min-height: 0;
-  padding-right: 2.8rem;
   overflow: hidden;
 }
 
@@ -984,15 +989,13 @@ main {
   max-height: calc(4 * 1.45em);
 }
 
-/* Which page of the description and story this is: "2/4". */
-.system-panel .reading .page {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  color: rgb(var(--sys2-rgb));
+/* Each chapter its own paragraph. */
+.system-panel .reading .para {
+  display: block;
+}
+
+.system-panel .reading .para + .para {
+  margin-top: 0.6em;
 }
 
 .system-panel .reading .description {
@@ -1940,7 +1943,8 @@ main {
 }
 
 /* A scrolling box fades at its edges, showing there is more. */
-.system-panel .scrolling {
+.system-panel .scrolling,
+.system-panel .looping {
   -webkit-mask-image: linear-gradient(
     transparent,
     #000 0.6em,
@@ -3995,8 +3999,9 @@ kbd {
   display: grid;
   /* Bays: the label over them all; the case on the left, the footage and the story in the
      middle, the dossier on the right. */
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr) 21rem;
-  grid-template-rows: auto minmax(0, 1fr) minmax(0, 0.62fr);
+  /* The footage's TV the biggest bay: the case's box needs less width than its column had. */
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.25fr) 21rem;
+  grid-template-rows: auto minmax(0, 1fr) minmax(0, 0.48fr);
   grid-template-areas:
     'label label label'
     'case footage dossier'
@@ -4201,7 +4206,9 @@ kbd {
   z-index: 6;
   display: grid;
   place-items: center;
-  padding: 1.2rem;
+  padding: 0.5rem;
+  /* Into the middle column, up to the shelf's dark band: its rows (22rem) leave its edges free. */
+  margin-right: -3.5rem;
   container-type: size;
   /* Faded out, never hidden: hidden, it was painted anew each time the shelf came (as the case
      was, measured: 80 ms on a Pi). Its layer is kept, ready, painted once. */
@@ -4255,17 +4262,11 @@ kbd {
   animation: none;
 }
 
-/* The dossier beside the shelf, over the dim always. It is drawn once, for the game stopped at
-   (collector.ts): while the shelf shows another, it dims (opacity on its own layer, nothing
-   painted) rather than being drawn again at each step. */
+/* The dossier beside the shelf, over the dim always. It is drawn as soon as the steps pause
+   (collector.ts), not at each step of a held press. */
 .collector .dossier {
   position: relative;
   z-index: 5;
-  transition: opacity 150ms ease;
-}
-
-.collector .dossier.stale {
-  opacity: 0.35;
 }
 
 /* Its zones in rooms of their own, whatever the game has: its logo (or name), its release (as
@@ -4299,7 +4300,7 @@ kbd {
   --tv-ar: 1.15;
   --ar: 1.33;
   position: relative;
-  width: min(92cqw, 92cqh * var(--tv-ar));
+  width: min(98cqw, 98cqh * var(--tv-ar));
   container-type: inline-size;
 }
 
@@ -4857,6 +4858,12 @@ kbd {
   padding: 2.3rem 1.6rem 1.3rem;
 }
 
+/* A TV draws its own body: only a little room round it, for its shadow; a gap under the
+   footage's label above it. */
+.bay.footage:has(.tv) {
+  padding: 2rem 0.4rem 0.2rem;
+}
+
 /* A 4:3 screen, as tall as the bay lets it, in a monitor's bezel: dark, a neon rim in the
    game's colour, a soft glow round it. The bezel is drawn outside the screen, so the video's
    window (the screen's own box) stays clear. Still: nothing here animates. */
@@ -4973,14 +4980,12 @@ kbd {
   box-shadow: none;
 }
 
-/* The video's window: the tube lets Forma's player through too, nothing half see-through over
-   it (the glass's glare and lines go). The TV's body stays, over the video's corners. */
+/* The video's window: the tube lets Forma's player through too. Its glass stays over it, as over
+   the screenshots (glare, the tiled scan lines, the darker edges): see-through over the player
+   is fine; what went wrong over it were the gradient's clumped lines. The TV's body stays, over
+   the video's corners. */
 .collector.video-on .bay.footage .tv-screen {
   background: transparent;
-}
-
-.collector.video-on .bay.footage .tv-screen::after {
-  visibility: hidden;
 }
 
 .bay.story {
@@ -5007,6 +5012,10 @@ kbd {
   font-size: 0.82rem;
   line-height: 1.5;
   color: #c3d4e1;
+  /* Justified, as a magazine's column; words broken where the language allows, so a narrow
+     column has no wide gaps. */
+  text-align: justify;
+  hyphens: auto;
   transition: opacity 300ms ease;
 }
 

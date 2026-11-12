@@ -12,6 +12,7 @@ import { categoryArt } from './art.js';
 import { circuitSvg } from './circuit.js';
 import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
+import { loopScroll } from './loopscroll.js';
 import { preload, ready } from './preload.js';
 import { awake } from './rest.js';
 import { boot } from './boot.js';
@@ -23,8 +24,6 @@ import { boot } from './boot.js';
 const READ_START_MS = 3000;
 const READ_WORD_MS = 450;
 const READ_LEAST_MS = 6000;
-/** How long the text under the logo takes to fade out, before the next fades in. */
-const READ_FADE_MS = 300;
 /**
  * The board follows the selection once it has rested a while: a new board is a full-screen
  * drawing, costly on a Pi, so moving through the rail does not redraw it at every step.
@@ -227,9 +226,8 @@ export class SystemView {
   #makers: MakerLogo[] = [];
   #fact = 0;
   #factTimer: ReturnType<typeof setTimeout> | undefined;
-  /** Which of the description and the story's chapters shows under the logo. */
-  #read = 0;
-  #readTimer: ReturnType<typeof setTimeout> | undefined;
+  /** The description and story under the logo, scrolling (loopScroll). */
+  #storyScroll: Animation | null = null;
   #boardTimer: ReturnType<typeof setTimeout> | undefined;
   #dropTimer: ReturnType<typeof setTimeout> | undefined;
   #shelfTimer: ReturnType<typeof setTimeout> | undefined;
@@ -338,6 +336,8 @@ export class SystemView {
     this.#place = from >= 0 && this.#loops() ? loopPlace(this.#place, from, index, total) : index;
     this.#drawStrip();
     this.#centre();
+    // The selection frame in the system's colour at once, not when its page is drawn.
+    if (moved) this.#railColour(system, index);
     if (!quiet) this.#browse();
     this.#preload(index);
     const ticket = ++this.#ticket;
@@ -345,7 +345,6 @@ export class SystemView {
       if (ticket !== this.#ticket) return;
       this.#info = info;
       this.#fact = 0;
-      this.#read = 0;
       this.#render(system, !now, ticket);
       this.#drawBoard(system, now ? 0 : BOARD_MS);
     };
@@ -397,6 +396,24 @@ export class SystemView {
     document.documentElement.classList.toggle('systems-browsing', on);
   }
 
+  /**
+   * The selection frame in `system`'s colour, set on the strip alone: the page's own colours
+   * wait for its page, drawn once the steps rest. From what the list already knows (its maker
+   * from Forma, not yet its info's), so cheap at each step.
+   */
+  #railColour(system: CyberSystem, index: number): void {
+    const [rgb] = systemColours(
+      {
+        hues: system.hues,
+        consoleHues: system.consoleHues,
+        maker: system.summary.manufacturer,
+        category: system.category
+      },
+      index
+    );
+    this.#rail.style.setProperty('--sys', `rgb(${rgb})`);
+  }
+
   /** Stops the curiosity timer when the screen goes away. */
   hide(): void {
     this.#onScreen = false;
@@ -405,7 +422,8 @@ export class SystemView {
     clearTimeout(this.#settle);
     this.#browsing(false);
     clearTimeout(this.#factTimer);
-    clearTimeout(this.#readTimer);
+    this.#storyScroll?.cancel();
+    this.#storyScroll = null;
     clearTimeout(this.#boardTimer);
     clearTimeout(this.#shelfTimer);
   }
@@ -657,12 +675,13 @@ export class SystemView {
       // A third and fourth where it has them; else its two again, the other way round.
       root.setProperty('--sys3-rgb', third ?? accent);
       root.setProperty('--sys4-rgb', fourth ?? rgb);
+      // The page's colours caught up: the frame takes them again.
+      this.#rail.style.removeProperty('--sys');
       this.#shown = this.#selected;
       this.#turnPage(parts, animate);
       this.#rotateShelves(showcase, SHELF_MS);
       this.#scrollOverflow();
       this.#scheduleFact();
-      this.#scheduleReading();
     };
     // The next system shows whole, its pictures ready, rather than its words first.
     if (!animate) return apply();
@@ -722,6 +741,15 @@ export class SystemView {
         const inner = box.firstElementChild as HTMLElement | null;
         const over = (inner?.scrollHeight ?? 0) - box.clientHeight;
         if (!inner || over <= 2) continue;
+        // The story: read through to its end, then from its start again. Started once: other
+        // words changing (the next curiosity) must not send it back to its start.
+        if (box.classList.contains('looping')) continue;
+        if (box.classList.contains('story')) {
+          this.#storyScroll?.cancel();
+          this.#storyScroll = loopScroll(inner, over);
+          box.classList.add('looping');
+          continue;
+        }
         box.style.setProperty('--scroll', `${-over}px`);
         box.style.setProperty('--scroll-s', `${scrollSeconds(over)}s`);
         box.classList.add('scrolling');
@@ -735,56 +763,22 @@ export class SystemView {
     return [...(info?.description ? [info.description] : []), ...(info?.story ?? [])];
   }
 
+  /**
+   * The description and every chapter of the story, one text: longer than its box, it scrolls
+   * slowly to its end, rests, and starts again from its beginning (`#scrollOverflow`).
+   */
   #readingPart(): HTMLElement | null {
     const all = this.#readings();
-    const text = all[this.#read % Math.max(1, all.length)];
-    if (!text) return null;
+    if (!all.length) return null;
+    const paragraphs = all.map((text) => el('span', { class: 'para' }, text));
     return el(
       'div',
       { class: 'reading' },
-      scroller('p', text, 'description'),
-      // Which page of how many, when they take turns.
-      all.length > 1 ? el('span', { class: 'page' }, this.#pageOf(all.length)) : null
-    );
-  }
-
-  #pageOf(total: number): string {
-    return `${(this.#read % total) + 1}/${total}`;
-  }
-
-  /**
-   * The next of the description and the story's chapters: only the words fade out and back in,
-   * in the same box; nothing else on the page is touched.
-   */
-  #nextReading(): void {
-    const box = this.#slots.get('reading')?.querySelector<HTMLElement>('.description');
-    const all = this.#readings();
-    if (!box || all.length < 2) return;
-    this.#read += 1;
-    const text = all[this.#read % all.length] ?? '';
-    const page = this.#pageOf(all.length);
-    const counter = this.#slots.get('reading')?.querySelector('.page');
-    box.classList.add('fading');
-    this.#readTimer = setTimeout(() => {
-      const fresh = scroller('p', text, 'description fading');
-      box.replaceWith(fresh);
-      if (counter) counter.textContent = page;
-      this.#scrollOverflow();
-      requestAnimationFrame(() => requestAnimationFrame(() => fresh.classList.remove('fading')));
-      this.#scheduleReading();
-    }, READ_FADE_MS);
-  }
-
-  /** The next page comes when this one has been read: each stays as long as its words need. */
-  #scheduleReading(): void {
-    clearTimeout(this.#readTimer);
-    const all = this.#readings();
-    if (all.length < 2 || !this.rotateFacts) return;
-    const box = this.#slots.get('reading')?.querySelector<HTMLElement>('.description');
-    const ms = stayMs(box, all[this.#read % all.length] ?? '');
-    this.#readTimer = setTimeout(
-      awake(() => this.#nextReading()),
-      ms
+      el(
+        'p',
+        { class: 'description scroll story' },
+        el('span', { class: 'scroll-inner' }, ...paragraphs)
+      )
     );
   }
 

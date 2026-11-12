@@ -86,6 +86,11 @@ export class Scan {
     if (status.running && game && status.current === game.name) this.#start(game, status);
   }
 
+  /** A scraper run is on the game `id`, or has just finished with it and is showing what came. */
+  busyWith(id: number): boolean {
+    return this.#state !== 'idle' && this.#game === id;
+  }
+
   /**
    * The game `id` is to be drawn again (its details changed): at once, unless it is the one being
    * scanned; then once its scrape is over and the library has gone quiet, and only once.

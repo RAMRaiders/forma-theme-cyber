@@ -1,5 +1,5 @@
 import type { Game, ScraperStatus } from '@ramraiders/forma-sdk';
-import { mark as perfMark, span } from './perf.js';
+import { mark as perfMark, perfOn, span, timing } from './perf.js';
 
 import type { LazyList } from '../logic/pager.js';
 import { ageRatings, asPegi } from '../logic/agerating.js';
@@ -7,6 +7,7 @@ import { flaggedRegions, languageFlag, regionFlag, gameTags, patchBy } from '../
 import { DEFAULT_BACK, DEFAULT_FRONT, hue } from './cover.js';
 import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
+import { loopScroll } from './loopscroll.js';
 import { Scan } from './scan.js';
 import { boot, scrapedMark } from './boot.js';
 import {
@@ -143,21 +144,28 @@ const HELD_PREVIEW_MS = 500;
 const RACE_MS = 1000;
 /** Fan art kept decoded, the game shown and those round it: going to them is then at once. */
 const FANART_KEPT = 12;
+/** The TV's pictures and logos kept decoded (and measured), the game shown's and those round it. */
+const NAV_PIC_KEPT = 20;
+/** How many games each side of the one shown get their TV picture ready ahead. */
+const NAV_PIC_AROUND = 2;
+/** After a list opens, how long its game's own pictures have before its neighbours' are asked for. */
+const AROUND_AFTER_OPEN_MS = 400;
 /** Longest the game shown stays while the next one's pictures load: then it is replaced anyway. */
 const SWAP_WAIT_MS = 700;
 /** On a game this long, its video plays in the footage bay. */
 const VIDEO_AFTER_MS = 2500;
 /** With no video, the footage bay shows the screenshots in turn. */
 const SHOT_MS = 4000;
-/** The story a page at a time: each this long, fading this long between. */
+/** The story a page at a time (motion off): each this long, fading this long between. */
 const STORY_PAGE_MS = 12_000;
 const STORY_FADE_MS = 300;
 /** The showcase behind the shelf waits for the selection to rest this long: made anew at each
- * step, it held up the shelf's glide on a Pi (measured: 20 to 46 ms of work, frames of up to
- * 146 ms, at a step every 350 ms). Well over the time between unhurried presses (at 450 ms it
- * was drawn between them, and the next press waited for it), shorter than DROP_MS so it is
- * drawn before the shelf goes. The colours, the dossier and the TV come at the peek, sooner. */
-const SETTLE_MS = 900;
+ * step, it held up the shelf's glide on a Pi. At 900 ms a game moved to at an unhurried pace
+ * showed nearly a second late (measured on a Pi 5: drawn 870 ms after the press, its pictures,
+ * made ahead by Forma, in 15 ms after); its drawing now costs 10 ms (27 at most). Long enough
+ * that quick presses pass games by undrawn, short enough that each slow press shows its game
+ * before the next. The colours, the dossier and the TV come at the peek, sooner. */
+const SETTLE_MS = 320;
 /** The box swallowing the cartridge again (as in style.css). */
 const SLIDE_MS = 2200;
 /** On a game: the box first turns after this, then every `TURN_MS`. */
@@ -274,6 +282,10 @@ export class CollectorView {
   readonly #dossier = el('aside', { class: 'dossier' });
   /** Over it all while the scraper is on the selected game. */
   /** A scrape's new data in: shown by the game's boot, as on entering its list. */
+  #aroundTimer: ReturnType<typeof setTimeout> | undefined;
+  #dossierFrame = 0;
+  /** The TV's pictures loaded ahead (#keepNavPicsAround), the latest last. */
+  readonly #navKept = new Map<string, HTMLImageElement>();
   readonly #scan = new Scan(async (id) => {
     const game = this.selected;
     return game?.id === id && (await this.#boot(game)) > 0;
@@ -317,6 +329,8 @@ export class CollectorView {
   #fanartQueue: Promise<unknown> = Promise.resolve();
   #arriving: ReturnType<typeof setTimeout> | undefined;
   #timers: ReturnType<typeof setTimeout>[] = [];
+  /** The story scrolling (#scrollStory); paused while the shelf is up. */
+  #storyScroll: Animation | null = null;
   #intervals: ReturnType<typeof setInterval>[] = [];
   #accents = new Map<number, Promise<string | null>>();
   /** The shelf's colours, worked out one after another. */
@@ -401,6 +415,10 @@ export class CollectorView {
       this.#showSelected();
       // Its shot on the shelf's TV too: the stop that puts it there was just called off.
       if (now) this.#navPicFor(now);
+      // Then, once its own pictures are on their way, its neighbours' TV pictures and
+      // achievements: the first step from here (Up or Down from its details) shows them at once.
+      clearTimeout(this.#aroundTimer);
+      this.#aroundTimer = setTimeout(() => this.#keepNavPicsAround(), AROUND_AFTER_OPEN_MS);
     }
     requestAnimationFrame(() => this.#track.classList.remove('still'));
   }
@@ -434,6 +452,7 @@ export class CollectorView {
    */
   #browse(): void {
     this.root.classList.add('browsing');
+    this.#storyScroll?.pause();
     if (this.#video) {
       this.#stopVideo();
       this.#videoHeld = true;
@@ -460,6 +479,7 @@ export class CollectorView {
     // shade, which has a transition of its own, it came back for a frame as it ended on a Pi
     // (recorded: one dark frame 320 ms in, at every drop).
     this.root.classList.remove('browsing');
+    this.#storyScroll?.play();
     if (this.#turnsDue) this.#startTurns();
     if (!this.#videoHeld) return;
     this.#videoHeld = false;
@@ -545,12 +565,10 @@ export class CollectorView {
     this.#track.style.transform = `translateY(${Math.round(this.#pad - this.#place * row)}px)`;
     this.render();
     if (!changed || quiet) return;
+    clearTimeout(this.#aroundTimer);
     this.#browse();
     this.#stopVideo();
-    // The dossier is drawn once, for the game stopped at (#draw, at the settle): redrawn at each
-    // step, it changed every few hundred ms, a game behind the shelf. Another game's meanwhile,
-    // it dims (opacity on its own layer: nothing painted).
-    this.#dossier.classList.toggle('stale', this.#dossier.dataset.id !== String(this.selected?.id));
+    // The dossier follows at the peek, once the steps pause: not at each step of a held press.
     // While held the shelf says which game it is; the label's pictures would only flicker past.
     clearTimeout(this.#labelTimer);
     // A step loads nothing: games passed by quickly would queue their pictures on a Pi ahead of
@@ -559,6 +577,17 @@ export class CollectorView {
     if (!held) {
       this.#labelNow();
       this.#previewedAt = now;
+      // Its TV picture at once (shown as soon as decoded, at once when loaded ahead), not the
+      // last game's left there till the peek; and its achievements asked for already.
+      const game = this.selected;
+      if (game) {
+        this.#navPicFor(game);
+        void this.#achievementsOf(game);
+        // Its details (logo, words) the frame after: not waiting for the peek, and not in the
+        // step's own frame, which only moves the shelf.
+        cancelAnimationFrame(this.#dossierFrame);
+        this.#dossierFrame = requestAnimationFrame(() => this.#dossierFor(game));
+      }
     }
     // Held a while: racing through the list. Nothing is loaded (the TV blank, the dossier empty):
     // the TV shows the letter the shelf is at, and all comes for the game stopped at.
@@ -589,7 +618,12 @@ export class CollectorView {
       // once was one long frame on a Pi (measured: 80 ms), most of it the page restyling.
       this.#tintSelected(game);
       this.#labelNow();
-      this.#inTurn(game, [() => this.#navPicFor(game), () => this.#backdropFor(game)]);
+      this.#inTurn(game, [
+        () => this.#navPicFor(game),
+        () => this.#dossierFor(game),
+        () => this.#backdropFor(game),
+        () => this.#keepNavPicsAround()
+      ]);
     }, PEEK_MS);
     clearTimeout(this.#settle);
     this.#settle = setTimeout(() => this.#showSelected(), SETTLE_MS);
@@ -786,6 +820,8 @@ export class CollectorView {
     this.render();
     const game = this.selected;
     if (game?.id !== id) return;
+    // A scraper run on it: drawn again as its scan says, once the run is done with it.
+    if (this.#scan.busyWith(id)) return this.#scan.redraw(id, () => this.#showSelected(true));
     this.#showSelected(true);
     this.#scan.refreshed(game, this.#pictures());
   }
@@ -880,6 +916,8 @@ export class CollectorView {
     this.#turnsDue = false;
     this.#timers.forEach(clearTimeout);
     this.#intervals.forEach(clearInterval);
+    this.#storyScroll?.cancel();
+    this.#storyScroll = null;
     this.#timers = [];
     this.#intervals = [];
     clearTimeout(this.#slideDone);
@@ -990,7 +1028,6 @@ export class CollectorView {
       this.#box &&
       this.#dossier.dataset.id === String(game.id)
     ) {
-      this.#dossier.classList.remove('stale');
       return this.#labelNow();
     }
     // Already on its way (the list reloaded meanwhile, as it does while Forma checks the
@@ -1026,6 +1063,61 @@ export class CollectorView {
       this.#drawing = null;
       if (this.selected?.id !== game.id) return;
       this.#draw(game, showcase, dossier);
+    });
+  }
+
+  /**
+   * The dossier for `game` at once, at the peek: its details as soon as the steps pause, ahead
+   * of the showcase. The draw at the settle then keeps it as it is.
+   */
+  #dossierFor(game: ShowGame): void {
+    if (this.selected?.id !== game.id || this.#dossier.dataset.id === String(game.id)) return;
+    const parts = this.#dossierParts(game);
+    keepPictures(this.#dossier, parts);
+    // Its words this frame, its pictures (the logo first among them) the next: decoding a
+    // logo in the same frame as the words made that one frame long on a Pi.
+    const later: [HTMLImageElement, string][] = [];
+    for (const part of parts) {
+      for (const img of part.querySelectorAll('img')) {
+        const src = img.getAttribute('src');
+        if (!src || img.complete) continue;
+        img.decoding = 'async';
+        img.removeAttribute('src');
+        later.push([img, src]);
+      }
+    }
+    this.#dossier.replaceChildren(...parts);
+    this.#dossier.dataset.id = String(game.id);
+    this.#dossier.classList.remove('kept');
+    if (later.length) {
+      const id = String(game.id);
+      requestAnimationFrame(() => {
+        if (this.#dossier.dataset.id !== id) return;
+        for (const [img, src] of later) img.setAttribute('src', src);
+        fadeInAsLoaded(this.#dossier);
+      });
+    }
+    if (perfOn() && this.#steppedAt)
+      timing('dossier after step', performance.now() - this.#steppedAt);
+  }
+
+  /** Perf mode: how long after the last step the game was drawn, and its pictures all in. */
+  #timeDraw(): void {
+    const since = this.#steppedAt;
+    if (!since || !perfOn()) return;
+    timing('drawn after step', performance.now() - since);
+    const images = [
+      ...this.#showcase.querySelectorAll('img'),
+      ...this.#dossier.querySelectorAll('img')
+    ];
+    void Promise.all(
+      images.map((img) =>
+        img.complete || typeof img.decode !== 'function'
+          ? Promise.resolve()
+          : img.decode().catch(() => undefined)
+      )
+    ).then(() => {
+      if (this.#steppedAt === since) timing('pictures after step', performance.now() - since);
     });
   }
 
@@ -1071,7 +1163,6 @@ export class CollectorView {
     // flickered as the shelf went).
     const keep = !fresh && this.#dossier.dataset.id === String(game.id);
     this.#dossier.classList.toggle('kept', keep);
-    this.#dossier.classList.remove('stale');
     if (!keep) {
       keepPictures(this.#dossier, dossier);
       this.#dossier.replaceChildren(...dossier);
@@ -1079,6 +1170,7 @@ export class CollectorView {
     }
     fadeInAsLoaded(this.#showcase);
     fadeInAsLoaded(this.#dossier);
+    this.#timeDraw();
     this.#scan.shown(game.id, this.#pictures());
     this.#arrive();
     requestAnimationFrame(() => {
@@ -1322,9 +1414,7 @@ export class CollectorView {
     // Set only when it changes: set again, even the same, the TV was styled anew at each step.
     const era = tvEra(system?.category, system?.released);
     if (this.#tv.dataset.era !== era) this.#tv.dataset.era = era;
-    const media = this.#options.media;
-    const shot = media(game, 'image', 400) ?? media(game, 'titleshot', 400);
-    const src = shot ?? media(game, 'thumbnail', 640);
+    const { shot, src } = this.#navPicOf(game);
     if (src === this.#navPicSrc) return;
     this.#navPicSrc = src;
     const screen = this.#navScreen;
@@ -1351,6 +1441,7 @@ export class CollectorView {
       for (const old of [...screen.querySelectorAll('img')]) if (old !== img) old.remove();
       img.classList.remove('waiting');
       this.#tv.classList.remove('empty');
+      if (perfOn() && this.#steppedAt) timing('tv after step', performance.now() - this.#steppedAt);
     };
     img.addEventListener(
       'load',
@@ -1365,6 +1456,57 @@ export class CollectorView {
       },
       { once: true }
     );
+  }
+
+  /** The TV's picture for `game`: its screenshot, else its title screen, else its box. */
+  #navPicOf(game: Game): { shot: string | null; src: string | null } {
+    const media = this.#options.media;
+    const shot = media(game, 'image', 400) ?? media(game, 'titleshot', 400);
+    return { shot, src: shot ?? media(game, 'thumbnail', 640) };
+  }
+
+  /**
+   * The TV pictures of the games round the one shown, loaded, decoded and measured (their black
+   * bars) ahead, the nearest first: a step to one of them shows it at once. A few kept only.
+   */
+  #keepNavPicsAround(): void {
+    const source = this.#source;
+    if (!source || this.#racing) return;
+    for (let d = 1; d <= NAV_PIC_AROUND; d++) {
+      for (const i of [this.#selected + d, this.#selected - d]) {
+        const game = i >= 0 && i < source.total ? source.get(i) : undefined;
+        if (!game) continue;
+        // Its achievements too: RetroAchievements is slow to answer, so asked for ahead.
+        void this.#achievementsOf(game);
+        const { shot, src } = this.#navPicOf(game);
+        // Its logo too, for the dossier the step to it draws at once.
+        const media = this.#options.media;
+        const logo = media(game, 'wheel', 560) ?? media(game, 'marquee', 560);
+        for (const url of [src, logo]) {
+          if (!url) continue;
+          const kept = this.#navKept.get(url);
+          this.#navKept.delete(url);
+          if (kept) {
+            this.#navKept.set(url, kept);
+            continue;
+          }
+          const img = new Image();
+          img.decoding = 'async';
+          img.src = url;
+          this.#navKept.set(url, img);
+          // Its bars measured now, while nothing moves: on the step to it, only looked up.
+          void (typeof img.decode === 'function' ? img.decode() : Promise.resolve())
+            .then(() => {
+              if (url === shot) borderOf(img);
+            })
+            .catch(() => {});
+        }
+      }
+    }
+    for (const oldest of this.#navKept.keys()) {
+      if (this.#navKept.size <= NAV_PIC_KEPT) break;
+      this.#navKept.delete(oldest);
+    }
   }
 
   /** The fan art of the game shown and those round it, decoded ahead and kept, within a limit. */
@@ -1497,14 +1639,15 @@ export class CollectorView {
     return stage;
   }
 
-  /** The game's story, all of it; when longer than its bay it scrolls slowly through. */
   /**
-   * The game's story, a page at a time: cut where it fills the bay, between sentences, each
-   * page shown in turn with its number under it (`2 / 3`).
+   * The game's story, all of it: longer than its bay, it scrolls slowly to its end, then shows
+   * from its start again, over and over (paused while the shelf is up). With motion off, a page
+   * at a time instead: cut where it fills the bay, between sentences, its number under it.
    */
   #storyBay(game: ShowGame): HTMLElement {
     const all = game.description ?? '';
-    const box = el('div', { class: 'text' }, all);
+    const lines = el('div', { class: 'lines' }, all);
+    const box = el('div', { class: 'text' }, lines);
     const pager = el('span', { class: 'pager', 'aria-hidden': 'true' });
     const story = bay('story', ARCADE.has(game.system) ? 'History' : 'Story', box, pager);
     // No story: the footage has its room.
@@ -1512,6 +1655,10 @@ export class CollectorView {
     const id = game.id;
     requestAnimationFrame(() => {
       if (this.#game?.id !== id || !box.clientHeight) return;
+      if (document.documentElement.dataset.motion !== 'off') {
+        this.#scrollStory(lines, lines.scrollHeight - box.clientHeight);
+        return;
+      }
       const pages = paginate(all, box);
       box.textContent = pages[0] ?? '';
       if (pages.length < 2) return;
@@ -1529,6 +1676,13 @@ export class CollectorView {
       }, STORY_PAGE_MS);
     });
     return story;
+  }
+
+  /** The story's lines moved up `by` pixels, slowly, then back to the start (loopScroll). */
+  #scrollStory(lines: HTMLElement, by: number): void {
+    this.#storyScroll?.cancel();
+    this.#storyScroll = loopScroll(lines, by);
+    if (!this.#resting()) this.#storyScroll?.pause();
   }
 
   /** The grading label on top of the case: the game, its system, its grade, its serial. */
@@ -1832,15 +1986,32 @@ export class CollectorView {
     );
   }
 
-  /** How many of its achievements are won, in their tile, once known. */
-  #achievementsInto(game: Game, marks: HTMLElement): void {
+  /** `game`'s achievements, asked for once (and kept); `null` where it has none to ask for. */
+  #achievementsOf(game: Game): Promise<Achievements | null> | null {
     const fetch = this.#options.achievements;
-    if (game.raGameId === null || !fetch) return;
+    if (game.raGameId === null || !fetch) return null;
     let progress = this.#achievements.get(game.id);
     if (!progress) {
+      const id = game.id;
       progress = fetch(game).catch(() => null);
-      this.#achievements.set(game.id, progress);
+      // None came (offline, say): asked again next time, not kept empty.
+      void progress.then((a) => {
+        if (!a && this.#achievements.get(id) === progress) this.#achievements.delete(id);
+      });
+      this.#achievements.set(id, progress);
     }
+    return progress;
+  }
+
+  /** The game `id` was just played: its achievements are asked for afresh. */
+  played(id: number): void {
+    this.#achievements.delete(id);
+  }
+
+  /** How many of its achievements are won, in their tile, once known. */
+  #achievementsInto(game: Game, marks: HTMLElement): void {
+    const progress = this.#achievementsOf(game);
+    if (!progress) return;
     const id = game.id;
     void progress.then((a) => {
       if (!a || a.total === 0 || this.#dossier.dataset.id !== String(id)) return;
