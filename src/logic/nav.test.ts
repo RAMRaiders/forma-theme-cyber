@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { loopIndex, loopPlace, moveGrid, moveHome, moveList } from './nav.js';
+import { loopIndex, loopPlace, moveGrid, moveHome, moveList, raceStep } from './nav.js';
 
 describe('moveGrid', () => {
   // 10 items in 4 columns:
@@ -85,5 +85,23 @@ describe('Cyber’s home: categories, then a row of shortcuts', () => {
   it('works with no shortcuts, as a plain grid', () => {
     expect(moveHome(6, 7, 4, 0, 'down')).toBe(6);
     expect(moveHome(3, 7, 4, 0, 'down')).toBe(6);
+  });
+});
+
+describe('raceStep', () => {
+  it('goes one at a time until held a second, then doubles each second, up to sixteen', () => {
+    expect(raceStep(0)).toBe(1);
+    expect(raceStep(999)).toBe(1);
+    expect(raceStep(1000)).toBe(2);
+    expect(raceStep(2000)).toBe(4);
+    expect(raceStep(3500)).toBe(8);
+    expect(raceStep(4000)).toBe(16);
+    expect(raceStep(60_000)).toBe(16);
+  });
+
+  it('moves a list that far, stopping at its ends', () => {
+    expect(moveList(10, 100, 'down', 10, true, 8)).toBe(18);
+    expect(moveList(95, 100, 'down', 10, true, 8)).toBe(99);
+    expect(moveList(3, 100, 'up', 10, true, 8)).toBe(0);
   });
 });

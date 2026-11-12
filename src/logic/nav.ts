@@ -34,23 +34,25 @@ export function moveGrid(index: number, count: number, columns: number, move: Mo
 /**
  * A vertical list. Up from the top wraps to the bottom (and back), as EmulationStation does,
  * but only on a fresh press: a held direction stops at the end instead of racing round.
- * Left/right jump a page, like the shoulder buttons.
+ * Left/right jump a page, like the shoulder buttons. Up and down go `by` at a time (a held
+ * direction racing, see {@link raceStep}).
  */
 export function moveList(
   index: number,
   count: number,
   move: Move,
   pageSize: number,
-  repeat: boolean
+  repeat: boolean,
+  by = 1
 ): number {
   if (count === 0) return 0;
   const last = count - 1;
   switch (move) {
     case 'up':
-      if (index > 0) return index - 1;
+      if (index > 0) return Math.max(0, index - by);
       return repeat ? 0 : last;
     case 'down':
-      if (index < last) return index + 1;
+      if (index < last) return Math.min(last, index + by);
       return repeat ? last : 0;
     case 'left':
     case 'pageUp':
@@ -112,4 +114,18 @@ export function moveHome(
     return count + across(index - lastRow * cols, count - lastRow * cols, shortcuts);
   }
   return moveGrid(index, count, cols, move);
+}
+
+/** A direction held this long races: each repeat goes further. */
+const RACE_AFTER_MS = 1000;
+/** The furthest a repeat goes: past it, too fast to follow even by the letter. */
+const RACE_MAX_STEP = 16;
+
+/**
+ * How far one repeat of a direction held `heldMs` goes: one, until it races; then two, doubling
+ * each second it is held on (at a repeat every 80 ms: 25, 50, 100, 200 games a second).
+ */
+export function raceStep(heldMs: number): number {
+  if (heldMs < RACE_AFTER_MS) return 1;
+  return Math.min(RACE_MAX_STEP, 2 ** (1 + Math.floor((heldMs - RACE_AFTER_MS) / 1000)));
 }

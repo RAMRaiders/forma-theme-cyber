@@ -34,7 +34,7 @@ import {
   margins,
   prefUpdate
 } from './data/prefs.js';
-import { type Move, moveGrid, moveHome, moveList } from './logic/nav.js';
+import { type Move, moveGrid, moveHome, moveList, raceStep } from './logic/nav.js';
 import { LazyList } from './logic/pager.js';
 import { el } from './ui/dom.js';
 import { type Card, GridView } from './ui/grid.js';
@@ -104,6 +104,8 @@ const MOVES: Partial<Record<Action, Move>> = {
 
 /** Moved this far through a list, Forma is asked again for the pictures around the selection. */
 const PREPARE_AGAIN = 10;
+/** After racing through a list, how long it rests before Forma is asked for pictures there. */
+const PREPARE_AFTER_RACE_MS = 400;
 
 /** One step of the breadcrumb: a name, or a system's logo (`label`: its name, for screen readers). */
 type Crumb = string | { label: string; logo: string; dark: boolean };
@@ -172,6 +174,9 @@ export class App {
   /** The game list on screen, for Forma to make its pictures ahead. */
   #listPlace: { view: string; path: string[] } | null = null;
   #preparedAround = 0;
+  /** When the direction now held was pressed. */
+  #heldSince = 0;
+  #prepareTimer: ReturnType<typeof setTimeout> | undefined;
 
   /**
    * Has Forma make the pictures of the games around `around` in the list on screen, in the
@@ -765,9 +770,19 @@ export class App {
       return;
     } else if (this.#list) {
       const view = this.#gameView;
-      level.index = moveList(level.index, this.#list.total, move, view.pageSize(), repeat);
+      // Held, it races: further at each repeat the longer it is held.
+      const now = performance.now();
+      if (!repeat) this.#heldSince = now;
+      const by = repeat ? raceStep(now - this.#heldSince) : 1;
+      level.index = moveList(level.index, this.#list.total, move, view.pageSize(), repeat, by);
       view.select(level.index);
-      if (Math.abs(level.index - this.#preparedAround) > PREPARE_AGAIN) {
+      clearTimeout(this.#prepareTimer);
+      if (by > 1) {
+        // Racing: asked once it stops, where it stops, not for every place raced past.
+        this.#prepareTimer = setTimeout(() => {
+          if (this.#level === level) this.#prepareList(level.index);
+        }, PREPARE_AFTER_RACE_MS);
+      } else if (Math.abs(level.index - this.#preparedAround) > PREPARE_AGAIN) {
         this.#prepareList(level.index);
       }
     } else {
