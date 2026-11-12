@@ -7,23 +7,23 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "3DO Magazine"
+        "title": "3DO Magazine #10"
       },
       {
         "file": "mag-2.webp",
-        "title": "Electronic Games 1993-11"
+        "title": "Electronic Games"
       },
       {
         "file": "mag-3.webp",
-        "title": "Ultimate Future Games - Issue 02"
+        "title": "Ultimate Future Games #2"
       },
       {
         "file": "mag-4.webp",
-        "title": "3DO Magazine - Issue 12"
+        "title": "3DO Magazine #12"
       },
       {
         "file": "mag-5.webp",
-        "title": "3DO Magazine Special - Gold Issue 01"
+        "title": "3DO Magazine Gold #1"
       }
     ],
     "hues": [
@@ -90,23 +90,23 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "CU Amiga Magazine Issue 027"
+        "title": "CU Amiga #27"
       },
       {
         "file": "mag-2.webp",
-        "title": "Amiga Computing Issue 062 Jul 93"
+        "title": "Amiga Computing #62"
       },
       {
         "file": "mag-3.webp",
-        "title": "Amiga_Format_Issue_114__1998_09__Future_Publishing__GB__300dpi_"
+        "title": "Amiga Format #114"
       },
       {
         "file": "mag-4.webp",
-        "title": "CU Amiga Magazine Issue 025"
+        "title": "CU Amiga #25"
       },
       {
         "file": "mag-5.webp",
-        "title": "CU Amiga Magazine Issue 046"
+        "title": "CU Amiga #46"
       }
     ]
   },
@@ -159,19 +159,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Amstrad Action 001-117"
+        "title": "Amstrad Action #52"
       },
       {
         "file": "mag-2.webp",
-        "title": "Amstrad Computer User 01-90 (Aug 84 - May 92)"
+        "title": "Amstrad Computer User"
       },
       {
         "file": "mag-3.webp",
-        "title": "Computing With The Amstrad Vol. 3 No. 3"
+        "title": "Computing with the Amstrad"
       },
       {
         "file": "mag-4.webp",
-        "title": "Amstrad Action Issue 064"
+        "title": "Amstrad Action #64"
       }
     ]
   },
@@ -257,7 +257,7 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Cursor / BASIC Express Newsletter for Bally Arcade / Astrocade Alternative ColorScans"
+        "title": "Cursor"
       }
     ]
   },
@@ -268,23 +268,23 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Atari VCS Owners Club Bulletin - AB 23 (Atari International)"
+        "title": "Atari VCS Club #23"
       },
       {
         "file": "mag-2.webp",
-        "title": "Atari Age Volume 1 Number 2"
+        "title": "Atari Age v1 #2"
       },
       {
         "file": "mag-3.webp",
-        "title": "Activisions - Vol. 5 (Activision)"
+        "title": "Activisions #5"
       },
       {
         "file": "mag-4.webp",
-        "title": "Atari Club Magazin (Weihnachts-Sonderausgabe 1982)"
+        "title": "Atari Club Magazin"
       },
       {
         "file": "mag-5.webp",
-        "title": "Atari VCS Owners Club Bulletin - AB 22 (Atari International)"
+        "title": "Atari VCS Club #22"
       }
     ],
     "peripherals": [
@@ -322,23 +322,23 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Atari Age Volumes 1 & 2"
+        "title": "Atari Age"
       },
       {
         "file": "mag-2.webp",
-        "title": "Atari Age Vol 02num 03"
+        "title": "Atari Age v2 #3"
       },
       {
         "file": "mag-3.webp",
-        "title": "Atari Age Volume 2 Number 2"
+        "title": "Atari Age v2 #2"
       },
       {
         "file": "mag-4.webp",
-        "title": "Atari Age Volume 2 Number 5"
+        "title": "Atari Age v2 #5"
       },
       {
         "file": "mag-5.webp",
-        "title": "Atari Age Volume 2 Number 4"
+        "title": "Atari Age v2 #4"
       }
     ],
     "peripherals": [
@@ -365,19 +365,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Computer Entertainer issue 3-3"
+        "title": "Computer Entertainer"
       },
       {
         "file": "mag-2.webp",
-        "title": "Atarian Issue 1 (May/June 1989)"
+        "title": "Atarian #1"
       },
       {
         "file": "mag-3.webp",
-        "title": "Atarian Issue 2 (August 1989)"
+        "title": "Atarian #2"
       },
       {
         "file": "mag-4.webp",
-        "title": "Atarian Issue 3 (October 1989)"
+        "title": "Atarian #3"
       }
     ],
     "peripherals": [
@@ -401,23 +401,23 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Atari Explorer (Atari)"
+        "title": "Atari Explorer"
       },
       {
         "file": "mag-2.webp",
-        "title": "Antic Magazine Volume 3 Number 02 (Exploring the Atari XL)"
+        "title": "Antic v3 #2"
       },
       {
         "file": "mag-3.webp",
-        "title": "Analog Computing Magazine Issue 15 (Inside the 600XL)"
+        "title": "Analog Computing #15"
       },
       {
         "file": "mag-4.webp",
-        "title": "Atari User Issue 01"
+        "title": "Atari User #1"
       },
       {
         "file": "mag-5.webp",
-        "title": "Antic Magazine Volume 4 Number 09 (Atari Products Are Back)"
+        "title": "Antic v4 #9"
       }
     ],
     "peripherals": [
@@ -449,23 +449,23 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Atari ST User - Issue 067 (Europress)"
+        "title": "Atari ST User #67"
       },
       {
         "file": "mag-2.webp",
-        "title": "atari-st-format-issue-049"
+        "title": "ST Format #49"
       },
       {
         "file": "mag-3.webp",
-        "title": "ST Action - Volume 1 Issue 1"
+        "title": "ST Action #1"
       },
       {
         "file": "mag-4.webp",
-        "title": "Atari ST User - Issue 099 (Europress)"
+        "title": "Atari ST User #99"
       },
       {
         "file": "mag-5.webp",
-        "title": "Atari ST User - Issue 088 (Europress)"
+        "title": "Atari ST User #88"
       }
     ],
     "peripherals": [
@@ -496,7 +496,7 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Gamest 0200"
+        "title": "Gamest #200"
       }
     ]
   },
@@ -563,15 +563,15 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Personal Computing On The VIC-20 (1982)(Commodore)"
+        "title": "VIC-20 Computing"
       },
       {
         "file": "mag-2.webp",
-        "title": "Compute!s VIC-20 Collection Book - Compute Computes"
+        "title": "Compute!'s VIC-20"
       },
       {
         "file": "mag-3.webp",
-        "title": "VIC-20 Programmers Reference Guide 1st Edition 6th Printing"
+        "title": "VIC-20 Reference Guide"
       }
     ]
   },
@@ -582,19 +582,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Zzap!64 001-107 (May85 - Mar 02)"
+        "title": "Zzap!64 #44"
       },
       {
         "file": "mag-2.webp",
-        "title": "Commodore User Magazine Issue 43"
+        "title": "Commodore User #43"
       },
       {
         "file": "mag-3.webp",
-        "title": "ZZap!64 Magazine Issue 044"
+        "title": "Zzap!64 #44"
       },
       {
         "file": "mag-4.webp",
-        "title": "ZZap!64 Magazine Issue 006"
+        "title": "Zzap!64 #6"
       }
     ],
     "peripherals": [
@@ -722,7 +722,7 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "1980 Coleco Toys and Games Catalog"
+        "title": "Coleco Catalog 1980"
       }
     ],
     "peripherals": [
@@ -776,11 +776,11 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Commodore C16 Plus4 Reference Book"
+        "title": "C16 Plus/4 Reference"
       },
       {
         "file": "mag-2.webp",
-        "title": "Videobasic per Commodore 16"
+        "title": "Videobasic C16"
       },
       {
         "file": "mag-3.webp",
@@ -869,19 +869,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "EDGE #067 (1999) - Supplement: Dreamcast"
+        "title": "Edge Dreamcast"
       },
       {
         "file": "mag-2.webp",
-        "title": "Official Dreamcast Magazine, The - Special Issue"
+        "title": "Dreamcast Magazine Special"
       },
       {
         "file": "mag-3.webp",
-        "title": "Dreamcast Monthly - Issue 1"
+        "title": "Dreamcast Monthly #1"
       },
       {
         "file": "mag-4.webp",
-        "title": "Official Dreamcast Magazine, The - Issue 01"
+        "title": "Dreamcast Magazine #1"
       }
     ],
     "peripherals": [
@@ -1028,19 +1028,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Gamest 183"
+        "title": "Gamest #183"
       },
       {
         "file": "mag-2.webp",
-        "title": "Play Meter - Volume 24, Number 4 - March 1998"
+        "title": "Play Meter"
       },
       {
         "file": "mag-3.webp",
-        "title": "Gamest 0260"
+        "title": "Gamest #260"
       },
       {
         "file": "mag-4.webp",
-        "title": "Gamest 0068"
+        "title": "Gamest #68"
       }
     ]
   },
@@ -1057,15 +1057,15 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Famimaga April 17 1992"
+        "title": "Famimaga '92"
       },
       {
         "file": "mag-2.webp",
-        "title": "Famimaga June 5 1987"
+        "title": "Famimaga '87"
       },
       {
         "file": "mag-3.webp",
-        "title": "Famimaga May 11 1990"
+        "title": "Famimaga '90"
       }
     ]
   },
@@ -1138,7 +1138,7 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Game And Watch Perfect Catalogue - ゲーム&ウオッチパーフェクトカタログ"
+        "title": "Game & Watch Catalogue"
       }
     ]
   },
@@ -1157,11 +1157,11 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Cube Issue 01"
+        "title": "Cube #1"
       },
       {
         "file": "mag-2.webp",
-        "title": "EGM's Unofficial Game Cube Guide - March 2002"
+        "title": "EGM GameCube Guide"
       }
     ],
     "peripherals": [
@@ -1190,7 +1190,7 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Official Sega Genesis & Game Gear Strategies ( 3rd Edition)"
+        "title": "Sega Strategies"
       }
     ],
     "peripherals": [
@@ -1218,19 +1218,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Game Boy Official Magazine 3"
+        "title": "Game Boy Magazine #3"
       },
       {
         "file": "mag-2.webp",
-        "title": "Game Boy Players Guide"
+        "title": "Game Boy Player's Guide"
       },
       {
         "file": "mag-3.webp",
-        "title": "The Game Boy Companion - N64 Magazine"
+        "title": "Game Boy Companion"
       },
       {
         "file": "mag-4.webp",
-        "title": "Total Game Boy Issue 07"
+        "title": "Total Game Boy #7"
       }
     ],
     "peripherals": [
@@ -1265,19 +1265,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Game Boy Official Magazine 3"
+        "title": "Game Boy Magazine #3"
       },
       {
         "file": "mag-2.webp",
-        "title": "Game Boy Players Guide"
+        "title": "Game Boy Player's Guide"
       },
       {
         "file": "mag-3.webp",
-        "title": "The Game Boy Companion - N64 Magazine"
+        "title": "Game Boy Companion"
       },
       {
         "file": "mag-4.webp",
-        "title": "Total Game Boy Issue 07"
+        "title": "Total Game Boy #7"
       }
     ]
   },
@@ -1288,7 +1288,7 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "GBA Master Guide Issue 01"
+        "title": "GBA Master Guide #1"
       }
     ],
     "peripherals": [
@@ -1317,15 +1317,15 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Total Game Boy Issue 01"
+        "title": "Total Game Boy #1"
       },
       {
         "file": "mag-2.webp",
-        "title": "GBX Game Boy Xtreme 06"
+        "title": "GBX #6"
       },
       {
         "file": "mag-3.webp",
-        "title": "Total Game Boy Issue 03"
+        "title": "Total Game Boy #3"
       }
     ],
     "hues": [
@@ -1351,15 +1351,15 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Total Game Boy Issue 01"
+        "title": "Total Game Boy #1"
       },
       {
         "file": "mag-2.webp",
-        "title": "GBX Game Boy Xtreme 06"
+        "title": "GBX #6"
       },
       {
         "file": "mag-3.webp",
-        "title": "Total Game Boy Issue 03"
+        "title": "Total Game Boy #3"
       }
     ]
   },
@@ -1471,23 +1471,23 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "EDGE #022 (1995) - Supplement: Atari Jaguar"
+        "title": "Edge Jaguar"
       },
       {
         "file": "mag-2.webp",
-        "title": "Atari Fan N°5 (Primavera 1995)"
+        "title": "Atari Fan #5"
       },
       {
         "file": "mag-3.webp",
-        "title": "Electronic Games 1993-09"
+        "title": "Electronic Games"
       },
       {
         "file": "mag-4.webp",
-        "title": "Cat Rap: News Source for the Atari Jaguar — Issue 1 — September 1993"
+        "title": "Cat Rap #1"
       },
       {
         "file": "mag-5.webp",
-        "title": "Cat Rap: News Source for the Atari Jaguar — Issue 2 — January 1994"
+        "title": "Cat Rap #2"
       }
     ],
     "peripherals": [
@@ -1528,19 +1528,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Atari Fan N°6 (Verano 1995)"
+        "title": "Atari Fan #6"
       },
       {
         "file": "mag-2.webp",
-        "title": "A.P.E. — Atari Power Entertainment, No. 21, Fall Holiday 1995"
+        "title": "A.P.E. #21"
       },
       {
         "file": "mag-3.webp",
-        "title": "A.P.E. — Atari Power Entertainment, No. 20, Summer 1995"
+        "title": "A.P.E. #20"
       },
       {
         "file": "mag-4.webp",
-        "title": "A.P.E. — Atari Power Entertainment, No. 18, Winter 1995"
+        "title": "A.P.E. #18"
       }
     ],
     "peripherals": [
@@ -1640,23 +1640,23 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Atari Lynx II Launch Promo Special (EGM)"
+        "title": "EGM Lynx II Special"
       },
       {
         "file": "mag-2.webp",
-        "title": "Atari Lynx Grey Matters Vol 3 1992"
+        "title": "Grey Matters"
       },
       {
         "file": "mag-3.webp",
-        "title": "Lynx User Issue 5"
+        "title": "Lynx User #5"
       },
       {
         "file": "mag-4.webp",
-        "title": "Lynx User Issue 6"
+        "title": "Lynx User #6"
       },
       {
         "file": "mag-5.webp",
-        "title": "Lynx User Issue 7"
+        "title": "Lynx User #7"
       }
     ],
     "hues": [
@@ -1712,23 +1712,23 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Mean Machines Sega Magazine Issue 04"
+        "title": "Mean Machines Sega #4"
       },
       {
         "file": "mag-2.webp",
-        "title": "S the Sega Magazine Issue 04"
+        "title": "S Magazine #4"
       },
       {
         "file": "mag-3.webp",
-        "title": "Sega Force Issue 01"
+        "title": "Sega Force #1"
       },
       {
         "file": "mag-4.webp",
-        "title": "Mean Machines Sega Issues 1-53"
+        "title": "Mean Machines Sega"
       },
       {
         "file": "mag-5.webp",
-        "title": "Mean Machines Sega Magazine Issue 03"
+        "title": "Mean Machines Sega #3"
       }
     ],
     "peripherals": [
@@ -1739,6 +1739,10 @@
       {
         "file": "gear-2.webp",
         "name": "Control Stick"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "3-D Glasses"
       }
     ],
     "hues": [
@@ -1765,7 +1769,7 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Megatech Supplement Mega CD Guide"
+        "title": "Mega CD Guide"
       }
     ]
   },
@@ -1776,23 +1780,23 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Sega Mega Drive Advanced Gaming Issue 05"
+        "title": "Mega Drive Advanced Gaming #5"
       },
       {
         "file": "mag-2.webp",
-        "title": "Sega Force Issue 10"
+        "title": "Sega Force #10"
       },
       {
         "file": "mag-3.webp",
-        "title": "Mean Machines Sega Issue 09"
+        "title": "Mean Machines Sega #9"
       },
       {
         "file": "mag-4.webp",
-        "title": "MEGA Magazine Gold Summer Special"
+        "title": "Mega Summer Special"
       },
       {
         "file": "mag-5.webp",
-        "title": "Sega Force Issue 16"
+        "title": "Sega Force #16"
       }
     ],
     "peripherals": [
@@ -1909,19 +1913,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "MSX Magazine Revival Vol. 1 - MSX MAGAZINE 永久保存版"
+        "title": "MSX Magazine Revival 1"
       },
       {
         "file": "mag-2.webp",
-        "title": "MSX Computer Magazine 02 1986"
+        "title": "MSX Computer Magazine"
       },
       {
         "file": "mag-3.webp",
-        "title": "MSX・FAN 1992-08月号"
+        "title": "MSX FAN '92"
       },
       {
         "file": "mag-4.webp",
-        "title": "MSX Magazine Revival Vol. 2 - MSX MAGAZINE 永久保存版2"
+        "title": "MSX Magazine Revival 2"
       }
     ]
   },
@@ -1932,19 +1936,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "MSX Magazine Revival Vol. 3 - MSX MAGAZINE 永久保存版3"
+        "title": "MSX Magazine Revival 3"
       },
       {
         "file": "mag-2.webp",
-        "title": "MSX・FAN 1993-10月号"
+        "title": "MSX FAN '93"
       },
       {
         "file": "mag-3.webp",
-        "title": "MSX Computer Magazine 02 1986"
+        "title": "MSX Computer Magazine"
       },
       {
         "file": "mag-4.webp",
-        "title": "MSX Magazine Revival Vol. 1 - MSX MAGAZINE 永久保存版"
+        "title": "MSX Magazine Revival 1"
       }
     ]
   },
@@ -1998,15 +2002,15 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Nintendo Official Magazine Nintendo 64 THE GUIDE"
+        "title": "N64 The Guide"
       },
       {
         "file": "mag-2.webp",
-        "title": "EGM's Player's Guide To Video Games For The Nintendo 64 - June 1998"
+        "title": "EGM N64 Guide"
       },
       {
         "file": "mag-3.webp",
-        "title": "N64 Gamer - Issue 23"
+        "title": "N64 Gamer #23"
       }
     ],
     "peripherals": [
@@ -2065,7 +2069,7 @@
     "magazines": [
       {
         "file": "mag-2.webp",
-        "title": "Gamest 199"
+        "title": "Gamest #199"
       }
     ]
   },
@@ -2083,19 +2087,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Gamest 0052"
+        "title": "Gamest #52"
       },
       {
         "file": "mag-2.webp",
-        "title": "Arcadia Magazine No 32 January 01 2003 The House of the Dead III pages"
+        "title": "Arcadia #32"
       },
       {
         "file": "mag-3.webp",
-        "title": "Play Meter - Volume 19, Number 5 April 1993"
+        "title": "Play Meter"
       },
       {
         "file": "mag-4.webp",
-        "title": "Gamest 0066"
+        "title": "Gamest #66"
       }
     ]
   },
@@ -2114,23 +2118,23 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Neo Geo Freak 0001"
+        "title": "Neo Geo Freak #1"
       },
       {
         "file": "mag-2.webp",
-        "title": "Gamest 199"
+        "title": "Gamest #199"
       },
       {
         "file": "mag-3.webp",
-        "title": "Play Meter - Volume 24, Number 4 - March 1998"
+        "title": "Play Meter"
       },
       {
         "file": "mag-4.webp",
-        "title": "Neo Geo Freak 0030"
+        "title": "Neo Geo Freak #30"
       },
       {
         "file": "mag-5.webp",
-        "title": "Neo Geo Freak 0033"
+        "title": "Neo Geo Freak #33"
       }
     ],
     "peripherals": [
@@ -2164,15 +2168,15 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Neo Geo CD Software Catalogue"
+        "title": "Neo Geo CD Catalogue"
       },
       {
         "file": "mag-2.webp",
-        "title": "SNK Neo-Geo CD WW Magazine Advertisements & Reviews"
+        "title": "Neo Geo CD Ads"
       },
       {
         "file": "mag-3.webp",
-        "title": "電玩玩味叢書 013 NEO GEO CD特辑"
+        "title": "Neo Geo CD Special"
       }
     ],
     "peripherals": [
@@ -2193,23 +2197,23 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Nintendo Power Issue #1(July/August 1988)"
+        "title": "Nintendo Power #1"
       },
       {
         "file": "mag-2.webp",
-        "title": "Nintendo Fun Club News Issue 03 Fall 1987"
+        "title": "Nintendo Fun Club #3"
       },
       {
         "file": "mag-3.webp",
-        "title": "Total Nintendo Magazine UK Issue 2 February 1992"
+        "title": "Total Nintendo #2"
       },
       {
         "file": "mag-4.webp",
-        "title": "Nintendo Power Issue 002 September October 1988"
+        "title": "Nintendo Power #2"
       },
       {
         "file": "mag-5.webp",
-        "title": "Nintendo Power Issue #3 November December 1988"
+        "title": "Nintendo Power #3"
       }
     ],
     "peripherals": [
@@ -2244,11 +2248,11 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "NeoGeo Pocket Soft Information Vol. 2"
+        "title": "Neo Geo Pocket Soft Info"
       },
       {
         "file": "mag-2.webp",
-        "title": "SNK Neo-Geo Pocket Color WW Magazine Advertisements & Reviews"
+        "title": "Neo Geo Pocket Ads"
       }
     ]
   },
@@ -2262,11 +2266,11 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "SNK Neo-Geo Pocket Color WW Magazine Advertisements & Reviews"
+        "title": "Neo Geo Pocket Ads"
       },
       {
         "file": "mag-2.webp",
-        "title": "NeoGeo Pocket Soft Information Vol. 2"
+        "title": "Neo Geo Pocket Soft Info"
       }
     ]
   },
@@ -2354,7 +2358,7 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Turbo Play US 12"
+        "title": "Turbo Play #12"
       },
       {
         "file": "mag-2.webp",
@@ -2500,15 +2504,15 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "DOOM II Official Strategy Guide"
+        "title": "Doom II Guide"
       },
       {
         "file": "mag-2.webp",
-        "title": "Ultimate Future Games Issue 14 - Supplement Playstation Doom Guide"
+        "title": "Doom Guide"
       },
       {
         "file": "mag-3.webp",
-        "title": "Doom III Gamespot Guide"
+        "title": "Doom 3 Guide"
       }
     ]
   },
@@ -2527,23 +2531,23 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Official US PlayStation Magazine - Volume 1 Issue 1"
+        "title": "PlayStation Magazine #1"
       },
       {
         "file": "mag-2.webp",
-        "title": "PSM (PlayStation Magazine) 001"
+        "title": "PSM #1"
       },
       {
         "file": "mag-3.webp",
-        "title": "Playstation Plus Vol 1 Issue 10"
+        "title": "PlayStation Plus #10"
       },
       {
         "file": "mag-4.webp",
-        "title": "Official UK Playstation Magazine (1999)"
+        "title": "PlayStation Magazine UK"
       },
       {
         "file": "mag-5.webp",
-        "title": "Official US PlayStation Magazine - Volume 3 Issue 1"
+        "title": "PlayStation Magazine v3"
       }
     ],
     "peripherals": [
@@ -2676,11 +2680,11 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Satellaview Tsushin Monthly FamicomTsushin May extra issue"
+        "title": "Satellaview Tsushin"
       },
       {
         "file": "mag-2.webp",
-        "title": "Satellaview Tsushin サテラビュー通信 1995年9月号"
+        "title": "Satellaview Tsushin '95"
       }
     ]
   },
@@ -2691,19 +2695,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Official Sega Saturn Magazine Issue 1"
+        "title": "Saturn Magazine #1"
       },
       {
         "file": "mag-2.webp",
-        "title": "Supplement Issue 53 SEGA MegaZone Saturn Guide"
+        "title": "Saturn Guide"
       },
       {
         "file": "mag-3.webp",
-        "title": "Sega Saturn Magazine - Issue 02"
+        "title": "Saturn Magazine #2"
       },
       {
         "file": "mag-4.webp",
-        "title": "Official Sega Saturn Magazine Issue 22 (Resident Evil 1)"
+        "title": "Saturn Magazine #22"
       }
     ],
     "peripherals": [
@@ -2752,15 +2756,15 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "LucasArts \"The Adventurer\" Magazine Complete 13 Issues"
+        "title": "The Adventurer"
       },
       {
         "file": "mag-2.webp",
-        "title": "Curse of Monkey Island, The Prima"
+        "title": "Monkey Island Guide"
       },
       {
         "file": "mag-3.webp",
-        "title": "The Adventurer magazine"
+        "title": "The Adventurer"
       }
     ]
   },
@@ -2794,7 +2798,15 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "SEGA Magazine Issue 12 Supplement - Megadrive 32X Guide"
+        "title": "Mean Machines Sega #29"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Sega Magazine 32X Guide"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Digital Pictures ad"
       }
     ],
     "hues": [
@@ -2820,7 +2832,7 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Beep 1986 04"
+        "title": "Beep"
       }
     ]
   },
@@ -2836,7 +2848,7 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Nintendo Player's Guide Super Game Boy"
+        "title": "Super Game Boy Guide"
       }
     ]
   },
@@ -2865,19 +2877,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Super Play Super Nintendo Magazine"
+        "title": "Super Play"
       },
       {
         "file": "mag-2.webp",
-        "title": "SNES Force - Issue 07"
+        "title": "SNES Force #7"
       },
       {
         "file": "mag-3.webp",
-        "title": "Super Gamer Issue 11"
+        "title": "Super Gamer #11"
       },
       {
         "file": "mag-4.webp",
-        "title": "SNES Force Issue 01"
+        "title": "SNES Force #1"
       }
     ],
     "peripherals": [
@@ -3032,11 +3044,11 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "NEC Super Grafx JAP Magazine Advertisements"
+        "title": "SuperGrafx Ads"
       },
       {
         "file": "mag-2.webp",
-        "title": "Daimakaimura (NEC Supergrafx) - Box, Manual and Card Scans"
+        "title": "Daimakaimura"
       }
     ]
   },
@@ -3229,7 +3241,7 @@
     "magazines": [
       {
         "file": "mag-2.webp",
-        "title": "Videopac Philips"
+        "title": "Videopac"
       }
     ]
   },
@@ -3333,19 +3345,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Oh! X 1990 - 1995"
+        "title": "Oh! X"
       },
       {
         "file": "mag-2.webp",
-        "title": "Oh! MZ 1986年12月号 X68000のハードウェア X1turboZ コンピュータによる立体映像"
+        "title": "Oh! MZ"
       },
       {
         "file": "mag-3.webp",
-        "title": "Oh!X 1991 08"
+        "title": "Oh! X '91"
       },
       {
         "file": "mag-4.webp",
-        "title": "Oh!X 1993 05"
+        "title": "Oh! X '93"
       }
     ]
   },
@@ -3361,23 +3373,23 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Antic Magazine Volume 7 Number 02 (Atari XE Game System)"
+        "title": "Antic v7 #2"
       },
       {
         "file": "mag-2.webp",
-        "title": "Atari Explorer - Volume 9 Number 6"
+        "title": "Atari Explorer v9 #6"
       },
       {
         "file": "mag-3.webp",
-        "title": "Atarian Issue 3 (October 1989)"
+        "title": "Atarian #3"
       },
       {
         "file": "mag-4.webp",
-        "title": "Antic Magazine Volume 6 Number 11 (Next Generation Game Machines)"
+        "title": "Antic v6 #11"
       },
       {
         "file": "mag-5.webp",
-        "title": "Antic Magazine Volume 7 Number 04 (Atari Home Turn-on)"
+        "title": "Antic v7 #4"
       }
     ],
     "peripherals": [
@@ -3448,19 +3460,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Your Sinclair 01-93"
+        "title": "Your Sinclair #37"
       },
       {
         "file": "mag-2.webp",
-        "title": "Sinclair User Magazine Issue 045"
+        "title": "Sinclair User #45"
       },
       {
         "file": "mag-3.webp",
-        "title": "Crash zx spectrum"
+        "title": "Crash #36"
       },
       {
         "file": "mag-4.webp",
-        "title": "Sinclair User Magazine Issue 058"
+        "title": "Sinclair User #58"
       }
     ],
     "peripherals": [
@@ -3476,19 +3488,19 @@
     "magazines": [
       {
         "file": "mag-1.webp",
-        "title": "Official Playstation 2 Magazine UK Special - Buyer's Guide"
+        "title": "PS2 Magazine Buyer's Guide"
       },
       {
         "file": "mag-2.webp",
-        "title": "PSM (PlayStation Magazine) 063"
+        "title": "PSM #63"
       },
       {
         "file": "mag-3.webp",
-        "title": "Official Playstation 2 Magazine Special Edition: The A-Z"
+        "title": "PS2 Magazine A-Z"
       },
       {
         "file": "mag-4.webp",
-        "title": "Official UK Playstation 2 Magazine - Issue 003"
+        "title": "PS2 Magazine #3"
       }
     ],
     "peripherals": [

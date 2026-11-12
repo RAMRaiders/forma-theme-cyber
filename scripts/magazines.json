@@ -1,5 +1,13 @@
 {
-  "sega32x": ["sega-magazine-uk-12-supplement-megadrive-32-x-guide"],
+  "sega32x": [
+    "mean-machines-sega-magazine-29",
+    "sega-magazine-uk-12-supplement-megadrive-32-x-guide",
+    {
+      "url": "https://tse1.mm.bing.net/th/id/OIP.B1yD2CNNVH7MS8svfLGcMAHaKK?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+      "title": "Digital Pictures on the Megadrive 32X (advert, 1995)",
+      "page": "https://tse1.mm.bing.net/th/id/OIP.B1yD2CNNVH7MS8svfLGcMAHaKK"
+    }
+  ],
   "megadrive": [
     "segamegadriveadvancedgaming05",
     "sega-force-10",

@@ -21,6 +21,7 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **megadrive**: Justifier light gun, [Konami-Justifiers-Genesis-Set.jpg](https://commons.wikimedia.org/wiki/File:Konami-Justifiers-Genesis-Set.jpg), by Evan-Amos, Public domain.
 - **mastersystem**: Control Pads, [Sega-Master-System-Controllers.jpg](https://commons.wikimedia.org/wiki/File:Sega-Master-System-Controllers.jpg), by Evan-Amos, Public domain.
 - **mastersystem**: Control Stick, [Sega-Master-System-Control-Stick.jpg](https://commons.wikimedia.org/wiki/File:Sega-Master-System-Control-Stick.jpg), by Evan-Amos, Public domain.
+- **mastersystem**: 3-D Glasses, [Sega-Masters-Sys-3D-Glasses.jpg](https://commons.wikimedia.org/wiki/File:Sega-Masters-Sys-3D-Glasses.jpg), by Evan-Amos, Public domain.
 - **saturn**: 3D Control Pad, [Sega-Saturn-3D-Controller.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-3D-Controller.jpg), by Evan-Amos, Public domain.
 - **saturn**: Control Pad, [Sega-Saturn-Controller-NA-Mk-II-FL.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-Controller-NA-Mk-II-FL.jpg), by Evan-Amos, Public domain.
 - **saturn**: Net Link keyboard, [Sega-Saturn-Net-Link-US-Keyboard.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-Net-Link-US-Keyboard.jpg), by Evan-Amos, Public domain.

@@ -6,7 +6,8 @@
  * `{ "url": <a picture, or a scanned PDF whose first picture is its cover>, "title": …,
  * "page": <where it is credited> }` (Atarimania's scans, say). Each cover is written as
  * public/systems/<id>/mag-<n>.webp, and listed in public/systems/art.json as `magazines`, with
- * its title; public/systems/MAGAZINES.md says where each came from.
+ * its short name from scripts/magazine-names.json (its full title without one);
+ * public/systems/MAGAZINES.md says where each came from, by full title.
  *
  *   node scripts/build-magazines.mjs
  */
@@ -19,6 +20,8 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SYSTEMS = join(ROOT, 'public', 'systems');
 const ART = join(SYSTEMS, 'art.json');
 const UA = { 'User-Agent': 'forma-theme-cyber build script' };
+/** Short names to show, by full title (`Mean Machines Sega #29`); the credits keep the full one. */
+const NAMES = JSON.parse(readFileSync(join(ROOT, 'scripts', 'magazine-names.json'), 'utf8'));
 /** Covers stand about 11rem tall: twice that in pixels at 1080p, for a sharp print. */
 const HEIGHT = 520;
 
@@ -110,8 +113,9 @@ async function fetchCover(id, item, file) {
     .toFile(join(SYSTEMS, id, file));
   const page = typeof item === 'object' ? item.page : `https://archive.org/details/${item}`;
   credits.push(`- **${id}**: [${title}](${page})`);
-  console.log(`${id}: ${title}`);
-  return { file, title };
+  const name = NAMES[title] ?? title;
+  console.log(`${id}: ${name}${name === title ? ' (no short name in magazine-names.json)' : ''}`);
+  return { file, title: name };
 }
 
 /** The system's entry in art.json, made if it has no art of its own (no logo, no photo). */

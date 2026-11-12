@@ -182,7 +182,9 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **scummvm**: LucasArts "The Adventurer" Magazine Complete 13 Issues
 - **scummvm**: Curse of Monkey Island, The Prima
 - **scummvm**: The Adventurer magazine
-- **sega32x**: SEGA Magazine Issue 12 Supplement - Megadrive 32X Guide
+- **sega32x**: [Mean Machines Sega Magazine Issue 29](https://archive.org/details/mean-machines-sega-magazine-29)
+- **sega32x**: [SEGA Magazine Issue 12 Supplement - Megadrive 32X Guide](https://archive.org/details/sega-magazine-uk-12-supplement-megadrive-32-x-guide)
+- **sega32x**: [Digital Pictures on the Megadrive 32X (advert, 1995)](https://tse1.mm.bing.net/th/id/OIP.B1yD2CNNVH7MS8svfLGcMAHaKK)
 - **sg1000**: Beep 1986 04
 - **sgb**: Nintendo Player's Guide Super Game Boy
 - **snes**: [Super Play Super Nintendo Magazine](https://archive.org/details/sup01)
