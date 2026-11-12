@@ -379,15 +379,17 @@ describe('the Collector view', () => {
       await Promise.resolve();
       await Promise.resolve();
     };
+    // The list opens with the shelf shown a moment: the fan art comes as it goes.
+    await vi.advanceTimersByTimeAsync(2100);
     imgs()[0]!.dispatchEvent(new Event('load'));
     await settle();
     expect(imgs()[0]!.classList.contains('waiting')).toBe(false);
-    await vi.advanceTimersByTimeAsync(2100);
     v.select(1);
-    // Not until the selection pauses, ahead of the rest of the game.
+    // Not while the shelf shows: as it goes, under the fade from the dark.
     expect(imgs()).toHaveLength(1);
-    await vi.advanceTimersByTimeAsync(230);
-    expect(v.root.classList.contains('arriving')).toBe(false);
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(imgs()).toHaveLength(1);
+    await vi.advanceTimersByTimeAsync(450);
     const [first, next] = imgs();
     expect(next?.classList.contains('waiting')).toBe(true);
     // The old one stays whole while the new one loads and fades in over it.
@@ -411,11 +413,11 @@ describe('the Collector view', () => {
       await Promise.resolve();
       await Promise.resolve();
     };
+    await vi.advanceTimersByTimeAsync(2100);
     imgs()[0]!.dispatchEvent(new Event('load'));
     await settle();
-    await vi.advanceTimersByTimeAsync(2100);
     v.select(1);
-    await vi.advanceTimersByTimeAsync(230);
+    await vi.advanceTimersByTimeAsync(1450);
     const next = imgs()[1]!;
     next.dispatchEvent(new Event('load'));
     await settle();
@@ -431,13 +433,13 @@ describe('the Collector view', () => {
       game(3, 'Quake', art)
     ]);
     const imgs = () => [...v.root.querySelectorAll<HTMLImageElement>('.collector-backdrop img')];
+    await vi.advanceTimersByTimeAsync(2100);
     expect(imgs()).toHaveLength(1);
     imgs()[0]!.dispatchEvent(new Event('load'));
     await Promise.resolve();
     await Promise.resolve();
-    await vi.advanceTimersByTimeAsync(2100);
     v.select(1);
-    await vi.advanceTimersByTimeAsync(230);
+    await vi.advanceTimersByTimeAsync(1450);
     expect(imgs()).toHaveLength(2);
     // Showing the same game once it has rested adds no second picture of it.
     await vi.advanceTimersByTimeAsync(750);
@@ -445,7 +447,7 @@ describe('the Collector view', () => {
     // On to another before Doom's had loaded: Doom's is dropped.
     const doom = imgs()[1];
     v.select(2);
-    await vi.advanceTimersByTimeAsync(230);
+    await vi.advanceTimersByTimeAsync(1450);
     expect(imgs()).not.toContain(doom);
     expect(imgs()).toHaveLength(2);
   });
@@ -650,7 +652,7 @@ describe('the Collector view', () => {
     expect(top('Game 2')).toBe('3.2rem');
     await vi.advanceTimersByTimeAsync(500);
     v.select(29);
-    expect(text('.spine-row.selected .title')).toEqual(['Game 30']);
+    expect(text('.spine-row[aria-selected="true"] .title')).toEqual(['Game 30']);
     expect(top('Game 30')).toBe('-3.2rem'); // one step up, not all the way down the list
     tall.mockRestore();
   });
@@ -682,7 +684,7 @@ describe('the Collector view', () => {
     expect(v.root.querySelectorAll('.spine-row.pictured .spine-pic')).toHaveLength(1);
     await vi.advanceTimersByTimeAsync(500);
     v.select(1);
-    expect(text('.spine-row.selected .title')).toEqual(['Doom']);
+    expect(text('.spine-row[aria-selected="true"] .title')).toEqual(['Doom']);
     // The label at once, lit over the shelf; the rest of the showcase once the selection rests.
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
     await vi.advanceTimersByTimeAsync(600);

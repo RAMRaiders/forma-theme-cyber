@@ -261,6 +261,18 @@ export class CollectorView {
   #shelfRoom = 0;
   /** The rows, moved as one so the selected sits in the middle: a transform, gliding. */
   readonly #track = el('div', { class: 'track' });
+  /**
+   * The selection's frame, still in the shelf's middle, the rows gliding under it (and the rows
+   * above and below dimmed by its two panels): a step only moves the track. A selected row
+   * restyled (bigger, brighter, framed) was painted again at each step, it and the last one.
+   */
+  readonly #lens = el(
+    'div',
+    { class: 'lens', 'aria-hidden': 'true' },
+    el('i', { class: 'above' }),
+    el('i', { class: 'frame' }),
+    el('i', { class: 'below' })
+  );
   readonly #showcase = el('section', { class: 'showcase' });
   readonly #dossier = el('aside', { class: 'dossier' });
   /** Over it all while the scraper is on the selected game. */
@@ -336,6 +348,7 @@ export class CollectorView {
   previews = true;
   #dropTimer: ReturnType<typeof setTimeout> | undefined;
   #landing: ReturnType<typeof setTimeout> | undefined;
+  #backdropDue: Game | null = null;
   /** A video asked for, until it is stopped. */
   #video = false;
   /** Its video, stopped while the shelf is up: it plays again when the shelf goes. */
@@ -351,7 +364,7 @@ export class CollectorView {
   constructor(options: CollectorOptions) {
     this.#options = options;
     window.addEventListener('resize', () => (this.#shelfH = 0));
-    this.#shelf.append(this.#track);
+    this.#shelf.append(this.#track, this.#lens);
     this.root.append(
       this.#backdrop,
       this.#navPic,
@@ -404,7 +417,11 @@ export class CollectorView {
   /** The shelf's room above the first row, so any row can sit in the middle. */
   #measure(): void {
     const row = this.#rowRem * remPx();
-    this.#pad = Math.max(0, (this.#shelfHeight - row) / 2);
+    const pad = Math.max(0, (this.#shelfHeight - row) / 2);
+    if (pad === this.#pad) return;
+    this.#pad = pad;
+    // Where the selected row sits: the lens there.
+    this.#shelf.style.setProperty('--pad', `${Math.round(pad)}px`);
   }
 
   /**
@@ -422,6 +439,12 @@ export class CollectorView {
     clearTimeout(this.#dropTimer);
     this.#dropTimer = setTimeout(() => {
       perfMark('drop');
+      if (this.#backdropDue && this.#backdropDue.id === this.selected?.id) {
+        const due = this.#backdropDue;
+        this.#backdropDue = null;
+        this.root.classList.remove('browsing');
+        this.#backdropFor(due);
+      }
       // The details faded in from the dark, a moment: opacity only, one layer.
       this.root.classList.add('landing');
       clearTimeout(this.#landing);
@@ -604,12 +627,11 @@ export class CollectorView {
         node.classList.remove('tinted');
         if (game) this.#spineColour(game, node);
       }
+      // Which is selected, for screen readers only: the lens shows it (no style follows it).
       const selected = i === (loops ? at : this.#selected);
-      node.classList.toggle('selected', selected);
-      // The game's colour on the selected spine alone (see #paint).
-      if (selected && this.#colour) node.style.setProperty('--game', this.#colour);
-      else node.style.removeProperty('--game');
-      node.setAttribute('aria-selected', String(selected));
+      if (node.getAttribute('aria-selected') !== String(selected)) {
+        node.setAttribute('aria-selected', String(selected));
+      }
     }
     if (this.#pending && this.selected) this.#showSelected();
   }
@@ -1135,15 +1157,13 @@ export class CollectorView {
 
   /**
    * The selected game's colour (`--game`) on the parts that show it: the showcase (the label
-   * and the bays), the dossier, the shelf's TV and its selected spine. Not on the whole view: a
+   * and the bays), the dossier, the shelf's TV and its lens. Not on the whole view: a
    * custom property changed there restyled every spine on the shelf at each game (a Pi frame
    * or more). `null`: the view's own (neon) again.
    */
   #paint(colour: string | null): void {
     this.#colour = colour;
-    const selected = this.#shelf.querySelector<HTMLElement>('.spine-row.selected');
-    for (const part of [this.#showcase, this.#dossier, this.#navPic, selected]) {
-      if (!part) continue;
+    for (const part of [this.#showcase, this.#dossier, this.#navPic, this.#lens]) {
       if (colour) part.style.setProperty('--game', colour);
       else part.style.removeProperty('--game');
     }
@@ -1195,6 +1215,14 @@ export class CollectorView {
    * it is covered. Both are opaque, so the screen stays as bright all through the fade.
    */
   #backdropFor(game: Game): void {
+    // While the shelf shows, the fan art waits for it to go, and changes under the fade from the
+    // dark then: crossfaded at each stop under the shelf, two full-screen pictures were drawn
+    // over each other at every frame of it, and the new one sent to the GPU, as the shelf moved.
+    if (this.root.classList.contains('browsing')) {
+      this.#backdropDue = game;
+      return;
+    }
+    this.#backdropDue = null;
     const src = this.#fanartOf(game);
     if (src === this.#backdropSrc) return;
     this.#backdropSrc = src;

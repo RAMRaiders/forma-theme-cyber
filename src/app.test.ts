@@ -457,7 +457,7 @@ describe('the default theme', () => {
     fire('settings:changed', { scope: 'theme', key: 'gamesView', value: 'collector' });
     await vi.waitFor(() => expect(root.querySelector('.collector')).not.toBeNull());
     expect(root.querySelector('.games')).toBeNull();
-    expect(text('.spine-row.selected .title')).toHaveLength(1);
+    expect(text('.spine-row[aria-selected="true"] .title')).toHaveLength(1);
     expect(text('.hint')).toContain('◀ ▶Turn');
     const box = root.querySelector<HTMLElement>('.cbox')!;
     await press('right');
@@ -466,7 +466,7 @@ describe('the default theme', () => {
     expect(box.dataset.pose).toBe('front');
     // Up and down still move along the shelf.
     await press('down');
-    expect(text('.spine-row.selected .title')).toHaveLength(1);
+    expect(text('.spine-row[aria-selected="true"] .title')).toHaveLength(1);
     // A plays it there and then, the shelf still showing.
     expect(root.querySelector('.collector.browsing')).not.toBeNull();
     const invoke = vi.spyOn(backend, 'invoke');
@@ -480,8 +480,8 @@ describe('the default theme', () => {
     await press('confirm');
     await vi.waitFor(() => expect(root.querySelector('.games')).not.toBeNull());
     fire('settings:changed', { scope: 'theme', key: 'gamesView', value: 'collector' });
-    await vi.waitFor(() => expect(text('.spine-row.selected .title')).toHaveLength(1));
-    const picked = text('.spine-row.selected .title');
+    await vi.waitFor(() => expect(text('.spine-row[aria-selected="true"] .title')).toHaveLength(1));
+    const picked = text('.spine-row[aria-selected="true"] .title');
     const invoke = backend.invoke.bind(backend);
     vi.spyOn(backend, 'invoke').mockImplementation(async (command, args) => {
       const answer = await invoke(command, args);
@@ -492,11 +492,11 @@ describe('the default theme', () => {
       return { ...browse, listing: { ...browse.listing, items } };
     });
     const rows = () => [...root.querySelectorAll<HTMLElement>('.spine-row')];
-    const at = () => rows().findIndex((r) => r.classList.contains('selected'));
+    const at = () => rows().findIndex((r) => r.getAttribute('aria-selected') === 'true');
     expect(at()).toBe(0);
     fire('library:changed', null);
     await vi.waitFor(() => expect(at()).toBe(rows().length - 1));
-    expect(text('.spine-row.selected .title')).toEqual(picked);
+    expect(text('.spine-row[aria-selected="true"] .title')).toEqual(picked);
   });
 
   it('draws a game again when its pictures are replaced, from new addresses', async () => {
@@ -516,7 +516,9 @@ describe('the default theme', () => {
     await press('confirm');
     await vi.waitFor(() => expect(root.querySelector('.games')).not.toBeNull());
     fire('settings:changed', { scope: 'theme', key: 'gamesView', value: 'collector' });
-    await vi.waitFor(() => expect(root.querySelector('.spine-row.selected')).not.toBeNull());
+    await vi.waitFor(() =>
+      expect(root.querySelector('.spine-row[aria-selected="true"]')).not.toBeNull()
+    );
     await vi.waitFor(() => expect(asked.mock.calls.some((c) => c[1] !== 'boxside')).toBe(true));
     const game = asked.mock.calls.filter((c) => c[1] !== 'boxside').at(-1)![0];
     asked.mockClear();

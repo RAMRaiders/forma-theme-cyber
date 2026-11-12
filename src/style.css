@@ -4224,6 +4224,16 @@ kbd {
   transition: opacity 200ms ease;
 }
 
+/* Everything that fades as the shelf comes and goes, or as a game is drawn (bay-in), on a layer
+   of its own for good: made for each fade and dropped after it, each was painted twice more at
+   every hand-off between the shelf and the game (a long frame each on a Pi). Fading is then the
+   compositor's alone. */
+.collector .showcase > .bay:not(.case),
+.collector .slab-label,
+.collector .dossier {
+  will-change: opacity;
+}
+
 /* The footage and the story faded out under the shelf (the TV stands in their place): seen
    dimmed through it, they were drawn at every frame of it for nothing (measured: a fifth of the
    shelf's slow frames on a Pi). Faded, not hidden: their layers are kept, nothing painted anew
@@ -4661,9 +4671,7 @@ kbd {
   font-size: 0.95rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  /* No transition: a row animating its own scale or opacity gets a layer of its own for it, made
-     and dropped at every step while the track moves, which flickered on a Pi. */
-  opacity: 0.68;
+  /* Never restyled as the selection moves (the lens shows it): no layer, no paint per step. */
 }
 
 .spine-row .band {
@@ -4729,11 +4737,6 @@ kbd {
   clip-path: inset(50%);
 }
 
-.spine-row.pictured.selected,
-.spine-row.marked.selected {
-  border-color: var(--game);
-}
-
 .spine-row .title {
   flex: 1;
   min-width: 0;
@@ -4742,13 +4745,42 @@ kbd {
   text-overflow: ellipsis;
 }
 
-/* The one picked slides out of the stack. */
-.spine-row.selected {
-  transform: scale(1.05);
-  opacity: 1;
-  color: #fff;
-  border-color: var(--game);
-  /* Inside it only: a glow spilling out ghosted on the Pi, and was redrawn at every step. */
+/* The selection: a still frame in the shelf's middle, the rows gliding under it, those above
+   and below it dimmed by two still panels (collector.ts, the lens). Nothing on a row changes as
+   the selection moves: only the track does. */
+.shelf .lens {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+}
+
+.shelf .lens i {
+  position: absolute;
+  left: calc(var(--mid) - var(--spine-len) / 2 - 0.2rem);
+  width: calc(var(--spine-len) + 0.4rem);
+}
+
+.shelf .lens .above,
+.shelf .lens .below {
+  background: rgb(3 5 11 / 34%);
+}
+
+.shelf .lens .above {
+  top: 0;
+  height: calc(var(--pad, 50%) - 0.15rem);
+}
+
+.shelf .lens .below {
+  top: calc(var(--pad, 50%) + var(--spine-h) + 0.15rem);
+  bottom: 0;
+}
+
+.shelf .lens .frame {
+  top: calc(var(--pad, 50%) - 0.15rem);
+  height: calc(var(--spine-h) + 0.3rem);
+  border: 1px solid var(--game);
+  border-radius: 0.25rem;
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 10%);
 }
 
