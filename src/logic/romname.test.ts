@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { flaggedRegions, languageFlag, regionFlag, romName } from './romname.js';
+import { flaggedRegions, gameTags, languageFlag, patchBy, regionFlag, romName } from './romname.js';
 
 describe('a ROM’s file name', () => {
   it('gives No-Intro’s regions, languages and revision', () => {
@@ -102,5 +102,61 @@ describe('a ROM’s file name', () => {
     expect(regionFlag('wor')).toBeNull();
     expect(languageFlag('en')).toBe('./flags/gb.svg');
     expect(languageFlag('xx')).toBeNull();
+  });
+});
+
+describe('gameTags', () => {
+  const dump = (name: string, status = 'verified') => ({ status, name });
+
+  it('takes the catalogue’s name first, whatever the file is called', () => {
+    const tags = gameTags({
+      path: 'sonic.md',
+      dump: dump('Sonic the Hedgehog (USA) (Proto 2)')
+    });
+    expect(tags).toEqual({
+      regions: ['us'],
+      languages: [],
+      version: 'Proto 2',
+      status: null,
+      fromCatalogue: true
+    });
+  });
+
+  it('fills from the file what the catalogue leaves out; its version is the catalogue’s alone', () => {
+    const tags = gameTags({
+      path: 'Mario (Europe) (En,Fr,De) (Rev 1) [h].nes',
+      dump: dump('Super Mario Bros. (Europe)')
+    });
+    expect(tags.regions).toEqual(['eu']);
+    expect(tags.languages).toEqual(['en', 'fr', 'de']);
+    // Matched: the original release, whatever the file said.
+    expect(tags.version).toBeNull();
+    expect(tags.status).toBeNull();
+  });
+
+  it('reads the file alone when not catalogued or not checked', () => {
+    const path = 'Cave Story (World) (Aftermarket) (Unl).zip';
+    expect(gameTags({ path, dump: dump('ignored (Japan)', 'notCatalogued') })).toEqual({
+      ...romName(path),
+      fromCatalogue: false
+    });
+    expect(gameTags({ path, dump: null }).fromCatalogue).toBe(false);
+  });
+
+  it('knows a kiosk, a promo, a debug build and an alpha', () => {
+    for (const tag of ['Kiosk', 'Promo', 'Debug', 'Alpha 1', 'Demo 2']) {
+      expect(romName(`Game (USA) (${tag}).bin`).version).toBe(tag);
+    }
+  });
+});
+
+describe('patchBy', () => {
+  it('credits who made a fan translation, as its name does', () => {
+    expect(patchBy('Bare Knuckle III (Japan) [T-En by Twilight Translations v1.0].zip')).toBe(
+      'Twilight Translations v1.0'
+    );
+    expect(patchBy('A (Japan) [T-En by Ann & Bo v0.99] [n].zip')).toBe('Ann & Bo v0.99');
+    expect(patchBy('Bare Knuckle III (Japan) (Translated En).zip')).toBeNull();
+    expect(patchBy('Sonic (USA) (by Sega).zip')).toBeNull();
   });
 });

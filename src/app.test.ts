@@ -88,7 +88,7 @@ describe('the default theme', () => {
     expect(text('.hint')).toEqual(['AOpen', 'StartMenu']);
   });
 
-  it('shows a system with a logo as its logo in the breadcrumb', async () => {
+  it('names a system in the breadcrumb, even one with a logo', async () => {
     const withLogo = new InfoStore((url) =>
       url === './systems/art.json'
         ? Promise.resolve({ nes: { logo: 'logo.webp', logoDark: true, picture: null } })
@@ -97,15 +97,10 @@ describe('the default theme', () => {
     const { press, root, text } = await start([], {}, withLogo);
     await press('confirm');
     await press('confirm');
-    await vi.waitFor(() => expect(root.querySelector('.trail .crumb-logo')).not.toBeNull());
-    const logo = root.querySelector<HTMLImageElement>('.trail .crumb.current .crumb-logo')!;
-    expect(logo.getAttribute('src')).toBe('./systems/nes/logo-small.webp');
-    expect(logo.alt).toBe('Nintendo Entertainment System');
-    expect(logo.classList.contains('dark')).toBe(true);
-    expect(text('.trail .crumb')[0]).toBe('Consoles');
-    // A logo that will not load: the name instead.
-    logo.dispatchEvent(new Event('error'));
-    expect(text('.trail .crumb.current')).toEqual(['Nintendo Entertainment System']);
+    await vi.waitFor(() =>
+      expect(text('.trail .crumb')).toEqual(['Consoles', 'Nintendo Entertainment System'])
+    );
+    expect(root.querySelector('.trail .crumb-logo')).toBeNull();
   });
 
   it('goes category → system → games, and back to where it was', async () => {
@@ -121,13 +116,16 @@ describe('the default theme', () => {
       'Homebrew'
     ]);
     // The system's own page: Cyber's info, its maker, a curiosity, and its board behind.
+    // The description, then the story's chapters: one text, each its own paragraph.
     await vi.waitFor(() =>
-      expect(text('.system-panel > :not(.leaving) .description')).toEqual(['An 8-bit console.'])
+      expect(text('.system-panel > :not(.leaving) .reading .para')).toEqual([
+        'An 8-bit console.',
+        'It began.',
+        'It sold.',
+        'It lasted.'
+      ])
     );
-    // The description first; the story's chapters take turns with it.
-    expect(text('.system-panel > :not(.leaving) .reading .description')).toEqual([
-      'An 8-bit console.'
-    ]);
+    expect(document.querySelector('.system-panel .reading .page')).toBeNull();
     // Beside the console: its maker.
     expect(text('.system-panel > :not(.leaving) .maker')).toEqual(['Nintendo']);
     // Left of the console, its hardware.
@@ -135,8 +133,8 @@ describe('the default theme', () => {
     expect(text('.system-panel > :not(.leaving) .hardware dd')).toEqual(['Ricoh 2A03']);
     // Not how many of its games are here: the strip of systems says.
     expect(root.querySelector('.system-panel .owned')).toBeNull();
-    // Switched on as it comes: its logo or name, lit, over the page a moment.
-    expect(root.querySelector('.system-panel > .boot')).not.toBeNull();
+    // Its page just shows: the system is switched on as its games open, not as it comes.
+    expect(document.querySelector('.boot')).toBeNull();
     expect(text('.system-panel > :not(.leaving) > .fact:not(.leaving) p')).toEqual(['First fact.']);
     await press('north');
     expect(text('.system-panel > :not(.leaving) > .fact:not(.leaving) p')).toEqual([
@@ -158,6 +156,8 @@ describe('the default theme', () => {
     await press('up');
 
     await press('confirm'); // A opens it at once, the strip or not
+    // Switched on as its games open: its logo or name, lit, over the whole screen a moment.
+    expect(document.querySelector('body > .boot.whole')).not.toBeNull();
     expect(text('.trail .crumb')).toEqual(['Consoles', 'Nintendo Entertainment System']);
     // Breadcrumbs: the step you are on is the lit one.
     expect(text('.trail .crumb.current')).toEqual(['Nintendo Entertainment System']);
@@ -462,7 +462,7 @@ describe('the default theme', () => {
     fire('settings:changed', { scope: 'theme', key: 'gamesView', value: 'collector' });
     await vi.waitFor(() => expect(root.querySelector('.collector')).not.toBeNull());
     expect(root.querySelector('.games')).toBeNull();
-    expect(text('.spine-row.selected .title')).toHaveLength(1);
+    expect(text('.spine-row[aria-selected="true"] .title')).toHaveLength(1);
     expect(text('.hint')).toContain('◀ ▶Turn');
     const box = root.querySelector<HTMLElement>('.cbox')!;
     await press('right');
@@ -471,7 +471,7 @@ describe('the default theme', () => {
     expect(box.dataset.pose).toBe('front');
     // Up and down still move along the shelf.
     await press('down');
-    expect(text('.spine-row.selected .title')).toHaveLength(1);
+    expect(text('.spine-row[aria-selected="true"] .title')).toHaveLength(1);
     // A plays it there and then, the shelf still showing.
     expect(root.querySelector('.collector.browsing')).not.toBeNull();
     const invoke = vi.spyOn(backend, 'invoke');
@@ -485,8 +485,8 @@ describe('the default theme', () => {
     await press('confirm');
     await vi.waitFor(() => expect(root.querySelector('.games')).not.toBeNull());
     fire('settings:changed', { scope: 'theme', key: 'gamesView', value: 'collector' });
-    await vi.waitFor(() => expect(text('.spine-row.selected .title')).toHaveLength(1));
-    const picked = text('.spine-row.selected .title');
+    await vi.waitFor(() => expect(text('.spine-row[aria-selected="true"] .title')).toHaveLength(1));
+    const picked = text('.spine-row[aria-selected="true"] .title');
     const invoke = backend.invoke.bind(backend);
     vi.spyOn(backend, 'invoke').mockImplementation(async (command, args) => {
       const answer = await invoke(command, args);
@@ -497,11 +497,11 @@ describe('the default theme', () => {
       return { ...browse, listing: { ...browse.listing, items } };
     });
     const rows = () => [...root.querySelectorAll<HTMLElement>('.spine-row')];
-    const at = () => rows().findIndex((r) => r.classList.contains('selected'));
+    const at = () => rows().findIndex((r) => r.getAttribute('aria-selected') === 'true');
     expect(at()).toBe(0);
     fire('library:changed', null);
     await vi.waitFor(() => expect(at()).toBe(rows().length - 1));
-    expect(text('.spine-row.selected .title')).toEqual(picked);
+    expect(text('.spine-row[aria-selected="true"] .title')).toEqual(picked);
   });
 
   it('draws a game again when its pictures are replaced, from new addresses', async () => {
@@ -521,7 +521,9 @@ describe('the default theme', () => {
     await press('confirm');
     await vi.waitFor(() => expect(root.querySelector('.games')).not.toBeNull());
     fire('settings:changed', { scope: 'theme', key: 'gamesView', value: 'collector' });
-    await vi.waitFor(() => expect(root.querySelector('.spine-row.selected')).not.toBeNull());
+    await vi.waitFor(() =>
+      expect(root.querySelector('.spine-row[aria-selected="true"]')).not.toBeNull()
+    );
     await vi.waitFor(() => expect(asked.mock.calls.some((c) => c[1] !== 'boxside')).toBe(true));
     const game = asked.mock.calls.filter((c) => c[1] !== 'boxside').at(-1)![0];
     asked.mockClear();

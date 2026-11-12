@@ -6,11 +6,11 @@ import { el } from './dom.js';
  * library notices the new files on its own time (slow on a Pi), then Cyber reloads. Only a
  * safety: the redraw ends the wait.
  */
-const REDRAW_MS = 30000;
+const REDRAW_MS = 8000;
 /** Drawn again while the scrape was still on: how long a later redraw may still come. */
-const EARLY_MS = 8000;
+const EARLY_MS = 3000;
 /** Longest wait for its new pictures to load: a safety, they normally end it. */
-const LOAD_MS = 20000;
+const LOAD_MS = 5000;
 /** How long the reveal takes, and how long "nothing found" stays. */
 const REVEAL_MS = 900;
 const VERDICT_MS = 1800;
@@ -44,7 +44,11 @@ export class Scan {
   readonly #title = el('span', { class: 'scan-name' });
   readonly #phase = el('span', { class: 'scan-phase' });
 
-  constructor() {
+  /**
+   * `reveal`: shows the game `id` in its own way once its new pictures are in (returns whether
+   * it did), the scan then going at once; else the beam crosses once more.
+   */
+  constructor(private readonly reveal?: (id: number) => boolean | Promise<boolean>) {
     this.root.hidden = true;
     this.root.append(
       el('span', { class: 'scan-shade' }),
@@ -80,6 +84,11 @@ export class Scan {
       return;
     }
     if (status.running && game && status.current === game.name) this.#start(game, status);
+  }
+
+  /** A scraper run is on the game `id`, or has just finished with it and is showing what came. */
+  busyWith(id: number): boolean {
+    return this.#state !== 'idle' && this.#game === id;
   }
 
   /**
@@ -194,6 +203,26 @@ export class Scan {
 
   /** All in: the beam crosses once more and the scan lifts off the new pictures. */
   #reveal(): void {
+    const game = this.#game;
+    if (game !== null && this.reveal) {
+      // The view's own reveal, once it is ready (its logo loaded): the scan stays till then.
+      this.#state = 'revealing';
+      this.#phase.textContent = 'Ready';
+      const round = ++this.#round;
+      void Promise.resolve(this.reveal(game))
+        .catch(() => false)
+        .then((shown) => {
+          if (round !== this.#round || this.#game !== game) return;
+          if (shown) this.#stop();
+          else this.#crossOnce();
+        });
+      return;
+    }
+    this.#crossOnce();
+  }
+
+  /** The beam crosses once more and the scan lifts off the new pictures. */
+  #crossOnce(): void {
     this.#state = 'revealing';
     this.#phase.textContent = 'Ready';
     this.root.classList.add('reveal');

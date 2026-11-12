@@ -1,44 +1,126 @@
 # Magazines
 
-Front pages of magazines about each system from the Internet
-Archive, shown on the systems screen. Built by `scripts/build-magazines.mjs`.
+Front pages of magazines about each system, from the Internet Archive, shown on the systems
+screen. Built by `scripts/build-magazines.mjs`.
 
+- **nes**: [Nintendo Power Issue #1(July/August 1988)](https://archive.org/details/nintendo_power_issue1)
+- **nes**: [Nintendo Fun Club News Issue 03 Fall 1987](https://archive.org/details/Nintendo_Fun_Club_News_Issue_03_Fall_1987)
+- **nes**: [Total Nintendo Magazine UK Issue 2 February 1992](https://archive.org/details/total-nintendo-uk-issue-2)
+- **nes**: [Nintendo Power Issue 002 September October 1988](https://archive.org/details/NintendoPowerIssue002SeptemberOctober1988)
+- **nes**: [Nintendo Power Issue #3 November December 1988](https://archive.org/details/nintendopowerissue003novemberdecember1988)
+- **gbc**: [Total Game Boy Issue 01](https://archive.org/details/Total_Game_Boy_Issue_01)
+- **gbc**: [GBX Game Boy Xtreme 06](https://archive.org/details/gbx-2001-12-06)
+- **gbc**: [Total Game Boy Issue 03](https://archive.org/details/Total_Game_Boy_Issue_03)
+- **psx**: [Official US PlayStation Magazine - Volume 1 Issue 1](https://archive.org/details/Official_US_PlayStation_Magazine_Volume_1_Issue_1_1997-10_Ziff_Davis_US)
+- **psx**: [PSM (PlayStation Magazine) 001](https://archive.org/details/PSM-001)
+- **psx**: [Playstation Plus Vol 1 Issue 10](https://archive.org/details/playstation-plus-vol-1-issue-10)
+- **psx**: [Official UK Playstation Magazine (1999)](https://archive.org/details/Official_UK_Playstation_Magazine_1999_Future_Publishing_GB_platinum_special)
+- **psx**: [Official US PlayStation Magazine - Volume 3 Issue 1](https://archive.org/details/Official_US_PlayStation_Magazine_Volume_3_Issue_1_1999-10_Ziff_Davis_US)
+- **ps2**: [Official Playstation 2 Magazine UK Special - Buyer's Guide](https://archive.org/details/official-playstation-2-magazine-uk-special-buyers-guide)
+- **ps2**: [PSM (PlayStation Magazine) 063](https://archive.org/details/PSM-063)
+- **ps2**: [Official Playstation 2 Magazine Special Edition: The A-Z](https://archive.org/details/ops2specialeditiontheaz)
+- **ps2**: [Official UK Playstation 2 Magazine - Issue 003](https://archive.org/details/Official_UK_Playstation_2_Magazine_Issue_003_2001_01_Future_Publishing_GB)
+- **saturn**: [Official Sega Saturn Magazine Issue 1](https://archive.org/details/Official_Sega_Saturn_Magazine_001)
+- **saturn**: [Supplement Issue 53 SEGA MegaZone Saturn Guide](https://archive.org/details/sup53saturnguide)
+- **saturn**: [Sega Saturn Magazine - Issue 02](https://archive.org/details/Sega_Saturn_Magazine_Issue_02_1995-12_EMAP_Images_GB)
+- **saturn**: [Official Sega Saturn Magazine Issue 22 (Resident Evil 1)](https://archive.org/details/official-sega-saturn-magazine-issue-22)
+- **dreamcast**: [EDGE #067 (1999) - Supplement: Dreamcast](https://archive.org/details/EDGE.N067.1999.01.Supplement.Dreamcast)
+- **dreamcast**: [Official Dreamcast Magazine, The - Special Issue](https://archive.org/details/Official_Dreamcast_Magazine_The_Special_Issue_1999-10_Dennis_Publishing_GB)
+- **dreamcast**: [Dreamcast Monthly - Issue 1](https://archive.org/details/Dreamcast_Monthly_Issue_1_1999-09_Quay_Publishing_GB)
+- **dreamcast**: [Official Dreamcast Magazine, The - Issue 01](https://archive.org/details/Official_Dreamcast_Magazine_The_Issue_01_1999-09_Imagine_Publishing_US)
+- **neogeo**: [Neo Geo Freak 0001](https://archive.org/details/neogeofreak0001)
+- **neogeo**: [Gamest 199](https://archive.org/details/gamest-199)
+- **neogeo**: [Play Meter - Volume 24, Number 4 - March 1998](https://archive.org/details/play-meter-volume-24-number-4-march-1998)
+- **neogeo**: [Neo Geo Freak 0030](https://archive.org/details/neogeofreak0030)
+- **neogeo**: [Neo Geo Freak 0033](https://archive.org/details/neogeofreak0033)
+- **atari2600**: [Atari VCS Owners Club Bulletin - AB 23 (Atari International)](https://archive.org/details/Atari_VCS_Owners_Club_Bulletin_AB_23_1982-12_Atari_International_GB)
+- **atari2600**: [Atari Age Volume 1 Number 2](https://archive.org/details/atariage-1-2)
+- **atari2600**: [Activisions - Vol. 5 (Activision)](https://archive.org/details/Activisions_Vol._5_1982-12_Activision_US)
+- **atari2600**: [Atari Club Magazin (Weihnachts-Sonderausgabe 1982)](https://www.atarimania.com/magazines/29)
+- **atari2600**: [Atari VCS Owners Club Bulletin - AB 22 (Atari International)](https://archive.org/details/Atari_VCS_Owners_Club_Bulletin_AB_22_1982-09_Atari_International_GB)
 - **3do**: [3DO Magazine](https://archive.org/details/3DOMagazineIssue10199605ParagonPublishingGB)
+- **3do**: [Electronic Games 1993-11](https://archive.org/details/Electronic-Games-1993-11)
+- **3do**: [Ultimate Future Games - Issue 02](https://archive.org/details/Ultimate_Future_Games_Issue_02_1995-01_Future_Publishing_GB)
 - **3do**: [3DO Magazine - Issue 12](https://archive.org/details/3DO_Magazine_Issue_12_1996-07_Paragon_Publishing_GB)
 - **3do**: [3DO Magazine Special - Gold Issue 01](https://archive.org/details/3-do-gold-01)
-- **3do**: [3DO Magazine Issue 04](https://archive.org/details/3-do-magazine-04)
-- **amiga1200**: CU Amiga Magazine Issue 027
-- **amiga1200**: CU Amiga Magazine Issue 025
-- **amiga1200**: CU Amiga Magazine Issue 046
-- **amstradcpc**: Amstrad Computer User 01-90 (Aug 84 - May 92)
-- **amstradcpc**: Amstrad Action 001-117
-- **amstradcpc**: Amstrad Action Issue 064
+- **zxspectrum**: [Your Sinclair 01-93](https://archive.org/details/YourSinclair37Jan89)
+- **zxspectrum**: [Sinclair User Magazine Issue 045](https://archive.org/details/sinclair-user-magazine-045)
+- **zxspectrum**: [Crash zx spectrum](https://archive.org/details/crash-no.-36-1987-01-newsfield-gb)
+- **zxspectrum**: [Sinclair User Magazine Issue 058](https://archive.org/details/sinclair-user-magazine-058)
+- **c64**: [Zzap!64 001-107 (May85 - Mar 02)](https://archive.org/details/Zzap044Dec88)
+- **c64**: [Commodore User Magazine Issue 43](https://archive.org/details/commodore-user-magazine-43)
+- **c64**: [ZZap!64 Magazine Issue 044](https://archive.org/details/zzap64-magazine-044)
+- **c64**: [ZZap!64 Magazine Issue 006](https://archive.org/details/zzap64-magazine-006)
+- **amstradcpc**: [Amstrad Action 001-117](https://archive.org/details/AmstradAction052)
+- **amstradcpc**: [Amstrad Computer User 01-90 (Aug 84 - May 92)](https://archive.org/details/AmstradComputerUser200786)
+- **amstradcpc**: [Computing With The Amstrad Vol. 3 No. 3](https://archive.org/details/computing-with-the-amstrad-vol.-3-no.-3-1987-03)
+- **amstradcpc**: [Amstrad Action Issue 064](https://archive.org/details/amstrad-action-064)
+- **atarist**: [Atari ST User - Issue 067 (Europress)](https://archive.org/details/Atari_ST_User_Issue_067_1991-09_Europress_GB)
+- **atarist**: [atari-st-format-issue-049](https://archive.org/details/atari-st-format-issue-049)
+- **atarist**: [ST Action - Volume 1 Issue 1](https://archive.org/details/ST_Action_Volume_1_Issue_1_1988-05_Gollner_Publishing_GB)
+- **atarist**: [Atari ST User - Issue 099 (Europress)](https://archive.org/details/Atari_ST_User_Issue_099_1994-04_Europress_GB)
+- **atarist**: [Atari ST User - Issue 088 (Europress)](https://archive.org/details/Atari_ST_User_Issue_088_1993-06_Europress_GB)
+- **amiga1200**: [CU Amiga Magazine Issue 027](https://archive.org/details/cuamiga-magazine-027)
+- **amiga1200**: [Amiga Computing Issue 062 Jul 93](https://archive.org/details/AmigaComputingIssue062Jul93)
+- **amiga1200**: [Amiga_Format_Issue_114__1998_09__Future_Publishing__GB__300dpi_](https://archive.org/details/AmigaFormatIssue114199809FuturePublishingGB300dpi)
+- **amiga1200**: [CU Amiga Magazine Issue 025](https://archive.org/details/cuamiga-magazine-025)
+- **amiga1200**: [CU Amiga Magazine Issue 046](https://archive.org/details/cuamiga-magazine-046)
+- **x68000**: [Oh! X 1990 - 1995](https://archive.org/details/OhX1990-1995)
+- **x68000**: [Oh! MZ 1986年12月号 X68000のハードウェア X1turboZ コンピュータによる立体映像](https://archive.org/details/OhMZ198612X68000X6800X1turboZX)
+- **x68000**: [Oh!X 1991 08](https://archive.org/details/OhX_1991-08)
+- **x68000**: [Oh!X 1993 05](https://archive.org/details/OhX_1993-05)
+- **msx2+**: [MSX Magazine Revival Vol. 1 - MSX MAGAZINE 永久保存版](https://archive.org/details/MSXMAGAZINE_201807)
+- **msx2+**: [MSX Computer Magazine 02 1986](https://archive.org/details/h42_MSX_Computer_Magazine_02-1986)
+- **msx2+**: [MSX・FAN 1992-08月号](https://archive.org/details/MSXFAN199208)
+- **msx2+**: [MSX Magazine Revival Vol. 2 - MSX MAGAZINE 永久保存版2](https://archive.org/details/MSXMAGAZINE2)
+- **msxturbor**: [MSX Magazine Revival Vol. 3 - MSX MAGAZINE 永久保存版3](https://archive.org/details/MSXMAGAZINE3_201808)
+- **msxturbor**: [MSX・FAN 1993-10月号](https://archive.org/details/MSXFAN199310)
+- **msxturbor**: [MSX Computer Magazine 02 1986](https://archive.org/details/h42_MSX_Computer_Magazine_02-1986)
+- **msxturbor**: [MSX Magazine Revival Vol. 1 - MSX MAGAZINE 永久保存版](https://archive.org/details/MSXMAGAZINE_201807)
+- **mastersystem**: [Mean Machines Sega Magazine Issue 04](https://archive.org/details/mean-machines-sega-magazine-04)
+- **mastersystem**: [S the Sega Magazine Issue 04](https://archive.org/details/s-04_20200726)
+- **mastersystem**: [Sega Force Issue 01](https://archive.org/details/sega-force-01)
+- **mastersystem**: [Mean Machines Sega Issues 1-53](https://archive.org/details/MMSega01Oct92)
+- **mastersystem**: [Mean Machines Sega Magazine Issue 03](https://archive.org/details/mean-machines-sega-magazine-03)
+- **fbneo**: [Gamest 183](https://archive.org/details/gamest-183)
+- **fbneo**: [Play Meter - Volume 24, Number 4 - March 1998](https://archive.org/details/play-meter-volume-24-number-4-march-1998)
+- **fbneo**: [Gamest 0260](https://archive.org/details/gamest0260)
+- **fbneo**: [Gamest 0068](https://archive.org/details/gamest0068)
+- **naomi2**: [Gamest 0052](https://archive.org/details/gamest0052)
+- **naomi2**: [Arcadia Magazine No 32 January 01 2003 The House of the Dead III pages](https://archive.org/details/arcadia-magazine-32-Jan-HOD)
+- **naomi2**: [Play Meter - Volume 19, Number 5 April 1993](https://archive.org/details/play-meter-volume-19-number-5-april-1993)
+- **naomi2**: [Gamest 0066](https://archive.org/details/gamest0066)
+- **gbc2players**: [Total Game Boy Issue 01](https://archive.org/details/Total_Game_Boy_Issue_01)
+- **gbc2players**: [GBX Game Boy Xtreme 06](https://archive.org/details/gbx-2001-12-06)
+- **gbc2players**: [Total Game Boy Issue 03](https://archive.org/details/Total_Game_Boy_Issue_03)
+- **xegs**: [Antic Magazine Volume 7 Number 02 (Atari XE Game System)](https://archive.org/details/1988-06-anticmagazine)
+- **xegs**: [Atari Explorer - Volume 9 Number 6](https://archive.org/details/atari-explorer-november-december-1989)
+- **xegs**: [Atarian Issue 3 (October 1989)](https://www.atarimania.com/magazines/33/288)
+- **xegs**: [Antic Magazine Volume 6 Number 11 (Next Generation Game Machines)](https://archive.org/details/1988-03-anticmagazine)
+- **xegs**: [Antic Magazine Volume 7 Number 04 (Atari Home Turn-on)](https://archive.org/details/1988-08-anticmagazine)
 - **astrocade**: Cursor / BASIC Express Newsletter for Bally Arcade / Astrocade Alternative ColorScans
-- **atari2600**: Atari VCS Owners Club Bulletin - AB 23 (Atari International)
-- **atari2600**: Atari VCS Owners Club Bulletin - AB 22 (Atari International)
-- **atari2600**: Atari VCS Owners Club Bulletin - AB 21 (Atari International)
-- **atari5200**: Atari Age Volumes 1 & 2
-- **atari5200**: Atari Age Vol 02num 03
-- **atarist**: Atari ST User - Issue 067 (Europress)
-- **atarist**: Atari ST User - Issue 099 (Europress)
-- **atarist**: Atari ST User - Issue 088 (Europress)
+- **atari5200**: [Atari Age Volumes 1 & 2](https://archive.org/details/AtariAgeIssues1-7)
+- **atari5200**: [Atari Age Vol 02num 03](https://archive.org/details/AtariAgeVol02num03)
+- **atari5200**: [Atari Age Volume 2 Number 2](https://archive.org/details/atariage-2-2)
+- **atari5200**: [Atari Age Volume 2 Number 5](https://archive.org/details/atariage-2-5)
+- **atari5200**: [Atari Age Volume 2 Number 4](https://archive.org/details/atariage-2-4)
+- **atari7800**: [Computer Entertainer issue 3-3](https://archive.org/details/computer-entertainer-3-3)
+- **atari7800**: [Atarian Issue 1 (May/June 1989)](https://www.atarimania.com/magazines/33/286)
+- **atari7800**: [Atarian Issue 2 (August 1989)](https://www.atarimania.com/magazines/33/287)
+- **atari7800**: [Atarian Issue 3 (October 1989)](https://www.atarimania.com/magazines/33/288)
+- **atari800**: [Atari Explorer (Atari)](https://archive.org/details/Atari_Explorer_1985-02_Atari_US)
+- **atari800**: [Antic Magazine Volume 3 Number 02 (Exploring the Atari XL)](https://archive.org/details/1984-06-anticmagazine)
+- **atari800**: [Analog Computing Magazine Issue 15 (Inside the 600XL)](https://archive.org/details/analog-computing-magazine-15)
+- **atari800**: [Atari User Issue 01](https://archive.org/details/atari-user-uk-magazine-01)
+- **atari800**: [Antic Magazine Volume 4 Number 09 (Atari Products Are Back)](https://archive.org/details/1986-01-anticmagazine)
 - **atomiswave**: Gamest 0200
 - **c20**: Personal Computing On The VIC-20 (1982)(Commodore)
 - **c20**: Compute!s VIC-20 Collection Book - Compute Computes
 - **c20**: VIC-20 Programmers Reference Guide 1st Edition 6th Printing
-- **c64**: Zzap!64 001-107 (May85 - Mar 02)
-- **c64**: ZZap!64 Magazine Issue 044
-- **c64**: ZZap!64 Magazine Issue 006
 - **colecovision**: 1980 Coleco Toys and Games Catalog
 - **cplus4**: Commodore C16 Plus4 Reference Book
 - **cplus4**: Videobasic per Commodore 16
 - **cplus4**: C16-MSX
-- **dreamcast**: EDGE #067 (1999) - Supplement: Dreamcast
-- **dreamcast**: Official Dreamcast Magazine, The - Special Issue
-- **dreamcast**: Official Dreamcast Magazine, The - Issue 01
-- **fbneo**: Gamest 183
-- **fbneo**: Gamest 0260
-- **fbneo**: Gamest 0068
 - **fds**: Famimaga April 17 1992
 - **fds**: Famimaga June 5 1987
 - **fds**: Famimaga May 11 1990
@@ -55,16 +137,20 @@ Archive, shown on the systems screen. Built by `scripts/build-magazines.mjs`.
 - **gb2players**: [The Game Boy Companion - N64 Magazine](https://archive.org/details/n64-presents-the-game-boy-companion_202206)
 - **gb2players**: [Total Game Boy Issue 07](https://archive.org/details/Total_Game_Boy_Issue_07)
 - **gba**: [GBA Master Guide Issue 01](https://archive.org/details/gba-master-guide-01)
-- **gbc**: Total Game Boy Issue 01
-- **gbc**: Total Game Boy Issue 03
-- **gbc2players**: Total Game Boy Issue 01
-- **gbc2players**: Total Game Boy Issue 03
-- **jaguar**: EDGE #022 (1995) - Supplement: Atari Jaguar
-- **lynx**: Atari Lynx II Launch Promo Special (EGM)
-- **lynx**: Atari Lynx Grey Matters Vol 3 1992
-- **mastersystem**: Mean Machines Sega Issues 1-53
-- **mastersystem**: Mean Machines Sega Magazine Issue 04
-- **mastersystem**: Mean Machines Sega Magazine Issue 03
+- **jaguar**: [EDGE #022 (1995) - Supplement: Atari Jaguar](https://archive.org/details/EDGE.N022.1995.07.Supplement.Atari.Jaguar)
+- **jaguar**: [Atari Fan N°5 (Primavera 1995)](https://www.atarimania.com/magazines/134)
+- **jaguar**: [Electronic Games 1993-09](https://archive.org/details/Electronic-Games-1993-09)
+- **jaguar**: [Cat Rap: News Source for the Atari Jaguar — Issue 1 — September 1993](https://archive.org/details/cat-rap-01-1993-09)
+- **jaguar**: [Cat Rap: News Source for the Atari Jaguar — Issue 2 — January 1994](https://archive.org/details/cat-rap-02-1994-01)
+- **jaguarcd**: [Atari Fan N°6 (Verano 1995)](https://www.atarimania.com/magazines/134)
+- **jaguarcd**: [A.P.E. — Atari Power Entertainment, No. 21, Fall Holiday 1995](https://archive.org/details/ape-atari-newsletter-issue-21)
+- **jaguarcd**: [A.P.E. — Atari Power Entertainment, No. 20, Summer 1995](https://archive.org/details/ape-atari-newsletter-issue-20)
+- **jaguarcd**: [A.P.E. — Atari Power Entertainment, No. 18, Winter 1995](https://archive.org/details/ape-atari-newsletter-issue-18)
+- **lynx**: [Atari Lynx II Launch Promo Special (EGM)](https://archive.org/details/AtariLynxMarketingEGM)
+- **lynx**: [Atari Lynx Grey Matters Vol 3 1992](https://archive.org/details/atari-lynx-grey-matters-vol-3-1992)
+- **lynx**: [Lynx User Issue 5](https://archive.org/details/lynx-user-issue-05)
+- **lynx**: [Lynx User Issue 6](https://archive.org/details/LynxUserIssue6)
+- **lynx**: [Lynx User Issue 7](https://archive.org/details/lynx-user-issue-07)
 - **megacd**: [Megatech Supplement Mega CD Guide](https://archive.org/details/mega-tech-supplement-mega-cd-guide)
 - **megadrive**: [Sega Mega Drive Advanced Gaming Issue 05](https://archive.org/details/segamegadriveadvancedgaming05)
 - **megadrive**: [Sega Force Issue 10](https://archive.org/details/sega-force-10)
@@ -75,25 +161,13 @@ Archive, shown on the systems screen. Built by `scripts/build-magazines.mjs`.
 - **msx1**: [MSX User](https://archive.org/details/msx-user-1985-09-images)
 - **msx2**: [MSX Computing](https://archive.org/details/MSXComputing)
 - **msx2**: [MSX User](https://archive.org/details/msx-user-1985-09-images)
-- **msx2+**: MSX Magazine Revival Vol. 1 - MSX MAGAZINE 永久保存版
-- **msx2+**: MSX Magazine Revival Vol. 2 - MSX MAGAZINE 永久保存版2
-- **msxturbor**: MSX Magazine Revival Vol. 3 - MSX MAGAZINE 永久保存版3
-- **msxturbor**: MSX Magazine Revival Vol. 1 - MSX MAGAZINE 永久保存版
 - **n64**: Nintendo Official Magazine Nintendo 64 THE GUIDE
 - **n64**: EGM's Player's Guide To Video Games For The Nintendo 64 - June 1998
 - **n64**: N64 Gamer - Issue 23
 - **naomi**: Gamest 199
-- **naomi2**: Gamest 0052
-- **naomi2**: Gamest 0066
-- **neogeo**: Neo Geo Freak 0001
-- **neogeo**: Neo Geo Freak 0030
-- **neogeo**: Neo Geo Freak 0033
 - **neogeocd**: Neo Geo CD Software Catalogue
 - **neogeocd**: SNK Neo-Geo CD WW Magazine Advertisements & Reviews
 - **neogeocd**: 電玩玩味叢書 013 NEO GEO CD特辑
-- **nes**: Nintendo Power Issue #1(July/August 1988)
-- **nes**: Nintendo Power Issue 002 September October 1988
-- **nes**: Nintendo Power Issue #3 November December 1988
 - **ngp**: NeoGeo Pocket Soft Information Vol. 2
 - **ngp**: SNK Neo-Geo Pocket Color WW Magazine Advertisements & Reviews
 - **ngpc**: SNK Neo-Geo Pocket Color WW Magazine Advertisements & Reviews
@@ -103,19 +177,14 @@ Archive, shown on the systems screen. Built by `scripts/build-magazines.mjs`.
 - **prboom**: DOOM II Official Strategy Guide
 - **prboom**: Ultimate Future Games Issue 14 - Supplement Playstation Doom Guide
 - **prboom**: Doom III Gamespot Guide
-- **psx**: Official US PlayStation Magazine - Volume 1 Issue 1
-- **psx**: Official UK Playstation Magazine (1999)
-- **psx**: Official US PlayStation Magazine - Volume 3 Issue 1
 - **satellaview**: Satellaview Tsushin Monthly FamicomTsushin May extra issue
 - **satellaview**: Satellaview Tsushin サテラビュー通信 1995年9月号
-- **saturn**: [Official Sega Saturn Magazine Issue 1](https://archive.org/details/Official_Sega_Saturn_Magazine_001)
-- **saturn**: [Official Sega Saturn Magazine Issue 22 (Resident Evil 1)](https://archive.org/details/official-sega-saturn-magazine-issue-22)
-- **saturn**: [Supplement Issue 53 SEGA MegaZone Saturn Guide](https://archive.org/details/sup53saturnguide)
-- **saturn**: [Sega Saturn Magazine - Issue 02](https://archive.org/details/Sega_Saturn_Magazine_Issue_02_1995-12_EMAP_Images_GB)
 - **scummvm**: LucasArts "The Adventurer" Magazine Complete 13 Issues
 - **scummvm**: Curse of Monkey Island, The Prima
 - **scummvm**: The Adventurer magazine
-- **sega32x**: SEGA Magazine Issue 12 Supplement - Megadrive 32X Guide
+- **sega32x**: [Mean Machines Sega Magazine Issue 29](https://archive.org/details/mean-machines-sega-magazine-29)
+- **sega32x**: [SEGA Magazine Issue 12 Supplement - Megadrive 32X Guide](https://archive.org/details/sega-magazine-uk-12-supplement-megadrive-32-x-guide)
+- **sega32x**: [Digital Pictures on the Megadrive 32X (advert, 1995)](https://tse1.mm.bing.net/th/id/OIP.B1yD2CNNVH7MS8svfLGcMAHaKK)
 - **sg1000**: Beep 1986 04
 - **sgb**: Nintendo Player's Guide Super Game Boy
 - **snes**: [Super Play Super Nintendo Magazine](https://archive.org/details/sup01)
@@ -125,12 +194,3 @@ Archive, shown on the systems screen. Built by `scripts/build-magazines.mjs`.
 - **supergrafx**: NEC Super Grafx JAP Magazine Advertisements
 - **supergrafx**: Daimakaimura (NEC Supergrafx) - Box, Manual and Card Scans
 - **videopacplus**: Videopac Philips
-- **x68000**: Oh! X 1990 - 1995
-- **x68000**: Oh!X 1991 08
-- **x68000**: Oh!X 1993 05
-- **zxspectrum**: Your Sinclair 01-93
-- **zxspectrum**: Sinclair User Magazine Issue 045
-- **zxspectrum**: Sinclair User Magazine Issue 058
-- **ps2**: Official Playstation 2 Magazine UK Special - Buyer's Guide
-- **ps2**: Official Playstation 2 Magazine Special Edition: The A-Z
-- **ps2**: Official UK Playstation 2 Magazine - Issue 003

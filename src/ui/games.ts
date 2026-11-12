@@ -4,6 +4,7 @@ import { span } from './perf.js';
 import type { LazyList } from '../logic/pager.js';
 import { el, remPx } from './dom.js';
 import { Scan } from './scan.js';
+import { boot, scrapedMark } from './boot.js';
 import { STAGE_PICTURES, Stage, type StageOptions } from './stage.js';
 
 /** Row height in rem; rows are positioned by index, so only visible ones exist. */
@@ -48,7 +49,11 @@ export class GamesView {
   #pending = false;
 
   /** Over the selected game while the scraper is on it. */
-  readonly #scan = new Scan();
+  /** A scrape's new data in: shown by the game's boot, as on entering its list. */
+  readonly #scan = new Scan(async (id) => {
+    const game = this.selected;
+    return game?.id === id && (await this.#boot(game)) > 0;
+  });
 
   constructor(options: StageOptions) {
     this.#options = options;
@@ -74,6 +79,21 @@ export class GamesView {
     this.#spacer.style.height = `${source.total * ROW_REM}rem`;
     this.#selected = -1;
     this.select(selected);
+  }
+
+  /** The game switched on over the view: its logo, or its name, lit in a line of light. */
+  async #boot(game: Game): Promise<number> {
+    const media = this.#options.media;
+    // Its logo as the scrape just brought it, loaded before the boot lights it.
+    const mark = await scrapedMark(
+      game,
+      (g) => media(g, 'wheel', 560) ?? media(g, 'marquee', 560),
+      this.#options.fresh
+    );
+    if (this.selected?.id !== game.id) return 0;
+    return boot(this.root, mark, 0, {
+      colour: getComputedStyle(this.root).getPropertyValue('--game').trim() || 'var(--neon)'
+    });
   }
 
   get selected(): Game | undefined {
@@ -188,6 +208,9 @@ export class GamesView {
     row.prepend(logo);
   }
 
+  /** A game whose pictures a scraper run replaced: drawn again whole, when it next is. */
+  #mediaStale: number | null = null;
+
   /** A game's pictures were replaced: draws again its row and, if it is the one shown, the rest. */
   mediaChanged(id: number): void {
     for (const node of this.#rows.values()) {
@@ -195,10 +218,15 @@ export class GamesView {
     }
     this.render();
     const game = this.selected;
-    if (game?.id === id) {
-      this.#stage.show(game, true);
-      this.#scan.refreshed(game, this.#stage.images());
+    if (game?.id !== id) return;
+    // A scraper run on it: drawn again as its scan says, once the run is done with it, its
+    // pictures then read anew whichever redraw it is (the library's may come after).
+    if (this.#scan.busyWith(id)) {
+      this.#mediaStale = id;
+      return this.#scan.redraw(id, () => this.#showDetailTraced());
     }
+    this.#stage.show(game, true);
+    this.#scan.refreshed(game, this.#stage.images());
   }
 
   /** A scraper run moved on: the scan over the selected game follows it. */
@@ -229,7 +257,8 @@ export class GamesView {
     const game = this.selected;
     this.#pending = !game;
     if (game) {
-      this.#stage.show(game);
+      this.#stage.show(game, this.#mediaStale === game.id);
+      this.#mediaStale = null;
       this.#scan.shown(game.id, this.#stage.images());
     } else this.#stage.clear();
     clearTimeout(this.#prepareTimer);
@@ -270,5 +299,11 @@ export class GamesView {
   /** Back on the list after a game: the selected game's stage again. */
   resume(): void {
     if (this.#source) this.#showDetail();
+  }
+
+  /** Forma's menu over the list: its stage (and video) put away, and drawn again once it closes. */
+  menu(open: boolean): void {
+    if (open) this.leave();
+    else this.resume();
   }
 }

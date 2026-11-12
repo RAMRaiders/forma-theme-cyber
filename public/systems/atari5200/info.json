@@ -10,6 +10,7 @@
     "graphics": "ANTIC + GTIA",
     "sound": "POKEY, 4 channels",
     "media": "Cartridge",
+    "unitsSold": "Over 1 million",
     "generation": "2nd",
     "lifetime": "1982–1984 (2 years)"
   },
@@ -35,7 +36,17 @@
     "Despite sharing hardware with the Atari 400/800, it cannot run their cartridges directly.",
     "The original model had four controller ports; a later revision cut it to two.",
     "Its analog joysticks do not spring back to centre.",
-    "Its controllers included a numeric keypad and Start, Pause and Reset keys."
+    "Its controllers included a numeric keypad and Start, Pause and Reset keys.",
+    "Its codename was PAM, short for Personal Arcade Machine.",
+    "Atari first showed it at the Winter CES of January 1982 as the 'Supergame'.",
+    "It launched at US$299.95 in October 1982.",
+    "The first model carried power and picture down one cable, through an automatic TV switch box.",
+    "The Pro-Line Trak-Ball made Centipede and Missile Command play like the arcade.",
+    "A voice synthesis module was promised for launch but never came out.",
+    "The two-port model of 1983 came with Pac-Man in the box.",
+    "A cheaper Atari 5100, or '5200 Jr.', without the controller bin never got past a few prototypes.",
+    "IGN ranked its controller the tenth worst of all time.",
+    "Atari stopped making it on 21 May 1984, less than two years after launch."
   ],
   "unverified": [],
   "bestsellers": ["Pac-Man", "The Activision Decathlon", "Astro Chase"],

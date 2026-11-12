@@ -10,6 +10,7 @@
     "graphics": "MARIA",
     "sound": "TIA (POKEY optional on cartridge)",
     "media": "Cartridge",
+    "unitsSold": "Over 1 million",
     "generation": "3rd",
     "lifetime": "1986–1992 (6 years)"
   },
@@ -35,7 +36,18 @@
     "It was the first Atari console to play almost all games for its predecessor without an adapter.",
     "Some cartridges, such as Ballblazer, carried their own POKEY sound chip.",
     "The CPU slows to about 1.19 MHz when it accesses TIA or RIOT.",
-    "NTSC 7800 cartridges carry a digital signature checked by the BIOS at boot."
+    "NTSC 7800 cartridges carry a digital signature checked by the BIOS at boot.",
+    "It was the first Atari console designed outside the company, by General Computer Corporation.",
+    "During development it was called the Atari 3600.",
+    "It launched nationwide in May 1986 at US$79.95.",
+    "It came with a two-button Pro-Line joystick; Europe got a joypad that America never saw.",
+    "A High Score Cartridge that saved scores for up to 65 games was cancelled; nine games support it.",
+    "Later models dropped the expansion port meant for a LaserDisc player.",
+    "PAL consoles skip the signature check and recognise 7800 cartridges by other means, because of export rules on encryption.",
+    "The signing software was found and released at the Classic Gaming Expo in 2001.",
+    "Only 59 official games came out for it.",
+    "Five games work with the XG-1 light gun, among them Barnyard Blaster and Alien Brigade.",
+    "In 2024 Atari brought out the Atari 7800+, a smaller copy of the European model."
   ],
   "unverified": ["The CPU slows to about 1.19 MHz when it accesses TIA or RIOT."],
   "bestsellers": ["Galaga", "Donkey Kong", "Centipede"],

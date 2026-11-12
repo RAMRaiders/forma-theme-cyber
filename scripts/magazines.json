@@ -1,5 +1,13 @@
 {
-  "sega32x": ["sega-magazine-uk-12-supplement-megadrive-32-x-guide"],
+  "sega32x": [
+    "mean-machines-sega-magazine-29",
+    "sega-magazine-uk-12-supplement-megadrive-32-x-guide",
+    {
+      "url": "https://tse1.mm.bing.net/th/id/OIP.B1yD2CNNVH7MS8svfLGcMAHaKK?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+      "title": "Digital Pictures on the Megadrive 32X (advert, 1995)",
+      "page": "https://tse1.mm.bing.net/th/id/OIP.B1yD2CNNVH7MS8svfLGcMAHaKK"
+    }
+  ],
   "megadrive": [
     "segamegadriveadvancedgaming05",
     "sega-force-10",
@@ -15,6 +23,8 @@
   ],
   "nes": [
     "nintendo_power_issue1",
+    "Nintendo_Fun_Club_News_Issue_03_Fall_1987",
+    "total-nintendo-uk-issue-2",
     "NintendoPowerIssue002SeptemberOctober1988",
     "nintendopowerissue003novemberdecember1988"
   ],
@@ -24,55 +34,111 @@
     "N64_Gamer_Issue_23_2000_01_Next_Publishing_AU"
   ],
   "gamecube": ["cube-01", "egms-unofficial-game-cube-guide-march-2002"],
-  "gbc": ["Total_Game_Boy_Issue_01", "Total_Game_Boy_Issue_03"],
+  "gbc": ["Total_Game_Boy_Issue_01", "gbx-2001-12-06", "Total_Game_Boy_Issue_03"],
   "gba": ["gba-master-guide-01"],
   "psx": [
     "Official_US_PlayStation_Magazine_Volume_1_Issue_1_1997-10_Ziff_Davis_US",
+    "PSM-001",
+    "playstation-plus-vol-1-issue-10",
     "Official_UK_Playstation_Magazine_1999_Future_Publishing_GB_platinum_special",
     "Official_US_PlayStation_Magazine_Volume_3_Issue_1_1999-10_Ziff_Davis_US"
   ],
   "ps2": [
     "official-playstation-2-magazine-uk-special-buyers-guide",
+    "PSM-063",
     "ops2specialeditiontheaz",
     "Official_UK_Playstation_2_Magazine_Issue_003_2001_01_Future_Publishing_GB"
   ],
   "saturn": [
     "Official_Sega_Saturn_Magazine_001",
-    "official-sega-saturn-magazine-issue-22",
     "sup53saturnguide",
-    "Sega_Saturn_Magazine_Issue_02_1995-12_EMAP_Images_GB"
+    "Sega_Saturn_Magazine_Issue_02_1995-12_EMAP_Images_GB",
+    "official-sega-saturn-magazine-issue-22"
   ],
   "dreamcast": [
     "EDGE.N067.1999.01.Supplement.Dreamcast",
     "Official_Dreamcast_Magazine_The_Special_Issue_1999-10_Dennis_Publishing_GB",
+    "Dreamcast_Monthly_Issue_1_1999-09_Quay_Publishing_GB",
     "Official_Dreamcast_Magazine_The_Issue_01_1999-09_Imagine_Publishing_US"
   ],
   "pcengine": ["turbo-play-us-12", "turbo-play"],
-  "neogeo": ["neogeofreak0001", "neogeofreak0030", "neogeofreak0033"],
-  "jaguar": ["EDGE.N022.1995.07.Supplement.Atari.Jaguar"],
-  "lynx": ["AtariLynxMarketingEGM", "atari-lynx-grey-matters-vol-3-1992"],
+  "neogeo": [
+    "neogeofreak0001",
+    "gamest-199",
+    "play-meter-volume-24-number-4-march-1998",
+    "neogeofreak0030",
+    "neogeofreak0033"
+  ],
+  "jaguar": [
+    "EDGE.N022.1995.07.Supplement.Atari.Jaguar",
+    {
+      "url": "https://www.atarimania.com/mags/pdf/AtariFan-05.pdf",
+      "title": "Atari Fan N°5 (Primavera 1995)",
+      "page": "https://www.atarimania.com/magazines/134"
+    },
+    "Electronic-Games-1993-09",
+    "cat-rap-01-1993-09",
+    "cat-rap-02-1994-01"
+  ],
+  "lynx": [
+    "AtariLynxMarketingEGM",
+    "atari-lynx-grey-matters-vol-3-1992",
+    "lynx-user-issue-05",
+    "LynxUserIssue6",
+    "lynx-user-issue-07"
+  ],
   "atari2600": [
     "Atari_VCS_Owners_Club_Bulletin_AB_23_1982-12_Atari_International_GB",
-    "Atari_VCS_Owners_Club_Bulletin_AB_22_1982-09_Atari_International_GB",
-    "Atari_VCS_Owners_Club_Bulletin_AB_21_1982-06_Atari_International_GB"
+    "atariage-1-2",
+    "Activisions_Vol._5_1982-12_Activision_US",
+    {
+      "url": "https://www.atarimania.com/mags/hi_res/atari_club_magazin_special_82.jpg",
+      "title": "Atari Club Magazin (Weihnachts-Sonderausgabe 1982)",
+      "page": "https://www.atarimania.com/magazines/29"
+    },
+    "Atari_VCS_Owners_Club_Bulletin_AB_22_1982-09_Atari_International_GB"
   ],
   "3do": [
     "3DOMagazineIssue10199605ParagonPublishingGB",
+    "Electronic-Games-1993-11",
+    "Ultimate_Future_Games_Issue_02_1995-01_Future_Publishing_GB",
     "3DO_Magazine_Issue_12_1996-07_Paragon_Publishing_GB",
-    "3-do-gold-01",
-    "3-do-magazine-04"
+    "3-do-gold-01"
   ],
-  "zxspectrum": ["YourSinclair37Jan89", "sinclair-user-magazine-045", "sinclair-user-magazine-058"],
-  "c64": ["Zzap044Dec88", "zzap64-magazine-044", "zzap64-magazine-006"],
-  "amstradcpc": ["AmstradComputerUser200786", "AmstradAction052", "amstrad-action-064"],
+  "zxspectrum": [
+    "YourSinclair37Jan89",
+    "sinclair-user-magazine-045",
+    "crash-no.-36-1987-01-newsfield-gb",
+    "sinclair-user-magazine-058"
+  ],
+  "c64": [
+    "Zzap044Dec88",
+    "commodore-user-magazine-43",
+    "zzap64-magazine-044",
+    "zzap64-magazine-006"
+  ],
+  "amstradcpc": [
+    "AmstradAction052",
+    "AmstradComputerUser200786",
+    "computing-with-the-amstrad-vol.-3-no.-3-1987-03",
+    "amstrad-action-064"
+  ],
   "atarist": [
     "Atari_ST_User_Issue_067_1991-09_Europress_GB",
+    "atari-st-format-issue-049",
+    "ST_Action_Volume_1_Issue_1_1988-05_Gollner_Publishing_GB",
     "Atari_ST_User_Issue_099_1994-04_Europress_GB",
     "Atari_ST_User_Issue_088_1993-06_Europress_GB"
   ],
-  "amiga1200": ["cuamiga-magazine-027", "cuamiga-magazine-025", "cuamiga-magazine-046"],
+  "amiga1200": [
+    "cuamiga-magazine-027",
+    "AmigaComputingIssue062Jul93",
+    "AmigaFormatIssue114199809FuturePublishingGB300dpi",
+    "cuamiga-magazine-025",
+    "cuamiga-magazine-046"
+  ],
   "msx1": ["MSXComputing", "msx-user-1985-09-images"],
-  "x68000": ["OhX1990-1995", "OhX_1991-08", "OhX_1993-05"],
+  "x68000": ["OhX1990-1995", "OhMZ198612X68000X6800X1turboZX", "OhX_1991-08", "OhX_1993-05"],
   "c20": [
     "Personal_Computing_On_The_VIC-20_1982_Commodore",
     "computes-vic-20-collection_202206",
@@ -92,8 +158,31 @@
   "virtualboy": [],
   "intellivision": [],
   "colecovision": ["1980-coleco-catalog"],
-  "atari5200": ["AtariAgeIssues1-7", "AtariAgeVol02num03"],
-  "atari7800": [],
+  "atari5200": [
+    "AtariAgeIssues1-7",
+    "AtariAgeVol02num03",
+    "atariage-2-2",
+    "atariage-2-5",
+    "atariage-2-4"
+  ],
+  "atari7800": [
+    "computer-entertainer-3-3",
+    {
+      "url": "https://www.atarimania.com/mags/hi_res/atarian_issue_1.jpg",
+      "title": "Atarian Issue 1 (May/June 1989)",
+      "page": "https://www.atarimania.com/magazines/33/286"
+    },
+    {
+      "url": "https://www.atarimania.com/mags/hi_res/atarian_issue_2.jpg",
+      "title": "Atarian Issue 2 (August 1989)",
+      "page": "https://www.atarimania.com/magazines/33/287"
+    },
+    {
+      "url": "https://www.atarimania.com/mags/hi_res/atarian_issue_3.jpg",
+      "title": "Atarian Issue 3 (October 1989)",
+      "page": "https://www.atarimania.com/magazines/33/288"
+    }
+  ],
   "vectrex": [],
   "odyssey2": [],
   "ngpc": ["ngpc_20211014", "softv2"],
@@ -106,20 +195,32 @@
     "Total_Game_Boy_Issue_07"
   ],
   "msx2": ["MSXComputing", "msx-user-1985-09-images"],
-  "msx2+": ["MSXMAGAZINE_201807", "MSXMAGAZINE2"],
-  "msxturbor": ["MSXMAGAZINE3_201808", "MSXMAGAZINE_201807"],
+  "msx2+": [
+    "MSXMAGAZINE_201807",
+    "h42_MSX_Computer_Magazine_02-1986",
+    "MSXFAN199208",
+    "MSXMAGAZINE2"
+  ],
+  "msxturbor": [
+    "MSXMAGAZINE3_201808",
+    "MSXFAN199310",
+    "h42_MSX_Computer_Magazine_02-1986",
+    "MSXMAGAZINE_201807"
+  ],
   "ngp": ["softv2", "ngpc_20211014"],
   "wswanc": [],
   "mastersystem": [
-    "MMSega01Oct92",
     "mean-machines-sega-magazine-04",
+    "s-04_20200726",
+    "sega-force-01",
+    "MMSega01Oct92",
     "mean-machines-sega-magazine-03"
   ],
   "pcenginecd": [],
   "supergrafx": ["nec-supergrafx", "DaimakaimuraSuperGrafxHiResScans"],
   "neogeocd": ["NeoGeoCDSoftCatalogue", "ngcd_20211014", "013-neo-geo-cd"],
   "naomi": ["gamest-199"],
-  "fbneo": ["gamest-183", "gamest0260", "gamest0068"],
+  "fbneo": ["gamest-183", "play-meter-volume-24-number-4-march-1998", "gamest0260", "gamest0068"],
   "daphne": [],
   "gameandwatch": ["GameAndWatchPerfectCatalogue", "donkeykongiicautionshowtoplay_201909"],
   "gamecom": [],
@@ -144,7 +245,40 @@
     "the-adventurer"
   ],
   "mrboom": [],
-  "naomi2": ["gamest0052", "gamest0066"],
+  "naomi2": [
+    "gamest0052",
+    "arcadia-magazine-32-Jan-HOD",
+    "play-meter-volume-19-number-5-april-1993",
+    "gamest0066"
+  ],
   "atomiswave": ["gamest0200"],
-  "gbc2players": ["Total_Game_Boy_Issue_01", "Total_Game_Boy_Issue_03"]
+  "gbc2players": ["Total_Game_Boy_Issue_01", "gbx-2001-12-06", "Total_Game_Boy_Issue_03"],
+  "atari800": [
+    "Atari_Explorer_1985-02_Atari_US",
+    "1984-06-anticmagazine",
+    "analog-computing-magazine-15",
+    "atari-user-uk-magazine-01",
+    "1986-01-anticmagazine"
+  ],
+  "xegs": [
+    "1988-06-anticmagazine",
+    "atari-explorer-november-december-1989",
+    {
+      "url": "https://www.atarimania.com/mags/hi_res/atarian_issue_3.jpg",
+      "title": "Atarian Issue 3 (October 1989)",
+      "page": "https://www.atarimania.com/magazines/33/288"
+    },
+    "1988-03-anticmagazine",
+    "1988-08-anticmagazine"
+  ],
+  "jaguarcd": [
+    {
+      "url": "https://www.atarimania.com/mags/pdf/AtariFan-06.pdf",
+      "title": "Atari Fan N°6 (Verano 1995)",
+      "page": "https://www.atarimania.com/magazines/134"
+    },
+    "ape-atari-newsletter-issue-21",
+    "ape-atari-newsletter-issue-20",
+    "ape-atari-newsletter-issue-18"
+  ]
 }

@@ -34,7 +34,7 @@ import {
   margins,
   prefUpdate
 } from './data/prefs.js';
-import { type Move, moveGrid, moveHome, moveList } from './logic/nav.js';
+import { type Move, moveGrid, moveHome, moveList, raceStep } from './logic/nav.js';
 import { LazyList } from './logic/pager.js';
 import { el } from './ui/dom.js';
 import { type Card, GridView } from './ui/grid.js';
@@ -47,6 +47,7 @@ import { SongCard } from './ui/music.js';
 import { preload } from './ui/preload.js';
 import { STAGE_PICTURES, accentOf } from './ui/stage.js';
 import { SystemView } from './ui/system.js';
+import { rest } from './ui/rest.js';
 
 /** One level of the path, and where the selection was, so going back returns to it. */
 interface Level {
@@ -102,7 +103,9 @@ const MOVES: Partial<Record<Action, Move>> = {
 };
 
 /** Moved this far through a list, Forma is asked again for the pictures around the selection. */
-const PREPARE_AGAIN = 100;
+const PREPARE_AGAIN = 10;
+/** After racing through a list, how long it rests before Forma is asked for pictures there. */
+const PREPARE_AFTER_RACE_MS = 400;
 
 /** One step of the breadcrumb: a name, or a system's logo (`label`: its name, for screen readers). */
 type Crumb = string | { label: string; logo: string; dark: boolean };
@@ -122,6 +125,7 @@ export class App {
       (game.media as Partial<Record<string, string>>)[kind]
         ? this.forma.library.mediaUrl(game.id, kind, width)
         : null,
+    fresh: (id) => this.forma.library.game(id),
     achievements: async (game) => {
       const { data } = await this.forma.ra.game(game.id);
       return { earned: data.earned, total: data.achievementCount };
@@ -137,6 +141,7 @@ export class App {
       (game.media as Partial<Record<string, string>>)[kind]
         ? this.forma.library.mediaUrl(game.id, kind, width)
         : null,
+    fresh: (id) => this.forma.library.game(id),
     achievements: async (game) => {
       const { data } = await this.forma.ra.game(game.id);
       return { earned: data.earned, total: data.achievementCount };
@@ -153,7 +158,9 @@ export class App {
       return {
         name: system.summary.fullname || name,
         logo: system.logoSmall,
-        dark: system.logoDark
+        dark: system.logoDark,
+        category: system.category,
+        released: system.released
       };
     },
     prepare: (items) => void this.forma.library.prepareMedia(items as never).catch(() => {})
@@ -164,9 +171,15 @@ export class App {
     return this.#prefs.gamesView === 'collector' ? this.#collector : this.#games;
   }
 
+  /** Until when a system's switch-on covers the screen (its games opening under it). */
+  #bootedUntil = 0;
+
   /** The game list on screen, for Forma to make its pictures ahead. */
   #listPlace: { view: string; path: string[] } | null = null;
   #preparedAround = 0;
+  /** When the direction now held was pressed. */
+  #heldSince = 0;
+  #prepareTimer: ReturnType<typeof setTimeout> | undefined;
 
   /**
    * Has Forma make the pictures of the games around `around` in the list on screen, in the
@@ -278,11 +291,27 @@ export class App {
     });
     // Forma's screensaver stopped the selected game's video; when it goes, the game's stage
     // and its video come back, as after a game.
+    // While it shows, Cyber rests: nothing moves on its timers behind it (Forma pauses the
+    // CSS animations). A game view is drawn afresh after, its video with it.
     this.forma.events.on('screensaver', ({ active }) => {
-      if (!active && this.#list && this.#playing.hidden) this.#gameView.resume();
+      const redraw = !active && this.#list !== null && this.#playing.hidden === true;
+      rest(active, redraw);
+      if (redraw) this.#gameView.resume();
     });
-    this.forma.events.on('game:end', ({ error }) => {
+    // Forma's menu open (Start or Select): nothing plays or moves under it (a video under its
+    // see-through panel flickered it on a Pi), and all picks up again once it closes. Forma
+    // sends `menu` since SDK 1.33.0; the SDK Cyber builds with does not list it yet.
+    const on = this.forma.events.on.bind(this.forma.events) as unknown as (
+      name: string,
+      listener: (change: { open: boolean }) => void
+    ) => unknown;
+    on('menu', ({ open }) => {
+      rest(open);
+      if (this.#list && this.#playing.hidden) this.#gameView.menu(open);
+    });
+    this.forma.events.on('game:end', ({ gameId, error }) => {
       this.#playing.hidden = true;
+      this.#collector.played(gameId);
       if (this.#list) this.#gameView.resume();
       if (error) this.#notify(`The game could not run: ${error}`);
     });
@@ -393,6 +422,10 @@ export class App {
         this.#level.index = Math.min(index, Math.max(0, list.total - 1));
         this.#main.replaceChildren(this.#gameView.root);
         this.#gameView.show(list, this.#level.index);
+        if (this.#gameView instanceof CollectorView) {
+          this.#gameView.holdShelf(this.#bootedUntil - performance.now());
+        }
+        this.#bootedUntil = 0;
         if (wasFiltered !== null && wasFiltered !== first.filtered) this.#gameView.reveal();
         this.#listPlace = { view, path };
         this.#prepareList(this.#level.index);
@@ -581,7 +614,11 @@ export class App {
         if (probe) {
           void accentOf(probe)
             .then((colour) => {
-              if (colour) screen.style.setProperty('--launch-accent', colour);
+              if (!colour) return;
+              screen.style.setProperty('--launch-accent', colour);
+              document
+                .querySelector<HTMLElement>('body > .boot.top')
+                ?.style.setProperty('--sys', colour);
             })
             .catch(() => {});
         }
@@ -604,10 +641,8 @@ export class App {
         : category
           ? [CATEGORIES.find((c) => c.id === category)?.label ?? category]
           : []),
-      // The system as its logo, where Cyber has one; else its name.
-      ...(found && name
-        ? [found.logoSmall ? { label: name, logo: found.logoSmall, dark: found.logoDark } : name]
-        : [])
+      // The system by its name, as the other steps: words on one line.
+      ...(found && name ? [name] : [])
     ];
   }
 
@@ -743,9 +778,19 @@ export class App {
       return;
     } else if (this.#list) {
       const view = this.#gameView;
-      level.index = moveList(level.index, this.#list.total, move, view.pageSize(), repeat);
+      // Held, it races: further at each repeat the longer it is held.
+      const now = performance.now();
+      if (!repeat) this.#heldSince = now;
+      const by = repeat ? raceStep(now - this.#heldSince) : 1;
+      level.index = moveList(level.index, this.#list.total, move, view.pageSize(), repeat, by);
       view.select(level.index);
-      if (Math.abs(level.index - this.#preparedAround) > PREPARE_AGAIN) {
+      clearTimeout(this.#prepareTimer);
+      if (by > 1) {
+        // Racing: asked once it stops, where it stops, not for every place raced past.
+        this.#prepareTimer = setTimeout(() => {
+          if (this.#level === level) this.#prepareList(level.index);
+        }, PREPARE_AFTER_RACE_MS);
+      } else if (Math.abs(level.index - this.#preparedAround) > PREPARE_AGAIN) {
         this.#prepareList(level.index);
       }
     } else {
@@ -800,6 +845,9 @@ export class App {
     if (this.#mode === 'systems') {
       const system = this.#systemView.selected;
       if (!system) return;
+      // Switched on as its games open (not as the systems go by); the list's shelf stays up
+      // past it.
+      this.#bootedUntil = performance.now() + this.#systemView.bootSelected();
       return this.#enter([...this.#level.path, system.summary.name]);
     }
     if (this.#list) {

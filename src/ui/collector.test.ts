@@ -6,15 +6,18 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LazyList } from '../logic/pager.js';
 import {
-  CollectorView,
-  type ScreenArea,
   boxHeight,
-  shelfShape,
-  paginate,
-  versionText,
+  CollectorView,
+  dumpText,
   gradeOf,
   hueOf,
-  serial
+  paginate,
+  releaseOf,
+  serial,
+  shelfShape,
+  tvEra,
+  type ScreenArea,
+  versionText
 } from './collector.js';
 import type { Kind } from './stage.js';
 
@@ -125,7 +128,7 @@ describe('the Collector view', () => {
     expect(display.classList.contains('cart-leaving')).toBe(true);
     expect(box.dataset.pose).toBe('front');
     expect(box.style.transform).toBe('rotateY(360deg)');
-    vi.advanceTimersByTime(2400);
+    await vi.advanceTimersByTimeAsync(2400);
     expect(display.classList.contains('cart-leaving')).toBe(false);
     // And the other way: out on its front, back in on its back (the same face as 180°).
     v.turn(-1);
@@ -148,11 +151,13 @@ describe('the Collector view', () => {
     expect(text('.dossier .marks .mark:last-child.pegi strong')).toEqual(['18PEGI']);
     const seal = v.root.querySelector('.dossier .pegi');
     expect(seal?.classList.contains('red')).toBe(true);
-    expect(seal?.getAttribute('aria-label')).toBe('Age rating ESRB M, PEGI 18');
+    expect(seal?.getAttribute('aria-label')).toBe('Age rating ESRB M · PEGI 18');
+    // The badge says it: no row for it under Release.
+    expect(text('.dossier .specs dt')).not.toContain('Age rating');
     const esrb = await view([{ ...game(9, 'After Burner'), ageRating: 'ESRB:E' }]);
     expect(esrb.text('.dossier .pegi strong')).toEqual(['3PEGI']);
-    expect(esrb.v.root.querySelector('.dossier .pegi')?.getAttribute('title')).toBe(
-      'PEGI 3, from ESRB E'
+    expect(esrb.v.root.querySelector('.dossier .pegi')?.getAttribute('aria-label')).toBe(
+      'Age rating PEGI 3, from ESRB E'
     );
     const unrated = await view([game(10, 'Kolibri')]);
     expect(unrated.text('.dossier .mark.rating.off')).toEqual(['No rating']);
@@ -161,6 +166,7 @@ describe('the Collector view', () => {
   it('labels the case with its grade, system and serial', async () => {
     const { v, text } = await view([game(7, 'After Burner', BOXED)]);
     expect(text('.slab-label .what strong')).toEqual(['After Burner']);
+    expect(text('.slab-label .publisher')).toEqual(['Sega of America']);
     expect(text('.slab-label .line')).toEqual(['1995 · Sega 32X']);
     expect(text('.slab-label .serial')).toEqual(['SEGA32X-000007']);
     expect(text('.slab-label .grade strong')).toEqual(['3.5/5']);
@@ -173,15 +179,15 @@ describe('the Collector view', () => {
   it('rests behind the shelf while it shows, and turns again once it is gone', async () => {
     const { v } = await view([game(7, 'After Burner', BOXED), game(8, 'Space Harrier', BOXED)]);
     const box = v.root.querySelector<HTMLElement>('.cbox')!;
-    vi.advanceTimersByTime(2500);
+    await vi.advanceTimersByTimeAsync(2500);
     // A step and back just before its first turn: the shelf is up over the same game.
     v.select(1);
     v.select(0);
     expect(v.root.classList.contains('browsing')).toBe(true);
-    vi.advanceTimersByTime(1000);
+    await vi.advanceTimersByTimeAsync(1000);
     expect(box.dataset.pose).toBe('front');
     // The shelf gone, the box turns again.
-    vi.advanceTimersByTime(4500);
+    await vi.advanceTimersByTimeAsync(4500);
     expect(v.root.classList.contains('browsing')).toBe(false);
     expect(box.dataset.pose).toBe('spine');
   });
@@ -190,47 +196,105 @@ describe('the Collector view', () => {
     const { v } = await view([game(7, 'After Burner', BOXED)]);
     const box = v.root.querySelector<HTMLElement>('.cbox')!;
     expect(box.dataset.pose).toBe('front');
-    vi.advanceTimersByTime(3300);
+    // The list opens with the shelf shown a moment: it turns from when it goes.
+    await vi.advanceTimersByTimeAsync(4700);
     expect(box.dataset.pose).toBe('spine');
     v.turn(1);
     expect(box.dataset.pose).toBe('back');
     // Turned by hand, it no longer turns by itself.
-    vi.advanceTimersByTime(20_000);
+    await vi.advanceTimersByTimeAsync(20_000);
     expect(box.dataset.pose).toBe('back');
     v.turn(-1);
     expect(box.dataset.pose).toBe('spine');
     expect(box.style.transform).toBe('rotateY(90deg)');
   });
 
+  it("puts the first game's shot on the shelf's TV as the list opens", async () => {
+    const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
+    const img = v.root.querySelector<HTMLImageElement>('.nav-pic .tv-screen img');
+    expect(img?.getAttribute('src')).toBe('forma://media/1/image?w=400');
+  });
+
+  it('readies the TV pictures round the game shown, and steps to one show it at once', async () => {
+    // Pictures load at once here, as one loaded ahead would.
+    const complete = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'complete');
+    const width = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'naturalWidth');
+    Object.defineProperty(HTMLImageElement.prototype, 'complete', {
+      configurable: true,
+      get: () => true
+    });
+    Object.defineProperty(HTMLImageElement.prototype, 'naturalWidth', {
+      configurable: true,
+      get: () => 320
+    });
+    try {
+      const games = [1, 2, 3, 4].map((n) => game(n, `Game ${n}`, BOXED));
+      const { v } = await view(games);
+      const tv = () =>
+        [...v.root.querySelectorAll<HTMLImageElement>('.nav-pic .tv-screen img')].map((i) =>
+          i.getAttribute('src')
+        );
+      // Resting on the first: the next games' pictures are made ready.
+      v.select(1);
+      await vi.advanceTimersByTimeAsync(2100);
+      // A step: its picture on the TV straight away, not at the peek.
+      v.select(2);
+      expect(tv()).toContain('forma://media/3/image?w=400');
+    } finally {
+      if (complete) Object.defineProperty(HTMLImageElement.prototype, 'complete', complete);
+      if (width) Object.defineProperty(HTMLImageElement.prototype, 'naturalWidth', width);
+    }
+  });
+
+  it("starts a new game's box on its front, whatever the last one's turn", async () => {
+    const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
+    await vi.advanceTimersByTimeAsync(4700);
+    expect(v.root.querySelector<HTMLElement>('.cbox')!.dataset.pose).toBe('spine');
+    v.select(1);
+    await vi.advanceTimersByTimeAsync(1500);
+    const box = v.root.querySelector<HTMLElement>('.cbox')!;
+    expect(box.dataset.pose).toBe('front');
+    expect(box.style.transform).toBe('rotateY(0deg)');
+    // Turning from when it is seen, the shelf gone.
+    await vi.advanceTimersByTimeAsync(2000);
+    expect(box.dataset.pose).toBe('front');
+    await vi.advanceTimersByTimeAsync(1500);
+    expect(box.dataset.pose).toBe('spine');
+  });
+
   it('shows the dossier: what is known, what it offers, what was played', async () => {
     const { v, text } = await view([
       { ...game(7, 'After Burner', BOXED), path: 'After Burner (USA, Japan) (En,Ja) (Rev 1).7z' }
     ]);
-    expect(text('.dossier .part h3')).toEqual(['Release', 'Play record']);
+    expect(text('.dossier .part h3')).toEqual(['Game', 'Dump', 'Play record']);
     expect(text('.dossier .specs dt')).toEqual([
-      'Released',
-      'Developer',
-      'Publisher',
       'Genre',
       'Region',
+      'Developer',
+      'Publisher',
+      'Released',
+      'Type',
       'Version',
       'Languages',
       'Played',
       'Time'
     ]);
     const dd = text('.dossier .specs dd');
-    expect(dd[0]).toMatch(/^13 Jan 1995 · \d+ years ago$/);
-    expect(dd[1]).toBe('Rutubo Games');
+    // The game first: its genre, where, who made it and who sold it, when.
+    expect(dd[0]).toBe('Shooter');
+    expect(dd[2]).toBe('Rutubo Games');
+    expect(dd[4]).toMatch(/^13 Jan 1995 · \d+ years ago$/);
     // From the ROM's name, before the gamelist's: flags alone, their names for screen readers.
     const flags = (n: number) =>
       [...v.root.querySelectorAll('.dossier .specs .flags')][n]!.querySelectorAll('.chip');
-    expect([...flags(0)].map((c) => c.getAttribute('title'))).toEqual(['USA', 'Japan']);
-    expect([...flags(1)].map((c) => c.getAttribute('title'))).toEqual(['English', 'Japanese']);
-    expect(text('.dossier .specs .flags')).toEqual(['', '']);
-    expect(dd[5]).toBe('Revision 1');
+    // Each flag with its name on screen.
+    expect([...flags(0)].map((c) => c.textContent)).toEqual(['USA', 'Japan']);
+    expect([...flags(1)].map((c) => c.textContent)).toEqual(['English', 'Japanese']);
+    expect(v.root.querySelectorAll('.dossier .specs .flags .flag')).toHaveLength(4);
+    expect(dd.slice(5, 7)).toEqual(['Release', 'Revision 1']);
     // Its pictures are not listed: they are on the screen.
     expect(v.root.querySelector('.dossier .archive')).toBeNull();
-    expect(dd.slice(7)).toEqual(['2×', '10 min']);
+    expect(dd.slice(8)).toEqual(['2×', '10 min']);
     // What it offers: players; no manual, achievements nor rating: their tiles there, faded.
     expect(text('.dossier .mark.on')).toEqual(['1 player']);
     expect(text('.dossier .mark.off')).toEqual(['No manual', '– / –', 'No rating']);
@@ -242,24 +306,84 @@ describe('the Collector view', () => {
     ]);
   });
 
-  it('puts the languages by the version and status, a translation’s language by it', async () => {
+  it('says a fan translation is one, who made its patch, and into what', async () => {
     const { v, text } = await view([
-      { ...game(7, 'After Burner', BOXED), path: 'After Burner (Japan) (T-En by Someone).md' }
+      {
+        ...game(7, 'After Burner', BOXED),
+        path: 'After Burner (Japan) [T-En by Twilight Translations v1.0].md'
+      }
     ]);
     const dt = text('.dossier .specs dt');
-    expect(dt.slice(dt.indexOf('Status'), dt.indexOf('Status') + 2)).toEqual([
-      'Status',
+    const dd = text('.dossier .specs dd');
+    expect(dt.slice(dt.indexOf('Type'), dt.indexOf('Type') + 3)).toEqual([
+      'Type',
+      'Patch',
       'Languages'
     ]);
+    expect(dd[dt.indexOf('Type')]).toBe('Fan translation');
+    expect(dd[dt.indexOf('Patch')]).toBe('Twilight Translations v1.0');
     expect(v.root.querySelector('.dossier .specs .flags')).not.toBeNull();
     // A manual: a mark by the players, not a row.
-    expect(text('.dossier .part h3')).toEqual(['Release', 'Play record']);
+    expect(text('.dossier .part h3')).toEqual(['Game', 'Dump', 'Play record']);
+  });
+
+  it('says whether the file is a catalogued dump, once Forma has checked it', async () => {
+    const { v, text } = await view([
+      {
+        ...game(7, 'After Burner', BOXED),
+        dump: {
+          status: 'verified',
+          catalogue: 'no-intro',
+          name: 'After Burner (USA)',
+          region: 'USA'
+        }
+      }
+    ]);
+    const dt = text('.dossier .specs dt');
+    expect(text('.dossier .specs dd')[dt.indexOf('Integrity')]).toBe('No-IntroVerified');
+    expect(text('.dossier .dump .seal')).toEqual(['No-Intro']);
+    expect(v.root.querySelector('.dossier .dump')?.getAttribute('aria-label')).toBe(
+      'Verified by No-Intro'
+    );
+    expect(text('.dossier .dump .badge .verdict')).toEqual(['Verified']);
+    expect(dumpText(null)).toBeNull();
+    // A file more than one catalogue lists: a badge each, in a row.
+    const both = dumpText([
+      { status: 'verified', catalogue: 'no-intro', name: 'Sonic (World)', region: null },
+      { status: 'crcOnly', catalogue: 'redump', name: 'Sonic (Japan)', region: null }
+    ]);
+    expect([...both!.querySelectorAll('.badge')].map((b) => b.textContent)).toEqual([
+      'No-IntroVerified',
+      'RedumpCRC32 match'
+    ]);
+    // Just the labels: not the catalogue's name for the dump.
+    expect(both!.querySelector('.listed')).toBeNull();
+    expect(
+      dumpText({ status: 'notCatalogued', catalogue: null, name: null, region: null })?.textContent
+    ).toBe('Not catalogued');
+  });
+
+  it('takes the release kind and its number apart', () => {
+    expect(releaseOf(null)).toEqual({ kind: null, number: null, status: null });
+    expect(releaseOf('Proto', 'Unl · Hack')).toEqual({
+      kind: 'Prototype · Unlicensed',
+      number: null,
+      status: 'Hack'
+    });
+    expect(releaseOf('Proto 1')).toEqual({ kind: 'Prototype', number: '1', status: null });
+    expect(releaseOf('Beta')).toEqual({ kind: 'Beta', number: null, status: null });
+    expect(releaseOf('Demo · Rev 1')).toEqual({ kind: 'Demo', number: 'Revision 1', status: null });
+    expect(releaseOf('v1.1')).toEqual({ kind: null, number: '1.1', status: null });
+    expect(releaseOf('Kiosk')).toEqual({ kind: 'Kiosk demo', number: null, status: null });
+    expect(releaseOf('Alt 2')).toEqual({ kind: null, number: 'Alternate 2', status: null });
   });
 
   it("says the dump's version in words", () => {
     expect(versionText(null)).toBe('Original release');
     expect(versionText('Rev 1')).toBe('Revision 1');
     expect(versionText('Rev a')).toBe('Revision A');
+    expect(versionText('Proto 2')).toBe('Prototype 2');
+    expect(versionText('Kiosk')).toBe('Kiosk demo');
     expect(versionText('v1.1')).toBe('Version 1.1');
     expect(versionText('Proto')).toBe('Prototype');
     expect(versionText('Beta 2')).toBe('Beta 2');
@@ -283,6 +407,37 @@ describe('the Collector view', () => {
     expect(v.root.querySelector('.dossier .bar')).toBeNull();
   });
 
+  it('readies the neighbours as a list opens: the first step from there needs nothing fetched', async () => {
+    const asked: number[] = [];
+    const games = [1, 2, 3].map((n) => ({ ...game(n, `Game ${n}`, BOXED), raGameId: n }));
+    await view(games, {
+      achievements: (g) => {
+        asked.push(g.id);
+        return Promise.resolve({ earned: 0, total: 10 } as never);
+      }
+    });
+    await vi.advanceTimersByTimeAsync(500);
+    expect(asked).toEqual(expect.arrayContaining([2, 3]));
+  });
+
+  it('asks for the achievements of the games round the one shown, once each, ahead', async () => {
+    const asked: number[] = [];
+    const games = [1, 2, 3, 4, 5].map((n) => ({ ...game(n, `Game ${n}`, BOXED), raGameId: n }));
+    const { v } = await view(games, {
+      achievements: (g) => {
+        asked.push(g.id);
+        return Promise.resolve({ earned: 0, total: 10 } as never);
+      }
+    });
+    v.select(1);
+    await vi.advanceTimersByTimeAsync(2100);
+    // The neighbours' asked for while resting, before any step to them.
+    expect(asked).toEqual(expect.arrayContaining([1, 2, 3, 4]));
+    v.select(2);
+    await vi.advanceTimersByTimeAsync(2100);
+    expect(asked.filter((id) => id === 3)).toHaveLength(1);
+  });
+
   it('keeps what kind of copy it is apart from its version', async () => {
     const rows = async (path: string) => {
       const { text } = await view([{ ...game(7, 'Tanglewood', BOXED), path }]);
@@ -291,65 +446,48 @@ describe('the Collector view', () => {
       return Object.fromEntries(labels.map((label, i) => [label, values[i]]));
     };
     const both = await rows('Tanglewood (World) (v1.1) (Aftermarket) (Unl).md');
-    expect(both['Version']).toBe('Version 1.1');
-    expect(both['Status']).toBe('Homebrew · Unlicensed');
+    // Homebrew and unlicensed are how it was released.
+    expect(both['Type']).toBe('Homebrew · Unlicensed');
+    expect(both['Version']).toBe('1.1');
     const noVersion = await rows('Tanglewood (World) (Aftermarket) (Unl).md');
+    expect(noVersion['Type']).toBe('Homebrew · Unlicensed');
     expect(noVersion['Version']).toBeUndefined();
-    expect(noVersion['Status']).toBe('Homebrew · Unlicensed');
+    // Changed since: a hack, a translation, what it was released as before it.
+    const hack = await rows('Tanglewood (USA) [h1].md');
+    expect(hack['Type']).toBe('Hack');
+    const translated = await rows('Tanglewood (China) (Unl) (Translated En).md');
+    expect(translated['Type']).toBe('Unlicensed · Fan translation');
+    expect(translated['Patch']).toBeUndefined();
     const plain = await rows('Tanglewood (USA).md');
-    expect(plain['Version']).toBe('Original release');
-    expect(plain['Status']).toBeUndefined();
+    expect(plain['Type']).toBe('Release');
+    expect(plain['Version']).toBeUndefined();
+    const proto = await rows('Tanglewood (USA) (Proto 2).md');
+    expect([proto['Type'], proto['Version']]).toEqual(['Prototype', '2']);
   });
 
-  it('fades the new fan art in over the old, which goes once covered: never a dip to dark', async () => {
+  it('changes the fan art at each stop as the shelf moves, the new one over the old', async () => {
     const art = { ...BOXED, fanart: 'art' };
     const { v } = await view([game(1, 'After Burner', art), game(2, 'Doom', art)]);
     const imgs = () => [...v.root.querySelectorAll<HTMLImageElement>('.collector-backdrop img')];
-    const settle = async () => {
-      await Promise.resolve();
-      await Promise.resolve();
-    };
-    imgs()[0]!.dispatchEvent(new Event('load'));
-    await settle();
-    expect(imgs()[0]!.classList.contains('waiting')).toBe(false);
-    vi.advanceTimersByTime(2100);
+    await vi.advanceTimersByTimeAsync(2100);
+    const [old] = imgs();
+    old!.dispatchEvent(new Event('load'));
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(old!.classList.contains('waiting')).toBe(false);
     v.select(1);
-    // Not until the selection pauses, ahead of the rest of the game.
-    expect(imgs()).toHaveLength(1);
-    vi.advanceTimersByTime(230);
-    expect(v.root.classList.contains('arriving')).toBe(false);
-    const [first, next] = imgs();
-    expect(next?.classList.contains('waiting')).toBe(true);
-    // The old one stays whole while the new one loads and fades in over it.
-    expect(first?.classList.contains('leaving')).toBe(false);
-    next!.dispatchEvent(new Event('load'));
-    await settle();
-    expect(next!.classList.contains('waiting')).toBe(false);
-    expect(first!.classList.contains('leaving')).toBe(false);
-    // Not on a clock alone: gone when the fade has really ended.
-    vi.advanceTimersByTime(600);
-    expect(imgs()).toEqual([first, next]);
-    next!.dispatchEvent(new Event('transitionend'));
-    expect(imgs()).toEqual([next]);
-  });
-
-  it('removes the old fan art in the end, even if the fade never reports', async () => {
-    const art = { ...BOXED, fanart: 'art' };
-    const { v } = await view([game(1, 'After Burner', art), game(2, 'Doom', art)]);
-    const imgs = () => [...v.root.querySelectorAll<HTMLImageElement>('.collector-backdrop img')];
-    const settle = async () => {
-      await Promise.resolve();
-      await Promise.resolve();
-    };
-    imgs()[0]!.dispatchEvent(new Event('load'));
-    await settle();
-    vi.advanceTimersByTime(2100);
-    v.select(1);
-    vi.advanceTimersByTime(230);
+    // Stopped on it, the shelf still showing: the new one comes over the old (a crossfade).
+    await vi.advanceTimersByTimeAsync(400);
+    expect(v.root.classList.contains('browsing')).toBe(true);
+    expect(imgs()).toHaveLength(2);
     const next = imgs()[1]!;
+    expect(next.classList.contains('waiting')).toBe(true);
     next.dispatchEvent(new Event('load'));
-    await settle();
-    vi.advanceTimersByTime(900);
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(next.classList.contains('waiting')).toBe(false);
+    // The old goes once covered, even if the fade never reports.
+    await vi.advanceTimersByTimeAsync(2000);
     expect(imgs()).toEqual([next]);
   });
 
@@ -361,21 +499,21 @@ describe('the Collector view', () => {
       game(3, 'Quake', art)
     ]);
     const imgs = () => [...v.root.querySelectorAll<HTMLImageElement>('.collector-backdrop img')];
+    await vi.advanceTimersByTimeAsync(2100);
     expect(imgs()).toHaveLength(1);
     imgs()[0]!.dispatchEvent(new Event('load'));
     await Promise.resolve();
     await Promise.resolve();
-    vi.advanceTimersByTime(2100);
     v.select(1);
-    vi.advanceTimersByTime(230);
+    await vi.advanceTimersByTimeAsync(1450);
     expect(imgs()).toHaveLength(2);
     // Showing the same game once it has rested adds no second picture of it.
-    vi.advanceTimersByTime(750);
+    await vi.advanceTimersByTimeAsync(750);
     expect(imgs()).toHaveLength(2);
     // On to another before Doom's had loaded: Doom's is dropped.
     const doom = imgs()[1];
     v.select(2);
-    vi.advanceTimersByTime(230);
+    await vi.advanceTimersByTimeAsync(1450);
     expect(imgs()).not.toContain(doom);
     expect(imgs()).toHaveLength(2);
   });
@@ -387,32 +525,188 @@ describe('the Collector view', () => {
       game(3, 'Quake', BOXED)
     ]);
     const held = () => v.root.querySelector('.track')!.classList.contains('held');
-    vi.advanceTimersByTime(2100);
+    await vi.advanceTimersByTimeAsync(2100);
     v.select(1);
     expect(held()).toBe(false);
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
-    vi.advanceTimersByTime(80);
+    await vi.advanceTimersByTimeAsync(80);
     v.select(2);
     expect(held()).toBe(true);
     // The label waits for the selection to rest.
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
-    vi.advanceTimersByTime(300);
+    await vi.advanceTimersByTimeAsync(300);
     expect(text('.slab-label .what strong')).toEqual(['Quake']);
     v.select(1);
     expect(held()).toBe(false);
   });
 
+  it('races when the direction is held a second: nothing loaded, the letter on the TV', async () => {
+    const names = ['Alien', 'Bomb', 'Crash', 'Doom', 'Echo', 'Fury', 'Gun', 'Hex', 'Ion', 'Jet'];
+    const games = [...names, ...names.map((n) => `${n} 2`), '3 Ninjas'].map((n, i) =>
+      game(i + 1, n, BOXED)
+    );
+    const { v } = await view(games);
+    await vi.advanceTimersByTimeAsync(2100);
+    const racing = () => v.root.classList.contains('racing');
+    const letter = () => v.root.querySelector('.tv-letter')?.textContent;
+    for (let i = 1; i <= 13; i++) {
+      v.select(i);
+      await vi.advanceTimersByTimeAsync(90);
+    }
+    // Over a second held: racing, the TV and the dossier empty, the letter the shelf is at.
+    expect(racing()).toBe(true);
+    expect(letter()).toBe('D');
+    expect(v.root.querySelector('.nav-pic .tv-screen img')).toBeNull();
+    expect(v.root.querySelector('.dossier')!.children).toHaveLength(0);
+    v.select(20);
+    expect(letter()).toBe('#');
+    // Let go: the game stopped at loads as after any step, its dossier once it rests.
+    await vi.advanceTimersByTimeAsync(400);
+    expect(racing()).toBe(false);
+    await vi.advanceTimersByTimeAsync(1500);
+    expect(v.root.querySelector('.dossier h2')?.textContent).toBe('3 Ninjas');
+  });
+
+  it('shows the games run past every half second while the direction is held', async () => {
+    const games = Array.from({ length: 12 }, (_, i) => game(i + 1, `Game ${i + 1}`, BOXED));
+    const { v, text } = await view(games);
+    await vi.advanceTimersByTimeAsync(2100);
+    v.select(1);
+    for (let i = 2; i <= 8; i++) {
+      await vi.advanceTimersByTimeAsync(100);
+      v.select(i);
+    }
+    // 700 ms held: the label has followed once on the way, not waited for the stop.
+    expect(text('.slab-label .what strong')).not.toEqual(['Game 2']);
+  });
+
   it('fades a new game in once the selection rests; the label alone follows each step', async () => {
     const { v, text } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
-    vi.advanceTimersByTime(2100);
+    await vi.advanceTimersByTimeAsync(2100);
     expect(v.root.classList.contains('arriving')).toBe(false);
     v.select(1);
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
     expect(v.root.classList.contains('arriving')).toBe(false);
-    vi.advanceTimersByTime(760);
-    expect(v.root.classList.contains('arriving')).toBe(true);
-    vi.advanceTimersByTime(360);
+    // Not at once: a quicker press would pass it by.
+    await vi.advanceTimersByTimeAsync(250);
     expect(v.root.classList.contains('arriving')).toBe(false);
+    // Rested, and its pictures loaded: then it replaces the last (from the next frame).
+    await vi.advanceTimersByTimeAsync(120);
+    expect(v.root.classList.contains('arriving')).toBe(true);
+    await vi.advanceTimersByTimeAsync(360);
+    expect(v.root.classList.contains('arriving')).toBe(false);
+  });
+
+  it("keeps the game shown until the next one's pictures have loaded, then replaces it", async () => {
+    const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
+    await vi.advanceTimersByTimeAsync(2100);
+    const waiting: (() => void)[] = [];
+    Object.defineProperty(HTMLImageElement.prototype, 'decode', {
+      configurable: true,
+      value: () => new Promise<void>((done) => waiting.push(done))
+    });
+    try {
+      v.select(1);
+      await vi.advanceTimersByTimeAsync(960);
+      // Doom's pictures still loading: After Burner's case still there, nothing emptied.
+      expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).toContain('media/1/');
+      waiting.forEach((done) => done());
+      await vi.advanceTimersByTimeAsync(0);
+      expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).toContain('media/2/');
+    } finally {
+      delete (HTMLImageElement.prototype as { decode?: unknown }).decode;
+    }
+  });
+
+  it('keeps the label as it is when the game it follows is drawn whole', async () => {
+    const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
+    await vi.advanceTimersByTimeAsync(2100);
+    v.select(1);
+    const label = v.root.querySelector('.slab-label');
+    expect(label?.querySelector('.what strong')?.textContent).toBe('Doom');
+    await vi.advanceTimersByTimeAsync(2000);
+    // Drawn whole by now (its case is Doom's): the label not drawn again.
+    expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).toContain('media/2/');
+    expect(v.root.querySelector('.slab-label')).toBe(label);
+  });
+
+  it("keeps the label's system logo through the steps, not a new one blinking in", async () => {
+    const wide = vi.spyOn(HTMLImageElement.prototype, 'naturalWidth', 'get').mockReturnValue(96);
+    const done = vi.spyOn(HTMLImageElement.prototype, 'complete', 'get').mockReturnValue(true);
+    try {
+      const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
+      await vi.advanceTimersByTimeAsync(2100);
+      const logo = v.root.querySelector('.slab-label .mark img');
+      expect(logo).not.toBeNull();
+      v.select(1);
+      expect(v.root.querySelector('.slab-label .what strong')?.textContent).toBe('Doom');
+      expect(v.root.querySelector('.slab-label .mark img')).toBe(logo);
+    } finally {
+      wide.mockRestore();
+      done.mockRestore();
+    }
+  });
+
+  it("frames the selected game's picture left of the shelf while it shows", async () => {
+    const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
+    await vi.advanceTimersByTimeAsync(2100);
+    v.select(1);
+    // Once the steps pause: games passed by quickly load nothing.
+    await vi.advanceTimersByTimeAsync(200);
+    const pic = v.root.querySelector('.nav-pic img');
+    // Its picture (the box, where it has nothing else), coming in once decoded.
+    expect(pic?.getAttribute('src')).toContain('media/2/');
+    expect(v.root.classList.contains('browsing')).toBe(true);
+    await vi.advanceTimersByTimeAsync(1300);
+    // The shelf gone, its picture goes with it (style.css: shown only while browsing).
+    expect(v.root.classList.contains('browsing')).toBe(false);
+  });
+
+  it('keeps the shelf up past a switch-on the list opened under', async () => {
+    const games = ['After Burner', 'Doom'].map((n, i) => game(i + 1, n, BOXED));
+    const { v } = await view(games);
+    const browsing = () => v.root.classList.contains('browsing');
+    expect(browsing()).toBe(true);
+    v.holdShelf(1500);
+    // Past its usual time, still up; gone the usual time after the switch-on.
+    await vi.advanceTimersByTimeAsync(2100);
+    expect(browsing()).toBe(true);
+    await vi.advanceTimersByTimeAsync(900);
+    expect(browsing()).toBe(false);
+    // At rest, nothing to hold.
+    v.holdShelf(1500);
+    expect(browsing()).toBe(false);
+  });
+
+  it('shows the details at each press, never dimmed, none while held', async () => {
+    const games = ['After Burner', 'Doom', 'Echo'].map((n, i) => game(i + 1, n, BOXED));
+    const { v } = await view(games);
+    await vi.advanceTimersByTimeAsync(2100);
+    const dossier = v.root.querySelector('.dossier')!;
+    // A press: its game's details the frame after, not at the peek.
+    v.select(1);
+    await vi.advanceTimersByTimeAsync(20);
+    expect(dossier.textContent).toContain('Doom');
+    // Held (steps closer than a press): the game passed by is not drawn.
+    await vi.advanceTimersByTimeAsync(200);
+    v.select(2);
+    v.select(0);
+    await vi.advanceTimersByTimeAsync(20);
+    expect(dossier.textContent).toContain('Doom');
+    // A pause: the details of the game stopped at.
+    await vi.advanceTimersByTimeAsync(250);
+    expect(dossier.textContent).toContain('After Burner');
+    v.select(2);
+    await vi.advanceTimersByTimeAsync(20);
+    expect(dossier.textContent).toContain('Echo');
+    expect(v.root.querySelector('.slab-label')?.textContent).toContain('Echo');
+    // A slow step: its game's details, then its showcase, before the next press would come.
+    v.select(1);
+    await vi.advanceTimersByTimeAsync(200);
+    expect(dossier.textContent).toContain('Doom');
+    await vi.advanceTimersByTimeAsync(250);
+    expect(v.root.querySelector('.showcase')?.textContent ?? dossier.textContent).toContain('Doom');
+    expect(dossier.className).not.toContain('stale');
   });
 
   it('stars a favourite in the label, and a reload of the same game moves nothing', async () => {
@@ -422,7 +716,7 @@ describe('the Collector view', () => {
     expect(star().classList.contains('on')).toBe(false);
     const box = v.root.querySelector('.cbox');
     // The shelf gone after the first show.
-    vi.advanceTimersByTime(2100);
+    await vi.advanceTimersByTimeAsync(2100);
     expect(v.root.classList.contains('browsing')).toBe(false);
     // The list reloaded after the favourite was set: the same game, starred.
     const list = new LazyList<Game>(
@@ -439,7 +733,7 @@ describe('the Collector view', () => {
   it('draws the game again when a scrape changes it, without moving the shelf', async () => {
     const g = game(7, 'After Burner', BOXED);
     const { v } = await view([g]);
-    vi.advanceTimersByTime(2100);
+    await vi.advanceTimersByTimeAsync(2100);
     const list = new LazyList<Game>(
       () => Promise.resolve({ items: [{ ...g, description: 'Freshly scraped.' }], total: 1 }),
       50
@@ -448,6 +742,43 @@ describe('the Collector view', () => {
     v.show(list, 0);
     expect(v.root.textContent).toContain('Freshly scraped.');
     expect(v.root.classList.contains('browsing')).toBe(false);
+  });
+
+  it('scrolls a long story to its end and back to its start, over and over, paused under the shelf', async () => {
+    const proto = HTMLElement.prototype;
+    const client = Object.getOwnPropertyDescriptor(proto, 'clientHeight');
+    const scroll = Object.getOwnPropertyDescriptor(proto, 'scrollHeight');
+    Object.defineProperty(proto, 'clientHeight', { configurable: true, get: () => 100 });
+    Object.defineProperty(proto, 'scrollHeight', { configurable: true, get: () => 340 });
+    const running = { pause: vi.fn(), play: vi.fn(), cancel: vi.fn() };
+    const animate = vi.fn(() => running as unknown as Animation);
+    (proto as unknown as { animate: unknown }).animate = animate;
+    try {
+      const games = [
+        { ...game(1, 'After Burner', BOXED), description: 'A long story. '.repeat(80) },
+        game(2, 'Doom', BOXED)
+      ];
+      const { v } = await view(games);
+      await vi.advanceTimersByTimeAsync(2100);
+      const call = animate.mock.calls.find((c) =>
+        JSON.stringify(c).includes('translateY(-240px)')
+      ) as unknown as [Keyframe[], KeyframeAnimationOptions] | undefined;
+      expect(call).toBeDefined();
+      const [frames, options] = call!;
+      expect(options.iterations).toBe(Infinity);
+      expect(frames[0]).toMatchObject({ transform: 'translateY(0)', opacity: 1 });
+      expect(frames.at(-1)).toMatchObject({ transform: 'translateY(0)', opacity: 1 });
+      // Whole pixels at a time.
+      expect(frames.some((f) => f.easing === 'steps(240)')).toBe(true);
+      // No pages: all of it, scrolled.
+      expect(v.root.querySelector('.bay.story .pager')?.textContent).toBe('');
+      v.select(1);
+      expect(running.pause).toHaveBeenCalled();
+    } finally {
+      delete (proto as unknown as { animate?: unknown }).animate;
+      if (client) Object.defineProperty(proto, 'clientHeight', client);
+      if (scroll) Object.defineProperty(proto, 'scrollHeight', scroll);
+    }
   });
 
   it('cuts a story into pages that fit, between sentences', () => {
@@ -467,6 +798,18 @@ describe('the Collector view', () => {
     ]);
   });
 
+  it("draws an Atari's spines a little bigger, rows and all", async () => {
+    const { v } = await view([
+      { ...game(1, 'Asteroids'), system: 'atari7800' },
+      { ...game(2, 'Xevious'), system: 'atari7800' }
+    ]);
+    const shelf = v.root.querySelector<HTMLElement>('.shelf')!;
+    expect(shelf.style.getPropertyValue('--spine-h')).toBe('3.19rem');
+    expect(shelf.style.getPropertyValue('--spine-len')).toBe('24.64rem');
+    const rows = [...v.root.querySelectorAll<HTMLElement>('.spine-row')].map((r) => r.style.top);
+    expect(rows).toContain('3.584rem');
+  });
+
   it('with more games than it shows, puts the last ones before the first', async () => {
     const tall = vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(320);
     const { v, text } = await view(
@@ -478,9 +821,9 @@ describe('the Collector view', () => {
       )?.style.top;
     expect(top('Game 30')).toBe('-3.2rem');
     expect(top('Game 2')).toBe('3.2rem');
-    vi.advanceTimersByTime(500);
+    await vi.advanceTimersByTimeAsync(500);
     v.select(29);
-    expect(text('.spine-row.selected .title')).toEqual(['Game 30']);
+    expect(text('.spine-row[aria-selected="true"] .title')).toEqual(['Game 30']);
     expect(top('Game 30')).toBe('-3.2rem'); // one step up, not all the way down the list
     tall.mockRestore();
   });
@@ -510,14 +853,14 @@ describe('the Collector view', () => {
     expect(text('.spine-row .title')).toEqual(['After Burner', 'Doom', 'Kolibri']);
     // Its own spine picture where it has one; Doom and Kolibri have none.
     expect(v.root.querySelectorAll('.spine-row.pictured .spine-pic')).toHaveLength(1);
-    vi.advanceTimersByTime(500);
+    await vi.advanceTimersByTimeAsync(500);
     v.select(1);
-    expect(text('.spine-row.selected .title')).toEqual(['Doom']);
+    expect(text('.spine-row[aria-selected="true"] .title')).toEqual(['Doom']);
     // The label at once, lit over the shelf; the rest of the showcase once the selection rests.
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
-    vi.advanceTimersByTime(600);
+    await vi.advanceTimersByTimeAsync(200);
     expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).not.toBe(DEFAULT_FRONT);
-    vi.advanceTimersByTime(200);
+    await vi.advanceTimersByTimeAsync(400);
     // Nothing to make a cover from: the default box, and static where the footage would be.
     expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).toBe(DEFAULT_FRONT);
     expect(text('.no-signal span')).toEqual(['No signal']);
@@ -550,9 +893,9 @@ describe('the shelf and the video', () => {
     await list.start(0);
     v.show(list, 0);
     expect(v.root.classList.contains('browsing')).toBe(true);
-    vi.advanceTimersByTime(2100);
+    await vi.advanceTimersByTimeAsync(2100);
     expect(v.root.classList.contains('browsing')).toBe(false);
-    vi.advanceTimersByTime(1500);
+    await vi.advanceTimersByTimeAsync(1500);
     expect(play).toHaveBeenCalledTimes(1);
     expect(play.mock.calls[0]?.[1]).toEqual({ left: 0.25, top: 0.2, width: 0.5, height: 0.6 });
     await Promise.resolve();
@@ -605,13 +948,34 @@ describe('a preview video', () => {
     const stopVideo = vi.fn();
     const g = game(7, 'After Burner', { ...BOXED, video: 'clip' });
     const { v } = await view([g], { play, stopVideo });
-    vi.advanceTimersByTime(3000);
+    await vi.advanceTimersByTimeAsync(3000);
     expect(play).toHaveBeenCalledTimes(1);
 
     v.leave();
     expect(stopVideo).toHaveBeenCalledTimes(1);
     started({ playing: true, sound: true });
     await vi.waitFor(() => expect(stopVideo).toHaveBeenCalledTimes(2));
+    rect.mockRestore();
+  });
+});
+
+describe("Forma's menu over the view", () => {
+  it('stops the video under it and plays it again once it closes', async () => {
+    const box = { left: 0, top: 0, right: 100, bottom: 100, width: 100, height: 100 };
+    const rect = vi
+      .spyOn(Element.prototype, 'getBoundingClientRect')
+      .mockReturnValue(box as DOMRect);
+    const play = vi.fn(() => Promise.resolve({ playing: true, sound: true }));
+    const stopVideo = vi.fn();
+    const g = game(7, 'After Burner', { ...BOXED, video: 'clip' });
+    const { v } = await view([g], { play, stopVideo });
+    await vi.advanceTimersByTimeAsync(3000);
+    expect(play).toHaveBeenCalledTimes(1);
+
+    v.menu(true);
+    expect(stopVideo).toHaveBeenCalledTimes(1);
+    v.menu(false);
+    expect(play).toHaveBeenCalledTimes(2);
     rect.mockRestore();
   });
 });
@@ -625,18 +989,76 @@ describe('coming back to the same game', () => {
     const play = vi.fn(() => Promise.resolve({ playing: false, sound: false }));
     const g = game(7, 'After Burner', { ...BOXED, video: 'clip' });
     const { v, list } = await view([g], { play });
-    vi.advanceTimersByTime(3000);
+    await vi.advanceTimersByTimeAsync(3000);
     expect(play).toHaveBeenCalledTimes(1);
 
     v.leave();
     v.show(list, 0);
-    vi.advanceTimersByTime(3000);
+    await vi.advanceTimersByTimeAsync(3000);
     expect(play).toHaveBeenCalledTimes(2);
     rect.mockRestore();
   });
 });
 
 describe('the shelf in the shape of its spines', () => {
+  it('sizes a system’s shelf once, when its list opens, and never while it is browsed', async () => {
+    // Every spine picture a PC Engine HuCard's shape: 18.4 times as tall as wide.
+    const loaded: HTMLImageElement[] = [];
+    const Real = globalThis.Image;
+    globalThis.Image = class extends Real {
+      constructor() {
+        super();
+        loaded.push(this);
+        Object.defineProperty(this, 'naturalWidth', { value: 10 });
+        Object.defineProperty(this, 'naturalHeight', { value: 184 });
+        queueMicrotask(() => {
+          this.onload?.(new Event('load'));
+        });
+      }
+    };
+    try {
+      const games = Array.from({ length: 30 }, (_, i): Game => ({
+        ...game(i + 1, `Game ${i + 1}`, i % 3 ? {} : { boxside: 's' }),
+        system: 'pcengine'
+      }));
+      // A wide screen: room for long spines.
+      const rect = vi
+        .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+        .mockReturnValue({ left: 0, top: 0, width: 1600, height: 900 } as DOMRect);
+      const { v } = await view(games);
+      const shelf = v.root.querySelector<HTMLElement>('.shelf')!;
+      expect(shelf.style.getPropertyValue('--spine-len')).toBe('22rem');
+      for (let i = 0; i < 5; i++) await Promise.resolve();
+      rect.mockRestore();
+      expect(shelf.style.getPropertyValue('--spine-len')).toBe('49.29rem');
+      const sized = shelf.style.getPropertyValue('--spine-len');
+      expect(loaded.length).toBeLessThanOrEqual(8);
+      // Browsing loads no more pictures to measure, and the length stays.
+      for (let i = 1; i < 20; i++) v.select(i);
+      await Promise.resolve();
+      expect(shelf.style.getPropertyValue('--spine-len')).toBe(sized);
+      expect(loaded.length).toBeLessThanOrEqual(8);
+    } finally {
+      globalThis.Image = Real;
+    }
+  });
+
+  it('loads a long list’s pages ahead of the shelf', async () => {
+    const asked: number[] = [];
+    const games = Array.from({ length: 1000 }, (_, i) => game(i + 1, `Game ${i + 1}`));
+    const v = new CollectorView({ media, system: () => null });
+    document.body.replaceChildren(v.root);
+    const list = new LazyList<Game>((offset, limit) => {
+      asked.push(offset);
+      return Promise.resolve({ items: games.slice(offset, offset + limit), total: games.length });
+    }, 50);
+    await list.start(0);
+    v.show(list, 0);
+    v.select(5);
+    // More than the rows drawn ask for: the next page already on its way.
+    expect(Math.max(...asked.filter((o) => o < 500))).toBeGreaterThanOrEqual(50);
+  });
+
   it('keeps a Mega Drive spine as it was, makes a PC Engine one longer, as far as there is room', () => {
     expect(shelfShape(7.1, 100)).toBe(22);
     expect(shelfShape(18.4, 100)).toBe(49.29);
@@ -658,5 +1080,16 @@ describe('collector words', () => {
     expect(serial(game(42, 'X'))).toBe('SEGA32X-000042');
     expect(hue('After Burner')).toBe(hue('After Burner'));
     expect(hue('After Burner')).not.toBe(hue('Doom'));
+  });
+});
+
+describe('tvEra', () => {
+  it("picks a console's TV from the year it came out, a plain frame for anything else", () => {
+    expect(tvEra('consoles', 1977)).toBe('wood');
+    expect(tvEra('consoles', 1986)).toBe('beige');
+    expect(tvEra('consoles', 1994)).toBe('black');
+    expect(tvEra('consoles', 2001)).toBe('flat');
+    expect(tvEra('consoles', null)).toBe('plain');
+    expect(tvEra('handhelds', 1989)).toBe('plain');
   });
 });

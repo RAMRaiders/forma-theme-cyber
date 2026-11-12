@@ -11,8 +11,17 @@ export function el<K extends keyof HTMLElementTagNameMap>(
 }
 
 /** Root font size in px: the layout is in rem, scaled to the screen height. */
+let rem = 0;
+if (typeof window !== 'undefined') window.addEventListener('resize', () => (rem = 0));
+
+/**
+ * The root font size in px, read once and kept (until the window is resized): reading it
+ * forces the browser to work out every style first, and a step along a list right after a
+ * class change paid for that whole page's styles at once.
+ */
 export function remPx(): number {
-  return parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+  if (!rem) rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 0;
+  return rem || 16;
 }
 
 /**

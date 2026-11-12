@@ -12,7 +12,10 @@ import { categoryArt } from './art.js';
 import { circuitSvg } from './circuit.js';
 import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
+import { loopScroll } from './loopscroll.js';
 import { preload, ready } from './preload.js';
+import { awake } from './rest.js';
+import { boot } from './boot.js';
 
 /**
  * Words that take turns stay as long as they take to read from a sofa: a moment to look over,
@@ -21,8 +24,6 @@ import { preload, ready } from './preload.js';
 const READ_START_MS = 3000;
 const READ_WORD_MS = 450;
 const READ_LEAST_MS = 6000;
-/** How long the text under the logo takes to fade out, before the next fades in. */
-const READ_FADE_MS = 300;
 /**
  * The board follows the selection once it has rested a while: a new board is a full-screen
  * drawing, costly on a Pi, so moving through the rail does not redraw it at every step.
@@ -43,8 +44,6 @@ const HELD_MS = 130;
 const SETTLE_MS = 600;
 /** How long the last page takes to fade under the next (as in style.css). */
 const PAGE_LEAVE_MS = 380;
-/** The power-on over a system's page: the line, the picture opening, the logo, the fade. */
-const BOOT_MS = 1500;
 /** How long each of its shelves (best sellers, magazines, peripherals) stays. */
 const SHELF_MS = 9000;
 /** The system's colours: a page keeps its own while it fades out. */
@@ -191,7 +190,8 @@ function makerRgb(maker: string): string | null {
 }
 
 /** The parts of the stage that change together when the selection moves. */
-type Slot = 'about' | 'maker' | 'life' | 'hardware' | 'console' | 'games' | 'reading' | 'fact';
+type Slot =
+  'about' | 'maker' | 'life' | 'hardware' | 'tally' | 'console' | 'games' | 'reading' | 'fact';
 
 /**
  * A category's systems: a strip of logos over the middle while moving, kept centred on the
@@ -226,9 +226,8 @@ export class SystemView {
   #makers: MakerLogo[] = [];
   #fact = 0;
   #factTimer: ReturnType<typeof setTimeout> | undefined;
-  /** Which of the description and the story's chapters shows under the logo. */
-  #read = 0;
-  #readTimer: ReturnType<typeof setTimeout> | undefined;
+  /** The description and story under the logo, scrolling (loopScroll). */
+  #storyScroll: Animation | null = null;
   #boardTimer: ReturnType<typeof setTimeout> | undefined;
   #dropTimer: ReturnType<typeof setTimeout> | undefined;
   #shelfTimer: ReturnType<typeof setTimeout> | undefined;
@@ -337,6 +336,8 @@ export class SystemView {
     this.#place = from >= 0 && this.#loops() ? loopPlace(this.#place, from, index, total) : index;
     this.#drawStrip();
     this.#centre();
+    // The selection frame in the system's colour at once, not when its page is drawn.
+    if (moved) this.#railColour(system, index);
     if (!quiet) this.#browse();
     this.#preload(index);
     const ticket = ++this.#ticket;
@@ -344,7 +345,6 @@ export class SystemView {
       if (ticket !== this.#ticket) return;
       this.#info = info;
       this.#fact = 0;
-      this.#read = 0;
       this.#render(system, !now, ticket);
       this.#drawBoard(system, now ? 0 : BOARD_MS);
     };
@@ -396,6 +396,24 @@ export class SystemView {
     document.documentElement.classList.toggle('systems-browsing', on);
   }
 
+  /**
+   * The selection frame in `system`'s colour, set on the strip alone: the page's own colours
+   * wait for its page, drawn once the steps rest. From what the list already knows (its maker
+   * from Forma, not yet its info's), so cheap at each step.
+   */
+  #railColour(system: CyberSystem, index: number): void {
+    const [rgb] = systemColours(
+      {
+        hues: system.hues,
+        consoleHues: system.consoleHues,
+        maker: system.summary.manufacturer,
+        category: system.category
+      },
+      index
+    );
+    this.#rail.style.setProperty('--sys', `rgb(${rgb})`);
+  }
+
   /** Stops the curiosity timer when the screen goes away. */
   hide(): void {
     this.#onScreen = false;
@@ -404,7 +422,8 @@ export class SystemView {
     clearTimeout(this.#settle);
     this.#browsing(false);
     clearTimeout(this.#factTimer);
-    clearTimeout(this.#readTimer);
+    this.#storyScroll?.cancel();
+    this.#storyScroll = null;
     clearTimeout(this.#boardTimer);
     clearTimeout(this.#shelfTimer);
   }
@@ -601,15 +620,17 @@ export class SystemView {
       mark || maker ? el('div', { class: 'maker' }, mark ?? el('span', {}, maker ?? '')) : null
     ]);
     // How many of its games are here is on the strip of systems already.
-    parts.push([
-      'life',
-      lifeline(lifeEvents(released, info?.specs?.lifetime), [
-        info?.specs?.generation ? `${info.specs.generation} generation` : null,
-        sold ? `${soldShort(sold)} sold` : null
-      ])
-    ]);
+    parts.push(['life', lifeline(lifeEvents(released, info?.specs?.lifetime))]);
     // The middle band: its hardware, the console, its games.
     parts.push(['hardware', hardware(info?.specs)]);
+    // Under the hardware, in the bottom-left corner: its generation and how many were sold.
+    parts.push([
+      'tally',
+      tally([
+        ['Generation', info?.specs?.generation ?? null],
+        ['Sold', sold ? soldShort(sold) : null]
+      ])
+    ]);
     // Right of it, in turn: its best sellers, magazines about it, its peripherals.
     const shelves = [
       iconicGames(bestsellers(s.name, info?.bestsellers), info?.bestsellersBy !== 'classics'),
@@ -654,14 +675,13 @@ export class SystemView {
       // A third and fourth where it has them; else its two again, the other way round.
       root.setProperty('--sys3-rgb', third ?? accent);
       root.setProperty('--sys4-rgb', fourth ?? rgb);
-      const entering = this.#shown !== this.#selected;
+      // The page's colours caught up: the frame takes them again.
+      this.#rail.style.removeProperty('--sys');
       this.#shown = this.#selected;
       this.#turnPage(parts, animate);
-      const booted = entering ? this.#boot(system) : 0;
-      this.#rotateShelves(showcase, booted + SHELF_MS);
+      this.#rotateShelves(showcase, SHELF_MS);
       this.#scrollOverflow();
       this.#scheduleFact();
-      this.#scheduleReading();
     };
     // The next system shows whole, its pictures ready, rather than its words first.
     if (!animate) return apply();
@@ -670,30 +690,20 @@ export class SystemView {
   }
 
   /**
-   * The system switched on: dark, a line of light across the middle opening into the picture,
-   * its logo lit in it, then the page underneath. Over the page, gone in `BOOT_MS`; opacity and
-   * transforms only (cheap on a Pi). Not with motion off. While the strip of logos is still up
-   * (just moved), the screen stays dark under it and the light comes as the strip goes.
+   * The selected system switched on as its games open: dark, a line of light across the middle
+   * opening into the picture, its logo lit in it in its colour, then its games underneath. Over
+   * the whole screen (the game list takes this view's place under it); gone in `BOOT_MS`. Only
+   * then: moving from one system to the next, its page just changes.
    */
-  #boot(system: CyberSystem): number {
-    for (const old of this.#panel.querySelectorAll('.boot')) old.remove();
-    if (document.documentElement.dataset.motion === 'off') return 0;
+  bootSelected(): number {
+    const system = this.selected;
+    if (!system) return 0;
     const logo = logoImage(system, 'boot-logo', true);
     const name = el('span', { class: 'boot-name' }, system.summary.fullname || system.summary.name);
     logo?.addEventListener('error', () => logo.replaceWith(name));
-    const boot = el(
-      'div',
-      { class: 'boot', 'aria-hidden': 'true' },
-      el('span', { class: 'beam' }),
-      el('div', { class: 'boot-mark' }, logo ?? name)
-    );
-    const wait = this.root.classList.contains('browsing')
-      ? Math.max(0, DROP_MS - (performance.now() - this.#steppedAt))
-      : 0;
-    boot.style.setProperty('--boot-wait', `${Math.round(wait)}ms`);
-    this.#panel.append(boot);
-    setTimeout(() => boot.remove(), wait + BOOT_MS);
-    return wait + BOOT_MS;
+    // Its colour as this view put it on the page (no style worked out to read it).
+    const colour = document.documentElement.style.getPropertyValue('--sys').trim() || '#fff';
+    return boot(this.root, logo ?? name, 0, { colour });
   }
 
   /**
@@ -716,9 +726,9 @@ export class SystemView {
         shelf.classList.remove('still');
         shelf.classList.toggle('on', shelf === ready[at]);
       }
-      this.#shelfTimer = setTimeout(next, SHELF_MS);
+      this.#shelfTimer = setTimeout(awake(next), SHELF_MS);
     };
-    this.#shelfTimer = setTimeout(next, first);
+    this.#shelfTimer = setTimeout(awake(next), first);
   }
 
   /**
@@ -731,6 +741,15 @@ export class SystemView {
         const inner = box.firstElementChild as HTMLElement | null;
         const over = (inner?.scrollHeight ?? 0) - box.clientHeight;
         if (!inner || over <= 2) continue;
+        // The story: read through to its end, then from its start again. Started once: other
+        // words changing (the next curiosity) must not send it back to its start.
+        if (box.classList.contains('looping')) continue;
+        if (box.classList.contains('story')) {
+          this.#storyScroll?.cancel();
+          this.#storyScroll = loopScroll(inner, over);
+          box.classList.add('looping');
+          continue;
+        }
         box.style.setProperty('--scroll', `${-over}px`);
         box.style.setProperty('--scroll-s', `${scrollSeconds(over)}s`);
         box.classList.add('scrolling');
@@ -744,54 +763,23 @@ export class SystemView {
     return [...(info?.description ? [info.description] : []), ...(info?.story ?? [])];
   }
 
+  /**
+   * The description and every chapter of the story, one text: longer than its box, it scrolls
+   * slowly to its end, rests, and starts again from its beginning (`#scrollOverflow`).
+   */
   #readingPart(): HTMLElement | null {
     const all = this.#readings();
-    const text = all[this.#read % Math.max(1, all.length)];
-    if (!text) return null;
+    if (!all.length) return null;
+    const paragraphs = all.map((text) => el('span', { class: 'para' }, text));
     return el(
       'div',
       { class: 'reading' },
-      scroller('p', text, 'description'),
-      // Which page of how many, when they take turns.
-      all.length > 1 ? el('span', { class: 'page' }, this.#pageOf(all.length)) : null
+      el(
+        'p',
+        { class: 'description scroll story' },
+        el('span', { class: 'scroll-inner' }, ...paragraphs)
+      )
     );
-  }
-
-  #pageOf(total: number): string {
-    return `${(this.#read % total) + 1}/${total}`;
-  }
-
-  /**
-   * The next of the description and the story's chapters: only the words fade out and back in,
-   * in the same box; nothing else on the page is touched.
-   */
-  #nextReading(): void {
-    const box = this.#slots.get('reading')?.querySelector<HTMLElement>('.description');
-    const all = this.#readings();
-    if (!box || all.length < 2) return;
-    this.#read += 1;
-    const text = all[this.#read % all.length] ?? '';
-    const page = this.#pageOf(all.length);
-    const counter = this.#slots.get('reading')?.querySelector('.page');
-    box.classList.add('fading');
-    this.#readTimer = setTimeout(() => {
-      const fresh = scroller('p', text, 'description fading');
-      box.replaceWith(fresh);
-      if (counter) counter.textContent = page;
-      this.#scrollOverflow();
-      requestAnimationFrame(() => requestAnimationFrame(() => fresh.classList.remove('fading')));
-      this.#scheduleReading();
-    }, READ_FADE_MS);
-  }
-
-  /** The next page comes when this one has been read: each stays as long as its words need. */
-  #scheduleReading(): void {
-    clearTimeout(this.#readTimer);
-    const all = this.#readings();
-    if (all.length < 2 || !this.rotateFacts) return;
-    const box = this.#slots.get('reading')?.querySelector<HTMLElement>('.description');
-    const ms = stayMs(box, all[this.#read % all.length] ?? '');
-    this.#readTimer = setTimeout(() => this.#nextReading(), ms);
   }
 
   #factStrip(): HTMLElement | null {
@@ -815,7 +803,10 @@ export class SystemView {
     const strip = this.#slots.get('fact');
     const ms = stayMs(strip?.querySelector<HTMLElement>('.scroll'), facts[this.#fact] ?? '');
     strip?.querySelector<HTMLElement>('.timer')?.style.setProperty('--fact-ms', `${ms}ms`);
-    this.#factTimer = setTimeout(() => this.nextFact(), ms);
+    this.#factTimer = setTimeout(
+      awake(() => this.nextFact()),
+      ms
+    );
   }
 }
 
@@ -860,8 +851,59 @@ function makerMark(maker: string | null | undefined, logos: readonly string[]): 
   const makers = el('span', { class: 'makers', role: 'img', 'aria-label': maker }, ...imgs);
   for (const img of imgs) {
     img.addEventListener('error', () => makers.replaceWith(maker), { once: true });
+    img.addEventListener(
+      'load',
+      () => {
+        const aspect = img.naturalWidth / img.naturalHeight;
+        if (aspect > 0) img.style.setProperty('--maker-h', `${makerHeight(aspect).toFixed(2)}rem`);
+      },
+      { once: true }
+    );
   }
   return makers;
+}
+
+let deckId = 0;
+
+/**
+ * The floor's still lines, running from the front to where they would meet (the vanishing point,
+ * a seventh of the floor's depth above its horizon): drawn once, in the system's colour, fading
+ * toward the horizon, the front and the sides.
+ */
+function deckRays(): string {
+  const id = `deck-fade-${++deckId}`;
+  // The floor box as 320 × 46; its front line spans 640 wide at the bottom, centred.
+  const vy = -46 / 7;
+  const rays: string[] = [];
+  // Close together: the floor is wide, and stretched to it.
+  for (let k = 0; k <= 30; k++) {
+    const x = -200 + 24 * k;
+    const side = Math.max(0, 1 - Math.abs(x - 160) / 220);
+    if (side <= 0) continue;
+    rays.push(
+      `<line x1="160" y1="${vy.toFixed(2)}" x2="${x}" y2="46" stroke-opacity="${side.toFixed(2)}"/>`
+    );
+  }
+  return (
+    `<svg class="rays" viewBox="0 0 320 46" preserveAspectRatio="none">` +
+    `<defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="46">` +
+    `<stop offset="0" style="stop-color: rgb(var(--sys-rgb)); stop-opacity: 0.15"/>` +
+    `<stop offset="0.45" style="stop-color: rgb(var(--sys-rgb)); stop-opacity: 0.6"/>` +
+    `<stop offset="1" style="stop-color: rgb(var(--sys-rgb)); stop-opacity: 0"/>` +
+    `</linearGradient></defs>` +
+    `<g stroke="url(#${id})" stroke-width="1.5" vector-effect="non-scaling-stroke" fill="none">` +
+    rays.join('') +
+    `</g></svg>`
+  );
+}
+
+/**
+ * How tall a maker's logo stands in the corner, in rem, for its width over its height: about the
+ * same area for every one (SEGA's, 3:1 at 1.9rem), so a square emblem (Atari's) is not a speck
+ * beside a wordmark; 1.7rem to 3.6rem.
+ */
+export function makerHeight(aspect: number): number {
+  return Math.min(3.6, Math.max(1.7, Math.sqrt(11 / aspect)));
 }
 
 /** A system's logo; a dark one gets a light halo; none (or a broken file) leaves nothing. */
@@ -902,6 +944,14 @@ function stage(system: CyberSystem, name: string): HTMLElement {
   const photo = el('img', { class: 'photo', src: system.photo, alt: '' });
   photo.addEventListener('error', fallback);
   box.append(photo);
+  // A console on its own (no backdrop of its photo's) stands on a floor: a neon grid running
+  // toward the player.
+  if (system.photoKind === 'cutout') {
+    const deck = el('div', { class: 'deck', 'aria-hidden': 'true' });
+    deck.innerHTML = deckRays();
+    for (let i = 0; i < 6; i++) deck.append(el('div', { class: 'cross' }));
+    box.append(deck);
+  }
   return box;
 }
 
@@ -989,12 +1039,11 @@ export function lifeEvents(
 }
 
 /** The life as a line of moments, evenly spaced, the years over it. `null` with fewer than two. */
-function lifeline(events: LifeEvent[], more: (string | null)[]): HTMLElement | null {
+function lifeline(events: LifeEvent[]): HTMLElement | null {
   if (events.length < 2) return null;
   return el(
     'div',
     { class: 'life' },
-    more.some(Boolean) ? el('h3', {}, more.filter(Boolean).join(' · ')) : null,
     el(
       'ol',
       { style: `--moments: ${events.length}` },
@@ -1047,6 +1096,17 @@ function hardware(specs: SystemInfo['specs']): HTMLElement | null {
     return value ? [el('div', { class: 'cell' }, el('dt', {}, label), scroller('dd', value))] : [];
   });
   return cells.length ? section('hardware', 'Hardware', el('dl', {}, ...cells)) : null;
+}
+
+/**
+ * The bottom-left corner: its generation and units sold, each a small name over a large value.
+ * `null` when neither is known.
+ */
+function tally(rows: [string, string | null][]): HTMLElement | null {
+  const cells = rows.flatMap(([label, value]) =>
+    value ? [el('div', { class: 'cell' }, el('dt', {}, label), el('dd', {}, value))] : []
+  );
+  return cells.length ? el('dl', { class: 'tally' }, ...cells) : null;
 }
 
 /**

@@ -2,9 +2,12 @@
 /**
  * Fetches the magazine covers the systems screen shows behind each console, from the Internet
  * Archive: scripts/magazines.json lists, per system, the archive items whose front page is
- * about it (a launch issue, a guide, a special). Each cover is written as
+ * about it (a launch issue, a guide, a special). An entry can instead be a cover elsewhere,
+ * `{ "url": <a picture, or a scanned PDF whose first picture is its cover>, "title": …,
+ * "page": <where it is credited> }` (Atarimania's scans, say). Each cover is written as
  * public/systems/<id>/mag-<n>.webp, and listed in public/systems/art.json as `magazines`, with
- * its title; public/systems/MAGAZINES.md says where each came from.
+ * its short name from scripts/magazine-names.json (its full title without one);
+ * public/systems/MAGAZINES.md says where each came from, by full title.
  *
  *   node scripts/build-magazines.mjs
  */
@@ -17,6 +20,8 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SYSTEMS = join(ROOT, 'public', 'systems');
 const ART = join(SYSTEMS, 'art.json');
 const UA = { 'User-Agent': 'forma-theme-cyber build script' };
+/** Short names to show, by full title (`Mean Machines Sega #29`); the credits keep the full one. */
+const NAMES = JSON.parse(readFileSync(join(ROOT, 'scripts', 'magazine-names.json'), 'utf8'));
 /** Covers stand about 11rem tall: twice that in pixels at 1080p, for a sharp print. */
 const HEIGHT = 520;
 
@@ -78,18 +83,39 @@ const credits = [
   ''
 ];
 
-/** An item's front page, written into the system's folder as `file`; its title. */
+/**
+ * A scanned PDF's first JPEG picture: its cover, for a scan whose pages are each one picture
+ * (no PDF renderer needed).
+ */
+function firstJpeg(pdf) {
+  const tag = pdf.indexOf('/DCTDecode');
+  if (tag < 0) throw new Error('no JPEG picture in the PDF');
+  let start = pdf.indexOf('stream', tag) + 'stream'.length;
+  while (pdf[start] === 0x0d || pdf[start] === 0x0a) start++;
+  return pdf.subarray(start, pdf.indexOf('endstream', start));
+}
+
+/** An entry's front page, written into the system's folder as `file`; its title. */
 async function fetchCover(id, item, file) {
-  const meta = await (await get(`https://archive.org/metadata/${item}/metadata`)).json();
-  const title = tidy(String(meta.result?.title ?? item));
-  const jpg = Buffer.from(await (await cover(item)).arrayBuffer());
+  let title, jpg;
+  if (typeof item === 'object') {
+    title = item.title;
+    const bytes = Buffer.from(await (await get(item.url)).arrayBuffer());
+    jpg = /\.pdf$/i.test(item.url) ? firstJpeg(bytes) : bytes;
+  } else {
+    const meta = await (await get(`https://archive.org/metadata/${item}/metadata`)).json();
+    title = tidy(String(meta.result?.title ?? item));
+    jpg = Buffer.from(await (await cover(item)).arrayBuffer());
+  }
   await sharp(jpg)
     .resize({ height: HEIGHT, withoutEnlargement: true })
     .webp({ quality: 78 })
     .toFile(join(SYSTEMS, id, file));
-  credits.push(`- **${id}**: [${title}](https://archive.org/details/${item})`);
-  console.log(`${id}: ${title}`);
-  return { file, title };
+  const page = typeof item === 'object' ? item.page : `https://archive.org/details/${item}`;
+  credits.push(`- **${id}**: [${title}](${page})`);
+  const name = NAMES[title] ?? title;
+  console.log(`${id}: ${name}${name === title ? ' (no short name in magazine-names.json)' : ''}`);
+  return { file, title: name };
 }
 
 /** The system's entry in art.json, made if it has no art of its own (no logo, no photo). */
@@ -114,7 +140,7 @@ const keep = (id) => only && !only.has(id);
       try {
         magazines.push(await fetchCover(id, item, `mag-${magazines.length + 1}.webp`));
       } catch (e) {
-        console.warn(`${id}: ${item} skipped (${e.message})`);
+        console.warn(`${id}: ${item.title ?? item} skipped (${e.message})`);
       }
     }
     if (magazines.length) entry.magazines = magazines;

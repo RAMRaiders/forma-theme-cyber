@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   lifeEvents,
   logoHeight,
+  makerHeight,
   readingMs,
   soldShort,
   SystemView,
@@ -59,6 +60,20 @@ describe('the strip of logos', () => {
     expect(place('System 11')).toBe('-1'); // one step up, not all the way down the list
     view.hide();
     tall.mockRestore();
+  });
+
+  it('lights the selection frame in the next system’s colour on the step itself', () => {
+    const { view } = strip(3);
+    const rail = view.root.querySelector<HTMLElement>('.system-rail')!;
+    const before = rail.style.getPropertyValue('--sys');
+    view.select(1);
+    const after = rail.style.getPropertyValue('--sys');
+    // Set at once, before the page is drawn; and a different colour from the first system's.
+    expect(after).toMatch(/^rgb\(/);
+    expect(after).not.toBe(before);
+    view.select(2);
+    expect(rail.style.getPropertyValue('--sys')).not.toBe(after);
+    view.hide();
   });
 
   it('with few systems stays a plain list, each once', () => {
@@ -154,6 +169,15 @@ describe('a logo in the column', () => {
     expect(logoHeight(3.5)).toBeCloseTo(3, 0);
     expect(logoHeight(6)).toBeLessThan(logoHeight(3));
     expect(logoHeight(40)).toBe(1.5);
+  });
+
+  describe('makerHeight', () => {
+    it('gives a square emblem the area of a wordmark', () => {
+      expect(makerHeight(3)).toBeCloseTo(1.9, 1);
+      expect(makerHeight(0.91)).toBeGreaterThan(3.4);
+      expect(makerHeight(0.5)).toBe(3.6);
+      expect(makerHeight(8)).toBe(1.7);
+    });
   });
 });
 

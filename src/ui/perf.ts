@@ -31,6 +31,57 @@ export function span(label: string): () => void {
   };
 }
 
+/** Perf mode is on (`#perf`): measuring is worth its cost. */
+export function perfOn(): boolean {
+  return tracing;
+}
+
+/** Adds a duration measured elsewhere (perf mode only): how long something took to come. */
+export function timing(label: string, ms: number): void {
+  if (!tracing) return;
+  const t = totals.get(label) ?? { n: 0, total: 0, max: 0 };
+  t.n += 1;
+  t.total += ms;
+  t.max = Math.max(t.max, ms);
+  totals.set(label, t);
+}
+
+/**
+ * Each of Forma's pictures, from when it is put on the page to when it has loaded, by kind
+ * (`img thumbnail`): fetched (resized first if Forma had not made it ahead) and decoded.
+ */
+function timePictures(): void {
+  const added = new WeakMap<HTMLImageElement, number>();
+  const note = (node: Node) => {
+    if (node instanceof HTMLImageElement) added.set(node, performance.now());
+    else if (node instanceof Element) node.querySelectorAll('img').forEach((i) => note(i));
+  };
+  new MutationObserver((records) => {
+    for (const r of records) r.addedNodes.forEach(note);
+  }).observe(document.body, { childList: true, subtree: true });
+  document.addEventListener(
+    'load',
+    (e) => {
+      const img = e.target;
+      if (!(img instanceof HTMLImageElement)) return;
+      const at = added.get(img);
+      const kind = /\/media\/\d+\/([a-z]+)/.exec(img.currentSrc || img.src)?.[1];
+      if (at === undefined || !kind) return;
+      added.delete(img);
+      timing(`img ${kind}`, performance.now() - at);
+    },
+    true
+  );
+}
+
+/**
+ * Notes that `label` happened (perf mode only), with the frame it happened in: a slow frame
+ * lists the events in it, so a stall nothing measured ran in can still be pinned to one.
+ */
+export function mark(label: string): void {
+  if (tracing) inFrame.push(`@${label}`);
+}
+
 export interface PerfStats {
   /** Over the last few seconds. */
   fps: number;
@@ -40,6 +91,8 @@ export interface PerfStats {
   dropped: number;
   frames: number;
   at: string;
+  /** All the time spent in slow frames so far. */
+  slowMs?: number;
   /** The slowest pieces of work so far, and the latest slow frames with what ran in them. */
   work?: string[];
   slow?: { ms: number; t: number; ran: string[]; moving: boolean }[];
@@ -52,6 +105,7 @@ export interface PerfStats {
  */
 export function startPerfOverlay(report: (stats: PerfStats) => void = () => {}): void {
   tracing = true;
+  timePictures();
   const panel = el('div', { class: 'perf', 'aria-hidden': 'true' });
   document.body.append(panel);
   const frames: number[] = [];
@@ -60,6 +114,7 @@ export function startPerfOverlay(report: (stats: PerfStats) => void = () => {}):
   let count = 0;
   let lastPaint = 0;
   let lastReport = 0;
+  let slowTotal = 0;
 
   const tick = (now: number) => {
     const ms = now - last;
@@ -68,6 +123,7 @@ export function startPerfOverlay(report: (stats: PerfStats) => void = () => {}):
     count += 1;
     if (ms > DROPPED_MS) dropped += 1;
     if (ms > SLOW_MS) {
+      slowTotal += ms;
       const moving = document.querySelector('.browsing') !== null;
       slow.push({ ms: Math.round(ms), t: Math.round(now), ran: inFrame.slice(0, 16), moving });
       if (slow.length > 60) slow.shift();
@@ -84,11 +140,12 @@ export function startPerfOverlay(report: (stats: PerfStats) => void = () => {}):
         p95Ms: Math.round((sorted[Math.floor(sorted.length * 0.95)] ?? 0) * 10) / 10,
         worstMs: Math.round(Math.max(...frames)),
         dropped,
+        slowMs: Math.round(slowTotal),
         frames: count,
         at: new Date().toISOString(),
         work: [...totals]
           .sort((a, b) => b[1].max - a[1].max)
-          .slice(0, 30)
+          .slice(0, 40)
           .map(
             ([k, v]) => `${k}: n ${v.n} avg ${(v.total / v.n).toFixed(1)} max ${Math.round(v.max)}`
           ),

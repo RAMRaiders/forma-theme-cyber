@@ -2,6 +2,7 @@ import type { Category, CyberSystem } from '../data/catalog.js';
 import { categoryArt } from './art.js';
 import { circuitSvg } from './circuit.js';
 import { el, reveal } from './dom.js';
+import { awake } from './rest.js';
 
 export interface Tile {
   category: Category;
@@ -97,11 +98,14 @@ export class HomeView {
     const count = tile ? (ROWS.get(tile)?.starts.length ?? 0) : 0;
     if (!tile || count < 2 || document.documentElement.dataset.motion === 'off') return;
     let step = 0;
-    this.#pageTimer = setInterval(() => {
-      step += 1;
-      glideTo(tile, step, true);
-      if (step === count) step = 0;
-    }, LOGO_STEP_MS);
+    this.#pageTimer = setInterval(
+      awake(() => {
+        step += 1;
+        glideTo(tile, step, true);
+        if (step === count) step = 0;
+      }),
+      LOGO_STEP_MS
+    );
   }
 
   /** Columns as laid out right now, for up/down movement. */

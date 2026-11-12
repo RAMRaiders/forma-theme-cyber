@@ -1,9 +1,10 @@
 import type { Game } from '@ramraiders/forma-sdk';
 import { span } from './perf.js';
 
-import { romName } from '../logic/romname.js';
+import { gameTags } from '../logic/romname.js';
 import { DEFAULT_BACK, DEFAULT_FRONT } from './cover.js';
 import { el } from './dom.js';
+import { awake } from './rest.js';
 
 /**
  * The selected game on a stage of its own: it fills the screen and plays out in acts while
@@ -60,6 +61,8 @@ export interface Achievements {
 
 export interface StageOptions {
   media: MediaUrl;
+  /** The game as Forma has it now (its media just scraped, say), not the list's copy. */
+  fresh?: (id: number) => Promise<Game | null>;
   /** The game's RetroAchievements progress, if it has any. */
   achievements?: (game: Game) => Promise<Achievements | null>;
   /** The game's colour, from a small picture of it; `null` keeps Cyber's own. */
@@ -387,7 +390,7 @@ export class Stage {
     add('Publisher', game.publisher !== game.developer ? game.publisher : null);
     add('Region', game.region ? names(game.region, REGIONS) : null);
     // As in the Collector: the ROM's own name first (it is the copy at hand), the scraper's after.
-    const languages = romName(game.path).languages.join(',') || game.lang;
+    const languages = gameTags(game).languages.join(',') || game.lang;
     add('Languages', languages ? names(languages, LANGUAGES) : null);
     add('Played', played(game));
     if (this.options.media(game, 'manual')) add('Manual', 'In the box');
@@ -573,11 +576,11 @@ export class Stage {
   }
 
   #later(work: () => void, ms: number): void {
-    this.#timers.push(setTimeout(work, ms));
+    this.#timers.push(setTimeout(awake(work), ms));
   }
 
   #every(work: () => void, ms: number): void {
-    this.#intervals.push(setInterval(work, ms));
+    this.#intervals.push(setInterval(awake(work), ms));
   }
 
   #stop(): void {

@@ -33,6 +33,24 @@ describe('the scan over a game being scraped', () => {
     expect(scan.root.querySelector('.scan-name')?.textContent).toBe('Bonk');
   });
 
+  it('is busy with its game from the run until it lifts, so new pictures wait for it', async () => {
+    const scan = new Scan();
+    expect(scan.busyWith(7)).toBe(false);
+    scan.progress(status(), game);
+    expect(scan.busyWith(7)).toBe(true);
+    expect(scan.busyWith(8)).toBe(false);
+    // Its pictures came while the run was on it: drawn once the run is done with it.
+    const draw = vi.fn();
+    scan.redraw(7, draw);
+    expect(draw).not.toHaveBeenCalled();
+    scan.progress(status({ running: false, current: null, done: 1, found: 1 }), game);
+    await vi.advanceTimersByTimeAsync(1300);
+    expect(draw).toHaveBeenCalledTimes(1);
+    scan.shown(7, []);
+    await vi.advanceTimersByTimeAsync(2000);
+    expect(scan.busyWith(7)).toBe(false);
+  });
+
   it('says when nothing came, then goes', () => {
     const scan = new Scan();
     scan.progress(status(), game);
@@ -59,8 +77,8 @@ describe('the scan over a game being scraped', () => {
     const scan = new Scan();
     scan.progress(status(), game);
     scan.progress(status({ running: false, current: null, done: 1, found: 1 }), game);
-    // The library is slow to notice the new files: still waiting, however long.
-    await vi.advanceTimersByTimeAsync(15000);
+    // The library is slow to notice the new files: still waiting, a while.
+    await vi.advanceTimersByTimeAsync(6000);
     expect(scan.root.classList.contains('reveal')).toBe(false);
     let loaded = () => {};
     const backdrop = {
@@ -72,6 +90,44 @@ describe('the scan over a game being scraped', () => {
     loaded();
     await vi.advanceTimersByTimeAsync(0);
     expect(scan.root.classList.contains('reveal')).toBe(true);
+  });
+
+  it('never hangs: without a redraw, or with pictures that never load, it shows the game', async () => {
+    const scan = new Scan();
+    scan.progress(status(), game);
+    scan.progress(status({ running: false, current: null, done: 1, found: 1 }), game);
+    await vi.advanceTimersByTimeAsync(8000);
+    expect(scan.root.classList.contains('reveal')).toBe(true);
+    const stuck = new Scan();
+    stuck.progress(status(), game);
+    stuck.progress(status({ running: false, current: null, done: 1, found: 1 }), game);
+    stuck.shown(7, [{ decode: () => new Promise<void>(() => {}) } as unknown as HTMLImageElement]);
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(stuck.root.classList.contains('reveal')).toBe(true);
+  });
+
+  it("hands the reveal to the view's own (the game's boot), then goes at once", async () => {
+    const revealed: number[] = [];
+    const scan = new Scan((id) => (revealed.push(id), true));
+    scan.progress(status(), game);
+    scan.progress(status({ running: false, current: null, done: 1, found: 1 }), game);
+    scan.shown(7, []);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(revealed).toEqual([7]);
+    expect(scan.root.hidden).toBe(true);
+  });
+
+  it('stays over the game until the view is ready to show it (its logo loaded)', async () => {
+    let ready = (_: boolean) => {};
+    const scan = new Scan(() => new Promise<boolean>((done) => (ready = done)));
+    scan.progress(status(), game);
+    scan.progress(status({ running: false, current: null, done: 1, found: 1 }), game);
+    scan.shown(7, []);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(scan.root.hidden).toBe(false);
+    ready(true);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(scan.root.hidden).toBe(true);
   });
 
   it('covers a game whose pictures were just saved until the new ones have loaded', async () => {

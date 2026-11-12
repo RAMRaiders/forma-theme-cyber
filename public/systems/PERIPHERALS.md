@@ -21,6 +21,7 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **megadrive**: Justifier light gun, [Konami-Justifiers-Genesis-Set.jpg](https://commons.wikimedia.org/wiki/File:Konami-Justifiers-Genesis-Set.jpg), by Evan-Amos, Public domain.
 - **mastersystem**: Control Pads, [Sega-Master-System-Controllers.jpg](https://commons.wikimedia.org/wiki/File:Sega-Master-System-Controllers.jpg), by Evan-Amos, Public domain.
 - **mastersystem**: Control Stick, [Sega-Master-System-Control-Stick.jpg](https://commons.wikimedia.org/wiki/File:Sega-Master-System-Control-Stick.jpg), by Evan-Amos, Public domain.
+- **mastersystem**: 3-D Glasses, [Sega-Masters-Sys-3D-Glasses.jpg](https://commons.wikimedia.org/wiki/File:Sega-Masters-Sys-3D-Glasses.jpg), by Evan-Amos, Public domain.
 - **saturn**: 3D Control Pad, [Sega-Saturn-3D-Controller.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-3D-Controller.jpg), by Evan-Amos, Public domain.
 - **saturn**: Control Pad, [Sega-Saturn-Controller-NA-Mk-II-FL.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-Controller-NA-Mk-II-FL.jpg), by Evan-Amos, Public domain.
 - **saturn**: Net Link keyboard, [Sega-Saturn-Net-Link-US-Keyboard.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-Net-Link-US-Keyboard.jpg), by Evan-Amos, Public domain.
@@ -36,8 +37,6 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **gb**: Game Boy Camera, [Game-Boy-Camera.jpg](https://commons.wikimedia.org/wiki/File:Game-Boy-Camera.jpg), by Evan-Amos, Public domain.
 - **gb**: Link Cable, [Nintendo-Game-Boy-Link-Cable-Dual.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Game-Boy-Link-Cable-Dual.jpg), by Evan-Amos, Public domain.
 - **gba**: e-Reader, [GameBoyAdvance-with-eReader.jpg](https://commons.wikimedia.org/wiki/File:GameBoyAdvance-with-eReader.jpg), by Gameboyadvance_gbacart_by_zeartul.JPG: Zeartul
-Nintendo_E-Reader.jpg: Synyster Zombie
-derivative work: Hic et nunc, CC BY-SA 3.0.
 - **gba**: Wireless Adapter, [Game-Boy-Advance-Wireless-Adapter.jpg](https://commons.wikimedia.org/wiki/File:Game-Boy-Advance-Wireless-Adapter.jpg), by Evan-Amos, CC BY-SA 3.0.
 - **gba**: Game Boy Player, [Game-Boy-Advance-Player.jpg](https://commons.wikimedia.org/wiki/File:Game-Boy-Advance-Player.jpg), by Evan-Amos, Public domain.
 - **virtualboy**: Controller, [Virtual-Boy-Controller.jpg](https://commons.wikimedia.org/wiki/File:Virtual-Boy-Controller.jpg), by Evan-Amos, Public domain.
@@ -72,3 +71,21 @@ derivative work: Hic et nunc, CC BY-SA 3.0.
 - **c64**: Datasette, [Commodore-Datasette-C2N-Mk1-Front.jpg](https://commons.wikimedia.org/wiki/File:Commodore-Datasette-C2N-Mk1-Front.jpg), by Evan-Amos, Public domain.
 - **c64**: 1541 disk drive, [Commodore-64-1541-Floppy-Drive-03.jpg](https://commons.wikimedia.org/wiki/File:Commodore-64-1541-Floppy-Drive-03.jpg), by Evan-Amos, Public domain.
 - **zxspectrum**: ZX Printer, [Sinclair.zx.thermal.printer.jpg](https://commons.wikimedia.org/wiki/File:Sinclair.zx.thermal.printer.jpg), by Jbattersby, Public domain.
+- **atari5200**: Controller, [Atari-5200-Controller.jpg](https://commons.wikimedia.org/wiki/File:Atari-5200-Controller.jpg), by Evan-Amos, Public domain.
+- **atari5200**: Trak-Ball, [Atari-5200-Trak-Ball-Controller.jpg](https://commons.wikimedia.org/wiki/File:Atari-5200-Trak-Ball-Controller.jpg), by Evan-Amos, Public domain.
+- **atari7800**: CX78 Joypad, [Atari-CX78-7800-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Atari-CX78-7800-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **atari7800**: XG-1 light gun, [Atari XG-1 light gun.jpg](https://commons.wikimedia.org/wiki/File:Atari_XG-1_light_gun.jpg), by Bilby, CC BY 3.0.
+- **atari800**: CX85 Keypad, [Atari-CX85.jpg](https://commons.wikimedia.org/wiki/File:Atari-CX85.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **atari800**: 1050 Disk Drive, [Atari 1050 disk drive.jpg](https://commons.wikimedia.org/wiki/File:Atari_1050_disk_drive.jpg), by Bilby, CC BY 3.0.
+- **atari800**: 410 Program Recorder, [Atari 410 (transparent bg).png](https://commons.wikimedia.org/wiki/File:Atari_410_(transparent_bg).png), by Bilby, CC BY 3.0.
+- **atari800**: CX40 Joystick, [Atari CX40 Joystick.jpg](https://commons.wikimedia.org/wiki/File:Atari_CX40_Joystick.jpg), by Rama, CC BY-SA 2.0 fr.
+- **xegs**: Keyboard, [Atari XEGS keyboard.jpg](https://commons.wikimedia.org/wiki/File:Atari_XEGS_keyboard.jpg), by Bilby, CC BY 3.0.
+- **xegs**: XG-1 light gun, [Atari XG-1 light gun.jpg](https://commons.wikimedia.org/wiki/File:Atari_XG-1_light_gun.jpg), by Bilby, CC BY 3.0.
+- **xegs**: Joystick, [Atari XE joystick (colour restored).jpg](https://commons.wikimedia.org/wiki/File:Atari_XE_joystick_(colour_restored).jpg), by Bilby, CC BY 3.0.
+- **atarist**: Mouse, [Atari st mouse.jpg](https://commons.wikimedia.org/wiki/File:Atari_st_mouse.jpg), by Supaste at English Wikipedia, Public domain.
+- **lynx**: Sun Visor, [Atari-Lynx-I-Sun-Visor.jpg](https://commons.wikimedia.org/wiki/File:Atari-Lynx-I-Sun-Visor.jpg), by Evan-Amos, Public domain.
+- **lynx**: Carrying Case, [Atari-Lynx-Carrying-Case.jpg](https://commons.wikimedia.org/wiki/File:Atari-Lynx-Carrying-Case.jpg), by Evan-Amos, Public domain.
+- **lynx**: Car Adapter, [Atari-Lynx-Cig-Lighter-Adapter.jpg](https://commons.wikimedia.org/wiki/File:Atari-Lynx-Cig-Lighter-Adapter.jpg), by Evan-Amos, Public domain.
+- **jaguarcd**: Memory Track, [Atari-Jaguar-CD-Memory-Track-Cart.jpg](https://commons.wikimedia.org/wiki/File:Atari-Jaguar-CD-Memory-Track-Cart.jpg), by Evan-Amos, Public domain.
+- **jaguarcd**: Controller, [Atari-Jaguar-Controller-Flat.jpg](https://commons.wikimedia.org/wiki/File:Atari-Jaguar-Controller-Flat.jpg), by Evan-Amos, Public domain.
+- **jaguarcd**: Pro Controller, [Atari-Jaguar-Pro-Controller-Flat.jpg](https://commons.wikimedia.org/wiki/File:Atari-Jaguar-Pro-Controller-Flat.jpg), by Evan-Amos, Public domain.

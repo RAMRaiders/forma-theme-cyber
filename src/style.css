@@ -22,7 +22,10 @@
   font-size: calc(min(calc(100vh / 45), calc(100vw / 64)) * var(--scale));
 }
 
-@media (max-height: 800px) {
+/* Smaller screens than a TV's 720p (a handheld's): the words a little larger for their size.
+   A 720p screen is drawn as 1080p is, only smaller: one layout for both (from 800px tall, 720p
+   had it all larger and out of place). */
+@media (max-height: 700px) {
   :root {
     font-size: calc(min(calc(100vh / 36), calc(100vw / 52)) * var(--scale));
     --safe: 1.6rem;
@@ -124,7 +127,7 @@ h1.current {
 
 .trail {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   min-width: 0;
   white-space: nowrap;
 }
@@ -135,13 +138,15 @@ h1.current {
   text-overflow: ellipsis;
   font-family: var(--mono);
   font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   color: var(--muted);
 }
 
+/* Every step the same size and weight, on one line: where you are only lit. */
 .trail .crumb.current {
   flex: none;
   max-width: 60vw;
-  font-weight: 700;
   color: var(--neon);
   text-shadow: 0 0 0.5rem rgb(34 228 255 / 45%);
 }
@@ -700,6 +705,12 @@ main {
 
 /* The column: logos down the middle of the screen, fading toward its ends. */
 .system-rail {
+  /* The selection frame's tints, from the strip's own colour: set at each step (system.ts),
+     ahead of the page's. */
+  --sys-10: color-mix(in srgb, var(--sys) 10%, transparent);
+  --sys-30: color-mix(in srgb, var(--sys) 30%, transparent);
+  --sys-70: color-mix(in srgb, var(--sys) 70%, transparent);
+
   position: absolute;
   z-index: 3;
   top: 0;
@@ -933,11 +944,13 @@ main {
      logo across the top; its hardware, the console and its games in the middle (its games down
      beside its story too); its story, then its curiosities, along the foot. */
   grid-template-columns: minmax(0, 18rem) minmax(0, 1fr) minmax(0, 18rem);
-  grid-template-rows: auto minmax(0, 1fr) auto 3.4rem;
+  /* Every row a fixed height: the console stays put whatever the logo, the timeline or the
+     length of the text under it; text too long for its box scrolls inside it. */
+  grid-template-rows: 5.2rem minmax(0, 1fr) 7.6rem 3.4rem;
   grid-template-areas:
     'about life maker'
     'hardware console games'
-    '. reading games'
+    'tally reading games'
     'fact fact fact';
   gap: 1.4rem 2.6rem;
   --pad-x: 2.6rem;
@@ -955,8 +968,8 @@ main {
   display: block;
 }
 
-/* Under the logo, in turn, the description and the chapters of the system's story: always the
-   same height, so nothing moves as one fades into the next. */
+/* Under the logo, the description and the chapters of the system's story, one text: longer than
+   its four lines, it scrolls slowly to its end and starts again (loopscroll.ts). */
 .system-panel .reading {
   grid-area: reading;
   position: relative;
@@ -968,7 +981,6 @@ main {
   width: min(100%, 46rem);
   min-width: 0;
   min-height: 0;
-  padding-right: 2.8rem;
   overflow: hidden;
 }
 
@@ -977,15 +989,13 @@ main {
   max-height: calc(4 * 1.45em);
 }
 
-/* Which page of the description and story this is: "2/4". */
-.system-panel .reading .page {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  color: rgb(var(--sys2-rgb));
+/* Each chapter its own paragraph. */
+.system-panel .reading .para {
+  display: block;
+}
+
+.system-panel .reading .para + .para {
+  margin-top: 0.6em;
 }
 
 .system-panel .reading .description {
@@ -1040,10 +1050,11 @@ main {
   content: '';
   position: absolute;
   z-index: -2;
-  inset: -1.4rem 0 0;
+  /* Up behind the timeline too, fading in from nothing there: no edge under it. */
+  inset: -9rem 0 0;
   background:
-    radial-gradient(ellipse 30% 85% at 50% 0%, rgb(255 255 255 / 11%), transparent 72%),
-    radial-gradient(ellipse 45% 70% at 50% 10%, rgb(var(--sys-rgb) / 12%), transparent 75%);
+    radial-gradient(ellipse 30% 50% at 50% 45%, rgb(255 255 255 / 10%), transparent),
+    radial-gradient(ellipse 48% 50% at 50% 45%, rgb(var(--sys-rgb) / 12%), transparent);
   pointer-events: none;
 }
 
@@ -1059,24 +1070,173 @@ main {
   max-height: 13rem;
 }
 
-/* The lit ring it stands on: a disc of light in the system's colour, a bright rim round it. */
+/* Only its shadow under it now: it stands on the floor below. */
 .system-panel .stage .cutout::before {
   left: 50%;
-  bottom: -1.2rem;
-  width: min(26rem, 92%);
-  height: 3.2rem;
-  border: 2px solid rgb(var(--sys-rgb) / 55%);
-  background:
-    radial-gradient(closest-side, rgb(0 0 0 / 55%), rgb(0 0 0 / 20%) 55%, transparent),
-    radial-gradient(
-      closest-side,
-      rgb(var(--sys-rgb) / 35%),
-      rgb(var(--sys-rgb) / 8%) 80%,
-      transparent
-    );
-  box-shadow:
-    0 0 1.6rem rgb(var(--sys-rgb) / 45%),
-    inset 0 0 1.4rem rgb(var(--sys-rgb) / 40%);
+  bottom: -0.4rem;
+  width: min(22rem, 80%);
+  height: 1.6rem;
+  background: radial-gradient(closest-side, rgb(0 0 0 / 70%), rgb(0 0 0 / 25%) 60%, transparent);
+}
+
+/* The floor the console stands on, in the system's colour, seen in perspective: still lines
+   running to the horizon, and lines across it that are born at the horizon and come toward the
+   player, faster and wider as they near, fading out at the front. Each crossing line takes the
+   same path, staggered, so the floor never starts over: it only flows. Transform and opacity
+   alone move, no mask over moving layers (WebKit on a Pi glitches there). */
+.system-panel .stage .deck {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  /* Its horizon a little above the console's feet. */
+  top: calc(100% - 1.6rem);
+  /* The same width for every system, not the console's: a narrow one (the 5200) had less. */
+  width: 52rem;
+  height: 4.6rem;
+  translate: -50% 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.system-panel .stage .deck .rays {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Near the horizon the lines crowd together: a still haze in the system's colour there. */
+.system-panel .stage .deck::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 45% 70% at 50% 0, rgb(var(--sys-rgb) / 26%), transparent);
+}
+
+/* The horizon: one bright line where the floor meets the console, breathing slowly. */
+.system-panel .stage .deck::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(var(--sys-rgb) / 90%) 30%,
+    #fff 50%,
+    rgb(var(--sys-rgb) / 90%) 70%,
+    transparent
+  );
+  box-shadow: 0 0 0.9rem rgb(var(--sys-rgb) / 70%);
+  animation: deck-horizon 4.8s ease-in-out infinite;
+}
+
+/* A line across the floor: twice the floor's width, its ends fading, so near the front it runs
+   off both sides and far off it is a short dash at the horizon. */
+.system-panel .stage .deck .cross {
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 20%,
+    rgb(var(--sys-rgb) / 75%) 38%,
+    rgb(var(--sys-rgb) / 75%) 62%,
+    transparent 80%
+  );
+  transform-origin: 50% 0;
+  opacity: 0;
+  animation: deck-cross 4.2s linear infinite;
+  will-change: transform, opacity;
+}
+
+.system-panel .stage .deck .cross:nth-of-type(2) {
+  animation-delay: -0.7s;
+}
+
+.system-panel .stage .deck .cross:nth-of-type(3) {
+  animation-delay: -1.4s;
+}
+
+.system-panel .stage .deck .cross:nth-of-type(4) {
+  animation-delay: -2.1s;
+}
+
+.system-panel .stage .deck .cross:nth-of-type(5) {
+  animation-delay: -2.8s;
+}
+
+.system-panel .stage .deck .cross:nth-of-type(6) {
+  animation-delay: -3.5s;
+}
+
+/* From 8 steps away to 1, at an even pace: on screen it falls as 1/distance from the horizon
+   (4.6rem, the floor's depth, at the front) and grows the same. */
+@keyframes deck-cross {
+  0% {
+    transform: translateY(0) scale(0.125);
+    opacity: 0;
+  }
+
+  20% {
+    transform: translateY(0.14rem) scale(0.152);
+    opacity: 0.9;
+  }
+
+  40% {
+    transform: translateY(0.35rem) scale(0.192);
+    opacity: 1;
+  }
+
+  60% {
+    transform: translateY(0.73rem) scale(0.263);
+    opacity: 1;
+  }
+
+  75% {
+    transform: translateY(1.25rem) scale(0.364);
+    opacity: 0.95;
+  }
+
+  85% {
+    transform: translateY(1.91rem) scale(0.488);
+    opacity: 0.8;
+  }
+
+  92% {
+    transform: translateY(2.71rem) scale(0.641);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translateY(4.6rem) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes deck-horizon {
+  0%,
+  100% {
+    opacity: 0.65;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+:root[data-motion='off'] .system-panel .stage .deck .cross,
+:root[data-motion='off'] .system-panel .stage .deck::before {
+  animation: none;
+}
+
+:root[data-motion='off'] .system-panel .stage .deck .cross {
+  opacity: 0;
 }
 
 /* Beside it: the logo large, the maker under it. */
@@ -1171,6 +1331,48 @@ main {
   overflow: hidden;
   font-size: 0.72rem;
   line-height: 1.3;
+  color: #fff;
+}
+
+/* The bottom-left corner: its generation and how many were sold, side by side. */
+.system-panel .tally {
+  grid-area: tally;
+  align-self: end;
+  display: flex;
+  gap: 1.6rem;
+  margin: 0;
+}
+
+.system-panel .tally .cell {
+  position: relative;
+  padding-left: 0.7rem;
+}
+
+.system-panel .tally .cell::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.15rem;
+  bottom: 0.15rem;
+  width: 2px;
+  background: rgb(var(--sys2-rgb));
+  box-shadow: 0 0 0.4rem rgb(var(--sys2-rgb) / 45%);
+}
+
+.system-panel .tally dt {
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.system-panel .tally dd {
+  margin: 0.25rem 0 0;
+  font-family: var(--mono);
+  font-size: 1rem;
+  font-weight: 700;
+  white-space: nowrap;
   color: #fff;
 }
 
@@ -1275,7 +1477,7 @@ main {
   overflow: hidden;
   padding-top: 0.25rem;
   text-align: center;
-  font-size: 0.72rem;
+  font-size: 0.6rem;
   line-height: 1.3;
   color: #fff;
 }
@@ -1322,6 +1524,9 @@ main {
 /* Its life: launch, abroad, the end, evenly along a lit line, the years over it. */
 .system-panel .life {
   grid-area: life;
+  align-self: center;
+  position: relative;
+  z-index: 1;
   min-width: 0;
 }
 
@@ -1369,9 +1574,7 @@ main {
   height: 0.7rem;
   border-radius: 50%;
   background: var(--sys);
-  box-shadow:
-    0 0 0 0.2rem rgb(4 6 12),
-    0 0 0.8rem var(--sys);
+  box-shadow: 0 0 0.8rem var(--sys);
 }
 
 .system-panel .life li:last-child .dot {
@@ -1395,7 +1598,7 @@ main {
 
 /* Switched on: dark, a line of light across the middle opening into a flash, the logo lit in
    it, then the page under it (system.ts, BOOT_MS). Opacity and transforms only. */
-.system-panel .boot {
+.boot {
   position: absolute;
   inset: 0;
   z-index: 20;
@@ -1408,15 +1611,23 @@ main {
   animation: boot-out 1500ms ease var(--boot-wait, 0ms) both;
 }
 
+/* Over a game: the whole screen, header and hints too, in the game's colour (boot.ts). */
+.boot.whole {
+  position: fixed;
+  z-index: 90;
+  border-radius: 0;
+  --sys-45: color-mix(in srgb, var(--sys) 45%, transparent);
+}
+
 /* Scanlines over it all, as on a tube. */
-.system-panel .boot::after {
+.boot::after {
   content: '';
   position: absolute;
   inset: 0;
   background: repeating-linear-gradient(0deg, rgb(0 0 0 / 35%) 0 2px, transparent 2px 4px);
 }
 
-.system-panel .boot .beam {
+.boot .beam {
   position: absolute;
   top: 50%;
   left: 0;
@@ -1429,7 +1640,7 @@ main {
   animation: boot-beam 1500ms cubic-bezier(0.2, 0.7, 0.2, 1) var(--boot-wait, 0ms) both;
 }
 
-.system-panel .boot-mark {
+.boot-mark {
   position: relative;
   display: grid;
   place-items: center;
@@ -1438,7 +1649,7 @@ main {
 }
 
 /* The logo's glow: a soft light behind it, not a filter on it. */
-.system-panel .boot-mark::before {
+.boot-mark::before {
   content: '';
   position: absolute;
   inset: -40% -25%;
@@ -1446,13 +1657,13 @@ main {
   background: radial-gradient(closest-side, var(--sys-45), transparent);
 }
 
-.system-panel .boot-logo {
+.boot-logo {
   max-width: min(60%, 34rem);
   max-height: 9rem;
   object-fit: contain;
 }
 
-.system-panel .boot-name {
+.boot-name {
   font-family: var(--mono);
   font-size: 3rem;
   font-weight: 800;
@@ -1522,7 +1733,7 @@ main {
 }
 
 .system-panel .maker .maker-logo {
-  height: 1.7rem;
+  height: var(--maker-h, 1.7rem);
   max-width: 9.5rem;
   object-fit: contain;
   object-position: right center;
@@ -1732,7 +1943,8 @@ main {
 }
 
 /* A scrolling box fades at its edges, showing there is more. */
-.system-panel .scrolling {
+.system-panel .scrolling,
+.system-panel .looping {
   -webkit-mask-image: linear-gradient(
     transparent,
     #000 0.6em,
@@ -2051,6 +2263,27 @@ main {
 
 .games .scan {
   inset: 0 0 0 calc(var(--rail) + 1.5rem);
+}
+
+/* Its scrape landed: no beam, no reticle, just the dark, till the game switches on (its
+   flicker, boot.ts) over the pictures drawn again beneath. */
+.collector .scan.found .scan-beam,
+.collector .scan.found .scan-grid,
+.collector .scan.found .scan-core,
+.collector .scan.reveal .scan-beam,
+.collector .scan.reveal .scan-core {
+  display: none;
+}
+
+.collector .scan.found .scan-shade {
+  background: #02040a;
+  opacity: 1;
+}
+
+/* Over the whole Collector, its label and dossier too (always over its dim, at 5) and the
+   shelf's preview (6): under it they showed through, drawn again as the scrape's pictures came. */
+.collector .scan {
+  z-index: 8;
 }
 
 /* Taking over from Forma's menu, dark already: no fade in. */
@@ -3766,8 +3999,9 @@ kbd {
   display: grid;
   /* Bays: the label over them all; the case on the left, the footage and the story in the
      middle, the dossier on the right. */
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr) 21rem;
-  grid-template-rows: auto minmax(0, 1fr) minmax(0, 0.62fr);
+  /* The footage's TV the biggest bay: the case's box needs less width than its column had. */
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.25fr) 21rem;
+  grid-template-rows: auto minmax(0, 1fr) minmax(0, 0.48fr);
   grid-template-areas:
     'label label label'
     'case footage dossier'
@@ -3805,13 +4039,14 @@ kbd {
 /* A new game's bays fade in, nothing else moving; well before its box turns or its video
    starts, so nothing moving sits under the fade. Backwards only: once in, no style is left. */
 .collector.arriving .bay,
-.collector.arriving .dossier {
+.collector.arriving .dossier:not(.kept) {
   animation: bay-in 360ms ease-out backwards;
 }
 
 @keyframes bay-in {
+  /* From part-way: the last game's place is never empty, the next brightens into it. */
   from {
-    opacity: 0;
+    opacity: 0.45;
   }
 }
 
@@ -3855,7 +4090,9 @@ kbd {
   grid-area: footage-start / case-start / story-end / dossier-end;
   position: absolute;
   z-index: 5;
-  inset: 0;
+  /* From just under the game's top bar (the gap above the footage, not over the bar) to a
+     little past the story's bottom: more of the list in sight. */
+  inset: -0.6rem 0 -1.6rem;
   /* Every spine as long, about a box spine's own shape at the row's height (so a spine picture is
      hardly trimmed), in the middle of the shelf. A slimmer box's spines make it longer
      (collector.ts sets it then). */
@@ -3874,6 +4111,8 @@ kbd {
   );
   opacity: 0;
   visibility: hidden;
+  /* Its layer ready before it shows: one made as it comes is a stutter on a Pi. */
+  will-change: opacity;
   transition:
     opacity 200ms ease,
     visibility 0s 200ms;
@@ -3888,18 +4127,31 @@ kbd {
   z-index: 1;
   left: calc(var(--mid) - var(--spine-len) / 2 - 0.8rem);
   width: calc(var(--spine-len) + 1.6rem);
-  height: 18%;
+  /* Long and soft: the rows sink away gradually, no edge where the list ends. */
+  height: 30%;
   pointer-events: none;
 }
 
 .shelf::before {
   top: 0;
-  background: linear-gradient(180deg, rgb(3 5 11 / 88%), rgb(3 5 11 / 0%));
+  background: linear-gradient(
+    180deg,
+    rgb(3 5 11 / 97%) 0%,
+    rgb(3 5 11 / 80%) 25%,
+    rgb(3 5 11 / 40%) 60%,
+    rgb(3 5 11 / 0%) 100%
+  );
 }
 
 .shelf::after {
   bottom: 0;
-  background: linear-gradient(0deg, rgb(3 5 11 / 88%), rgb(3 5 11 / 0%));
+  background: linear-gradient(
+    0deg,
+    rgb(3 5 11 / 97%) 0%,
+    rgb(3 5 11 / 80%) 25%,
+    rgb(3 5 11 / 40%) 60%,
+    rgb(3 5 11 / 0%) 100%
+  );
 }
 
 /* The rows glide as one to bring the selected to the middle: the compositor's work. */
@@ -3936,20 +4188,474 @@ kbd {
   background: rgb(2 4 10 / 50%);
   opacity: 0;
   pointer-events: none;
+  will-change: opacity;
   transition: opacity 200ms ease;
-}
-
-/* Behind the shelf, while it shows, nothing moves: the case's, the footage's and the dossier's
-   own animations wait where they are. */
-.collector.browsing .showcase *,
-.collector.browsing .dossier *,
-.collector.browsing .collector-backdrop * {
-  animation-play-state: paused !important;
 }
 
 .collector.browsing::after {
   opacity: 1;
   transition-duration: 120ms;
+}
+
+/* Where the case was, while the shelf shows: the selected game's picture on a TV of its console's
+   day, drawn (no pictures, no filters: the Pi); it goes with the shelf when the details come.
+   Everything is sized off the TV's width (cqw), so each set keeps its proportions. */
+.nav-pic {
+  grid-area: footage-start / case-start / story-end / case-end;
+  position: relative;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  padding: 0.5rem;
+  /* Into the middle column, up to the shelf's dark band: its rows (22rem) leave its edges free. */
+  margin-right: -3.5rem;
+  container-type: size;
+  /* Faded out, never hidden: hidden, it was painted anew each time the shelf came (as the case
+     was, measured: 80 ms on a Pi). Its layer is kept, ready, painted once. */
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+  transition: opacity 200ms ease;
+}
+
+/* Everything that fades as the shelf comes and goes, or as a game is drawn (bay-in), on a layer
+   of its own for good: made for each fade and dropped after it, each was painted twice more at
+   every hand-off between the shelf and the game (a long frame each on a Pi). Fading is then the
+   compositor's alone. */
+.collector .showcase > .bay:not(.case),
+.collector .slab-label,
+.collector .dossier {
+  will-change: opacity;
+}
+
+/* The footage and the story faded out under the shelf (the TV stands in their place): seen
+   dimmed through it, they were drawn at every frame of it for nothing (measured: a fifth of the
+   shelf's slow frames on a Pi). Faded, not hidden: their layers are kept, nothing painted anew
+   as the shelf goes. */
+.collector .showcase > .bay:not(.case) {
+  transition: opacity 200ms ease;
+}
+
+.collector.browsing .showcase > .bay:not(.case) {
+  opacity: 0;
+  transition-duration: 120ms;
+  animation: none;
+}
+
+.collector.browsing .nav-pic {
+  opacity: 1;
+  transition: opacity 120ms ease;
+}
+
+/* The case is put away while the shelf shows (the TV stands in its place): first of all, on the
+   step itself, before the shelf and the TV fade in; back as the shelf goes. Moved off the
+   screen, its own layer kept, so it comes back as it was, nothing painted again: hidden
+   (visibility) its box was painted and uploaded anew as it came back, a long frame on a Pi
+   (measured: 80 ms), and opacity flattens its 3D. Its fade-in as a new game is drawn waits
+   too, or the box showed through the shelf. */
+.collector .bay.case {
+  will-change: transform;
+}
+
+.collector.browsing .bay.case {
+  transform: translateX(-300vw);
+  animation: none;
+}
+
+/* The dossier beside the shelf, over the dim always. It is drawn as soon as the steps pause
+   (collector.ts), not at each step of a held press. */
+.collector .dossier {
+  position: relative;
+  z-index: 5;
+}
+
+/* Its zones in rooms of their own, whatever the game has: its logo (or name), its release (as
+   if all nine rows were there), its play record. Game after game, nothing moves. */
+.collector .dossier .head {
+  flex: none;
+  display: grid;
+  place-items: center;
+  height: 4.8rem;
+  overflow: hidden;
+}
+
+.collector .dossier .head h2 {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  justify-self: start;
+}
+
+.collector .dossier .about,
+.collector .dossier .copy {
+  flex: none;
+  /* Its title, then five rows of 1.3rem, 0.22rem apart. */
+  min-height: calc(0.6rem * 1.2 + 0.3rem + 5 * 1.3rem + 4 * 0.22rem);
+}
+
+/* The set's width over its height, for it to fit the side whole. */
+.tv {
+  --tv-ar: 1.15;
+  --ar: 1.33;
+  position: relative;
+  width: min(98cqw, 98cqh * var(--tv-ar));
+  container-type: inline-size;
+}
+
+.tv-set {
+  position: relative;
+  /* Its body is drawn on a layer of its own under its parts (::before), so a video's hole can
+     be cut in the body alone: the tube's corners, over it, still round the video off. */
+  isolation: isolate;
+  display: grid;
+  /* Slim: the screen as big as the set allows, its day told by the body's look, not its bulk. */
+  gap: 2cqw;
+  padding: 2.6cqw;
+  border-radius: 2.4cqw;
+  box-shadow: 0 3cqw 6cqw rgb(0 0 0 / 65%);
+}
+
+/* The body: under the TV's parts, a hole cut in it where a video plays (--hole, collector.ts). */
+.tv-set::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  clip-path: var(--hole, none);
+}
+
+.tv-screen {
+  position: relative;
+  display: grid;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  /* A CRT's tube bulges: its corners round off. */
+  border-radius: 5cqw / 4.4cqw;
+  background: radial-gradient(ellipse at 50% 45%, #1a2a30 0%, #060a0d 75%);
+  --bezel: #141518;
+  box-shadow:
+    0 0 0 1.1cqw var(--bezel),
+    0 0 0 1.4cqw rgb(0 0 0 / 50%);
+}
+
+/* The tube's corners, outside its curve, in the bezel's colour: over a video (a rectangle,
+   played under the page) the screen still curves. Opaque, so nothing half see-through. */
+.tv-screen::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 6cqw var(--bezel);
+  pointer-events: none;
+}
+
+.tv-screen img {
+  grid-area: 1 / 1;
+  /* A layer of its own: a new picture is that alone uploaded, not the whole set painted again
+     round it (its wood, its bezel, its shadows; measured: the TV was a third of the shelf's
+     slow frames on a Pi). */
+  will-change: transform;
+  width: 100%;
+  height: 100%;
+  /* The whole screen filled, as a tube shows a picture: a little of a wider one's sides cut. */
+  object-fit: cover;
+  /* A little shaded: a preview. */
+  opacity: 0.88;
+}
+
+.tv-screen img.waiting {
+  visibility: hidden;
+}
+
+/* A screenshot with its black bars cut off (trim.ts): its box set there, bigger than the screen,
+   which clips it. */
+.tv-screen img.trimmed,
+.bay.footage .screen img.trimmed {
+  position: absolute;
+  inset: auto;
+  max-width: none;
+  object-fit: fill;
+}
+
+/* The glass: a curve of light across it, faint scan lines, darker towards its edges. The lines a
+   1×3 picture (one dark row, two clear) tiled pixel for pixel (pixelated): a gradient's, the TV
+   at a fraction of a pixel as it is sized, came in clumps and gaps on a Pi, every third pixel
+   rounded its own way. */
+.tv-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(150deg, rgb(255 255 255 / 13%) 0%, rgb(255 255 255 / 0%) 32%),
+    url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAADCAYAAABS3WWCAAAAD0lEQVR42mNgYGCwYIADAAJ3ADmpk1ObAAAAAElFTkSuQmCC')
+      0 0 / 1px 3px,
+    radial-gradient(ellipse at center, transparent 55%, rgb(0 0 0 / 55%) 100%);
+  image-rendering: pixelated;
+  box-shadow: inset 0 0 4cqw rgb(0 0 0 / 70%);
+  pointer-events: none;
+}
+
+.tv-panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 3cqw;
+}
+
+.tv-panel .grille {
+  flex: 1;
+  align-self: stretch;
+  border-radius: 0.8cqw;
+  background: repeating-linear-gradient(0deg, rgb(0 0 0 / 55%) 0 0.6cqw, transparent 0.6cqw 1.4cqw);
+}
+
+.tv-panel .knob {
+  flex: none;
+  width: 6cqw;
+  height: 6cqw;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #d9d9d9, #6e6e6e 45%, #2a2a2a 100%);
+  box-shadow: 0 0.5cqw 1cqw rgb(0 0 0 / 60%);
+}
+
+.tv-panel .led {
+  flex: none;
+  width: 1.6cqw;
+  height: 1.6cqw;
+  border-radius: 50%;
+  background: #ff3b30;
+  box-shadow: 0 0 1.5cqw #ff3b30;
+}
+
+/* Late '70s, early '80s: a wood-grain cabinet, the dials and the speaker beside the screen, on
+   short legs. */
+.tv[data-era='wood'] {
+  --tv-ar: 1.44;
+}
+
+.tv[data-era='wood'] .tv-set {
+  grid-template-columns: 1fr 11cqw;
+  border: 0.6cqw solid #2b1a0b;
+}
+
+.tv[data-era='wood'] .tv-set::before {
+  background:
+    linear-gradient(180deg, rgb(255 220 170 / 14%), rgb(0 0 0 / 25%)),
+    repeating-linear-gradient(
+      93deg,
+      #5b3a1d 0 0.9cqw,
+      #6d4626 0.9cqw 1.7cqw,
+      #4d2f16 1.7cqw 2.2cqw,
+      #67421f 2.2cqw 3.4cqw
+    );
+}
+
+.tv[data-era='wood'] .tv-panel {
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.6cqw 1.2cqw;
+  border-radius: 0.8cqw;
+  background: linear-gradient(180deg, #2a2a2a, #161616);
+  box-shadow: inset 0 0 0 0.4cqw #8c8c8c;
+}
+
+.tv[data-era='wood'] .tv-panel .knob {
+  order: -1;
+  width: 6.5cqw;
+  height: 6.5cqw;
+}
+
+.tv[data-era='wood'] .tv-panel .grille {
+  width: 100%;
+  min-height: 9cqw;
+}
+
+.tv[data-era='wood'] .tv-panel .led {
+  display: none;
+}
+
+.tv[data-era='wood']::before,
+.tv[data-era='wood']::after {
+  content: '';
+  position: absolute;
+  bottom: -2.6cqw;
+  width: 3cqw;
+  height: 3.2cqw;
+  border-radius: 0 0 1cqw 1cqw;
+  background: #22150a;
+}
+
+.tv[data-era='wood']::before {
+  left: 12cqw;
+}
+
+.tv[data-era='wood']::after {
+  right: 12cqw;
+}
+
+/* Late '80s: a beige-grey plastic set, a strip of grille and buttons under the screen. */
+.tv[data-era='beige'] {
+  --tv-ar: 1.2;
+}
+
+.tv[data-era='beige'] .tv-set {
+  grid-template-rows: auto 5cqw;
+  box-shadow: 0 3cqw 6cqw rgb(0 0 0 / 65%);
+}
+
+.tv[data-era='beige'] .tv-set::before {
+  background: linear-gradient(180deg, #d8d1c3 0%, #bdb5a5 100%);
+  box-shadow:
+    inset 0 0.6cqw 0 rgb(255 255 255 / 45%),
+    inset 0 -0.8cqw 0 rgb(0 0 0 / 18%);
+}
+
+.tv[data-era='beige'] .tv-screen {
+  --bezel: #3b3d42;
+  box-shadow:
+    0 0 0 1.3cqw #3b3d42,
+    0 0 0 1.6cqw rgb(0 0 0 / 35%);
+}
+
+.tv[data-era='beige'] .tv-panel .grille {
+  background: repeating-linear-gradient(90deg, #8f8778 0 0.6cqw, transparent 0.6cqw 1.6cqw);
+}
+
+.tv[data-era='beige'] .tv-panel .knob {
+  width: 3.4cqw;
+  height: 3.4cqw;
+  border-radius: 0.6cqw;
+  background: linear-gradient(180deg, #a9a192, #807868);
+}
+
+/* The '90s: a black set, silver round the screen, grilles either side under it. */
+.tv[data-era='black'] {
+  --tv-ar: 1.2;
+}
+
+.tv[data-era='black'] .tv-set {
+  grid-template-rows: auto 4.6cqw;
+  border-radius: 3cqw;
+  box-shadow: 0 3cqw 6cqw rgb(0 0 0 / 65%);
+}
+
+.tv[data-era='black'] .tv-set::before {
+  background: linear-gradient(180deg, #2b2d33 0%, #15161a 100%);
+  box-shadow: inset 0 0.5cqw 0 rgb(255 255 255 / 12%);
+}
+
+.tv[data-era='black'] .tv-screen {
+  --bezel: #0b0c0e;
+  box-shadow:
+    0 0 0 1cqw #0b0c0e,
+    0 0 0 1.4cqw #8b8f97;
+}
+
+.tv[data-era='black'] .tv-panel .grille {
+  background: repeating-linear-gradient(90deg, #070708 0 0.7cqw, #26282d 0.7cqw 1.4cqw);
+}
+
+.tv[data-era='black'] .tv-panel .knob {
+  width: 2.4cqw;
+  height: 2.4cqw;
+  background: radial-gradient(circle at 35% 30%, #9da1a8, #3a3c41);
+}
+
+/* From 2000: a flat screen, wide, on a stand. */
+.tv[data-era='flat'] {
+  --tv-ar: 1.62;
+}
+
+.tv[data-era='flat'] .tv-set {
+  padding: 1.4cqw;
+  border-radius: 1cqw;
+  box-shadow: 0 3cqw 6cqw rgb(0 0 0 / 65%);
+}
+
+.tv[data-era='flat'] .tv-set::before {
+  background: linear-gradient(180deg, #1c1d21, #0d0e10);
+  box-shadow: inset 0 0 0 0.3cqw #3a3c42;
+}
+
+.tv[data-era='flat'] .tv-screen {
+  aspect-ratio: 16 / 9;
+  border-radius: 0.4cqw;
+  background: #020304;
+  box-shadow: none;
+}
+
+.tv[data-era='flat'] .tv-screen::before,
+.tv[data-era='plain'] .tv-screen::before {
+  display: none;
+}
+
+.tv[data-era='flat'] .tv-screen::after {
+  background: linear-gradient(150deg, rgb(255 255 255 / 9%) 0%, rgb(255 255 255 / 0%) 35%);
+  box-shadow: none;
+}
+
+.tv[data-era='flat'] .tv-panel {
+  position: absolute;
+  left: 50%;
+  bottom: -4.4cqw;
+  width: 5cqw;
+  height: 4.4cqw;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, #1a1b1f, #303238, #1a1b1f);
+}
+
+.tv[data-era='flat'] .tv-panel::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -1.2cqw;
+  width: 24cqw;
+  height: 1.4cqw;
+  border-radius: 0.8cqw 0.8cqw 0.3cqw 0.3cqw;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #34363c, #111215);
+}
+
+.tv[data-era='flat'] .tv-panel > * {
+  display: none;
+}
+
+/* Other systems: the picture in a plain frame, its own shape. */
+.tv[data-era='plain'] {
+  --tv-ar: var(--ar);
+}
+
+.tv[data-era='plain'] .tv-set {
+  padding: 0;
+  box-shadow: 0 1rem 2rem rgb(0 0 0 / 60%);
+}
+
+.tv[data-era='plain'] .tv-screen {
+  aspect-ratio: var(--ar);
+  border: 1px solid color-mix(in srgb, var(--game) 60%, transparent);
+  border-radius: 0.25rem;
+  box-shadow:
+    0 0 0 0.25rem rgb(4 7 15 / 85%),
+    0 0 0 calc(0.25rem + 1px) color-mix(in srgb, var(--game) 30%, transparent);
+}
+
+.tv[data-era='plain'] .tv-screen img {
+  object-fit: fill;
+}
+
+.tv[data-era='plain'] .tv-screen::after,
+.tv[data-era='plain'] .tv-panel {
+  display: none;
+}
+
+/* Nothing to show: no frame, for a plain one; a TV stays, its screen dark. */
+.tv.empty[data-era='plain'] {
+  visibility: hidden;
 }
 
 .spine-row {
@@ -3975,9 +4681,7 @@ kbd {
   font-size: 0.95rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  /* No transition: a row animating its own scale or opacity gets a layer of its own for it, made
-     and dropped at every step while the track moves, which flickered on a Pi. */
-  opacity: 0.68;
+  /* Never restyled as the selection moves (the lens shows it): no layer, no paint per step. */
 }
 
 .spine-row .band {
@@ -4043,11 +4747,6 @@ kbd {
   clip-path: inset(50%);
 }
 
-.spine-row.pictured.selected,
-.spine-row.marked.selected {
-  border-color: var(--game);
-}
-
 .spine-row .title {
   flex: 1;
   min-width: 0;
@@ -4056,13 +4755,42 @@ kbd {
   text-overflow: ellipsis;
 }
 
-/* The one picked slides out of the stack. */
-.spine-row.selected {
-  transform: scale(1.05);
-  opacity: 1;
-  color: #fff;
-  border-color: var(--game);
-  /* Inside it only: a glow spilling out ghosted on the Pi, and was redrawn at every step. */
+/* The selection: a still frame in the shelf's middle, the rows gliding under it, those above
+   and below it dimmed by two still panels (collector.ts, the lens). Nothing on a row changes as
+   the selection moves: only the track does. */
+.shelf .lens {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+}
+
+.shelf .lens i {
+  position: absolute;
+  left: calc(var(--mid) - var(--spine-len) / 2 - 0.2rem);
+  width: calc(var(--spine-len) + 0.4rem);
+}
+
+.shelf .lens .above,
+.shelf .lens .below {
+  background: rgb(3 5 11 / 34%);
+}
+
+.shelf .lens .above {
+  top: 0;
+  height: calc(var(--pad, 50%) - 0.15rem);
+}
+
+.shelf .lens .below {
+  top: calc(var(--pad, 50%) + var(--spine-h) + 0.15rem);
+  bottom: 0;
+}
+
+.shelf .lens .frame {
+  top: calc(var(--pad, 50%) - 0.15rem);
+  height: calc(var(--spine-h) + 0.3rem);
+  border: 1px solid var(--game);
+  border-radius: 0.25rem;
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 10%);
 }
 
@@ -4076,10 +4804,13 @@ kbd {
   position: relative;
 }
 
-/* The label over the dimming while the shelf shows, dimmed too but less: the game picked, read
-   at a glance. */
-.collector.browsing .slab-label {
+/* The label over the dimming always (no layer change as the shelf comes and goes), dimmed
+   while the shelf shows but less: the game picked, read at a glance. */
+.collector .slab-label {
   z-index: 5;
+}
+
+.collector.browsing .slab-label {
   opacity: 0.6;
 }
 
@@ -4121,8 +4852,16 @@ kbd {
   grid-area: footage;
   display: grid;
   place-items: center;
+  /* Its size its grid area's, not its content's: a TV in it sizes itself to fit (cq units). */
+  container-type: size;
   /* Room round the screen for its bezel. */
   padding: 2.3rem 1.6rem 1.3rem;
+}
+
+/* A TV draws its own body: only a little room round it, for its shadow; a gap under the
+   footage's label above it. */
+.bay.footage:has(.tv) {
+  padding: 2rem 0.4rem 0.2rem;
 }
 
 /* A 4:3 screen, as tall as the bay lets it, in a monitor's bezel: dark, a neon rim in the
@@ -4143,8 +4882,9 @@ kbd {
     0 0 0 calc(0.55rem + 3px) var(--game);
 }
 
-/* Over the screenshots: faint scanlines, the corners a little darker. Not over the video: the
-   page is see-through there, and half-see-through pixels over Forma's player went wrong. */
+/* Over the screenshots: faint scanlines (a tiled picture, as the TV's glass), the
+   corners a little darker. Not over the video: the page is see-through there, and
+   half-see-through pixels over Forma's player went wrong. */
 .bay.footage .screen::after {
   content: '';
   position: absolute;
@@ -4152,8 +4892,16 @@ kbd {
   inset: 0;
   pointer-events: none;
   background:
-    repeating-linear-gradient(0deg, rgb(0 0 0 / 16%) 0 1px, transparent 1px 3px),
+    url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAADCAYAAABS3WWCAAAAD0lEQVR42mNgYGDQZIADAAHSACo4Aq1+AAAAAElFTkSuQmCC')
+      0 0 / 1px 3px,
     radial-gradient(ellipse 75% 70% at 50% 50%, transparent 60%, rgb(0 0 0 / 45%) 100%);
+  image-rendering: pixelated;
+}
+
+/* In a TV the tube's glass is the screen's (.tv-screen::after): not a second one under it, its
+   lines across the first's. */
+.bay.footage .tv .screen::after {
+  display: none;
 }
 
 .bay.footage .screen img {
@@ -4216,6 +4964,30 @@ kbd {
   visibility: hidden;
 }
 
+/* A console's footage in a TV of its day (the TVs are drawn with the shelf's preview): as big
+   as the bay lets it, the screen filling its tube, the TV's body round it. */
+.bay.footage .tv {
+  width: min(100cqw, 100cqh * var(--tv-ar));
+}
+
+.bay.footage .tv .screen {
+  position: absolute;
+  inset: 0;
+  height: auto;
+  max-width: none;
+  aspect-ratio: auto;
+  border-radius: inherit;
+  box-shadow: none;
+}
+
+/* The video's window: the tube lets Forma's player through too. Its glass stays over it, as over
+   the screenshots (glare, the tiled scan lines, the darker edges): see-through over the player
+   is fine; what went wrong over it were the gradient's clumped lines. The TV's body stays, over
+   the video's corners. */
+.collector.video-on .bay.footage .tv-screen {
+  background: transparent;
+}
+
 .bay.story {
   grid-area: story;
 }
@@ -4240,6 +5012,10 @@ kbd {
   font-size: 0.82rem;
   line-height: 1.5;
   color: #c3d4e1;
+  /* Justified, as a magazine's column; words broken where the language allows, so a narrow
+     column has no wide gaps. */
+  text-align: justify;
+  hyphens: auto;
   transition: opacity 300ms ease;
 }
 
@@ -4262,6 +5038,13 @@ kbd {
 
 .slab-label {
   width: 100%;
+  /* One height whatever the game, its words cut to a line each: a long name on two lines made
+     the bar, and the whole view under it, jump as the shelf went by. */
+  height: 5.2rem;
+  overflow: hidden;
+  /* Walled off: its words, changed at each step along the shelf, are laid out and painted in
+     it alone, not the whole showcase round it again. */
+  contain: strict;
   display: grid;
   /* The system, the game's name and details, its star; the seals at the right end. */
   grid-template-columns: auto minmax(0, max-content) auto minmax(0, 1fr);
@@ -4301,22 +5084,31 @@ kbd {
   line-height: 1.25;
 }
 
-.slab-label .brand {
-  font-family: var(--mono);
-  font-size: 0.56rem;
-  letter-spacing: 0.24em;
-  color: var(--game);
-}
-
 .slab-label .what strong {
-  /* The whole name, on two lines if it needs them. */
-  display: -webkit-box;
+  /* One line, cut short if need be (the dossier has it whole). */
   overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-size: 1.1rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+}
+
+.slab-label .publisher,
+.slab-label .line,
+.slab-label .serial {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Its publisher, under its name: a line of its own, kept when unknown. */
+.slab-label .publisher {
+  min-height: 1lh;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #dbe7f0;
 }
 
 .slab-label .line {
@@ -4407,12 +5199,12 @@ kbd {
   justify-content: center;
 }
 
-/* The box's sled and the cartridge's, going one way, left to right, slowly and at one speed
-   (SLIDE_MS in collector.ts): after its back, the box slides off to the right as the cartridge
-   comes in from the left; then the cartridge goes on out to the right as the box comes back in
-   from the left, on its front. Out of the case's bay they are cut off: no opacity, the Pi's
-   WebKit ghosts layers under a changing one. Each on its own layer from the start: layers made
-   mid-slide flickered. Both share one middle, top to bottom. */
+/* The box's sled and the cartridge's (SLIDE_MS in collector.ts). After its back, the box swipes
+   off to the left, out of the bay; the cartridge comes in from there to the middle. Then the
+   cartridge backs off to the left as the box, on its front, comes in from the left: they meet,
+   and the box, over it, swallows it and carries it back to the middle. Out of the case's bay
+   they are cut off: no opacity, the Pi's WebKit ghosts layers under a changing one. Each on its
+   own layer from the start: layers made mid-slide flickered. Both share one middle. */
 .bay.case {
   overflow: hidden;
 }
@@ -4425,39 +5217,72 @@ kbd {
   align-items: center;
   justify-content: center;
   will-change: transform;
-  transition: transform 2.2s cubic-bezier(0.45, 0, 0.55, 1);
 }
 
 .display .mover {
   z-index: 1;
 }
 
+/* Off to the left, gathering speed, as if out of the screen. Its transition here only: on the
+   sled itself, the Pi's WebKit replayed it as the swallowing below ended (the box jumped back
+   out to the left and slid in again). */
 .display.cart-out .mover {
-  transform: translateX(105%);
+  transform: translateX(-110%);
+  transition: transform 1s cubic-bezier(0.55, 0, 0.75, 0.3);
 }
 
-/* Round to the left, at once, to come in from there. */
-.display.box-from-left .mover {
-  transform: translateX(-105%);
-  transition: none;
-}
-
-/* Waiting out of sight on the left (past the bay's edge, which cuts it off); in to the middle;
-   on out to the right; then round to the left again at once, still out of sight. Never hidden:
-   a layer hidden until it moves is first drawn mid-slide on the Pi, and that showed as a jump. */
+/* Waiting out of sight on the left (past the bay's edge, which cuts it off). Never hidden: a
+   layer hidden until it moves is first drawn mid-slide on the Pi, and that showed as a jump. */
 .display .cart-stage {
-  transform: translateX(-105%);
-  transition: none;
+  transform: translateX(-110%);
 }
 
+/* In from where the box went, once it has gone. */
 .display.cart-out .cart-stage {
   transform: none;
-  transition: transform 2.2s cubic-bezier(0.45, 0, 0.55, 1);
+  transition: transform 1.1s cubic-bezier(0.2, 0.7, 0.3, 1) 0.85s;
+}
+
+/* Both at once, ending where they began: the box at the middle, the cartridge inside it (and
+   back out of sight on the left once over, unseen under the box). */
+.display.cart-leaving .mover {
+  animation: box-swallows 2.2s both;
 }
 
 .display.cart-leaving .cart-stage {
-  transform: translateX(105%);
-  transition: transform 2.2s cubic-bezier(0.45, 0, 0.55, 1);
+  animation: cart-swallowed 2.2s both;
+}
+
+@keyframes box-swallows {
+  from {
+    transform: translateX(-110%);
+    animation-timing-function: cubic-bezier(0.3, 0.5, 0.6, 1);
+  }
+
+  45% {
+    transform: translateX(-28%);
+    animation-timing-function: cubic-bezier(0.3, 0, 0.3, 1);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+@keyframes cart-swallowed {
+  from {
+    transform: none;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+  }
+
+  45% {
+    transform: translateX(-28%) scale(0.94);
+    animation-timing-function: cubic-bezier(0.3, 0, 0.3, 1);
+  }
+
+  to {
+    transform: scale(0.94);
+  }
 }
 
 .display .cart-stage .cart {
@@ -4738,6 +5563,71 @@ kbd {
   text-overflow: ellipsis;
 }
 
+/* The dump check: a label per catalogue that lists the file, in a row; each the catalogue's
+   name on a quiet band joined to its verdict, tinted by it, cut-corner like Cyber's panels.
+   No glow (the Pi). */
+.dossier .dump {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.45em;
+  max-width: 100%;
+}
+
+.dossier .dump.unknown {
+  color: var(--muted);
+}
+
+.dossier .dump .badge {
+  --dump: var(--muted);
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid color-mix(in srgb, var(--dump) 40%, transparent);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 0.45em) 0,
+    100% 0.45em,
+    100% 100%,
+    0.45em 100%,
+    0 calc(100% - 0.45em)
+  );
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* Verified: a soft, light green; doubtful: a muted amber. */
+.dossier .dump .badge.verified {
+  --dump: #9be3b4;
+}
+
+.dossier .dump .badge.doubtful {
+  --dump: #e8c27e;
+}
+
+/* The catalogue's name: the label's quiet first half. */
+.dossier .dump .seal {
+  display: flex;
+  align-items: center;
+  padding: 0.38em 0.6em 0.32em 0.7em;
+  font-family: var(--mono);
+  font-size: 0.66em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(235 242 250 / 85%);
+  background: rgb(255 255 255 / 8%);
+}
+
+/* Its verdict: the second half, tinted by it. */
+.dossier .dump .verdict {
+  display: flex;
+  align-items: center;
+  padding: 0.3em 0.7em 0.28em 0.6em;
+  font-size: 0.8em;
+  font-weight: 600;
+  color: var(--dump);
+  background: color-mix(in srgb, var(--dump) 13%, transparent);
+}
+
 .collector .stars {
   position: relative;
   font-size: 0.9rem;
@@ -4874,7 +5764,21 @@ kbd {
   object-position: left center;
 }
 
-/* Regions and languages: their flags alone. */
+/* The logo, then the name in words. */
+.dossier .company-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.dossier .company-line > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Regions and languages: each flag with its name. */
 .dossier .specs .flags {
   display: flex;
   flex-wrap: wrap;
@@ -4886,6 +5790,10 @@ kbd {
   align-items: center;
   gap: 0.3rem;
   white-space: nowrap;
+}
+
+.dossier .chip .name {
+  font-size: 0.85em;
 }
 
 .dossier .flag {
@@ -4955,4 +5863,58 @@ kbd {
 
 :root[data-motion='off'] .cbox {
   transition: none;
+}
+
+/* Perf mode only (main.ts, `perfOff`): parts of the Collector's look left out, to measure them. */
+[data-perf-off~='shadows'] .collector *,
+[data-perf-off~='shadows'] .collector *::before,
+[data-perf-off~='shadows'] .collector *::after {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+[data-perf-off~='navpic'] .collector .nav-pic,
+[data-perf-off~='fades'] .collector .shelf::before,
+[data-perf-off~='fades'] .collector .shelf::after,
+[data-perf-off~='backdrop'] .collector .collector-backdrop,
+[data-perf-off~='dim'] .collector::after {
+  display: none !important;
+}
+
+[data-perf-off~='spines'] .collector .shelf img {
+  visibility: hidden !important;
+}
+
+[data-perf-off~='gradients'] .collector * {
+  background-image: none !important;
+}
+
+[data-perf-off~='anims'] .collector.browsing .showcase *,
+[data-perf-off~='anims'] .collector.browsing .showcase *::before,
+[data-perf-off~='anims'] .collector.browsing .showcase *::after {
+  animation-play-state: paused !important;
+}
+
+[data-perf-off~='under'] .collector.browsing .showcase {
+  visibility: hidden !important;
+}
+
+/* Racing through the list (a direction held a while, collector.ts): the TV blank but for the
+   letter the shelf is at, big, as a channel's number on an old set. */
+.tv-letter {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 34cqw;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--neon);
+  opacity: 0;
+}
+
+.collector.racing .tv-letter {
+  opacity: 1;
 }
