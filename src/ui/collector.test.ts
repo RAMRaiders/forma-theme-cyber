@@ -265,7 +265,12 @@ describe('the Collector view', () => {
     expect(v.root.querySelector('.dossier .archive')).toBeNull();
     expect(dd.slice(8)).toEqual(['2×', '10 min']);
     // What it offers: players; no manual, achievements nor rating: their tiles there, faded.
-    expect(text('.dossier .mark.on')).toEqual(['1 player']);
+    // Its region first: the first one's flag and name, how many more.
+    expect(text('.dossier .mark.on')).toEqual(['USA +1', '1 player']);
+    expect(v.root.querySelector('.dossier .mark.region .flag')).not.toBeNull();
+    expect(v.root.querySelector('.dossier .mark.region')?.getAttribute('aria-label')).toBe(
+      'Region: USA, Japan'
+    );
     expect(text('.dossier .mark.off')).toEqual(['No manual', '– / –', 'No rating']);
     expect(v.root.querySelector('.dossier .achievements')).toBeNull();
     // The bays: the case, the footage (its screenshots until the video), the story.
@@ -723,8 +728,8 @@ describe('the Collector view', () => {
     // Nothing to make a cover from: the default box, and static where the footage would be.
     expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).toBe(DEFAULT_FRONT);
     expect(text('.no-signal span')).toEqual(['No signal']);
-    // All four tiles, whatever it has: what it lacks faded.
-    expect(text('.dossier .mark')).toHaveLength(4);
+    // All five tiles, whatever it has: what it lacks faded.
+    expect(text('.dossier .mark')).toHaveLength(5);
   });
 });
 
