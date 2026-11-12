@@ -1554,8 +1554,7 @@ export class CollectorView {
       mark.append(el('span', {}, system?.name ?? game.system.toUpperCase()));
     }
     const grade = gradeOf(game.rating);
-    // Its year, system and regions; under them its genre, on a line of its own in its colours
-    // (the dossier leaves it out).
+    // Its year, system and regions (its genre is in the dossier's release).
     const details = [
       game.releaseDate?.slice(0, 4),
       system?.name ?? game.system,
@@ -1574,7 +1573,6 @@ export class CollectorView {
           { class: 'line' },
           [isIconic(game) ? 'Iconic' : '', ...details].filter(Boolean).join(' · ')
         ),
-        el('span', { class: 'genre' }, game.genre ?? ''),
         el('span', { class: 'serial' }, serial(game))
       ),
       // The favourite's gold star, right after its name and details (only when it is one).
@@ -1778,6 +1776,7 @@ export class CollectorView {
       row('Released', released),
       row('Developer', company(game.developer)),
       row('Publisher', company(game.publisher)),
+      row('Genre', game.genre),
       row('Region', flags(flaggedRegions(regions), REGIONS, regionFlag)),
       // A hack or a homebrew game with no version is no "original release".
       // What kind of release (the original, a prototype, a demo, homebrew, unlicensed…), then

@@ -166,7 +166,6 @@ describe('the Collector view', () => {
   it('labels the case with its grade, system and serial', async () => {
     const { v, text } = await view([game(7, 'After Burner', BOXED)]);
     expect(text('.slab-label .what strong')).toEqual(['After Burner']);
-    expect(text('.slab-label .genre')).toEqual(['Shooter']);
     expect(text('.slab-label .line')).toEqual(['1995 · Sega 32X']);
     expect(text('.slab-label .serial')).toEqual(['SEGA32X-000007']);
     expect(text('.slab-label .grade strong')).toEqual(['3.5/5']);
@@ -240,6 +239,7 @@ describe('the Collector view', () => {
       'Released',
       'Developer',
       'Publisher',
+      'Genre',
       'Region',
       'Release',
       'Version',
@@ -247,9 +247,9 @@ describe('the Collector view', () => {
       'Played',
       'Time'
     ]);
-    // Its genre under its name on the label, not in the dossier.
-    expect(text('.slab-label .genre')).toEqual(['Shooter']);
     const dd = text('.dossier .specs dd');
+    // Its genre in the release, after who made it.
+    expect(dd[3]).toBe('Shooter');
     expect(dd[0]).toMatch(/^13 Jan 1995 · \d+ years ago$/);
     expect(dd[1]).toBe('Rutubo Games');
     // From the ROM's name, before the gamelist's: flags alone, their names for screen readers.
@@ -259,10 +259,10 @@ describe('the Collector view', () => {
     expect([...flags(0)].map((c) => c.textContent)).toEqual(['USA', 'Japan']);
     expect([...flags(1)].map((c) => c.textContent)).toEqual(['English', 'Japanese']);
     expect(v.root.querySelectorAll('.dossier .specs .flags .flag')).toHaveLength(4);
-    expect(dd.slice(4, 6)).toEqual(['Original', 'Revision 1']);
+    expect(dd.slice(5, 7)).toEqual(['Original', 'Revision 1']);
     // Its pictures are not listed: they are on the screen.
     expect(v.root.querySelector('.dossier .archive')).toBeNull();
-    expect(dd.slice(7)).toEqual(['2×', '10 min']);
+    expect(dd.slice(8)).toEqual(['2×', '10 min']);
     // What it offers: players; no manual, achievements nor rating: their tiles there, faded.
     expect(text('.dossier .mark.on')).toEqual(['1 player']);
     expect(text('.dossier .mark.off')).toEqual(['No manual', '– / –', 'No rating']);
