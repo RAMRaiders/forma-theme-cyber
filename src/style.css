@@ -4013,16 +4013,6 @@ kbd {
   z-index: -1;
   overflow: hidden;
   background: var(--bg);
-  will-change: opacity;
-  transition: opacity 200ms ease;
-}
-
-/* No fan art while the shelf shows (nor the shade over it, collector::after): the shelf's frames
-   composite the shelf, its TV and the dossier on the dark, not a screen of picture under them.
-   It changes as the shelf goes anyway (collector.ts), the new one fading in from the dark. */
-.collector.browsing .collector-backdrop {
-  opacity: 0;
-  transition-duration: 120ms;
 }
 
 .collector-backdrop img {
@@ -4039,11 +4029,6 @@ kbd {
 .collector-backdrop img.waiting,
 .collector-backdrop img.leaving {
   opacity: 0;
-}
-
-/* Put in as the shelf goes, the backdrop fading in with it: no fade of its own. */
-.collector-backdrop img.instant {
-  transition: none;
 }
 
 /* A new game's bays fade in, nothing else moving; well before its box turns or its video
@@ -4200,6 +4185,11 @@ kbd {
   pointer-events: none;
   will-change: opacity;
   transition: opacity 200ms ease;
+}
+
+.collector.browsing::after {
+  opacity: 1;
+  transition-duration: 120ms;
 }
 
 /* The shelf gone: the case and footage fade in from the dark. */

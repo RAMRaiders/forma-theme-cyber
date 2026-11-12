@@ -350,7 +350,6 @@ export class CollectorView {
   previews = true;
   #dropTimer: ReturnType<typeof setTimeout> | undefined;
   #landing: ReturnType<typeof setTimeout> | undefined;
-  #backdropDue: Game | null = null;
   /** When the direction began to be held, and whether the shelf is racing (#race). */
   #heldSince = 0;
   /** The box drawn under the shelf: its turns start as the shelf goes. */
@@ -449,12 +448,6 @@ export class CollectorView {
     clearTimeout(this.#dropTimer);
     this.#dropTimer = setTimeout(() => {
       perfMark('drop');
-      if (this.#backdropDue && this.#backdropDue.id === this.selected?.id) {
-        const due = this.#backdropDue;
-        this.#backdropDue = null;
-        this.root.classList.remove('browsing');
-        this.#backdropFor(due, true);
-      }
       // The details faded in from the dark, a moment: opacity only, one layer.
       this.root.classList.add('landing');
       clearTimeout(this.#landing);
@@ -1264,15 +1257,8 @@ export class CollectorView {
    * over the old, once decoded (a picture decoded mid-fade caught on a Pi); the old goes when
    * it is covered. Both are opaque, so the screen stays as bright all through the fade.
    */
-  #backdropFor(game: Game, instant = false): void {
-    // While the shelf shows, the fan art waits for it to go, and changes under the fade from the
-    // dark then: crossfaded at each stop under the shelf, two full-screen pictures were drawn
-    // over each other at every frame of it, and the new one sent to the GPU, as the shelf moved.
-    if (this.root.classList.contains('browsing')) {
-      this.#backdropDue = game;
-      return;
-    }
-    this.#backdropDue = null;
+  #backdropFor(game: Game): void {
+    // At each stop as the shelf moves too, under its shade (not while racing: no stop then).
     const src = this.#fanartOf(game);
     if (src === this.#backdropSrc) return;
     this.#backdropSrc = src;
@@ -1280,10 +1266,6 @@ export class CollectorView {
     this.#backdrop.querySelectorAll('img.waiting').forEach((n) => n.remove());
     const old = [...this.#backdrop.children];
     const removeOld = () => old.forEach((n) => n.remove());
-    // As the shelf goes (the fan art hidden under it): the old one unseen, gone at once, and the
-    // new one put in whole, the backdrop fading in with it. No crossfade of two full-screen
-    // pictures for nothing (measured: a cluster of long frames at every stop on a Pi).
-    if (instant) removeOld();
     // A little over the fade: on a busy Pi it can start late, and the old must not go first.
     const removeOldLater = () => setTimeout(removeOld, BACKDROP_FADE_MS + 200);
     if (!src) {
@@ -1291,7 +1273,7 @@ export class CollectorView {
       removeOldLater();
       return;
     }
-    const img = picture(src, instant ? 'waiting instant' : 'waiting');
+    const img = picture(src, 'waiting');
     img.addEventListener('transitionend', removeOld, { once: true });
     this.#backdrop.append(img);
     img.addEventListener(

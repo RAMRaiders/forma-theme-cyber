@@ -388,29 +388,30 @@ describe('the Collector view', () => {
     expect(plain['Status']).toBeUndefined();
   });
 
-  it('changes the fan art as the shelf goes: the old one, hidden under it, gone at once', async () => {
+  it('changes the fan art at each stop as the shelf moves, the new one over the old', async () => {
     const art = { ...BOXED, fanart: 'art' };
     const { v } = await view([game(1, 'After Burner', art), game(2, 'Doom', art)]);
     const imgs = () => [...v.root.querySelectorAll<HTMLImageElement>('.collector-backdrop img')];
-    // The list opens with the shelf shown a moment: the fan art comes as it goes.
     await vi.advanceTimersByTimeAsync(2100);
-    imgs()[0]!.dispatchEvent(new Event('load'));
+    const [old] = imgs();
+    old!.dispatchEvent(new Event('load'));
     await Promise.resolve();
     await Promise.resolve();
-    expect(imgs()[0]!.classList.contains('waiting')).toBe(false);
+    expect(old!.classList.contains('waiting')).toBe(false);
     v.select(1);
-    // Not while the shelf shows (it is hidden under it).
-    await vi.advanceTimersByTimeAsync(1000);
-    expect(imgs()).toHaveLength(1);
-    await vi.advanceTimersByTimeAsync(450);
-    // As it goes: the new one alone, put in whole (no crossfade of its own).
-    const [next] = imgs();
-    expect(imgs()).toHaveLength(1);
-    expect(next!.classList.contains('instant')).toBe(true);
-    next!.dispatchEvent(new Event('load'));
+    // Stopped on it, the shelf still showing: the new one comes over the old (a crossfade).
+    await vi.advanceTimersByTimeAsync(400);
+    expect(v.root.classList.contains('browsing')).toBe(true);
+    expect(imgs()).toHaveLength(2);
+    const next = imgs()[1]!;
+    expect(next.classList.contains('waiting')).toBe(true);
+    next.dispatchEvent(new Event('load'));
     await Promise.resolve();
     await Promise.resolve();
-    expect(next!.classList.contains('waiting')).toBe(false);
+    expect(next.classList.contains('waiting')).toBe(false);
+    // The old goes once covered, even if the fade never reports.
+    await vi.advanceTimersByTimeAsync(2000);
+    expect(imgs()).toEqual([next]);
   });
 
   it('leaves the fan art alone when the game is shown again, and drops any passed by', async () => {
@@ -428,16 +429,16 @@ describe('the Collector view', () => {
     await Promise.resolve();
     v.select(1);
     await vi.advanceTimersByTimeAsync(1450);
-    expect(imgs()).toHaveLength(1);
+    expect(imgs()).toHaveLength(2);
     // Showing the same game once it has rested adds no second picture of it.
     await vi.advanceTimersByTimeAsync(750);
-    expect(imgs()).toHaveLength(1);
+    expect(imgs()).toHaveLength(2);
     // On to another before Doom's had loaded: Doom's is dropped.
     const doom = imgs()[1];
     v.select(2);
     await vi.advanceTimersByTimeAsync(1450);
     expect(imgs()).not.toContain(doom);
-    expect(imgs()).toHaveLength(1);
+    expect(imgs()).toHaveLength(2);
   });
 
   it('runs at an even speed while the direction is held, and only then', async () => {
