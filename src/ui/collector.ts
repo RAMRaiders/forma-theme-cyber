@@ -161,7 +161,7 @@ const STORY_FADE_MS = 300;
  * was drawn between them, and the next press waited for it), shorter than DROP_MS so it is
  * drawn before the shelf goes. The colours, the dossier and the TV come at the peek, sooner. */
 const SETTLE_MS = 900;
-/** The box and the cartridge sliding past each other, slowly (as in style.css). */
+/** The box swallowing the cartridge again (as in style.css). */
 const SLIDE_MS = 2200;
 /** On a game: the box first turns after this, then every `TURN_MS`. */
 const FIRST_TURN_MS = 3200;
@@ -1093,9 +1093,9 @@ export class CollectorView {
 
   /**
    * The next pose (`1`) or the last (`-1`). Between the box's, it turns. After its back, the
-   * box slides slowly off to the right as its cartridge comes in from the left, at the same
-   * speed; then the cartridge goes on out to the right as the box comes back in from the left,
-   * already turned to its pose. Everything goes one way, left to right.
+   * box swipes off to the left and its cartridge comes in from there; then the cartridge backs
+   * off to the left as the box comes in from the left, already turned to its pose, and swallows
+   * it on the way back to the middle.
    */
   #turnTo(direction: 1 | -1): void {
     const done = span('collector.turnTo');
@@ -1120,14 +1120,14 @@ export class CollectorView {
       display?.classList.remove('cart-leaving');
       display?.classList.add('cart-out');
     } else if (!from || from.angle === null) {
-      // Out of sight: turned to its pose at once, and moved round to the left to come in.
+      // Out of sight on the left: turned to its pose at once, to come in from there over the
+      // cartridge (style.css: box-swallows).
       this.#angle += (((to.angle - this.#angle) % 360) + 360) % 360;
       box.style.transition = 'none';
       box.style.transform = boxTransform(this.#angle);
-      display?.classList.add('box-from-left');
       void box.offsetWidth;
       box.style.removeProperty('transition');
-      display?.classList.remove('cart-out', 'box-from-left');
+      display?.classList.remove('cart-out');
       display?.classList.add('cart-leaving');
       this.#slideDone = setTimeout(() => display?.classList.remove('cart-leaving'), SLIDE_MS + 100);
     } else {
