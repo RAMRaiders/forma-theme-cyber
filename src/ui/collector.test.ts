@@ -498,9 +498,10 @@ describe('the Collector view', () => {
     expect(v.root.querySelector('.dossier')!.children).toHaveLength(0);
     v.select(20);
     expect(letter()).toBe('#');
-    // Let go: the game stopped at loads as after any step.
+    // Let go: the game stopped at loads as after any step, its dossier once it rests.
     await vi.advanceTimersByTimeAsync(400);
     expect(racing()).toBe(false);
+    await vi.advanceTimersByTimeAsync(1500);
     expect(v.root.querySelector('.dossier h2')?.textContent).toBe('3 Ninjas');
   });
 
@@ -596,13 +597,28 @@ describe('the Collector view', () => {
     expect(v.root.classList.contains('browsing')).toBe(false);
   });
 
-  it('keeps the dossier lit and following the selection while the shelf shows', async () => {
-    const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
+  it('draws the dossier once, for the game stopped at, dimmed meanwhile', async () => {
+    const games = ['After Burner', 'Doom', 'Echo'].map((n, i) => game(i + 1, n, BOXED));
+    const { v } = await view(games);
     await vi.advanceTimersByTimeAsync(2100);
+    const dossier = v.root.querySelector('.dossier')!;
+    const stale = () => dossier.classList.contains('stale');
     v.select(1);
-    // As soon as the steps pause, well before the selection rests.
-    await vi.advanceTimersByTimeAsync(200);
-    expect(v.root.querySelector('.dossier')?.textContent).toContain('Doom');
+    // A step, then a pause: the last game's dossier kept, dimmed, not drawn for each step.
+    expect(stale()).toBe(true);
+    await vi.advanceTimersByTimeAsync(300);
+    expect(dossier.textContent).toContain('After Burner');
+    v.select(2);
+    await vi.advanceTimersByTimeAsync(300);
+    expect(dossier.textContent).toContain('After Burner');
+    // Back on the game shown: lit again at once.
+    v.select(0);
+    expect(stale()).toBe(false);
+    v.select(2);
+    // At rest: the game stopped at, lit.
+    await vi.advanceTimersByTimeAsync(1500);
+    expect(dossier.textContent).toContain('Echo');
+    expect(stale()).toBe(false);
   });
 
   it('stars a favourite in the label, and a reload of the same game moves nothing', async () => {

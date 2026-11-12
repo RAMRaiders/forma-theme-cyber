@@ -108,10 +108,6 @@ export const COLLECTOR_PICTURES: readonly (readonly [Kind, number])[] = [
  * into that.
  */
 const SPINE_LEN_REM = 22;
-/** How long after a step the dossier follows it: once the shelf has faded in. */
-const DOSSIER_MS = 140;
-/** Longest a new dossier waits for its pictures to decode before it is put in anyway. */
-const DOSSIER_WAIT_MS = 150;
 const SPINE_H_REM = 2.85;
 /** Systems whose spines are drawn a little bigger, rows and all: Atari's short cartridge labels
  * read small at the usual size. */
@@ -298,11 +294,8 @@ export class CollectorView {
   readonly #tv = tvSet(this.#navScreen, 'tv empty');
   readonly #navPic = el('div', { class: 'nav-pic', 'aria-hidden': 'true' }, this.#tv);
   #navPicSrc: string | null = null;
-  #dossierTimer: ReturnType<typeof setTimeout> | undefined;
   /** The selected game's colour, as on its parts (#paint); `null` for the view's own. */
   #colour: string | null = null;
-  /** Which dossier draw is the latest: one whose pictures decode after another began is dropped. */
-  #dossierRound = 0;
   /** The shelf's height (px), measured once a list opens or the window is resized, not at each
    * step: measuring right after a step's class change made the page work out all its styles
    * and layout in the key press. */
@@ -540,6 +533,10 @@ export class CollectorView {
     if (!changed || quiet) return;
     this.#browse();
     this.#stopVideo();
+    // The dossier is drawn once, for the game stopped at (#draw, at the settle): redrawn at each
+    // step, it changed every few hundred ms, a game behind the shelf. Another game's meanwhile,
+    // it dims (opacity on its own layer: nothing painted).
+    this.#dossier.classList.toggle('stale', this.#dossier.dataset.id !== String(this.selected?.id));
     // While held the shelf says which game it is; the label's pictures would only flicker past.
     clearTimeout(this.#labelTimer);
     // A step loads nothing: games passed by quickly would queue their pictures on a Pi ahead of
@@ -565,7 +562,6 @@ export class CollectorView {
         // loading finishes first). The fan art waits for a pause: decoding it at every step
         // made scrolling stutter on a Pi.
         if (!this.#navPic.querySelector('img.waiting')) this.#navPicFor(game);
-        this.#dossierFor(game);
       }
     }
     clearTimeout(this.#peek);
@@ -579,11 +575,7 @@ export class CollectorView {
       // once was one long frame on a Pi (measured: 80 ms), most of it the page restyling.
       this.#tintSelected(game);
       this.#labelNow();
-      this.#inTurn(game, [
-        () => this.#dossierFor(game, 0),
-        () => this.#navPicFor(game),
-        () => this.#backdropFor(game)
-      ]);
+      this.#inTurn(game, [() => this.#navPicFor(game), () => this.#backdropFor(game)]);
     }, PEEK_MS);
     clearTimeout(this.#settle);
     this.#settle = setTimeout(() => this.#showSelected(), SETTLE_MS);
@@ -596,7 +588,6 @@ export class CollectorView {
     if (this.#letter.textContent !== letter) this.#letter.textContent = letter;
     if (this.#racing) return;
     this.#racing = true;
-    clearTimeout(this.#dossierTimer);
     this.#navScreen.querySelectorAll('img').forEach((img) => img.remove());
     this.#navPicSrc = null;
     this.#dossier.replaceChildren();
@@ -976,7 +967,16 @@ export class CollectorView {
   #showSelectedTraced(again = false): void {
     const game = this.selected;
     this.#pending = !game;
-    if (game && !again && !this.#left && this.#game?.id === game.id && this.#box) {
+    // The same game, its dossier there too (a race emptied it: drawn again below).
+    if (
+      game &&
+      !again &&
+      !this.#left &&
+      this.#game?.id === game.id &&
+      this.#box &&
+      this.#dossier.dataset.id === String(game.id)
+    ) {
+      this.#dossier.classList.remove('stale');
       return this.#labelNow();
     }
     // Already on its way (the list reloaded meanwhile, as it does while Forma checks the
@@ -1057,6 +1057,7 @@ export class CollectorView {
     // flickered as the shelf went).
     const keep = !fresh && this.#dossier.dataset.id === String(game.id);
     this.#dossier.classList.toggle('kept', keep);
+    this.#dossier.classList.remove('stale');
     if (!keep) {
       keepPictures(this.#dossier, dossier);
       this.#dossier.replaceChildren(...dossier);
@@ -1296,39 +1297,6 @@ export class CollectorView {
       },
       { once: true }
     );
-  }
-
-  /**
-   * The dossier of the game selected, as the shelf moves: it stays lit beside it. Just after the
-   * shelf has faded in, not in the same frame (on a Pi, its redraw there made the shelf stutter
-   * in); the latest game only, if several steps come meanwhile.
-   */
-  #dossierFor(game: Game, after = DOSSIER_MS): void {
-    clearTimeout(this.#dossierTimer);
-    const round = ++this.#dossierRound;
-    const draw = () => {
-      if (this.selected?.id !== game.id || this.#dossier.dataset.id === String(game.id)) return;
-      const parts = this.#dossierParts(game);
-      keepPictures(this.#dossier, parts);
-      const swap = () => {
-        if (round !== this.#dossierRound || this.selected?.id !== game.id) return;
-        this.#dossier.dataset.id = String(game.id);
-        this.#dossier.replaceChildren(...parts);
-      };
-      // Its new pictures (flags, makers' logos) decoded first, a moment at most: put in still
-      // decoding, they were blank a frame or two and popped in, the dossier flickering.
-      const decoding = parts
-        .flatMap((p) => [...p.querySelectorAll('img')])
-        .filter((img) => !img.complete && typeof img.decode === 'function')
-        .map((img) => img.decode().catch(() => undefined));
-      if (!decoding.length) return swap();
-      void Promise.race([
-        Promise.all(decoding),
-        new Promise((done) => setTimeout(done, DOSSIER_WAIT_MS))
-      ]).then(swap);
-    };
-    if (after > 0) this.#dossierTimer = setTimeout(draw, after);
-    else draw();
   }
 
   /**

@@ -4255,11 +4255,17 @@ kbd {
   animation: none;
 }
 
-/* The dossier stays lit beside the shelf, following the selection: over the dim always, so
-   nothing about it changes as the shelf comes. */
+/* The dossier beside the shelf, over the dim always. It is drawn once, for the game stopped at
+   (collector.ts): while the shelf shows another, it dims (opacity on its own layer, nothing
+   painted) rather than being drawn again at each step. */
 .collector .dossier {
   position: relative;
   z-index: 5;
+  transition: opacity 150ms ease;
+}
+
+.collector .dossier.stale {
+  opacity: 0.35;
 }
 
 /* Its zones in rooms of their own, whatever the game has: its logo (or name), its release (as
