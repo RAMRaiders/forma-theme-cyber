@@ -4370,6 +4370,16 @@ kbd {
   visibility: hidden;
 }
 
+/* A screenshot with its black bars cut off (trim.ts): its box set there, bigger than the screen,
+   which clips it. */
+.tv-screen img.trimmed,
+.bay.footage .screen img.trimmed {
+  position: absolute;
+  inset: auto;
+  max-width: none;
+  object-fit: fill;
+}
+
 /* The glass: a curve of light across it, faint scan lines, darker towards its edges. */
 .tv-screen::after {
   content: '';

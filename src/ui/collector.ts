@@ -27,6 +27,7 @@ import {
   playtime
 } from './stage.js';
 import { awake } from './rest.js';
+import { borderOf, placeTrimmed, placedBox, trimmedAspect } from './trim.js';
 
 /**
  * The Collector view: a game list as a collector keeps one.
@@ -880,7 +881,7 @@ export class CollectorView {
       return;
     }
     const play = this.#options.play;
-    const area = this.#footage ? screenArea(this.#footage) : null;
+    const area = this.#footage ? videoArea(this.#footage) : null;
     if (!this.previews || !play || !area || !this.#options.media(game, 'video')) return;
     this.#video = true;
     const id = game.id;
@@ -1309,8 +1310,8 @@ export class CollectorView {
     const era = tvEra(system?.category, system?.released);
     if (this.#tv.dataset.era !== era) this.#tv.dataset.era = era;
     const media = this.#options.media;
-    const src =
-      media(game, 'image', 400) ?? media(game, 'titleshot', 400) ?? media(game, 'thumbnail', 640);
+    const shot = media(game, 'image', 400) ?? media(game, 'titleshot', 400);
+    const src = shot ?? media(game, 'thumbnail', 640);
     if (src === this.#navPicSrc) return;
     this.#navPicSrc = src;
     const screen = this.#navScreen;
@@ -1324,10 +1325,15 @@ export class CollectorView {
     screen.append(img);
     const show = () => {
       if (!img.isConnected) return;
-      // Its own shape, for a plain frame to fit it (style.css).
+      // Its own shape, for a plain frame to fit it (style.css): a screenshot's without its
+      // black bars, cut off (trim.ts). Not the box's, shown when there is no screenshot.
       if (img.naturalWidth && img.naturalHeight) {
-        const ar = (img.naturalWidth / img.naturalHeight).toFixed(3);
+        const trim = src === shot ? borderOf(img) : null;
+        const shape = trim ? trimmedAspect(img, trim) : img.naturalWidth / img.naturalHeight;
+        const ar = shape.toFixed(3);
         if (this.#tv.style.getPropertyValue('--ar') !== ar) this.#tv.style.setProperty('--ar', ar);
+        const era = this.#tv.dataset.era ?? 'plain';
+        if (trim) placeTrimmed(img, trim, era === 'plain' ? shape : screenAspect(era));
       }
       for (const old of [...screen.querySelectorAll('img')]) if (old !== img) old.remove();
       img.classList.remove('waiting');
@@ -1413,7 +1419,9 @@ export class CollectorView {
 
     const shots = PRINTS.map((k) => media(game, k, 400)).filter((u): u is string => u !== null);
     this.#footage = el('div', { class: 'screen' });
-    this.#footage.append(...shots.map((src, i) => shotImage(src, i === 0)));
+    const shown = this.#options.system?.(game.system);
+    const era = tvEra(shown?.category, shown?.released);
+    this.#footage.append(...shots.map((src, i) => shotImage(src, i === 0, screenAspect(era))));
     if (!shots.length) this.#footage.append(noSignal());
     if (shots.length > 1 && motion()) {
       let at = 0;
@@ -1952,10 +1960,40 @@ function bay(cls: string, name: string, ...content: (HTMLElement | null)[]): HTM
   );
 }
 
-function shotImage(src: string, on: boolean): HTMLImageElement {
+/** A screenshot in the footage's screen (of shape `aspect`), its black bars cut off (trim.ts). */
+function shotImage(src: string, on: boolean, aspect: number): HTMLImageElement {
   const img = picture(src, on ? 'on' : '');
   img.addEventListener('error', () => img.remove(), { once: true });
+  const fit = () => {
+    const trim = borderOf(img);
+    if (trim) placeTrimmed(img, trim, aspect);
+  };
+  if (img.complete && img.naturalWidth) fit();
+  else img.addEventListener('load', fit, { once: true });
   return img;
+}
+
+/** A TV's screen shape for its era (style.css: .tv-screen), the plain monitor's too. */
+function screenAspect(era: string): number {
+  return era === 'flat' ? 16 / 9 : 4 / 3;
+}
+
+/**
+ * Where the footage's video plays: its screen, or, if the screenshot shown there had black bars
+ * cut off, as much bigger as that cut asked, so the video's own bars (the same, as a rule) fall
+ * under the TV's body and the game fills the screen. Forma plays it in the area it is given.
+ */
+function videoArea(screen: HTMLElement): ScreenArea | null {
+  const area = screenArea(screen);
+  const shot = screen.querySelector<HTMLImageElement>('img');
+  const box = area && shot ? placedBox(shot) : null;
+  if (!area || !box) return area;
+  return {
+    left: area.left + area.width * box.left,
+    top: area.top + area.height * box.top,
+    width: area.width * box.width,
+    height: area.height * box.height
+  };
 }
 
 function boxTransform(angle: number): string {
