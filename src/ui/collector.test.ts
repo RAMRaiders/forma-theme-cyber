@@ -785,6 +785,27 @@ describe('a preview video', () => {
   });
 });
 
+describe("Forma's menu over the view", () => {
+  it('stops the video under it and plays it again once it closes', async () => {
+    const box = { left: 0, top: 0, right: 100, bottom: 100, width: 100, height: 100 };
+    const rect = vi
+      .spyOn(Element.prototype, 'getBoundingClientRect')
+      .mockReturnValue(box as DOMRect);
+    const play = vi.fn(() => Promise.resolve({ playing: true, sound: true }));
+    const stopVideo = vi.fn();
+    const g = game(7, 'After Burner', { ...BOXED, video: 'clip' });
+    const { v } = await view([g], { play, stopVideo });
+    await vi.advanceTimersByTimeAsync(3000);
+    expect(play).toHaveBeenCalledTimes(1);
+
+    v.menu(true);
+    expect(stopVideo).toHaveBeenCalledTimes(1);
+    v.menu(false);
+    expect(play).toHaveBeenCalledTimes(2);
+    rect.mockRestore();
+  });
+});
+
 describe('coming back to the same game', () => {
   it('starts its animations and video again', async () => {
     const box = { left: 0, top: 0, right: 100, bottom: 100, width: 100, height: 100 };

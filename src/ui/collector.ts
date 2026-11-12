@@ -797,6 +797,19 @@ export class CollectorView {
     if (this.#source) this.#showSelected(true);
   }
 
+  /** Forma's menu over the view: its video stopped under it, and played again once it closes. */
+  menu(open: boolean): void {
+    if (open) {
+      if (!this.#video) return;
+      this.#stopVideo();
+      this.#videoHeld = true;
+      return;
+    }
+    if (!this.#videoHeld || this.#left) return;
+    this.#videoHeld = false;
+    if (this.#game) this.#startVideo(this.#game);
+  }
+
   #stop(): void {
     this.#videoHeld = false;
     this.#timers.forEach(clearTimeout);

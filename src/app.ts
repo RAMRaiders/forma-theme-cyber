@@ -290,6 +290,17 @@ export class App {
       rest(active, redraw);
       if (redraw) this.#gameView.resume();
     });
+    // Forma's menu open (Start or Select): nothing plays or moves under it (a video under its
+    // see-through panel flickered it on a Pi), and all picks up again once it closes. Forma
+    // sends `menu` since SDK 1.33.0; the SDK Cyber builds with does not list it yet.
+    const on = this.forma.events.on.bind(this.forma.events) as unknown as (
+      name: string,
+      listener: (change: { open: boolean }) => void
+    ) => unknown;
+    on('menu', ({ open }) => {
+      rest(open);
+      if (this.#list && this.#playing.hidden) this.#gameView.menu(open);
+    });
     this.forma.events.on('game:end', ({ error }) => {
       this.#playing.hidden = true;
       if (this.#list) this.#gameView.resume();

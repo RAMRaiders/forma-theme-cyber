@@ -291,4 +291,10 @@ export class GamesView {
   resume(): void {
     if (this.#source) this.#showDetail();
   }
+
+  /** Forma's menu over the list: its stage (and video) put away, and drawn again once it closes. */
+  menu(open: boolean): void {
+    if (open) this.leave();
+    else this.resume();
+  }
 }
