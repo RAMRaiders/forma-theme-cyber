@@ -5611,8 +5611,8 @@ kbd {
 /* What the game offers, as icons in a row: lit when it has it, faint when not. */
 .dossier .marks {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.3rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.4rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -5622,13 +5622,13 @@ kbd {
   display: grid;
   justify-items: center;
   gap: 0.25rem;
-  padding: 0.45rem 0.05rem 0.35rem;
+  padding: 0.45rem 0.2rem 0.35rem;
   border: 1px solid rgb(255 255 255 / 8%);
   border-radius: 0.35rem;
   overflow: hidden;
   font-family: var(--mono);
-  font-size: 0.5rem;
-  letter-spacing: -0.03em;
+  font-size: 0.52rem;
+  letter-spacing: 0.01em;
   text-align: center;
   white-space: nowrap;
   text-transform: uppercase;
@@ -5644,14 +5644,6 @@ kbd {
 .dossier .mark .glyph {
   width: 1.5rem;
   height: 1.5rem;
-}
-
-/* The region's flag where the others have their icon, as tall. */
-.dossier .mark.region .flag {
-  height: 1.5rem;
-  width: auto;
-  max-width: 100%;
-  object-fit: contain;
 }
 
 .dossier .mark svg {

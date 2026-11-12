@@ -1811,7 +1811,7 @@ export class CollectorView {
     // The play record in the place its pair once shared (its styles still say `alternate`).
     record.classList.add('shown');
     const alternate = el('div', { class: 'alternate' }, record);
-    const marks = this.#marks(game, flaggedRegions(regions));
+    const marks = this.#marks(game);
     this.#achievementsInto(game, marks);
     const parts = [head, marks, about, dump, alternate].filter((p): p is HTMLElement => p !== null);
 
@@ -1819,18 +1819,17 @@ export class CollectorView {
   }
 
   /**
-   * What the game offers and what it is, as tiles, always all five (faded where it has none):
-   * where it is from, how many play, its manual, its achievements (filled in when they
-   * arrive), and its age rating as PEGI's badge.
+   * What the game offers and what it is, as tiles, always all four (faded where it has none):
+   * how many play, its manual, its achievements (filled in when they arrive), and its age
+   * rating as PEGI's badge.
    */
-  #marks(game: ShowGame, regions: string[]): HTMLElement {
+  #marks(game: ShowGame): HTMLElement {
     const cheevos = mark('cheevos', ICONS.cheevos, '– / –', false);
     cheevos.setAttribute('aria-label', 'No achievements');
     const manual = !!this.#options.media(game, 'manual');
     return el(
       'ul',
       { class: 'marks' },
-      regionMark(regions),
       mark(
         'players',
         ICONS.players,
@@ -2188,9 +2187,6 @@ function versionWords(version: string): string {
 
 /** Line icons for the marks, in Cyber's style. */
 const ICONS = {
-  /** A globe, for a copy whose region is not known. */
-  region:
-    '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.6 3.6 5.4 3.6 8.5s-1.1 5.9-3.6 8.5c-2.5-2.6-3.6-5.4-3.6-8.5S9.5 6.1 12 3.5z"/>',
   /** A shield with an age's place on it, for a game with no rating. */
   rating: '<path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6z"/><path d="M9.5 12.5h5"/>',
   manual:
@@ -2217,27 +2213,6 @@ function mark(cls: string, icon: string, label: string, on: boolean): HTMLElemen
     glyph(icon),
     el('span', {}, label)
   );
-}
-
-/**
- * Where the copy is from, first among the tiles: its region's flag and name; with several, the
- * first and how many more (the dossier's Region row lists them all).
- */
-function regionMark(regions: string[]): HTMLElement {
-  const [first] = regions;
-  if (!first) return mark('region', ICONS.region, 'Region ?', false);
-  const name = REGIONS[first] ?? first.toUpperCase();
-  const label = regions.length > 1 ? `${name} +${regions.length - 1}` : name;
-  const tile = el('li', { class: 'mark region on' });
-  const flag = regionFlag(first);
-  if (flag) {
-    const img = el('img', { src: flag, alt: '', class: 'flag' });
-    img.addEventListener('error', () => img.replaceWith(glyph(ICONS.region)), { once: true });
-    tile.append(img);
-  } else tile.append(glyph(ICONS.region));
-  tile.append(el('span', {}, label));
-  tile.setAttribute('aria-label', `Region: ${regions.map((r) => REGIONS[r] ?? r).join(', ')}`);
-  return tile;
 }
 
 /** A front made up: the fan art (or a screenshot) under its logo (or its name). */
