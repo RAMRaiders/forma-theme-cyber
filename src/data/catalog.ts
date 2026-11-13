@@ -109,17 +109,12 @@ export interface SystemArt {
   peripherals?: { file: string; name: string }[];
 }
 
-/**
- * A company's logo, for one whose name `match` finds: a hardware maker's (public/makers/) or a
- * game developer's or publisher's (public/companies/, `dir` saying so).
- */
+/** A hardware maker's logo (public/makers/), for one whose name `match` finds. */
 export interface MakerLogo {
   id: string;
   /** A regular expression, case-insensitive, run on the maker's name. */
   match: string;
   logo: string;
-  /** The folder under public/ the logo is in; `makers` when not given. */
-  dir?: string;
 }
 
 /**
@@ -140,7 +135,7 @@ export function makerLogos(
       return null;
     }
   };
-  const url = (m: MakerLogo) => `./${m.dir ?? 'makers'}/${m.logo}`;
+  const url = (m: MakerLogo) => `./makers/${m.logo}`;
   const lead = makers.find((m) => test(m.match));
   if (lead) return [url(lead)];
   // Anywhere in it, as a whole word.
@@ -275,7 +270,6 @@ export class InfoStore {
   readonly #loaded = new Map<string, SystemInfo | null>();
   #art: Promise<Record<string, SystemArt>> | null = null;
   #makers: Promise<MakerLogo[]> | null = null;
-  #companies: Promise<MakerLogo[]> | null = null;
 
   constructor(private readonly fetchJson: (url: string) => Promise<unknown> = defaultFetch) {}
 
@@ -305,16 +299,6 @@ export class InfoStore {
       .then((json) => (Array.isArray(json) ? (json as MakerLogo[]) : []))
       .catch(() => []);
     return this.#makers;
-  }
-
-  /** Game developers' and publishers' logos, from companies/companies.json, fetched once. */
-  companies(): Promise<MakerLogo[]> {
-    this.#companies ??= this.fetchJson('./companies/companies.json')
-      .then((json) =>
-        Array.isArray(json) ? (json as MakerLogo[]).map((c) => ({ ...c, dir: 'companies' })) : []
-      )
-      .catch(() => []);
-    return this.#companies;
   }
 
   /** Every system's art, from art.json, fetched once; none if it cannot be read. */

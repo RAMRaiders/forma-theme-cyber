@@ -705,38 +705,6 @@ describe('the Collector view', () => {
     expect(browsing()).toBe(false);
   });
 
-  it('keeps a slot for each company logo, and asks once for one that is not there', async () => {
-    const asked: string[] = [];
-    const games = ['After Burner', 'Doom'].map((n, i) => game(i + 1, n, BOXED));
-    const { v } = await view(games, {
-      company: (name) => {
-        asked.push(name);
-        return `./company/${encodeURIComponent(name)}.png`;
-      }
-    });
-    await vi.advanceTimersByTimeAsync(2100);
-    const lines = () => [...v.root.querySelectorAll('.dossier .company-line')];
-    // Developer and publisher: a slot each before the name, the logo in it.
-    expect(lines()).toHaveLength(2);
-    expect(lines().every((l) => l.firstElementChild?.classList.contains('company-slot'))).toBe(
-      true
-    );
-    // The developer's logo is not there: gone, its slot kept.
-    const missing = v.root.querySelector<HTMLImageElement>('.dossier .company')!;
-    missing.dispatchEvent(new Event('error'));
-    expect(lines()[0]!.querySelector('.company-slot img')).toBeNull();
-    expect(lines()[0]!.querySelector('.company-slot')).not.toBeNull();
-    // The next game by the same company: its slot, no logo asked for again.
-    v.select(1);
-    await vi.advanceTimersByTimeAsync(400);
-    const src = missing.getAttribute('src');
-    const again = [...v.root.querySelectorAll('.dossier .company')].map((i) =>
-      i.getAttribute('src')
-    );
-    expect(again).not.toContain(src);
-    expect(lines()).toHaveLength(2);
-  });
-
   it('shows the details at each pause, never dimmed, none while held', async () => {
     const games = ['After Burner', 'Doom', 'Echo'].map((n, i) => game(i + 1, n, BOXED));
     const { v } = await view(games);

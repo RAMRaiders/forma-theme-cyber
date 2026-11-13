@@ -97,14 +97,6 @@ describe('makerLogos', () => {
       './makers/mb.webp'
     ]);
   });
-  it("finds a game company's logo in its own folder, before the makers'", () => {
-    const all = [
-      { id: 'konami', match: '^konami', logo: 'konami.webp', dir: 'companies' },
-      ...makers
-    ];
-    expect(makerLogos('Konami', all)).toEqual(['./companies/konami.webp']);
-    expect(makerLogos('Sega of America', all)).toEqual(['./makers/sega.webp']);
-  });
   it('is none for a maker without one, no maker, or a word that only starts the same', () => {
     expect(makerLogos('Necrosoft', makers)).toEqual([]);
     expect(makerLogos('Watara', makers)).toEqual([]);

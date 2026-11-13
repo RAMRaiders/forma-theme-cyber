@@ -60,8 +60,6 @@ export interface CollectorOptions {
   achievements?: (game: Game) => Promise<Achievements | null>;
   /** What the game has saved (Forma since SDK 1.35.0); its tile lights when there are some. */
   saves?: (game: Game) => Promise<GameSaves | null>;
-  /** A developer's or publisher's logo, from its name; `null` where Cyber has none. */
-  company?: (name: string) => string | null;
   /** The game's colour, from a small picture of it. */
   accent?: (url: string) => Promise<string | null>;
   /**
@@ -222,9 +220,6 @@ function picture(src: string, cls: string): HTMLImageElement {
  * they show the same thing: a new picture is blank until decoded, so a part drawn again at each
  * step (the label's system logo, the dossier's flags and logos) blinked, and faded in again.
  */
-/** Company logos asked for that were not there: not asked for again. */
-const NO_LOGO = new Set<string>();
-
 function keepPictures(from: ParentNode, parts: Element[]): void {
   // Every one shown, the same picture twice too (a developer that is also the publisher).
   const shown = new Map<string, HTMLImageElement[]>();
@@ -1897,27 +1892,6 @@ export class CollectorView {
     const tags = releaseOf(rom.version, rom.status);
     const regions = rom.regions.length ? rom.regions : codes(game.region);
     const languages = rom.languages.length ? rom.languages : codes(game.lang);
-    const company = (name: string | null) => {
-      if (!name) return null;
-      const src = this.#options.company?.(name);
-      // The logo with its name beside it: a logo alone may not say whose it is. Its slot there
-      // with no logo too, so the name never moves, and a logo that is not there is asked for
-      // once, not at every game.
-      const slot = el('span', { class: 'company-slot' });
-      if (src && !NO_LOGO.has(src)) {
-        const img = el('img', { class: 'company', src, alt: '', decoding: 'async' });
-        img.addEventListener(
-          'error',
-          () => {
-            NO_LOGO.add(src);
-            img.remove();
-          },
-          { once: true }
-        );
-        slot.append(img);
-      }
-      return el('span', { class: 'company-line' }, slot, el('span', {}, name));
-    };
     const flags = (
       list: string[],
       table: Record<string, string>,
@@ -1946,8 +1920,8 @@ export class CollectorView {
       row('Genre', game.genre),
       row('Region', flags(flaggedRegions(regions), REGIONS, regionFlag)),
       // Who made it and who sold it, together.
-      row('Developer', company(game.developer)),
-      row('Publisher', company(game.publisher)),
+      row('Developer', game.developer),
+      row('Publisher', game.publisher),
       row('Released', released)
     );
     // The copy at hand: what kind it is, as released (a release, a prototype, a demo, homebrew,
