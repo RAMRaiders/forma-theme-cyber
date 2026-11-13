@@ -1,8 +1,7 @@
 import type { Category, CyberSystem } from '../data/catalog.js';
 import { categoryArt } from './art.js';
 import { circuitSvg } from './circuit.js';
-import { el, reveal } from './dom.js';
-import { awake } from './rest.js';
+import { el, remPx, reveal } from './dom.js';
 
 export interface Tile {
   category: Category;
@@ -22,10 +21,8 @@ export interface Shortcut {
   soon?: boolean;
 }
 
-/** The selected tile's logos, when more than fit, turn to the next few this often. */
-/** How often the selected tile's logos glide on by one, and how long the glide takes. */
-const LOGO_STEP_MS = 1800;
-const LOGO_GLIDE_MS = 700;
+/** The selected tile's logos, when more than fit, run along at this speed (rem a second). */
+const LOGO_REM_PER_S = 1.2;
 
 /**
  * Cyber's top level: one tile per category that has games, then a row of shortcuts under them.
@@ -37,7 +34,6 @@ export class HomeView {
   readonly #shortcuts = el('div', { class: 'shortcuts', role: 'listbox' });
   #tiles: HTMLElement[] = [];
   #selected = -1;
-  #pageTimer: ReturnType<typeof setInterval> | undefined;
   /** Categories shown; the shortcuts' indexes start here. */
   categories = 0;
   shortcuts = 0;
@@ -61,10 +57,10 @@ export class HomeView {
     this.#shortcuts.replaceChildren(...buttons);
     this.#selected = -1;
     this.select(selected);
-    // Every row is split into pages now, not on its tile's first selection: the first moves
-    // (at boot, while the Pi is busiest) then only change which row turns.
+    // Every row measured now, not on its tile's first selection: the first moves (at boot,
+    // while the Pi is busiest) then only change which row runs.
     requestAnimationFrame(() => {
-      for (const card of cards) void paginate(card).then(() => this.#turnPages());
+      for (const card of cards) void loopRow(card);
     });
   }
 
@@ -73,9 +69,12 @@ export class HomeView {
     return this.#tiles[this.#selected]?.dataset.shortcut ?? null;
   }
 
+  /**
+   * Only classes change: the selected tile's logo row runs (style.css), the last one's pauses
+   * where it is. Nothing is put back, made or measured, so no logo is drawn again.
+   */
   select(index: number): void {
     const before = this.#tiles[this.#selected];
-    if (before) glideTo(before, 0, false);
     before?.classList.remove('selected');
     this.#tiles[this.#selected]?.setAttribute('aria-selected', 'false');
     this.#selected = index;
@@ -84,28 +83,6 @@ export class HomeView {
     t.classList.add('selected');
     t.setAttribute('aria-selected', 'true');
     if (t.parentElement === this.#categories) reveal(t, this.#categories);
-    this.#turnPages();
-  }
-
-  /**
-   * The selected tile's logos, when more than fit, glide along by one every couple of seconds,
-   * round and round; still in between. (A row running without pause kept the Pi drawing every
-   * frame, and moves stuttered behind it.)
-   */
-  #turnPages(): void {
-    clearInterval(this.#pageTimer);
-    const tile = this.#tiles[this.#selected];
-    const count = tile ? (ROWS.get(tile)?.starts.length ?? 0) : 0;
-    if (!tile || count < 2 || document.documentElement.dataset.motion === 'off') return;
-    let step = 0;
-    this.#pageTimer = setInterval(
-      awake(() => {
-        step += 1;
-        glideTo(tile, step, true);
-        if (step === count) step = 0;
-      }),
-      LOGO_STEP_MS
-    );
   }
 
   /** Columns as laid out right now, for up/down movement. */
@@ -116,19 +93,16 @@ export class HomeView {
 }
 
 /**
- * Each tile's row of logos, when longer than its room: where each logo starts, and the length
- * of the whole set (a copy follows it, so the row loops without a jump).
- */
-const ROWS = new WeakMap<HTMLElement, { starts: number[]; loop: number }>();
-
-/**
  * Measures a tile's row of logos once they are in (at start-up they may still be loading). When
- * they do not all fit, a copy of them follows, for the row to run round.
+ * they do not all fit, a copy of them follows and the row runs round (style.css): slowly, a whole
+ * pixel at a time (logos moved by a fraction of one shimmer), its copy taking its place without a
+ * jump. A transform only, on a layer the row keeps: the Pi's compositor moves it, and a selection
+ * moving on makes or drops no layer.
  */
-async function paginate(tile: HTMLElement): Promise<void> {
+async function loopRow(tile: HTMLElement): Promise<void> {
   const row = tile.querySelector<HTMLElement>('.logos');
   const track = row?.querySelector<HTMLElement>('.logos-track');
-  if (!row || !track || ROWS.has(tile)) return;
+  if (!row || !track || track.classList.contains('loops')) return;
   await Promise.all(
     [...track.querySelectorAll('img')]
       .filter((img) => !img.complete)
@@ -142,34 +116,17 @@ async function paginate(tile: HTMLElement): Promise<void> {
   );
   // Not laid out (the screen is hidden): done again when it shows.
   const room = row.clientWidth;
-  if (!room || ROWS.has(tile)) return;
+  if (!room || track.classList.contains('loops')) return;
   const logos = [...track.querySelectorAll('img')];
   if (!logos.length || track.scrollWidth <= room) return;
   const base = logos[0]?.offsetLeft ?? 0;
-  const starts = logos.map((img) => img.offsetLeft - base);
   for (const img of logos) track.append(img.cloneNode(true));
-  const loop = (logos.length ? (track.children[logos.length] as HTMLElement).offsetLeft : 0) - base;
-  ROWS.set(tile, { starts, loop });
-}
-
-/**
- * Moves a tile's row so logo `n` is first, gliding or at once. Past the last, it glides on to the
- * copy and then, still, jumps back to the start, which looks the same. Only a transform changes:
- * nothing is laid out again.
- */
-function glideTo(tile: HTMLElement, n: number, glide: boolean): void {
-  const row = ROWS.get(tile);
-  const track = tile.querySelector<HTMLElement>('.logos-track');
-  if (!row || !track) return;
-  const x = n >= row.starts.length ? row.loop : (row.starts[n] ?? 0);
-  track.style.transition = glide ? `transform ${LOGO_GLIDE_MS}ms ease-in-out` : 'none';
-  track.style.transform = x ? `translateX(${-x}px)` : '';
-  if (glide && n >= row.starts.length) {
-    setTimeout(() => {
-      track.style.transition = 'none';
-      track.style.transform = '';
-    }, LOGO_GLIDE_MS + 50);
-  }
+  const loop = Math.round((track.children[logos.length] as HTMLElement).offsetLeft - base);
+  if (loop <= 0) return;
+  track.style.setProperty('--loop', `${-loop}px`);
+  track.style.setProperty('--loop-steps', String(loop));
+  track.style.setProperty('--loop-s', `${(loop / (LOGO_REM_PER_S * remPx())).toFixed(2)}s`);
+  track.classList.add('loops');
 }
 
 const image = (src: string, cls: string) => {

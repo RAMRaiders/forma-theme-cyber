@@ -1,4 +1,4 @@
-import type { Game, ScraperStatus } from '@ramraiders/forma-sdk';
+import type { Game, GameSaves, ScraperStatus } from '@ramraiders/forma-sdk';
 import { mark as perfMark, perfOn, span, timing } from './perf.js';
 
 import type { LazyList } from '../logic/pager.js';
@@ -8,6 +8,7 @@ import { DEFAULT_BACK, DEFAULT_FRONT, hue } from './cover.js';
 import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
 import { loopScroll } from './loopscroll.js';
+import { darkLogo, knownDark } from './tone.js';
 import { Scan } from './scan.js';
 import { boot, scrapedMark } from './boot.js';
 import {
@@ -58,6 +59,8 @@ export interface CollectorOptions {
   /** The game as Forma has it now (its media just scraped, say), not the list's copy. */
   fresh?: (id: number) => Promise<Game | null>;
   achievements?: (game: Game) => Promise<Achievements | null>;
+  /** What the game has saved (Forma since SDK 1.35.0); its tile shows only when there are some. */
+  saves?: (game: Game) => Promise<GameSaves | null>;
   /** A developer's or publisher's logo, from its name; `null` where Cyber has none. */
   company?: (name: string) => string | null;
   /** The game's colour, from a small picture of it. */
@@ -336,6 +339,8 @@ export class CollectorView {
   /** The shelf's colours, worked out one after another. */
   #colourQueue: Promise<void> = Promise.resolve();
   #achievements = new Map<number, Promise<Achievements | null>>();
+  /** Each game's saves, asked for once until it is played again. */
+  readonly #saves = new Map<number, Promise<GameSaves | null>>();
   #game: ShowGame | null = null;
   #box: HTMLElement | null = null;
   /** Sizes the box to its case, once the case is laid out. */
@@ -954,13 +959,19 @@ export class CollectorView {
   }
 
   #seeThrough(on: boolean): void {
-    // The fan art stays round the video's window: a hole cut where the screen is.
+    // The fan art stays round the video's window: a hole cut where the screen is, its corners
+    // as round as the screen's (a TV's tube), so the video's square corners never show.
     const r = on ? this.#footage?.getBoundingClientRect() : null;
+    const round = this.#footage ? cornerOf(this.#footage) : { rx: 0, ry: 0 };
     if (r?.width) {
-      const [x0, y0, x1, y1] = [r.left, r.top, r.right, r.bottom].map((n) => `${Math.round(n)}px`);
-      this.#backdrop.style.clipPath =
-        `polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ` +
-        `${x0} ${y0}, ${x0} ${y1}, ${x1} ${y1}, ${x1} ${y0}, ${x0} ${y0})`;
+      const b = this.#backdrop.getBoundingClientRect();
+      this.#backdrop.style.clipPath = holeIn(b.width, b.height, {
+        left: r.left - b.left,
+        top: r.top - b.top,
+        right: r.right - b.left,
+        bottom: r.bottom - b.top,
+        ...round
+      });
     } else {
       this.#backdrop.style.removeProperty('clip-path');
     }
@@ -970,17 +981,16 @@ export class CollectorView {
     if (set) {
       const s = set.getBoundingClientRect();
       if (r?.width && s.width) {
-        const [x0, y0, x1, y1] = [
-          r.left - s.left,
-          r.top - s.top,
-          r.right - s.left,
-          r.bottom - s.top
-        ].map((n) => `${Math.round(n)}px`);
-        // In its body only (style.css): the tube's corners, over it, round the video off.
+        // In its body only (style.css), rounded as the tube is.
         set.style.setProperty(
           '--hole',
-          `polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ` +
-            `${x0} ${y0}, ${x0} ${y1}, ${x1} ${y1}, ${x1} ${y0}, ${x0} ${y0})`
+          holeIn(s.width, s.height, {
+            left: r.left - s.left,
+            top: r.top - s.top,
+            right: r.right - s.left,
+            bottom: r.bottom - s.top,
+            ...round
+          })
         );
       } else {
         set.style.removeProperty('--hole');
@@ -1498,6 +1508,8 @@ export class CollectorView {
           void (typeof img.decode === 'function' ? img.decode() : Promise.resolve())
             .then(() => {
               if (url === shot) borderOf(img);
+              // Its tone read now, while nothing moves: the dossier knows it at the step.
+              if (url === logo) darkLogo(img);
             })
             .catch(() => {});
         }
@@ -1859,6 +1871,16 @@ export class CollectorView {
     if (logo) {
       const img = picture(logo, 'logo');
       head.classList.add('has-logo');
+      // A logo too dark for the page (black, for a box): the page lighter behind it. At once
+      // when it was measured ahead (#keepNavPicsAround), else as it loads.
+      const tone = () => {
+        const dark = darkLogo(img);
+        if (dark !== null) head.classList.toggle('dark-logo', dark);
+      };
+      const dark = knownDark(logo);
+      if (dark !== undefined) head.classList.toggle('dark-logo', dark);
+      else if (img.complete) tone();
+      else img.addEventListener('load', tone, { once: true });
       img.addEventListener(
         'error',
         () => {
@@ -1912,8 +1934,14 @@ export class CollectorView {
             ...list.map((c) => flagChip(table[c] ?? c.toUpperCase(), flag(c)))
           )
         : null;
+    // How long ago, smaller, after the date.
     const released = game.releaseDate
-      ? `${date(game.releaseDate)} · ${ago(game.releaseDate).toLowerCase()}`
+      ? el(
+          'span',
+          {},
+          `${date(game.releaseDate)} `,
+          el('span', { class: 'ago' }, `· ${ago(game.releaseDate).toLowerCase()}`)
+        )
       : null;
 
     // The game itself, as made and sold.
@@ -1957,6 +1985,7 @@ export class CollectorView {
     const alternate = el('div', { class: 'alternate' }, record);
     const marks = this.#marks(game);
     this.#achievementsInto(game, marks);
+    this.#savesInto(game, marks);
     const parts = [head, marks, about, dump, alternate].filter((p): p is HTMLElement => p !== null);
 
     return parts;
@@ -2003,9 +2032,45 @@ export class CollectorView {
     return progress;
   }
 
-  /** The game `id` was just played: its achievements are asked for afresh. */
+  /** The game `id` was just played: its achievements and saves are asked for afresh. */
   played(id: number): void {
     this.#achievements.delete(id);
+    this.#saves.delete(id);
+  }
+
+  /** `game`'s saves, asked for once until it is played again; `null` where none can be asked. */
+  #savesOf(game: Game): Promise<GameSaves | null> | null {
+    const fetch = this.#options.saves;
+    if (!fetch) return null;
+    let saves = this.#saves.get(game.id);
+    if (!saves) {
+      saves = fetch(game).catch(() => null);
+      this.#saves.set(game.id, saves);
+    }
+    return saves;
+  }
+
+  /** A tile for its saves beside its manual, once known, when it has some. */
+  #savesInto(game: Game, marks: HTMLElement): void {
+    const saves = this.#savesOf(game);
+    if (!saves) return;
+    const id = game.id;
+    void saves.then((s) => {
+      if (!s || this.#dossier.dataset.id !== String(id)) return;
+      const total = s.states + (s.battery ? 1 : 0);
+      if (total === 0) return;
+      const tile = mark('saves', ICONS.saves, total === 1 ? '1 save' : `${total} saves`, true);
+      const what = [
+        s.states > 0 ? `${s.states} save state${s.states === 1 ? '' : 's'}` : null,
+        s.battery ? 'a battery save' : null
+      ].filter(Boolean);
+      tile.setAttribute(
+        'aria-label',
+        `${what.join(' and ')}${s.latest ? `, the latest ${ago(s.latest)}` : ''}`
+      );
+      marks.querySelector('.mark.saves')?.remove();
+      marks.querySelector('.mark.manual')?.after(tile);
+    });
   }
 
   /** How many of its achievements are won, in their tile, once known. */
@@ -2155,6 +2220,39 @@ function shotImage(src: string, on: boolean, aspect: number): HTMLImageElement {
   if (img.complete && img.naturalWidth) fit();
   else img.addEventListener('load', fit, { once: true });
   return img;
+}
+
+/** How round an element's corners are, in px across and down (its top-left's; all alike). */
+function cornerOf(node: HTMLElement): { rx: number; ry: number } {
+  const [x = '0', y = x] = getComputedStyle(node).borderTopLeftRadius.split(' ');
+  const px = (v: string) => (v.endsWith('px') ? Number.parseFloat(v) || 0 : 0);
+  return { rx: px(x), ry: px(y) };
+}
+
+/**
+ * A clip path for a box `width` × `height` with a hole in it: the rectangle given, its corners
+ * rounded `rx` × `ry` (a TV's tube), in whole pixels.
+ */
+export function holeIn(
+  width: number,
+  height: number,
+  hole: { left: number; top: number; right: number; bottom: number; rx: number; ry: number }
+): string {
+  const n = (v: number) => Math.round(v);
+  const [x0, y0, x1, y1] = [hole.left, hole.top, hole.right, hole.bottom].map(n) as [
+    number,
+    number,
+    number,
+    number
+  ];
+  const rx = Math.min(n(hole.rx), Math.floor((x1 - x0) / 2));
+  const ry = Math.min(n(hole.ry), Math.floor((y1 - y0) / 2));
+  const arc = (x: number, y: number) => `A${rx} ${ry} 0 0 1 ${x} ${y}`;
+  const outer = `M0 0H${n(width)}V${n(height)}H0Z`;
+  const inner =
+    `M${x0 + rx} ${y0}H${x1 - rx}${arc(x1, y0 + ry)}V${y1 - ry}${arc(x1 - rx, y1)}` +
+    `H${x0 + rx}${arc(x0, y1 - ry)}V${y0 + ry}${arc(x0 + rx, y0)}Z`;
+  return `path(evenodd, '${outer}${inner}')`;
 }
 
 /** A TV's screen shape for its era (style.css: .tv-screen), the plain monitor's too. */
@@ -2384,6 +2482,9 @@ const ICONS = {
     '<path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M9 7h6M9 10.5h6"/>',
   players:
     '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.2c2.8.2 5 2.3 5 5.8"/>',
+  /** A floppy disk: something kept. */
+  saves:
+    '<path d="M5 4h11.5L19 6.5V20H5z"/><path d="M8 4v5h7V4"/><rect x="8" y="13" width="8" height="7"/>',
   cheevos:
     '<path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1.5A3.5 3.5 0 0 0 7.5 11M17 6h3v1.5a3.5 3.5 0 0 1-3.5 3.5"/><path d="M12 14v3M8.5 20.5h7M10 17h4v3.5h-4z"/>'
 } as const;

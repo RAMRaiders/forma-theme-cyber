@@ -10,6 +10,7 @@ import {
   CollectorView,
   dumpText,
   gradeOf,
+  holeIn,
   hueOf,
   paginate,
   releaseOf,
@@ -407,6 +408,29 @@ describe('the Collector view', () => {
     expect(v.root.querySelector('.dossier .bar')).toBeNull();
   });
 
+  it('shows a tile for its saves beside its manual, only when it has some', async () => {
+    const saves = (id: number) =>
+      Promise.resolve(
+        id === 7
+          ? { battery: true, states: 2, latest: '2026-11-01T20:15:00Z' }
+          : { battery: false, states: 0, latest: null }
+      );
+    const { v } = await view([game(7, 'After Burner', BOXED), game(8, 'Alex Kidd', BOXED)], {
+      saves: (g) => saves(g.id)
+    });
+    await vi.waitFor(() => expect(v.root.querySelector('.dossier .mark.saves')).not.toBeNull());
+    const tile = v.root.querySelector('.dossier .mark.saves')!;
+    expect(tile.textContent).toBe('3 saves');
+    expect(tile.getAttribute('aria-label')).toMatch(
+      /^2 save states and a battery save, the latest/
+    );
+    expect(tile.previousElementSibling?.matches('.manual')).toBe(true);
+    // None: no tile.
+    v.select(1);
+    await vi.advanceTimersByTimeAsync(600);
+    expect(v.root.querySelector('.dossier .mark.saves')).toBeNull();
+  });
+
   it('readies the neighbours as a list opens: the first step from there needs nothing fetched', async () => {
     const asked: number[] = [];
     const games = [1, 2, 3].map((n) => ({ ...game(n, `Game ${n}`, BOXED), raGameId: n }));
@@ -779,6 +803,23 @@ describe('the Collector view', () => {
       if (client) Object.defineProperty(proto, 'clientHeight', client);
       if (scroll) Object.defineProperty(proto, 'scrollHeight', scroll);
     }
+  });
+
+  it("cuts the video's window with the tube's round corners, so its square ones never show", () => {
+    const path = holeIn(800, 600, { left: 100, top: 50, right: 500, bottom: 350, rx: 20, ry: 16 });
+    expect(path).toBe(
+      "path(evenodd, 'M0 0H800V600H0Z" +
+        'M120 50H480A20 16 0 0 1 500 66V334A20 16 0 0 1 480 350' +
+        "H120A20 16 0 0 1 100 334V66A20 16 0 0 1 120 50Z')"
+    );
+    // A plain monitor's square screen: square corners.
+    expect(holeIn(10, 10, { left: 1, top: 1, right: 9, bottom: 9, rx: 0, ry: 0 })).toContain(
+      'M1 1H9A0 0 0 0 1 9 1'
+    );
+    // Never rounder than half the window.
+    expect(holeIn(100, 100, { left: 0, top: 0, right: 10, bottom: 10, rx: 40, ry: 40 })).toContain(
+      'A5 5'
+    );
   });
 
   it('cuts a story into pages that fit, between sentences', () => {

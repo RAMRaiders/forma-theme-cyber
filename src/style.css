@@ -71,7 +71,15 @@ body,
   align-items: center;
   gap: 0;
   min-width: 0;
-  padding: calc(var(--safe) * 0.5) var(--safe) 0.4rem;
+  /* Slim: the screen is for what it shows. Room on the right for Forma's status icons. */
+  padding: calc(var(--safe) * 0.3) calc(var(--safe) + 7rem) 0.15rem var(--safe);
+}
+
+/* Forma's controllers and connection, small, level with the breadcrumbs. */
+forma-shell::part(status) {
+  top: calc(var(--safe) * 0.3 + 0.15rem);
+  right: var(--safe);
+  font-size: 0.62rem;
 }
 
 /* Fog behind the top and bottom bars, dark at the screen's edge and gone a little past them:
@@ -109,77 +117,91 @@ body,
   );
 }
 
-h1 {
+/* The breadcrumbs: small chevrons, one per step, like a path's segments; the step you are on
+   lit in neon. All still: they change only between screens. */
+h1,
+.trail .crumb {
+  --notch: 0.55rem;
   flex: none;
-  margin: 0;
-  font-family: var(--mono);
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  margin: 0 -0.2rem 0 0;
+  padding: 0.32rem 1rem 0.32rem calc(var(--notch) + 0.7rem);
+  background: rgb(255 255 255 / 5%);
   color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--notch)) 0,
+    100% 50%,
+    calc(100% - var(--notch)) 100%,
+    0 100%,
+    var(--notch) 50%
+  );
 }
 
-h1.current {
+/* The first step has a straight start. */
+h1,
+h1[hidden] + .trail .crumb:first-child {
+  padding-left: 0.8rem;
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--notch)) 0,
+    100% 50%,
+    calc(100% - var(--notch)) 100%,
+    0 100%
+  );
+}
+
+h1.current,
+.trail .crumb.current {
+  background: linear-gradient(90deg, rgb(34 228 255 / 24%), rgb(34 228 255 / 10%));
   color: var(--neon);
-  text-shadow: 0 0 0.6rem rgb(34 228 255 / 55%);
+  text-shadow: 0 0 0.4rem rgb(34 228 255 / 60%);
 }
 
 .trail {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   min-width: 0;
   white-space: nowrap;
 }
 
+/* A long name gives way, the step you are on last. */
 .trail .crumb {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-family: var(--mono);
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--muted);
 }
 
-/* Every step the same size and weight, on one line: where you are only lit. */
 .trail .crumb.current {
   flex: none;
   max-width: 60vw;
-  color: var(--neon);
-  text-shadow: 0 0 0.5rem rgb(34 228 255 / 45%);
 }
 
-/* A system as its logo, the height of the words around it. */
+/* A system as its logo, the height of the words. */
 .trail .crumb.has-logo {
   display: inline-flex;
   align-items: center;
+  padding-block: 0.18rem;
 }
 
 .trail .crumb-logo {
-  height: 1.6rem;
-  max-width: 12rem;
+  height: 1.05rem;
+  max-width: 9rem;
   object-fit: contain;
   object-position: left center;
 }
 
 /* Too dark for the background: on a light plate (no glow filter). */
 .trail .crumb-logo.dark {
-  padding: 0.2rem 0.45rem;
-  border-radius: 0.25rem;
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.2rem;
   background: rgb(255 255 255 / 82%);
-}
-
-.trail .crumb::before {
-  content: '▸';
-  margin: 0 0.7rem;
-  color: var(--accent);
-}
-
-/* First after a hidden root: nothing to separate it from. */
-h1[hidden] + .trail .crumb:first-child::before {
-  content: none;
 }
 
 main {
@@ -613,10 +635,30 @@ main {
   align-items: center;
   width: max-content;
   height: 100%;
+  /* On a layer of its own for good: one made for the selected tile and dropped as the
+     selection moved on drew its logos again at each move (they flickered on a Pi). */
+  will-change: transform;
 }
 
-.tile.selected .logos-track {
-  will-change: transform;
+/* More logos than fit: the row runs round (home.ts), only on the selected tile; another's
+   waits where it stopped, and all wait under Forma's screensaver. */
+.tile .logos-track.loops {
+  animation: logos-run var(--loop-s, 30s) steps(var(--loop-steps, 300)) infinite paused;
+}
+
+.tile.selected .logos-track.loops {
+  animation-play-state: running;
+}
+
+:root.resting .tile .logos-track.loops,
+:root[data-motion='off'] .tile .logos-track.loops {
+  animation-play-state: paused;
+}
+
+@keyframes logos-run {
+  to {
+    transform: translateX(var(--loop, 0));
+  }
 }
 
 .tile .logo {
@@ -658,11 +700,13 @@ main {
 .systems {
   position: relative;
   display: grid;
-  /* The stage, the whole screen; the strip of logos over its middle while moving. */
-  grid-template-rows: minmax(0, 1fr);
-  /* The column's width, and one logo's place in it, under the selection frame. */
-  --strip: 24rem;
-  --strip-item: 6.8rem;
+  /* The bar of the category's systems, then the stage. */
+  grid-template-rows: var(--bar-h) minmax(0, 1fr);
+  gap: 0.5rem;
+  /* The bar's height, and one logo's place along it, under the selection frame (system.ts
+     STRIP_ITEM_REM). */
+  --bar-h: 4.2rem;
+  --strip-item: 11rem;
   height: 100%;
   min-height: 0;
 }
@@ -703,112 +747,104 @@ main {
   transition: none;
 }
 
-/* The column: logos down the middle of the screen, fading toward its ends. */
+/* The bar: the category's systems, side by side, always there. The selected one sits still in
+   its middle, in a frame of its colour, the logos sliding under it: moving is only the track's
+   slide, which the Pi's compositor does by itself. Its ends fade into the screen. */
 .system-rail {
-  /* The selection frame's tints, from the strip's own colour: set at each step (system.ts),
+  /* The selection frame's tints, from the bar's own colour: set at each step (system.ts),
      ahead of the page's. */
   --sys-10: color-mix(in srgb, var(--sys) 10%, transparent);
   --sys-30: color-mix(in srgb, var(--sys) 30%, transparent);
   --sys-70: color-mix(in srgb, var(--sys) 70%, transparent);
 
-  position: absolute;
+  position: relative;
+  /* Over the dark that hides the page while moving. */
   z-index: 3;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: var(--strip);
-  translate: -50% 0;
   overflow: hidden;
-  opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 200ms ease,
-    visibility 0s linear 200ms;
-  will-change: opacity;
-  /* Near black under the logos; beyond the column the screen shows, dimmed, as a sneak peek. */
+  border-block: 1px solid rgb(255 255 255 / 6%);
   background: linear-gradient(
     90deg,
     transparent,
-    rgb(3 5 11 / 94%) 12%,
-    rgb(3 5 11 / 94%) 88%,
+    rgb(3 5 11 / 70%) 20%,
+    rgb(3 5 11 / 70%) 80%,
     transparent
   );
 }
 
-.systems.browsing .system-rail {
-  opacity: 1;
-  visibility: visible;
-  transition:
-    opacity 120ms ease,
-    visibility 0s;
-}
-
-/* Its top and bottom fade into the dark behind it: still layers over the logos (a mask over
-   moving rows glitches on a Pi's WebKit). */
+/* Its ends fade into the screen: still layers over the logos (a mask over a moving track
+   glitches on a Pi's WebKit). */
 .system-rail .edge {
   position: absolute;
   z-index: 2;
-  left: 0;
-  right: 0;
-  height: 18%;
+  top: 0;
+  bottom: 0;
+  width: 22%;
   pointer-events: none;
 }
 
-.system-rail .edge.top {
-  top: 0;
-  background: linear-gradient(180deg, rgb(3 5 11 / 88%), rgb(3 5 11 / 0%));
+.system-rail .edge.left {
+  left: 0;
+  background: linear-gradient(90deg, var(--bg), transparent);
 }
 
-.system-rail .edge.bottom {
-  bottom: 0;
-  background: linear-gradient(0deg, rgb(3 5 11 / 88%), rgb(3 5 11 / 0%));
+.system-rail .edge.right {
+  right: 0;
+  background: linear-gradient(270deg, var(--bg), transparent);
 }
 
-/* The selection: a frame fixed in the strip's middle, the logos sliding under it. Moving is
-   then only the strip's slide, which the Pi's compositor does by itself. */
+/* The selection: a frame fixed in the bar's middle, lit in the system's colour. */
 .system-rail::before {
   content: '';
   position: absolute;
   z-index: 0;
-  left: 0.6rem;
-  right: 0.6rem;
-  top: 50%;
-  height: var(--strip-item);
-  translate: 0 -50%;
+  top: 0.35rem;
+  bottom: 0.35rem;
+  left: 50%;
+  width: var(--strip-item);
+  translate: -50% 0;
   border: 1px solid var(--sys-70);
   border-radius: calc(var(--radius) * 1.6);
   background: linear-gradient(var(--sys-10), var(--sys-30));
-  box-shadow: 0 0 1.6rem var(--sys-30);
+  box-shadow:
+    0 0 1.4rem var(--sys-30),
+    inset 0 0 0.8rem var(--sys-10);
 }
 
+/* Under it, a lit edge pointing at the stage below. */
 .system-rail::after {
   content: '';
   position: absolute;
-  left: 0.6rem;
-  top: 50%;
-  width: 0.22rem;
-  height: 3rem;
-  translate: 0 -50%;
+  z-index: 3;
+  bottom: 0;
+  left: 50%;
+  width: calc(var(--strip-item) * 0.55);
+  height: 0.18rem;
+  translate: -50% 0;
   border-radius: 1rem;
   background: var(--sys);
+  box-shadow: 0 0 0.8rem var(--sys);
 }
 
-/* Where the selection is in the list, under the frame. */
+/* How many games the selected system has, in its frame under its logo. */
 .system-rail .where {
   position: absolute;
-  z-index: 1;
-  right: 1.2rem;
-  top: 50%;
-  translate: 0 calc(var(--strip-item) / 2 - 1.3rem);
+  z-index: 3;
+  left: 50%;
+  bottom: 0.55rem;
+  translate: -50% 0;
   font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
-  color: var(--muted);
+  font-size: 0.56rem;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  white-space: nowrap;
+  text-transform: uppercase;
+  color: var(--sys);
 }
 
 .system-list {
   position: relative;
   z-index: 1;
+  height: 100%;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -828,23 +864,23 @@ main {
 .system-list li {
   /* Placed on the track, which runs past the list's ends when it loops. */
   position: absolute;
-  top: calc(var(--place) * var(--strip-item));
-  left: 0;
-  right: 0;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--place) * var(--strip-item));
+  width: var(--strip-item);
   display: grid;
   place-items: center;
-  /* Every logo the same height: the column's slide is all that moves. */
-  height: var(--strip-item);
-  padding: 0 2.2rem;
-  opacity: 0.68;
+  /* Room under the logo for the selected one's count of games. */
+  padding: 0.3rem 1.3rem 1.1rem;
+  opacity: 0.45;
   transition: opacity 260ms ease;
 }
 
 /* Each logo centred in the same small box, as large as it fits in it. */
 .system-list .logo {
-  /* Set from its shape once loaded (logoHeight): every logo the same weight. */
-  height: var(--logo-h, 2.4rem);
-  max-width: 12.5rem;
+  /* Set from its shape once loaded (logoHeight): every logo the same weight, smaller in the bar. */
+  height: calc(var(--logo-h, 2.4rem) * 0.72);
+  max-width: 100%;
   object-fit: contain;
 }
 
@@ -882,7 +918,7 @@ main {
   display: block;
   max-width: 100%;
   font-family: inherit;
-  font-size: 1.4rem;
+  font-size: 1rem;
   letter-spacing: 0;
   color: var(--fg);
 }
@@ -2992,22 +3028,56 @@ main {
   z-index: 6;
   display: flex;
   justify-content: flex-end;
-  gap: 1.5rem;
-  padding: 0.8rem var(--safe) calc(var(--safe) * 0.5);
+  align-items: center;
+  gap: 1.1rem;
+  padding: 0.35rem var(--safe) calc(var(--safe) * 0.35);
   color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.hint {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
 }
 
 kbd {
   display: inline-block;
-  min-width: 1.6rem;
-  margin-right: 0.4rem;
-  padding: 0.1rem 0.4rem;
-  border-radius: 0.4rem;
+  min-width: 1.45rem;
+  margin-right: 0.35rem;
+  padding: 0.08rem 0.35rem;
+  border-radius: 0.35rem;
   background: var(--card);
   color: var(--fg);
   font: inherit;
-  font-size: 0.8rem;
+  font-size: 0.68rem;
+  font-weight: 700;
   text-align: center;
+}
+
+/* The D-pad drawn: the arms that move here lit. */
+kbd.pad {
+  min-width: 0;
+  padding: 0.12rem;
+  line-height: 0;
+}
+
+.dpad svg {
+  display: block;
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.dpad .on {
+  fill: var(--fg);
+}
+
+.dpad .off {
+  fill: rgb(255 255 255 / 18%);
+}
+
+.dpad .hub {
+  fill: rgb(255 255 255 / 30%);
 }
 
 .overlay {
@@ -3178,6 +3248,10 @@ kbd {
   padding: 8vh 8vw;
   overflow: hidden;
   background: var(--bg);
+  /* Its own layer for good, and its parts' below theirs: a layer made for a fade and dropped as
+     it ended drew the whole screen again, blank for a few frames on a Pi (the launch screen
+     came in twice). */
+  will-change: opacity;
   animation: launch-in 0.3s ease-out both;
 }
 
@@ -3333,6 +3407,7 @@ kbd {
 /* The box swings in, then hovers, turning a little. */
 .launch.has-art .launch-hero {
   perspective: 60rem;
+  will-change: opacity, transform;
   animation: launch-swing 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
@@ -3367,6 +3442,7 @@ kbd {
   width: 2.6rem;
   height: 2.6rem;
   border: 2px solid var(--launch-glow);
+  will-change: opacity, transform;
   animation: launch-lock 0.5s ease-out 0.45s both;
 }
 
@@ -3426,6 +3502,7 @@ kbd {
 /* The logo arrives in stutters. */
 .launch.has-art .launch-logo,
 .launch.has-art .launch-title {
+  will-change: opacity, transform;
   animation: launch-glitch 0.5s steps(1, end) 0.3s both;
 }
 
@@ -3460,6 +3537,7 @@ kbd {
   display: grid;
   justify-items: center;
   gap: 0.6rem;
+  will-change: opacity;
   animation: launch-in 0.4s ease-out 0.7s both;
 }
 
@@ -3895,10 +3973,6 @@ kbd {
 
 /* A narrow screen: the list gives way to the system, and secondary details go. */
 @media (max-width: 960px), (max-aspect-ratio: 4/3) {
-  .systems {
-    --strip-item: 8.5rem;
-  }
-
   /* Narrower: closer together. */
   .system-panel .stage-page {
     gap: 1rem 1.6rem;
@@ -5518,6 +5592,20 @@ kbd {
   object-fit: contain;
 }
 
+/* A logo too dark for the page (black or deep colours, made for a box): the page behind it
+   lighter, a soft glow fading out with no edge. Its room taken back round it (the margin), so
+   nothing else moves. */
+.dossier .head.dark-logo {
+  margin: -0.6rem -0.6rem 0;
+  padding: 0.6rem 0.6rem 0;
+  background: radial-gradient(
+    closest-side,
+    rgb(160 178 200 / 55%),
+    rgb(160 178 200 / 41%) 60%,
+    rgb(160 178 200 / 0%)
+  );
+}
+
 .dossier .head h2 {
   margin: 0.35rem 0 0;
   font-size: 1.1rem;
@@ -5561,6 +5649,12 @@ kbd {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+/* How long ago it came out: smaller and quieter than the date it follows. */
+.dossier .specs .ago {
+  font-size: 0.78em;
+  color: var(--muted);
 }
 
 /* The dump check: a label per catalogue that lists the file, in a row; each the catalogue's
@@ -5647,11 +5741,12 @@ kbd {
   clip-path: inset(0 calc(100% - var(--rating) * 100%) 0 0);
 }
 
-/* What the game offers, as icons in a row: lit when it has it, faint when not. */
+/* What the game offers, as icons in a row: lit when it has it, faint when not. Five slots, the
+   saves' only filled when the game has some: every tile the same size from game to game. */
 .dossier .marks {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.4rem;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.3rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -5660,13 +5755,13 @@ kbd {
 .dossier .mark {
   display: grid;
   justify-items: center;
-  gap: 0.25rem;
-  padding: 0.45rem 0.2rem 0.35rem;
+  gap: 0.2rem;
+  padding: 0.35rem 0.15rem 0.28rem;
   border: 1px solid rgb(255 255 255 / 8%);
   border-radius: 0.35rem;
   overflow: hidden;
   font-family: var(--mono);
-  font-size: 0.52rem;
+  font-size: 0.46rem;
   letter-spacing: 0.01em;
   text-align: center;
   white-space: nowrap;
@@ -5681,8 +5776,8 @@ kbd {
 }
 
 .dossier .mark .glyph {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.15rem;
+  height: 1.15rem;
 }
 
 .dossier .mark svg {
@@ -5727,7 +5822,7 @@ kbd {
   background: var(--pegi);
   box-shadow: inset 0 0 0 2px rgb(255 255 255 / 85%);
   font-family: var(--mono);
-  font-size: 1.8rem;
+  font-size: 1.35rem;
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0;
@@ -5735,7 +5830,7 @@ kbd {
 }
 
 .dossier .mark.pegi strong span {
-  font-size: 0.5rem;
+  font-size: 0.42rem;
   letter-spacing: 0.18em;
 }
 
