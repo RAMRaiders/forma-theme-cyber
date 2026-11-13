@@ -222,6 +222,9 @@ function picture(src: string, cls: string): HTMLImageElement {
  * they show the same thing: a new picture is blank until decoded, so a part drawn again at each
  * step (the label's system logo, the dossier's flags and logos) blinked, and faded in again.
  */
+/** Company logos asked for that were not there: not asked for again. */
+const NO_LOGO = new Set<string>();
+
 function keepPictures(from: ParentNode, parts: Element[]): void {
   // Every one shown, the same picture twice too (a developer that is also the publisher).
   const shown = new Map<string, HTMLImageElement[]>();
@@ -1897,12 +1900,23 @@ export class CollectorView {
     const company = (name: string | null) => {
       if (!name) return null;
       const src = this.#options.company?.(name);
-      if (!src) return name;
-      // The logo with its name beside it: a logo alone may not say whose it is.
-      const img = el('img', { class: 'company', src, alt: '', decoding: 'async' });
-      const line = el('span', { class: 'company-line' }, img, el('span', {}, name));
-      img.addEventListener('error', () => img.remove(), { once: true });
-      return line;
+      // The logo with its name beside it: a logo alone may not say whose it is. Its slot there
+      // with no logo too, so the name never moves, and a logo that is not there is asked for
+      // once, not at every game.
+      const slot = el('span', { class: 'company-slot' });
+      if (src && !NO_LOGO.has(src)) {
+        const img = el('img', { class: 'company', src, alt: '', decoding: 'async' });
+        img.addEventListener(
+          'error',
+          () => {
+            NO_LOGO.add(src);
+            img.remove();
+          },
+          { once: true }
+        );
+        slot.append(img);
+      }
+      return el('span', { class: 'company-line' }, slot, el('span', {}, name));
     };
     const flags = (
       list: string[],

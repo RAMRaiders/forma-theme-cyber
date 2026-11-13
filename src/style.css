@@ -5849,13 +5849,19 @@ kbd.pad {
 /* Developers and publishers as their logos, where Cyber has them. */
 /* A publisher's or developer's logo: as small as a word beside it, a wide one no wider than a
    short name. */
-.dossier .company {
-  /* A room of its own, whatever the logo's shape and whether it has loaded: the name beside it
-     never moves. */
-  display: block;
+/* A company's logo in a slot of its own, whatever the logo's shape, whether it has loaded or
+   whether there is one: the name beside it never moves. */
+.dossier .company-slot {
   flex: none;
   width: 4.5rem;
   height: 1rem;
+  overflow: hidden;
+}
+
+.dossier .company {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   object-position: left center;
 }
