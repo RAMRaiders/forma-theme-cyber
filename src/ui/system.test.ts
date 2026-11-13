@@ -73,6 +73,10 @@ describe('the strip of logos', () => {
     expect(after).not.toBe(before);
     view.select(2);
     expect(rail.style.getPropertyValue('--sys')).not.toBe(after);
+    // The logo's colours, four stops, the first its main one.
+    const stops = [1, 2, 3, 4].map((n) => rail.style.getPropertyValue(`--logo-${n}`));
+    expect(stops.every((c) => /^rgb\(/.test(c))).toBe(true);
+    expect(stops[0]).toBe(rail.style.getPropertyValue('--sys'));
     view.hide();
   });
 

@@ -402,16 +402,18 @@ export class SystemView {
    * from Forma, not yet its info's), so cheap at each step.
    */
   #railColour(system: CyberSystem, index: number): void {
-    const [rgb] = systemColours(
-      {
-        hues: system.hues,
-        consoleHues: system.consoleHues,
-        maker: system.summary.manufacturer,
-        category: system.category
-      },
+    // The logo's own colours (its maker's where it has none), not its console's: the frame
+    // lights in what the logo in it is drawn in.
+    const colours = systemColours(
+      { hues: system.hues, maker: system.summary.manufacturer, category: system.category },
       index
-    );
-    this.#rail.style.setProperty('--sys', `rgb(${rgb})`);
+    ).map((rgb) => `rgb(${rgb})`);
+    const style = this.#rail.style;
+    style.setProperty('--sys', colours[0]!);
+    // Four stops, the last colour again where the logo has fewer.
+    for (let n = 1; n <= 4; n++) {
+      style.setProperty(`--logo-${n}`, colours[Math.min(n, colours.length) - 1]!);
+    }
   }
 
   /** Stops the curiosity timer when the screen goes away. */

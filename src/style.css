@@ -752,6 +752,11 @@ main {
   --sys-10: color-mix(in srgb, var(--sys) 10%, transparent);
   --sys-30: color-mix(in srgb, var(--sys) 30%, transparent);
   --sys-70: color-mix(in srgb, var(--sys) 70%, transparent);
+  /* The selected logo's colours, up to four (system.ts sets them at each step). */
+  --logo-1: var(--sys);
+  --logo-2: var(--logo-1);
+  --logo-3: var(--logo-2);
+  --logo-4: var(--logo-3);
 
   position: absolute;
   z-index: 3;
@@ -817,10 +822,25 @@ main {
   top: 50%;
   height: var(--strip-item);
   translate: 0 -50%;
-  border: 1px solid var(--sys-70);
+  /* Lit in the logo's own colours, across it: its border, the tint inside and the glow. */
+  border: 1px solid transparent;
   border-radius: calc(var(--radius) * 1.6);
-  background: linear-gradient(var(--sys-10), var(--sys-30));
-  box-shadow: 0 0 1.6rem var(--sys-30);
+  background:
+    linear-gradient(
+        100deg,
+        color-mix(in srgb, var(--logo-1) 22%, transparent),
+        color-mix(in srgb, var(--logo-2) 14%, transparent) 38%,
+        color-mix(in srgb, var(--logo-3) 14%, transparent) 66%,
+        color-mix(in srgb, var(--logo-4) 22%, transparent)
+      )
+      padding-box,
+    /* Dark under the tint, so the border's gradient shows on the border alone. */
+    linear-gradient(rgb(6 8 16), rgb(6 8 16)) padding-box,
+    linear-gradient(100deg, var(--logo-1), var(--logo-2) 36%, var(--logo-3) 66%, var(--logo-4))
+      border-box;
+  box-shadow:
+    -0.9rem 0 1.6rem -0.5rem color-mix(in srgb, var(--logo-1) 40%, transparent),
+    0.9rem 0 1.6rem -0.5rem color-mix(in srgb, var(--logo-4) 40%, transparent);
 }
 
 .system-rail::after {
@@ -832,7 +852,7 @@ main {
   height: 3rem;
   translate: 0 -50%;
   border-radius: 1rem;
-  background: var(--sys);
+  background: linear-gradient(180deg, var(--logo-1), var(--logo-2), var(--logo-3), var(--logo-4));
 }
 
 /* Where the selection is in the list, under the frame. */
