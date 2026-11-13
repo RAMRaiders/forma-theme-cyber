@@ -1969,9 +1969,14 @@ export class CollectorView {
       row('Languages', flags(languages, LANGUAGES, languageFlag)),
       row('Integrity', dumpText(game.dump))
     );
-    // Each its own room, as if every row were there: the play record below never moves.
-    about?.classList.add('about');
-    dump?.classList.add('copy');
+    // Each its own room, as if every row were there, even with none: nothing below ever moves.
+    const room = (part: HTMLElement | null, name: string) => {
+      const kept = part ?? el('section', { class: 'part' });
+      kept.classList.add(name);
+      return kept;
+    };
+    const aboutRoom = room(about, 'about');
+    const dumpRoom = room(dump, 'copy');
     const record =
       section(
         'Play record',
@@ -1986,7 +1991,7 @@ export class CollectorView {
     const marks = this.#marks(game);
     this.#achievementsInto(game, marks);
     this.#savesInto(game, marks);
-    const parts = [head, marks, about, dump, alternate].filter((p): p is HTMLElement => p !== null);
+    const parts = [head, marks, aboutRoom, dumpRoom, alternate];
 
     return parts;
   }

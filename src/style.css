@@ -5623,11 +5623,18 @@ kbd.pad {
 }
 
 /* A logo too dark for the page (black or deep colours, made for a box): the page behind it
-   lighter, a soft glow fading out with no edge. Its room taken back round it (the margin), so
-   nothing else moves. */
-.dossier .head.dark-logo {
-  margin: -0.6rem -0.6rem 0;
-  padding: 0.6rem 0.6rem 0;
+   lighter, a soft glow fading out with no edge. A layer behind it, in its own box: it takes
+   no room, so nothing else moves. */
+.dossier .head {
+  position: relative;
+  isolation: isolate;
+}
+
+.dossier .head.dark-logo::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
   background: radial-gradient(
     closest-side,
     rgb(160 178 200 / 55%),
