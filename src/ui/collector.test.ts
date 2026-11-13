@@ -296,9 +296,10 @@ describe('the Collector view', () => {
     // Its pictures are not listed: they are on the screen.
     expect(v.root.querySelector('.dossier .archive')).toBeNull();
     expect(dd.slice(8)).toEqual(['2×', '10 min']);
-    // What it offers: players; no manual, achievements nor rating: their tiles there, faded.
+    // What it offers: players; no manual, saves, achievements nor rating: their tiles there,
+    // faded.
     expect(text('.dossier .mark.on')).toEqual(['1 player']);
-    expect(text('.dossier .mark.off')).toEqual(['No manual', '– / –', 'No rating']);
+    expect(text('.dossier .mark.off')).toEqual(['No manual', 'No saves', '– / –', 'No rating']);
     expect(v.root.querySelector('.dossier .achievements')).toBeNull();
     // The bays: the case, the footage (its screenshots until the video), the story.
     expect(text('.bay-tag')).toEqual(['Case', 'Footage', 'Story']);
@@ -408,7 +409,7 @@ describe('the Collector view', () => {
     expect(v.root.querySelector('.dossier .bar')).toBeNull();
   });
 
-  it('shows a tile for its saves beside its manual, only when it has some', async () => {
+  it('shows a tile for its saves beside its manual, lit when it has some', async () => {
     const saves = (id: number) =>
       Promise.resolve(
         id === 7
@@ -425,10 +426,12 @@ describe('the Collector view', () => {
       /^2 save states and a battery save, the latest/
     );
     expect(tile.previousElementSibling?.matches('.manual')).toBe(true);
-    // None: no tile.
+    // None: the tile still there, faded, as the manual's is without one.
     v.select(1);
     await vi.advanceTimersByTimeAsync(600);
-    expect(v.root.querySelector('.dossier .mark.saves')).toBeNull();
+    const none = v.root.querySelector('.dossier .mark.saves')!;
+    expect(none.classList.contains('off')).toBe(true);
+    expect(none.textContent).toBe('No saves');
   });
 
   it('readies the neighbours as a list opens: the first step from there needs nothing fetched', async () => {
@@ -905,8 +908,8 @@ describe('the Collector view', () => {
     // Nothing to make a cover from: the default box, and static where the footage would be.
     expect(v.root.querySelector('.cbox .front img')?.getAttribute('src')).toBe(DEFAULT_FRONT);
     expect(text('.no-signal span')).toEqual(['No signal']);
-    // All four tiles, whatever it has: what it lacks faded.
-    expect(text('.dossier .mark')).toHaveLength(4);
+    // All five tiles, whatever it has: what it lacks faded.
+    expect(text('.dossier .mark')).toHaveLength(5);
   });
 });
 

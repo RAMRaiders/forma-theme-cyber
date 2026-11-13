@@ -59,7 +59,7 @@ export interface CollectorOptions {
   /** The game as Forma has it now (its media just scraped, say), not the list's copy. */
   fresh?: (id: number) => Promise<Game | null>;
   achievements?: (game: Game) => Promise<Achievements | null>;
-  /** What the game has saved (Forma since SDK 1.35.0); its tile shows only when there are some. */
+  /** What the game has saved (Forma since SDK 1.35.0); its tile lights when there are some. */
   saves?: (game: Game) => Promise<GameSaves | null>;
   /** A developer's or publisher's logo, from its name; `null` where Cyber has none. */
   company?: (name: string) => string | null;
@@ -2010,6 +2010,8 @@ export class CollectorView {
         !!game.players
       ),
       mark('manual', ICONS.manual, manual ? 'Manual' : 'No manual', manual),
+      // Faded until its saves are known, and when it has none: lit with their count.
+      mark('saves', ICONS.saves, 'No saves', false),
       cheevos,
       pegiMark(game)
     );
@@ -2050,7 +2052,7 @@ export class CollectorView {
     return saves;
   }
 
-  /** A tile for its saves beside its manual, once known, when it has some. */
+  /** Its saves' tile lit with their count, once known, when it has some. */
   #savesInto(game: Game, marks: HTMLElement): void {
     const saves = this.#savesOf(game);
     if (!saves) return;
@@ -2068,8 +2070,7 @@ export class CollectorView {
         'aria-label',
         `${what.join(' and ')}${s.latest ? `, the latest ${ago(s.latest)}` : ''}`
       );
-      marks.querySelector('.mark.saves')?.remove();
-      marks.querySelector('.mark.manual')?.after(tile);
+      marks.querySelector('.mark.saves')?.replaceWith(tile);
     });
   }
 

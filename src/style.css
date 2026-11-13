@@ -5772,7 +5772,7 @@ kbd.pad {
 }
 
 /* What the game offers, as icons in a row: lit when it has it, faint when not. Five slots, the
-   saves' only filled when the game has some: every tile the same size from game to game. */
+   the saves' faded when the game has none, as any other: every tile the same size from game to game. */
 .dossier .marks {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
