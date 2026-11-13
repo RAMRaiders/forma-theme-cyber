@@ -232,11 +232,16 @@ export interface Catalogued {
   dump?: { status: string; name: string | null } | null;
 }
 
+/** How a game was released, not changed after: kept from the file even when matched. */
+const RELEASED = /^(unl|unlicensed|pirate|bootleg|aftermarket|homebrew)$/i;
+
 /**
  * A game's tags, from the best source first: the catalogue's name when Forma matched its file to
  * a No-Intro or Redump entry (it is the dump's own name, whatever the file is called), then the
- * file's name for what that leaves out. Matched, its version and status are the catalogue's
- * alone: none there means the original release, whatever the file says.
+ * file's name for what that leaves out. Matched, its version is the catalogue's alone (none
+ * there means the original release, whatever the file says), and so is anything changed since
+ * (a hack, a translation): the file is the catalogue's. How it was released (`Unl`, a pirate
+ * cart) the file's name says too: No-Intro's names leave `(Unl)` out of some.
  */
 export function gameTags(game: Catalogued): RomName & { fromCatalogue: boolean } {
   const file = romName(game.path);
@@ -247,7 +252,17 @@ export function gameTags(game: Catalogued): RomName & { fromCatalogue: boolean }
     regions: listed.regions.length ? listed.regions : file.regions,
     languages: listed.languages.length ? listed.languages : file.languages,
     version: listed.version,
-    status: listed.status,
+    status: joinTags([
+      ...(listed.status?.split(' · ') ?? []),
+      ...(file.status?.split(' · ').filter((t) => RELEASED.test(t)) ?? [])
+    ]),
     fromCatalogue: true
   };
+}
+
+/** Tags as one, each once (case aside), `null` with none. */
+function joinTags(tags: string[]): string | null {
+  const seen = new Map<string, string>();
+  for (const t of tags) if (!seen.has(t.toLowerCase())) seen.set(t.toLowerCase(), t);
+  return seen.size ? [...seen.values()].join(' · ') : null;
 }

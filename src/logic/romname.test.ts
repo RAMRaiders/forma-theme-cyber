@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { releaseOf } from '../ui/collector.js';
 import { flaggedRegions, gameTags, languageFlag, patchBy, regionFlag, romName } from './romname.js';
 
 describe('a ROM’s file name', () => {
@@ -132,6 +133,20 @@ describe('gameTags', () => {
     // Matched: the original release, whatever the file said.
     expect(tags.version).toBeNull();
     expect(tags.status).toBeNull();
+  });
+
+  it('keeps how it was released from the file: No-Intro leaves `(Unl)` out of some names', () => {
+    const tags = gameTags({
+      path: 'Alex Kidd in Miracle World 2 (World) (Unl) [h].7z',
+      dump: dump('Alex Kidd in Miracle World 2 (World)')
+    });
+    // Unlicensed, from the file; a hack it is not, the file being the catalogue's.
+    expect(tags.status).toBe('Unl');
+    expect(releaseOf(tags.version, tags.status).kind).toBe('Unlicensed');
+    // Said by both: once.
+    expect(gameTags({ path: 'A (Korea) (Unl).7z', dump: dump('A (Korea) (Unl)') }).status).toBe(
+      'Unl'
+    );
   });
 
   it('reads the file alone when not catalogued or not checked', () => {
