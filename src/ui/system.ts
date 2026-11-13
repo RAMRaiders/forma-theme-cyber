@@ -32,7 +32,7 @@ const BOARD_MS = 450;
 /** How long what was shown takes to fade, as the next system comes in. */
 const LEAVE_MS = 220;
 /** One logo's place in the strip (as `--strip-item` in style.css). */
-const STRIP_ITEM_REM = 6.8;
+const STRIP_ITEM_REM = 11;
 /** The strip of logos shows while moving, over the stage; this long after the last move it goes. */
 const DROP_MS = 1400;
 /** Steps closer together than this are the direction held: the strip then runs evenly. */
@@ -252,8 +252,8 @@ export class SystemView {
     this.#rail.append(
       this.#list,
       this.#where,
-      el('span', { class: 'edge top' }),
-      el('span', { class: 'edge bottom' })
+      el('span', { class: 'edge left' }),
+      el('span', { class: 'edge right' })
     );
     this.root.append(this.#rail, this.#panel);
     void infos.makers().then((makers) => {
@@ -428,9 +428,9 @@ export class SystemView {
     clearTimeout(this.#shelfTimer);
   }
 
-  /** With more systems than the strip shows at once, the last ones come before the first. */
+  /** With more systems than the bar shows at once, the last ones come before the first. */
   #loops(): boolean {
-    const shown = this.#rail.clientHeight;
+    const shown = this.#rail.clientWidth;
     return shown > 0 && this.#systems.length >= Math.ceil(shown / (STRIP_ITEM_REM * remPx())) + 2;
   }
 
@@ -447,7 +447,7 @@ export class SystemView {
   #drawStripTraced(): void {
     const total = this.#systems.length;
     const loops = this.#loops();
-    const half = Math.ceil(this.#rail.clientHeight / (STRIP_ITEM_REM * remPx()) / 2) + 2;
+    const half = Math.ceil(this.#rail.clientWidth / (STRIP_ITEM_REM * remPx()) / 2) + 2;
     const first = loops ? this.#place - half : 0;
     const last = loops ? this.#place + half : total - 1;
     for (const [place, node] of this.#rows) {
@@ -469,18 +469,18 @@ export class SystemView {
   }
 
   /**
-   * The strip slides so the selected logo sits in its middle, under the selection frame, at the
+   * The bar slides so the selected logo sits in its middle, under the selection frame, at the
    * ends of the list too (a transform: the compositor's work, cheap on a Pi).
    */
   #centre(): void {
     const games = this.#systems[this.#selected]?.summary.gameCount ?? 0;
     this.#where.textContent = `${games.toLocaleString('en')} ${games === 1 ? 'game' : 'games'}`;
-    const strip = this.#rail.clientHeight;
-    if (strip === 0) return;
+    const bar = this.#rail.clientWidth;
+    if (bar === 0) return;
     const item = STRIP_ITEM_REM * remPx();
-    const y = this.#place * item + item / 2 - strip / 2;
+    const x = this.#place * item + item / 2 - bar / 2;
     // Whole pixels: text on a layer moved by a fraction of one shimmers.
-    this.#list.style.transform = `translateY(${-Math.round(y)}px)`;
+    this.#list.style.transform = `translateX(${-Math.round(x)}px)`;
   }
 
   #drawBoard(system: CyberSystem, delay: number): void {

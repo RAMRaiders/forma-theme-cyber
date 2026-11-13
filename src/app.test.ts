@@ -85,7 +85,8 @@ describe('the default theme', () => {
     expect(text('h1.current')).toEqual(['Categories']);
     expect(text('.tile h2')).toEqual(['Consoles', 'All games', 'Magazines']);
     expect(text('.tile.selected .tag')).toEqual(['5 systems', '9 games']);
-    expect(text('.hint')).toEqual(['AOpen', 'StartMenu']);
+    // How to move here first (a drawn D-pad), then A, Select and Start.
+    expect(text('.hint')).toEqual(['Category', 'AOpen', 'SelectOptions', 'StartMenu']);
   });
 
   it('names a system in the breadcrumb, even one with a logo', async () => {
@@ -389,7 +390,8 @@ describe('the default theme', () => {
     await press('start');
     await press('select');
     expect(text('.switcher, .page, .keyboard')).toEqual([]);
-    expect(text('.hint')).toEqual(['AOpen', 'StartMenu']);
+    // How to move here first (a drawn D-pad), then A, Select and Start.
+    expect(text('.hint')).toEqual(['Category', 'AOpen', 'SelectOptions', 'StartMenu']);
   });
 
   it('tells Forma’s menu the system and game selected, once the selection rests', async () => {
@@ -463,7 +465,7 @@ describe('the default theme', () => {
     await vi.waitFor(() => expect(root.querySelector('.collector')).not.toBeNull());
     expect(root.querySelector('.games')).toBeNull();
     expect(text('.spine-row[aria-selected="true"] .title')).toHaveLength(1);
-    expect(text('.hint')).toContain('◀ ▶Turn');
+    expect(text('.hint')).toContain('Turn');
     const box = root.querySelector<HTMLElement>('.cbox')!;
     await press('right');
     expect(box.dataset.pose).toBe('spine');

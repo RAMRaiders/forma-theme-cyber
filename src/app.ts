@@ -146,6 +146,8 @@ export class App {
       const { data } = await this.forma.ra.game(game.id);
       return { earned: data.earned, total: data.achievementCount };
     },
+    // What the game has saved: a tile beside its manual when it has some.
+    saves: (game) => this.forma.library.saves(game.id),
     play: (game, area) => this.forma.video.play(game.id, { area }),
     stopVideo: () => void this.forma.video.stop().catch(() => {}),
     // The game companies' logos first, then the hardware makers'.
@@ -708,23 +710,37 @@ export class App {
       })
     );
     const games = this.#mode === 'browse' && this.#page?.listing.kind === 'games';
-    // Select and Start are Forma's own: its views list and its menu, over any theme.
-    const hints: [string, string][] = [
-      ['A', games ? 'Play' : this.#mode === 'systems' ? 'Games' : 'Open'],
-      ...(games && this.#prefs.gamesView === 'collector'
-        ? [['◀ ▶', 'Turn'] as [string, string]]
-        : []),
+    const systems = this.#mode === 'systems';
+    const collector = games && this.#prefs.gamesView === 'collector';
+    // How to move here, then what each button does: a word each. Select and Start are Forma's
+    // own: the selection's options and its menu, over any theme.
+    const hints: [string | Element, string][] = [
+      this.#mode === 'home'
+        ? [dpad('all'), 'Category']
+        : systems
+          ? [dpad('h'), 'System']
+          : [dpad('v'), games ? 'Game' : 'Browse'],
+      ['A', games ? 'Play' : systems ? 'Games' : 'Open'],
+      ...(collector ? [[dpad('h'), 'Turn'] as [Element, string]] : []),
       ...(games ? [['Y', 'Favourite'] as [string, string]] : []),
-      ...(this.#mode === 'systems' ? [['Y', 'Next fact'] as [string, string]] : []),
+      ...(systems ? [['Y', 'Fact'] as [string, string]] : []),
       ...(this.#filtered()
-        ? [['B', 'All games'] as [string, string]]
+        ? [['B', 'All'] as [string, string]]
         : this.#stack.length > 1
           ? [['B', 'Back'] as [string, string]]
           : []),
+      ['Select', 'Options'],
       ['Start', 'Menu']
     ];
     this.#hints.replaceChildren(
-      ...hints.map(([button, label]) => el('span', { class: 'hint' }, el('kbd', {}, button), label))
+      ...hints.map(([button, label]) =>
+        el(
+          'span',
+          { class: 'hint' },
+          el('kbd', typeof button === 'string' ? {} : { class: 'pad' }, button),
+          label
+        )
+      )
     );
   }
 
@@ -941,4 +957,22 @@ export class App {
     clearTimeout(this.#toastTimer);
     this.#toastTimer = setTimeout(() => (this.#toast.hidden = true), 4000);
   }
+}
+
+/**
+ * A D-pad, drawn (the Pi has no font for arrows): the arms that move here lit, `h` left and
+ * right, `v` up and down.
+ */
+function dpad(axis: 'h' | 'v' | 'all'): Element {
+  const on = (arm: 'h' | 'v') => (axis === 'all' || axis === arm ? 'on' : 'off');
+  const span = el('span', {
+    class: 'dpad',
+    'aria-label': axis === 'h' ? 'Left and right' : axis === 'v' ? 'Up and down' : 'D-pad'
+  });
+  span.innerHTML =
+    '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+    `<path class="${on('v')}" d="M9 2h6v7H9zM9 15h6v7H9z"/>` +
+    `<path class="${on('h')}" d="M2 9h7v6H2zM15 9h7v6h-7z"/>` +
+    '<path class="hub" d="M9 9h6v6H9z"/></svg>';
+  return span;
 }
