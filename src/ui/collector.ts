@@ -223,18 +223,19 @@ function picture(src: string, cls: string): HTMLImageElement {
  * step (the label's system logo, the dossier's flags and logos) blinked, and faded in again.
  */
 function keepPictures(from: ParentNode, parts: Element[]): void {
-  const shown = new Map<string, HTMLImageElement>();
+  // Every one shown, the same picture twice too (a developer that is also the publisher).
+  const shown = new Map<string, HTMLImageElement[]>();
   for (const img of from.querySelectorAll('img')) {
     const src = img.getAttribute('src');
-    if (src && img.complete && img.naturalWidth && !shown.has(src)) shown.set(src, img);
+    if (!src || !img.complete || !img.naturalWidth) continue;
+    shown.set(src, [...(shown.get(src) ?? []), img]);
   }
   if (!shown.size) return;
   for (const part of parts) {
     for (const img of part.querySelectorAll('img')) {
       const src = img.getAttribute('src');
-      const old = src ? shown.get(src) : undefined;
-      if (!old || !src) continue;
-      shown.delete(src);
+      const old = src ? shown.get(src)?.shift() : undefined;
+      if (!old) continue;
       old.className = img.className;
       img.replaceWith(old);
     }
@@ -285,7 +286,6 @@ export class CollectorView {
   /** Over it all while the scraper is on the selected game. */
   /** A scrape's new data in: shown by the game's boot, as on entering its list. */
   #aroundTimer: ReturnType<typeof setTimeout> | undefined;
-  #dossierFrame = 0;
   /** The TV's pictures loaded ahead (#keepNavPicsAround), the latest last. */
   readonly #navKept = new Map<string, HTMLImageElement>();
   readonly #scan = new Scan(async (id) => {
@@ -582,16 +582,10 @@ export class CollectorView {
       this.#labelNow();
       this.#previewedAt = now;
       // Its TV picture at once (shown as soon as decoded, at once when loaded ahead), not the
-      // last game's left there till the peek; and its achievements asked for already.
+      // last game's left there till the peek. Its details and achievements wait for the peek:
+      // built in the frame after each step, they held up the shelf's glide on a Pi.
       const game = this.selected;
-      if (game) {
-        this.#navPicFor(game);
-        void this.#achievementsOf(game);
-        // Its details (logo, words) the frame after: not waiting for the peek, and not in the
-        // step's own frame, which only moves the shelf.
-        cancelAnimationFrame(this.#dossierFrame);
-        this.#dossierFrame = requestAnimationFrame(() => this.#dossierFor(game));
-      }
+      if (game) this.#navPicFor(game);
     }
     // Held a while: racing through the list. Nothing is loaded (the TV blank, the dossier empty):
     // the TV shows the letter the shelf is at, and all comes for the game stopped at.
@@ -622,6 +616,7 @@ export class CollectorView {
       // once was one long frame on a Pi (measured: 80 ms), most of it the page restyling.
       this.#tintSelected(game);
       this.#labelNow();
+      void this.#achievementsOf(game);
       this.#inTurn(game, [
         () => this.#navPicFor(game),
         () => this.#dossierFor(game),

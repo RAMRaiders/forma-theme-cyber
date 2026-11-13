@@ -705,14 +705,16 @@ describe('the Collector view', () => {
     expect(browsing()).toBe(false);
   });
 
-  it('shows the details at each press, never dimmed, none while held', async () => {
+  it('shows the details at each pause, never dimmed, none while held', async () => {
     const games = ['After Burner', 'Doom', 'Echo'].map((n, i) => game(i + 1, n, BOXED));
     const { v } = await view(games);
     await vi.advanceTimersByTimeAsync(2100);
     const dossier = v.root.querySelector('.dossier')!;
-    // A press: its game's details the frame after, not at the peek.
+    // A press: its game's details at the peek, not in the frames the shelf glides in.
     v.select(1);
     await vi.advanceTimersByTimeAsync(20);
+    expect(dossier.textContent).toContain('After Burner');
+    await vi.advanceTimersByTimeAsync(200);
     expect(dossier.textContent).toContain('Doom');
     // Held (steps closer than a press): the game passed by is not drawn.
     await vi.advanceTimersByTimeAsync(200);
@@ -725,8 +727,9 @@ describe('the Collector view', () => {
     expect(dossier.textContent).toContain('After Burner');
     v.select(2);
     await vi.advanceTimersByTimeAsync(20);
-    expect(dossier.textContent).toContain('Echo');
     expect(v.root.querySelector('.slab-label')?.textContent).toContain('Echo');
+    await vi.advanceTimersByTimeAsync(200);
+    expect(dossier.textContent).toContain('Echo');
     // A slow step: its game's details, then its showcase, before the next press would come.
     v.select(1);
     await vi.advanceTimersByTimeAsync(200);

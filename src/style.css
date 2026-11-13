@@ -5850,11 +5850,12 @@ kbd.pad {
 /* A publisher's or developer's logo: as small as a word beside it, a wide one no wider than a
    short name. */
 .dossier .company {
+  /* A room of its own, whatever the logo's shape and whether it has loaded: the name beside it
+     never moves. */
   display: block;
-  width: auto;
-  height: auto;
-  max-width: 6rem;
-  max-height: 1rem;
+  flex: none;
+  width: 4.5rem;
+  height: 1rem;
   object-fit: contain;
   object-position: left center;
 }
