@@ -438,10 +438,10 @@ export class CollectorView {
     return this.#shelfH;
   }
 
-  /** The shelf's room above the first row, so any row can sit in the middle. */
+  /** The shelf's room above the first row, so any row can sit one row above the middle. */
   #measure(): void {
     const row = this.#rowRem * remPx();
-    const pad = Math.max(0, (this.#shelfHeight - row) / 2);
+    const pad = Math.max(0, (this.#shelfHeight - row) / 2 - row);
     if (pad === this.#pad) return;
     this.#pad = pad;
     // Where the selected row sits: the lens there.
@@ -561,7 +561,7 @@ export class CollectorView {
     this.#track.classList.toggle('held', held);
     const row = this.#rowRem * remPx();
     this.#measure();
-    // The selected row in the middle, at the ends of the list too; the rows glide there. Whole
+    // The selected row a row above the middle, at the ends of the list too; the rows glide there. Whole
     // pixels: text on a layer moved by a fraction of one shimmers.
     const total = this.#source?.total ?? 0;
     this.#place =
