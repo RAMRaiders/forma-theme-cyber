@@ -718,7 +718,7 @@ export class App {
       this.#mode === 'home'
         ? [dpad('all'), 'Category']
         : systems
-          ? [dpad('h'), 'System']
+          ? [dpad('all'), 'System']
           : [dpad('v'), games ? 'Game' : 'Browse'],
       ['A', games ? 'Play' : systems ? 'Games' : 'Open'],
       ...(collector ? [[dpad('h'), 'Turn'] as [Element, string]] : []),

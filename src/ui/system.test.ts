@@ -51,15 +51,15 @@ describe('the strip of logos', () => {
   };
 
   it('with more systems than it shows, puts the last ones before the first', () => {
-    const wide = vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(500);
+    const tall = vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(320);
     const { view, place } = strip(12);
     expect(place('System 11')).toBe('-1');
     expect(place('System 1')).toBe('1');
     view.select(11);
     expect(view.root.querySelector('li.selected .name')?.textContent).toBe('System 11');
-    expect(place('System 11')).toBe('-1'); // one step left, not all the way along the list
+    expect(place('System 11')).toBe('-1'); // one step up, not all the way down the list
     view.hide();
-    wide.mockRestore();
+    tall.mockRestore();
   });
 
   it('lights the selection frame in the next system’s colour on the step itself', () => {
@@ -77,11 +77,11 @@ describe('the strip of logos', () => {
   });
 
   it('with few systems stays a plain list, each once', () => {
-    const wide = vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(500);
+    const tall = vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockReturnValue(320);
     const { view, place } = strip(3);
     expect(view.root.querySelectorAll('.system-list li')).toHaveLength(3);
     expect(place('System 2')).toBe('2');
-    wide.mockRestore();
+    tall.mockRestore();
   });
 });
 

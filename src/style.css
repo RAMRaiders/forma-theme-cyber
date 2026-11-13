@@ -700,13 +700,11 @@ main {
 .systems {
   position: relative;
   display: grid;
-  /* The bar of the category's systems, then the stage. */
-  grid-template-rows: var(--bar-h) minmax(0, 1fr);
-  gap: 0.5rem;
-  /* The bar's height, and one logo's place along it, under the selection frame (system.ts
-     STRIP_ITEM_REM). */
-  --bar-h: 4.2rem;
-  --strip-item: 11rem;
+  /* The stage, the whole screen; the strip of logos over its middle while moving. */
+  grid-template-rows: minmax(0, 1fr);
+  /* The column's width, and one logo's place in it, under the selection frame. */
+  --strip: 24rem;
+  --strip-item: 6.8rem;
   height: 100%;
   min-height: 0;
 }
@@ -747,104 +745,112 @@ main {
   transition: none;
 }
 
-/* The bar: the category's systems, side by side, always there. The selected one sits still in
-   its middle, in a frame of its colour, the logos sliding under it: moving is only the track's
-   slide, which the Pi's compositor does by itself. Its ends fade into the screen. */
+/* The column: logos down the middle of the screen, fading toward its ends. */
 .system-rail {
-  /* The selection frame's tints, from the bar's own colour: set at each step (system.ts),
+  /* The selection frame's tints, from the strip's own colour: set at each step (system.ts),
      ahead of the page's. */
   --sys-10: color-mix(in srgb, var(--sys) 10%, transparent);
   --sys-30: color-mix(in srgb, var(--sys) 30%, transparent);
   --sys-70: color-mix(in srgb, var(--sys) 70%, transparent);
 
-  position: relative;
-  /* Over the dark that hides the page while moving. */
+  position: absolute;
   z-index: 3;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: var(--strip);
+  translate: -50% 0;
   overflow: hidden;
-  border-block: 1px solid rgb(255 255 255 / 6%);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 200ms ease,
+    visibility 0s linear 200ms;
+  will-change: opacity;
+  /* Near black under the logos; beyond the column the screen shows, dimmed, as a sneak peek. */
   background: linear-gradient(
     90deg,
     transparent,
-    rgb(3 5 11 / 70%) 20%,
-    rgb(3 5 11 / 70%) 80%,
+    rgb(3 5 11 / 94%) 12%,
+    rgb(3 5 11 / 94%) 88%,
     transparent
   );
 }
 
-/* Its ends fade into the screen: still layers over the logos (a mask over a moving track
-   glitches on a Pi's WebKit). */
+.systems.browsing .system-rail {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 120ms ease,
+    visibility 0s;
+}
+
+/* Its top and bottom fade into the dark behind it: still layers over the logos (a mask over
+   moving rows glitches on a Pi's WebKit). */
 .system-rail .edge {
   position: absolute;
   z-index: 2;
-  top: 0;
-  bottom: 0;
-  width: 22%;
+  left: 0;
+  right: 0;
+  height: 18%;
   pointer-events: none;
 }
 
-.system-rail .edge.left {
-  left: 0;
-  background: linear-gradient(90deg, var(--bg), transparent);
+.system-rail .edge.top {
+  top: 0;
+  background: linear-gradient(180deg, rgb(3 5 11 / 88%), rgb(3 5 11 / 0%));
 }
 
-.system-rail .edge.right {
-  right: 0;
-  background: linear-gradient(270deg, var(--bg), transparent);
+.system-rail .edge.bottom {
+  bottom: 0;
+  background: linear-gradient(0deg, rgb(3 5 11 / 88%), rgb(3 5 11 / 0%));
 }
 
-/* The selection: a frame fixed in the bar's middle, lit in the system's colour. */
+/* The selection: a frame fixed in the strip's middle, the logos sliding under it. Moving is
+   then only the strip's slide, which the Pi's compositor does by itself. */
 .system-rail::before {
   content: '';
   position: absolute;
   z-index: 0;
-  top: 0.35rem;
-  bottom: 0.35rem;
-  left: 50%;
-  width: var(--strip-item);
-  translate: -50% 0;
+  left: 0.6rem;
+  right: 0.6rem;
+  top: 50%;
+  height: var(--strip-item);
+  translate: 0 -50%;
   border: 1px solid var(--sys-70);
   border-radius: calc(var(--radius) * 1.6);
   background: linear-gradient(var(--sys-10), var(--sys-30));
-  box-shadow:
-    0 0 1.4rem var(--sys-30),
-    inset 0 0 0.8rem var(--sys-10);
+  box-shadow: 0 0 1.6rem var(--sys-30);
 }
 
-/* Under it, a lit edge pointing at the stage below. */
 .system-rail::after {
   content: '';
   position: absolute;
-  z-index: 3;
-  bottom: 0;
-  left: 50%;
-  width: calc(var(--strip-item) * 0.55);
-  height: 0.18rem;
-  translate: -50% 0;
+  left: 0.6rem;
+  top: 50%;
+  width: 0.22rem;
+  height: 3rem;
+  translate: 0 -50%;
   border-radius: 1rem;
   background: var(--sys);
-  box-shadow: 0 0 0.8rem var(--sys);
 }
 
-/* How many games the selected system has, in its frame under its logo. */
+/* Where the selection is in the list, under the frame. */
 .system-rail .where {
   position: absolute;
-  z-index: 3;
-  left: 50%;
-  bottom: 0.55rem;
-  translate: -50% 0;
+  z-index: 1;
+  right: 1.2rem;
+  top: 50%;
+  translate: 0 calc(var(--strip-item) / 2 - 1.3rem);
   font-family: var(--mono);
-  font-size: 0.56rem;
-  line-height: 1;
-  letter-spacing: 0.16em;
-  white-space: nowrap;
-  text-transform: uppercase;
-  color: var(--sys);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
 }
 
 .system-list {
   position: relative;
   z-index: 1;
-  height: 100%;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -864,23 +870,23 @@ main {
 .system-list li {
   /* Placed on the track, which runs past the list's ends when it loops. */
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: calc(var(--place) * var(--strip-item));
-  width: var(--strip-item);
+  top: calc(var(--place) * var(--strip-item));
+  left: 0;
+  right: 0;
   display: grid;
   place-items: center;
-  /* Room under the logo for the selected one's count of games. */
-  padding: 0.3rem 1.3rem 1.1rem;
-  opacity: 0.45;
+  /* Every logo the same height: the column's slide is all that moves. */
+  height: var(--strip-item);
+  padding: 0 2.2rem;
+  opacity: 0.68;
   transition: opacity 260ms ease;
 }
 
 /* Each logo centred in the same small box, as large as it fits in it. */
 .system-list .logo {
-  /* Set from its shape once loaded (logoHeight): every logo the same weight, smaller in the bar. */
-  height: calc(var(--logo-h, 2.4rem) * 0.72);
-  max-width: 100%;
+  /* Set from its shape once loaded (logoHeight): every logo the same weight. */
+  height: var(--logo-h, 2.4rem);
+  max-width: 12.5rem;
   object-fit: contain;
 }
 
@@ -918,7 +924,7 @@ main {
   display: block;
   max-width: 100%;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 1.4rem;
   letter-spacing: 0;
   color: var(--fg);
 }
@@ -3973,6 +3979,10 @@ kbd.pad {
 
 /* A narrow screen: the list gives way to the system, and secondary details go. */
 @media (max-width: 960px), (max-aspect-ratio: 4/3) {
+  .systems {
+    --strip-item: 8.5rem;
+  }
+
   /* Narrower: closer together. */
   .system-panel .stage-page {
     gap: 1rem 1.6rem;
