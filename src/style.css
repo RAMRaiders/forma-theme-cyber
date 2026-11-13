@@ -4163,25 +4163,8 @@ kbd.pad {
   content: '';
   position: absolute;
   inset: 0;
-  /* Lightest round the case, darker under the story and the dossier (enough for their words,
-     not so much that a dark logo is lost); the last, all over. */
-  background:
-    linear-gradient(
-      90deg,
-      rgb(4 6 12 / 35%) 0%,
-      rgb(4 6 12 / 20%) 30%,
-      rgb(4 6 12 / 55%) 48%,
-      rgb(4 6 12 / 58%) 72%,
-      rgb(4 6 12 / 55%) 100%
-    ),
-    linear-gradient(
-      180deg,
-      rgb(4 6 12 / 70%) 0%,
-      transparent 22%,
-      transparent 60%,
-      rgb(4 6 12 / 80%) 100%
-    ),
-    linear-gradient(rgb(4 6 12 / 15%), rgb(4 6 12 / 15%));
+  /* One even shade all over: the art shows the same everywhere, the words read on it. */
+  background: rgb(4 6 12 / 55%);
 }
 
 /* The game's video plays under the page, in the footage bay's window only: the fan art has a
@@ -5621,27 +5604,6 @@ kbd.pad {
   max-height: 4.6rem;
   margin: 0 auto;
   object-fit: contain;
-}
-
-/* A logo too dark for the page (black or deep colours, made for a box): the page behind it
-   lighter, a soft glow fading out with no edge. A layer behind it, in its own box: it takes
-   no room, so nothing else moves. */
-.dossier .head {
-  position: relative;
-  isolation: isolate;
-}
-
-.dossier .head.dark-logo::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  background: radial-gradient(
-    closest-side,
-    rgb(176 192 212 / 72%),
-    rgb(176 192 212 / 52%) 60%,
-    rgb(160 178 200 / 0%)
-  );
 }
 
 .dossier .head h2 {

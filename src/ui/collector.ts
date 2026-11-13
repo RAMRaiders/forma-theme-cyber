@@ -8,7 +8,6 @@ import { DEFAULT_BACK, DEFAULT_FRONT, hue } from './cover.js';
 import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
 import { loopScroll } from './loopscroll.js';
-import { darkLogo, knownDark } from './tone.js';
 import { Scan } from './scan.js';
 import { boot, scrapedMark } from './boot.js';
 import {
@@ -1508,8 +1507,6 @@ export class CollectorView {
           void (typeof img.decode === 'function' ? img.decode() : Promise.resolve())
             .then(() => {
               if (url === shot) borderOf(img);
-              // Its tone read now, while nothing moves: the dossier knows it at the step.
-              if (url === logo) darkLogo(img);
             })
             .catch(() => {});
         }
@@ -1871,16 +1868,6 @@ export class CollectorView {
     if (logo) {
       const img = picture(logo, 'logo');
       head.classList.add('has-logo');
-      // A logo too dark for the page (black, for a box): the page lighter behind it. At once
-      // when it was measured ahead (#keepNavPicsAround), else as it loads.
-      const tone = () => {
-        const dark = darkLogo(img);
-        if (dark !== null) head.classList.toggle('dark-logo', dark);
-      };
-      const dark = knownDark(logo);
-      if (dark !== undefined) head.classList.toggle('dark-logo', dark);
-      else if (img.complete) tone();
-      else img.addEventListener('load', tone, { once: true });
       img.addEventListener(
         'error',
         () => {
