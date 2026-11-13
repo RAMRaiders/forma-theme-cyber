@@ -4,7 +4,7 @@
  */
 
 /** Of a logo's solid pixels, under this share bright: too dark to read on a dark page. */
-const BRIGHT_SHARE = 0.2;
+const BRIGHT_SHARE = 0.35;
 /** A pixel is bright when its strongest channel is above this (0–255): a vivid red counts. */
 const BRIGHT = 140;
 const SAMPLE_W = 48;

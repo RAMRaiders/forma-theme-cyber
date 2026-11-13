@@ -4163,15 +4163,16 @@ kbd.pad {
   content: '';
   position: absolute;
   inset: 0;
-  /* Lightest round the case, darkest under the story and the dossier; the last, all over. */
+  /* Lightest round the case, darker under the story and the dossier (enough for their words,
+     not so much that a dark logo is lost); the last, all over. */
   background:
     linear-gradient(
       90deg,
       rgb(4 6 12 / 35%) 0%,
       rgb(4 6 12 / 20%) 30%,
-      rgb(4 6 12 / 62%) 48%,
-      rgb(4 6 12 / 78%) 72%,
-      rgb(4 6 12 / 86%) 100%
+      rgb(4 6 12 / 55%) 48%,
+      rgb(4 6 12 / 58%) 72%,
+      rgb(4 6 12 / 55%) 100%
     ),
     linear-gradient(
       180deg,
@@ -5637,8 +5638,8 @@ kbd.pad {
   inset: 0;
   background: radial-gradient(
     closest-side,
-    rgb(160 178 200 / 55%),
-    rgb(160 178 200 / 41%) 60%,
+    rgb(176 192 212 / 72%),
+    rgb(176 192 212 / 52%) 60%,
     rgb(160 178 200 / 0%)
   );
 }

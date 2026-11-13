@@ -14,6 +14,8 @@ describe('a logo too dark for a dark page', () => {
     expect(isDarkLogo(pixels([90, [0, 0, 0, 255]], [10, [0, 0, 0, 0]]))).toBe(true);
     // Navy, as After Burner's.
     expect(isDarkLogo(pixels([100, [20, 20, 110, 255]]))).toBe(true);
+    // Mostly black with a touch of colour: its black would be lost, so dark.
+    expect(isDarkLogo(pixels([75, [0, 0, 0, 255]], [25, [230, 40, 40, 255]]))).toBe(true);
   });
 
   it('is not one with a bright fill, black outline or not', () => {
