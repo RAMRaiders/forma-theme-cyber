@@ -12,16 +12,7 @@ import type {
 import { span } from './ui/perf.js';
 import { FormaError } from '@ramraiders/forma-sdk';
 
-import {
-  ALL_GAMES,
-  CATEGORIES,
-  InfoStore,
-  MAGAZINES,
-  type MakerLogo,
-  allGames,
-  group,
-  makerLogos
-} from './data/catalog.js';
+import { ALL_GAMES, CATEGORIES, InfoStore, MAGAZINES, allGames, group } from './data/catalog.js';
 import {
   DEFAULT_PREFS,
   MARGINS_SETTING,
@@ -151,8 +142,6 @@ export class App {
     play: (game, area) => this.forma.video.play(game.id, { area }),
     stopVideo: () => void this.forma.video.stop().catch(() => {}),
     // The game companies' logos first, then the hardware makers'.
-    company: (name) =>
-      makerLogos(name, this.#companies)[0] ?? this.forma.library.companyLogoUrl(name),
     accent: accentOf,
     system: (name) => {
       const system = this.#groups.flatMap((g) => g.systems).find((s) => s.summary.name === name);
@@ -211,7 +200,6 @@ export class App {
   #mode: 'home' | 'systems' | 'browse' = 'browse';
   #groups: Tile[] = [];
   /** Logos for the Collector's developers and publishers: game companies', then makers'. */
-  #companies: MakerLogo[] = [];
   #shortcuts: Shortcut[] = SHORTCUTS;
 
   #views: ViewInfo[] = [];
@@ -260,9 +248,6 @@ export class App {
   }
 
   async start(): Promise<void> {
-    void Promise.all([this.infos.companies(), this.infos.makers()]).then(([games, makers]) => {
-      this.#companies = [...games, ...makers];
-    });
     this.forma.input.on((e) => this.#onInput(e));
     this.forma.events.on('library:changed', () => {
       this.#reloadSoon();
@@ -718,7 +703,7 @@ export class App {
       this.#mode === 'home'
         ? [dpad('all'), 'Category']
         : systems
-          ? [dpad('h'), 'System']
+          ? [dpad('all'), 'System']
           : [dpad('v'), games ? 'Game' : 'Browse'],
       ['A', games ? 'Play' : systems ? 'Games' : 'Open'],
       ...(collector ? [[dpad('h'), 'Turn'] as [Element, string]] : []),

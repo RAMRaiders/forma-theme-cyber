@@ -8,7 +8,6 @@ import { DEFAULT_BACK, DEFAULT_FRONT, hue } from './cover.js';
 import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
 import { loopScroll } from './loopscroll.js';
-import { darkLogo, knownDark } from './tone.js';
 import { Scan } from './scan.js';
 import { boot, scrapedMark } from './boot.js';
 import {
@@ -59,10 +58,8 @@ export interface CollectorOptions {
   /** The game as Forma has it now (its media just scraped, say), not the list's copy. */
   fresh?: (id: number) => Promise<Game | null>;
   achievements?: (game: Game) => Promise<Achievements | null>;
-  /** What the game has saved (Forma since SDK 1.35.0); its tile shows only when there are some. */
+  /** What the game has saved (Forma since SDK 1.35.0); its tile lights when there are some. */
   saves?: (game: Game) => Promise<GameSaves | null>;
-  /** A developer's or publisher's logo, from its name; `null` where Cyber has none. */
-  company?: (name: string) => string | null;
   /** The game's colour, from a small picture of it. */
   accent?: (url: string) => Promise<string | null>;
   /**
@@ -224,18 +221,19 @@ function picture(src: string, cls: string): HTMLImageElement {
  * step (the label's system logo, the dossier's flags and logos) blinked, and faded in again.
  */
 function keepPictures(from: ParentNode, parts: Element[]): void {
-  const shown = new Map<string, HTMLImageElement>();
+  // Every one shown, the same picture twice too (a developer that is also the publisher).
+  const shown = new Map<string, HTMLImageElement[]>();
   for (const img of from.querySelectorAll('img')) {
     const src = img.getAttribute('src');
-    if (src && img.complete && img.naturalWidth && !shown.has(src)) shown.set(src, img);
+    if (!src || !img.complete || !img.naturalWidth) continue;
+    shown.set(src, [...(shown.get(src) ?? []), img]);
   }
   if (!shown.size) return;
   for (const part of parts) {
     for (const img of part.querySelectorAll('img')) {
       const src = img.getAttribute('src');
-      const old = src ? shown.get(src) : undefined;
-      if (!old || !src) continue;
-      shown.delete(src);
+      const old = src ? shown.get(src)?.shift() : undefined;
+      if (!old) continue;
       old.className = img.className;
       img.replaceWith(old);
     }
@@ -286,7 +284,6 @@ export class CollectorView {
   /** Over it all while the scraper is on the selected game. */
   /** A scrape's new data in: shown by the game's boot, as on entering its list. */
   #aroundTimer: ReturnType<typeof setTimeout> | undefined;
-  #dossierFrame = 0;
   /** The TV's pictures loaded ahead (#keepNavPicsAround), the latest last. */
   readonly #navKept = new Map<string, HTMLImageElement>();
   readonly #scan = new Scan(async (id) => {
@@ -439,10 +436,10 @@ export class CollectorView {
     return this.#shelfH;
   }
 
-  /** The shelf's room above the first row, so any row can sit in the middle. */
+  /** The shelf's room above the first row, so any row can sit one row above the middle. */
   #measure(): void {
     const row = this.#rowRem * remPx();
-    const pad = Math.max(0, (this.#shelfHeight - row) / 2);
+    const pad = Math.max(0, (this.#shelfHeight - row) / 2 - row);
     if (pad === this.#pad) return;
     this.#pad = pad;
     // Where the selected row sits: the lens there.
@@ -562,7 +559,7 @@ export class CollectorView {
     this.#track.classList.toggle('held', held);
     const row = this.#rowRem * remPx();
     this.#measure();
-    // The selected row in the middle, at the ends of the list too; the rows glide there. Whole
+    // The selected row a row above the middle, at the ends of the list too; the rows glide there. Whole
     // pixels: text on a layer moved by a fraction of one shimmers.
     const total = this.#source?.total ?? 0;
     this.#place =
@@ -583,16 +580,10 @@ export class CollectorView {
       this.#labelNow();
       this.#previewedAt = now;
       // Its TV picture at once (shown as soon as decoded, at once when loaded ahead), not the
-      // last game's left there till the peek; and its achievements asked for already.
+      // last game's left there till the peek. Its details and achievements wait for the peek:
+      // built in the frame after each step, they held up the shelf's glide on a Pi.
       const game = this.selected;
-      if (game) {
-        this.#navPicFor(game);
-        void this.#achievementsOf(game);
-        // Its details (logo, words) the frame after: not waiting for the peek, and not in the
-        // step's own frame, which only moves the shelf.
-        cancelAnimationFrame(this.#dossierFrame);
-        this.#dossierFrame = requestAnimationFrame(() => this.#dossierFor(game));
-      }
+      if (game) this.#navPicFor(game);
     }
     // Held a while: racing through the list. Nothing is loaded (the TV blank, the dossier empty):
     // the TV shows the letter the shelf is at, and all comes for the game stopped at.
@@ -623,6 +614,7 @@ export class CollectorView {
       // once was one long frame on a Pi (measured: 80 ms), most of it the page restyling.
       this.#tintSelected(game);
       this.#labelNow();
+      void this.#achievementsOf(game);
       this.#inTurn(game, [
         () => this.#navPicFor(game),
         () => this.#dossierFor(game),
@@ -1508,8 +1500,6 @@ export class CollectorView {
           void (typeof img.decode === 'function' ? img.decode() : Promise.resolve())
             .then(() => {
               if (url === shot) borderOf(img);
-              // Its tone read now, while nothing moves: the dossier knows it at the step.
-              if (url === logo) darkLogo(img);
             })
             .catch(() => {});
         }
@@ -1871,16 +1861,6 @@ export class CollectorView {
     if (logo) {
       const img = picture(logo, 'logo');
       head.classList.add('has-logo');
-      // A logo too dark for the page (black, for a box): the page lighter behind it. At once
-      // when it was measured ahead (#keepNavPicsAround), else as it loads.
-      const tone = () => {
-        const dark = darkLogo(img);
-        if (dark !== null) head.classList.toggle('dark-logo', dark);
-      };
-      const dark = knownDark(logo);
-      if (dark !== undefined) head.classList.toggle('dark-logo', dark);
-      else if (img.complete) tone();
-      else img.addEventListener('load', tone, { once: true });
       img.addEventListener(
         'error',
         () => {
@@ -1912,16 +1892,6 @@ export class CollectorView {
     const tags = releaseOf(rom.version, rom.status);
     const regions = rom.regions.length ? rom.regions : codes(game.region);
     const languages = rom.languages.length ? rom.languages : codes(game.lang);
-    const company = (name: string | null) => {
-      if (!name) return null;
-      const src = this.#options.company?.(name);
-      if (!src) return name;
-      // The logo with its name beside it: a logo alone may not say whose it is.
-      const img = el('img', { class: 'company', src, alt: '', decoding: 'async' });
-      const line = el('span', { class: 'company-line' }, img, el('span', {}, name));
-      img.addEventListener('error', () => img.remove(), { once: true });
-      return line;
-    };
     const flags = (
       list: string[],
       table: Record<string, string>,
@@ -1950,8 +1920,8 @@ export class CollectorView {
       row('Genre', game.genre),
       row('Region', flags(flaggedRegions(regions), REGIONS, regionFlag)),
       // Who made it and who sold it, together.
-      row('Developer', company(game.developer)),
-      row('Publisher', company(game.publisher)),
+      row('Developer', game.developer),
+      row('Publisher', game.publisher),
       row('Released', released)
     );
     // The copy at hand: what kind it is, as released (a release, a prototype, a demo, homebrew,
@@ -1969,9 +1939,14 @@ export class CollectorView {
       row('Languages', flags(languages, LANGUAGES, languageFlag)),
       row('Integrity', dumpText(game.dump))
     );
-    // Each its own room, as if every row were there: the play record below never moves.
-    about?.classList.add('about');
-    dump?.classList.add('copy');
+    // Each its own room, as if every row were there, even with none: nothing below ever moves.
+    const room = (part: HTMLElement | null, name: string) => {
+      const kept = part ?? el('section', { class: 'part' });
+      kept.classList.add(name);
+      return kept;
+    };
+    const aboutRoom = room(about, 'about');
+    const dumpRoom = room(dump, 'copy');
     const record =
       section(
         'Play record',
@@ -1986,7 +1961,7 @@ export class CollectorView {
     const marks = this.#marks(game);
     this.#achievementsInto(game, marks);
     this.#savesInto(game, marks);
-    const parts = [head, marks, about, dump, alternate].filter((p): p is HTMLElement => p !== null);
+    const parts = [head, marks, aboutRoom, dumpRoom, alternate];
 
     return parts;
   }
@@ -2010,6 +1985,8 @@ export class CollectorView {
         !!game.players
       ),
       mark('manual', ICONS.manual, manual ? 'Manual' : 'No manual', manual),
+      // Faded until its saves are known, and when it has none: lit with their count.
+      mark('saves', ICONS.saves, 'No saves', false),
       cheevos,
       pegiMark(game)
     );
@@ -2050,7 +2027,7 @@ export class CollectorView {
     return saves;
   }
 
-  /** A tile for its saves beside its manual, once known, when it has some. */
+  /** Its saves' tile lit with their count, once known, when it has some. */
   #savesInto(game: Game, marks: HTMLElement): void {
     const saves = this.#savesOf(game);
     if (!saves) return;
@@ -2068,8 +2045,7 @@ export class CollectorView {
         'aria-label',
         `${what.join(' and ')}${s.latest ? `, the latest ${ago(s.latest)}` : ''}`
       );
-      marks.querySelector('.mark.saves')?.remove();
-      marks.querySelector('.mark.manual')?.after(tile);
+      marks.querySelector('.mark.saves')?.replaceWith(tile);
     });
   }
 

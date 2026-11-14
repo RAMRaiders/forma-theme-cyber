@@ -32,7 +32,7 @@ const BOARD_MS = 450;
 /** How long what was shown takes to fade, as the next system comes in. */
 const LEAVE_MS = 220;
 /** One logo's place in the strip (as `--strip-item` in style.css). */
-const STRIP_ITEM_REM = 11;
+const STRIP_ITEM_REM = 6.8;
 /** The strip of logos shows while moving, over the stage; this long after the last move it goes. */
 const DROP_MS = 1400;
 /** Steps closer together than this are the direction held: the strip then runs evenly. */
@@ -252,8 +252,8 @@ export class SystemView {
     this.#rail.append(
       this.#list,
       this.#where,
-      el('span', { class: 'edge left' }),
-      el('span', { class: 'edge right' })
+      el('span', { class: 'edge top' }),
+      el('span', { class: 'edge bottom' })
     );
     this.root.append(this.#rail, this.#panel);
     void infos.makers().then((makers) => {
@@ -402,16 +402,18 @@ export class SystemView {
    * from Forma, not yet its info's), so cheap at each step.
    */
   #railColour(system: CyberSystem, index: number): void {
-    const [rgb] = systemColours(
-      {
-        hues: system.hues,
-        consoleHues: system.consoleHues,
-        maker: system.summary.manufacturer,
-        category: system.category
-      },
+    // The logo's own colours (its maker's where it has none), not its console's: the frame
+    // lights in what the logo in it is drawn in.
+    const colours = systemColours(
+      { hues: system.hues, maker: system.summary.manufacturer, category: system.category },
       index
-    );
-    this.#rail.style.setProperty('--sys', `rgb(${rgb})`);
+    ).map((rgb) => `rgb(${rgb})`);
+    const style = this.#rail.style;
+    style.setProperty('--sys', colours[0]!);
+    // Four stops, the last colour again where the logo has fewer.
+    for (let n = 1; n <= 4; n++) {
+      style.setProperty(`--logo-${n}`, colours[Math.min(n, colours.length) - 1]!);
+    }
   }
 
   /** Stops the curiosity timer when the screen goes away. */
@@ -428,9 +430,9 @@ export class SystemView {
     clearTimeout(this.#shelfTimer);
   }
 
-  /** With more systems than the bar shows at once, the last ones come before the first. */
+  /** With more systems than the strip shows at once, the last ones come before the first. */
   #loops(): boolean {
-    const shown = this.#rail.clientWidth;
+    const shown = this.#rail.clientHeight;
     return shown > 0 && this.#systems.length >= Math.ceil(shown / (STRIP_ITEM_REM * remPx())) + 2;
   }
 
@@ -447,7 +449,7 @@ export class SystemView {
   #drawStripTraced(): void {
     const total = this.#systems.length;
     const loops = this.#loops();
-    const half = Math.ceil(this.#rail.clientWidth / (STRIP_ITEM_REM * remPx()) / 2) + 2;
+    const half = Math.ceil(this.#rail.clientHeight / (STRIP_ITEM_REM * remPx()) / 2) + 2;
     const first = loops ? this.#place - half : 0;
     const last = loops ? this.#place + half : total - 1;
     for (const [place, node] of this.#rows) {
@@ -469,18 +471,18 @@ export class SystemView {
   }
 
   /**
-   * The bar slides so the selected logo sits in its middle, under the selection frame, at the
+   * The strip slides so the selected logo sits in its middle, under the selection frame, at the
    * ends of the list too (a transform: the compositor's work, cheap on a Pi).
    */
   #centre(): void {
     const games = this.#systems[this.#selected]?.summary.gameCount ?? 0;
     this.#where.textContent = `${games.toLocaleString('en')} ${games === 1 ? 'game' : 'games'}`;
-    const bar = this.#rail.clientWidth;
-    if (bar === 0) return;
+    const strip = this.#rail.clientHeight;
+    if (strip === 0) return;
     const item = STRIP_ITEM_REM * remPx();
-    const x = this.#place * item + item / 2 - bar / 2;
+    const y = this.#place * item + item / 2 - strip / 2;
     // Whole pixels: text on a layer moved by a fraction of one shimmers.
-    this.#list.style.transform = `translateX(${-Math.round(x)}px)`;
+    this.#list.style.transform = `translateY(${-Math.round(y)}px)`;
   }
 
   #drawBoard(system: CyberSystem, delay: number): void {
