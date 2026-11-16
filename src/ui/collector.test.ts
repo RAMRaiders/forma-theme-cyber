@@ -465,6 +465,27 @@ describe('the Collector view', () => {
     expect(asked.filter((id) => id === 3)).toHaveLength(1);
   });
 
+  it('shows the achievements of the game a reload lands on, after the one shown is deleted', async () => {
+    const games = [1, 2, 3].map((n) => ({ ...game(n, `Game ${n}`, BOXED), raGameId: n }));
+    const { v } = await view(games, {
+      achievements: (g) => Promise.resolve({ earned: g.id, total: 10 } as never)
+    });
+    // Game 2's asked for ahead, as a neighbour: known before its panel goes up.
+    await vi.advanceTimersByTimeAsync(2100);
+    const left = new LazyList<Game>(
+      (offset, limit) =>
+        Promise.resolve({ items: games.slice(1).slice(offset, offset + limit), total: 2 }),
+      50
+    );
+    await left.start(0);
+    v.show(left, 0);
+    await vi.advanceTimersByTimeAsync(2100);
+    const tile = v.root.querySelector('.dossier .mark.cheevos')!;
+    expect(v.root.querySelector<HTMLElement>('.dossier')!.dataset.id).toBe('2');
+    expect(tile.classList.contains('on')).toBe(true);
+    expect(tile.textContent).toBe('2 / 10');
+  });
+
   it('keeps what kind of copy it is apart from its version', async () => {
     const rows = async (path: string) => {
       const { text } = await view([{ ...game(7, 'Tanglewood', BOXED), path }]);

@@ -2031,9 +2031,10 @@ export class CollectorView {
   #savesInto(game: Game, marks: HTMLElement): void {
     const saves = this.#savesOf(game);
     if (!saves) return;
-    const id = game.id;
+    // Into this game's own tiles, shown yet or not: when the list reloads onto another game the
+    // last one stays up until the new one's pictures load, and its saves are often known first.
     void saves.then((s) => {
-      if (!s || this.#dossier.dataset.id !== String(id)) return;
+      if (!s) return;
       const total = s.states + (s.battery ? 1 : 0);
       if (total === 0) return;
       const tile = mark('saves', ICONS.saves, total === 1 ? '1 save' : `${total} saves`, true);
@@ -2053,9 +2054,10 @@ export class CollectorView {
   #achievementsInto(game: Game, marks: HTMLElement): void {
     const progress = this.#achievementsOf(game);
     if (!progress) return;
-    const id = game.id;
+    // Into this game's own tiles, shown yet or not (see #savesInto): asked for ahead as a
+    // neighbour, they are known before the game's panel goes up after a delete.
     void progress.then((a) => {
-      if (!a || a.total === 0 || this.#dossier.dataset.id !== String(id)) return;
+      if (!a || a.total === 0) return;
       const tile = mark('cheevos', ICONS.cheevos, `${a.earned} / ${a.total}`, true);
       tile.setAttribute('aria-label', `${a.earned} of ${a.total} achievements`);
       marks.querySelector('.mark.cheevos')?.replaceWith(tile);
