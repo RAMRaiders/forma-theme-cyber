@@ -328,6 +328,12 @@ export class App {
    * if browsed to, so back climbs out the usual way.
    */
   async #openGame({ game, system }: NavGame): Promise<void> {
+    // In the list on screen (after a delete, the game beside it): chosen there, no list left.
+    if (this.#list && this.#mode === 'browse') {
+      this.#level.game = game;
+      await this.#load(true);
+      if (this.#gameView.selected?.id === game) return;
+    }
     const at = this.#groups.findIndex((g) => g.systems.some((s) => s.summary.name === system));
     const group = this.#groups[at];
     if (!group) return this.#notify('That game is not in Cyber’s lists');
@@ -379,8 +385,10 @@ export class App {
     // A system's games keep its board behind them; other views have none.
     if (this.#view !== CYBER_VIEW || target.shortcut) this.#backdrop.replaceChildren();
     const remembered = this.#level.index;
-    // A reload keeps to the game selected, wherever it now sorts: a scrape can rename it.
-    const follow = reload && this.#list ? this.#gameView.selected?.id : this.#level.game;
+    // A reload keeps to the game selected, wherever it now sorts (a scrape can rename it),
+    // unless Forma asked for another.
+    const follow =
+      this.#level.game ?? (reload && this.#list ? this.#gameView.selected?.id : undefined);
     // The same list, filtered or every game again since: shown, so the change is seen.
     const wasFiltered = reload && this.#list ? this.#page?.filtered === true : null;
     this.#level.game = undefined;

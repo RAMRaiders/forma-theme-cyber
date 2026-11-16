@@ -242,6 +242,23 @@ describe('the default theme', () => {
     await vi.waitFor(() => expect(text('.system-list li.selected .name')).toEqual(['Mega Drive']));
   });
 
+  it('chooses a game Forma names in the list on screen when it is there, staying in that list', async () => {
+    const { press, text, fire, backend } = await start();
+    await vi.waitFor(() => expect(text('.categories .tile h2').at(-2)).toBe('All games'));
+    const tiles = text('.categories .tile h2').length;
+    for (let i = 1; i < tiles - 1; i++) await press('right');
+    await press('confirm');
+    await vi.waitFor(() => expect(text('.games .row').length).toBeGreaterThan(2));
+    const third = text('.games .row')[2]!;
+    const [hit] = await backend.invoke<{ id: number; system: string }[]>('library_search', {
+      query: third
+    });
+    // As after deleting the one game a filter kept: the game beside it, in this same list.
+    fire('nav:game', { game: hit!.id, system: hit!.system });
+    await vi.waitFor(() => expect(text('.row.selected')).toEqual([third]));
+    expect(text('.crumb')).toEqual(['All games']);
+  });
+
   it('shows the Collector’s shelf when its list is narrowed down, and when Back undoes it', async () => {
     const { press, text, backend, root, fire } = await start();
     const [hit] = await backend.invoke<{ id: number; name: string }[]>('library_search', {
