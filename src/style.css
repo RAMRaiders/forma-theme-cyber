@@ -4946,7 +4946,14 @@ kbd.pad {
   transform: translateY(
     calc(clamp(-1, (var(--i) - var(--sel, 0)) * 1000, 1) * var(--spine-h) * 0.22)
   );
-  transition: transform 140ms ease-out;
+  transition:
+    transform 140ms ease-out,
+    opacity 160ms ease-out;
+}
+
+/* Its spine picture not decoded yet: out of sight until it is, then faded in, in its shape. */
+.spine-row.waiting {
+  opacity: 0;
 }
 
 .spine-row[aria-selected='true'] {
@@ -4958,7 +4965,7 @@ kbd.pad {
 /* Held: the rows glide by as they are, none growing and shrinking at every step. */
 .shelf .track.held .spine-row {
   transform: none;
-  transition: none;
+  transition: opacity 160ms ease-out;
 }
 
 .shelf .track.held .spine-row[aria-selected='true'] {
