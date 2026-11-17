@@ -38,6 +38,7 @@ import { SongCard } from './ui/music.js';
 import { preload } from './ui/preload.js';
 import { STAGE_PICTURES, accentOf } from './ui/stage.js';
 import { SystemView } from './ui/system.js';
+import { poke } from './ui/idle.js';
 import { rest } from './ui/rest.js';
 
 /** One level of the path, and where the selection was, so going back returns to it. */
@@ -248,7 +249,12 @@ export class App {
   }
 
   async start(): Promise<void> {
-    this.forma.input.on((e) => this.#onInput(e));
+    // What only decorates holds still a while after the last button (idle.ts).
+    poke();
+    this.forma.input.on((e) => {
+      poke();
+      this.#onInput(e);
+    });
     this.forma.events.on('library:changed', () => {
       this.#reloadSoon();
     });
