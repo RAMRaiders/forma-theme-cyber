@@ -693,7 +693,7 @@ export class CollectorView {
         node.classList.remove('tinted');
         if (game) this.#spineColour(game, node);
       }
-      // Which is selected, for screen readers only: the lens shows it (no style follows it).
+      // Which is selected: for screen readers, and the selected spine stands out bigger (CSS).
       const selected = i === (loops ? at : this.#selected);
       if (node.getAttribute('aria-selected') !== String(selected)) {
         node.setAttribute('aria-selected', String(selected));
