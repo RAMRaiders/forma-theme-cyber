@@ -138,6 +138,9 @@ const spineFits = new Map<string, ShelfFit>();
 const MOST_SPINE_SCALE = 1.3;
 /** What a short spine grows towards: a little longer than the usual. */
 const GROWN_SPINE_REM = SPINE_LEN_REM * 1.2;
+/** The thinnest a shelf's rows are drawn, for spines too long for the room (a Mega CD's jewel
+ * case, some 21 times as long as wide): thinner rows, not squashed pictures. */
+const LEAST_SPINE_SCALE = 0.6;
 
 /** Row height of the shelf in rem: each a box on its side. */
 const ROW_REM = 3.2;
@@ -202,6 +205,8 @@ const UNDER_REM = 1.6;
 /** Until its pictures say otherwise: a Mega Drive case's shape. */
 const FRONT_RATIO = 0.72;
 const SPINE_RATIO = 0.14;
+/** The thinnest case, its depth over its height: a Japanese Mega CD's jewel case is about 0.04. */
+const SLIMMEST_DEPTH = 0.035;
 
 /** A pose: how far the box is turned for it, in degrees; `null`: the box away, its cartridge out. */
 interface Pose {
@@ -744,12 +749,19 @@ export class CollectorView {
       return [parts[0]!, logo, parts[1]!];
     }
     node.classList.remove('lying');
+    node.style.removeProperty('--shape');
     if (!src) return parts;
     const img = picture(src, 'spine-pic');
-    // A spine along its box's top (a Super Nintendo's) already lies as the row does.
+    // A spine along its box's top (a Super Nintendo's) already lies as the row does. Its shape
+    // lets style.css draw a much slenderer spine than the row (a Mega CD jewel case's among
+    // longboxes) thinner, not squashed.
     img.addEventListener(
       'load',
-      () => node.classList.toggle('lying', img.naturalWidth > img.naturalHeight),
+      () => {
+        const { naturalWidth: w, naturalHeight: h } = img;
+        node.classList.toggle('lying', w > h);
+        if (w && h) node.style.setProperty('--shape', (Math.max(w, h) / Math.min(w, h)).toFixed(2));
+      },
       { once: true }
     );
     img.addEventListener(
@@ -1799,7 +1811,7 @@ export class CollectorView {
     // `lying`: a spine along the top, its height over its length (depth from the box's width).
     const size = { ratio: FRONT_RATIO, depth: SPINE_RATIO, lying: 0 };
     const resize = () => {
-      if (size.lying) size.depth = clamp(size.lying * size.ratio, 0.05, 0.3);
+      if (size.lying) size.depth = clamp(size.lying * size.ratio, SLIMMEST_DEPTH, 0.3);
       const display = box.closest<HTMLElement>('.display');
       const h = display?.clientHeight
         ? boxHeight(
@@ -1861,7 +1873,7 @@ export class CollectorView {
             const lying = img.naturalWidth > img.naturalHeight;
             box.classList.toggle('lying', lying);
             size.lying = lying ? img.naturalHeight / img.naturalWidth : 0;
-            size.depth = clamp(img.naturalWidth / img.naturalHeight, 0.05, 0.3);
+            size.depth = clamp(img.naturalWidth / img.naturalHeight, SLIMMEST_DEPTH, 0.3);
             resize();
           }
         },
@@ -2185,7 +2197,13 @@ export function shelfFit(shape: number, room: number, base: number): ShelfFit {
   const natural = SPINE_H_REM * shape;
   const length = shelfShape(shape, room / base);
   if (natural >= SPINE_LEN_REM || length < natural) {
-    return { length: Math.round(length * base * 100) / 100, scale: base };
+    // Longer than the room lets it be: its rows thinner, so the picture keeps its shape.
+    const squeezed = natural * SPINE_SQUEEZE;
+    const thin = squeezed > length ? clamp(length / squeezed, LEAST_SPINE_SCALE, 1) : 1;
+    return {
+      length: Math.round(length * base * 100) / 100,
+      scale: Math.round(base * thin * 1000) / 1000
+    };
   }
   const target = Math.min(GROWN_SPINE_REM, (room - 4) / base);
   const grow = clamp(target / natural, 1, MOST_SPINE_SCALE / base);
