@@ -4,5 +4,11 @@
   "specs": {
     "generation": "7th",
     "lifetime": "2006–2017 (11 years)"
-  }
+  },
+  "curiosities": [
+    "The first models carried the PS2's own chips, so they played PS2 discs too.",
+    "Its Cell processor has a main core and eight helper cores, one switched off so more chips pass testing.",
+    "Its OtherOS option let owners install Linux, until a 2010 update took it away.",
+    "The US Air Force built a supercomputer, the Condor Cluster, from 1,760 of them."
+  ]
 }
