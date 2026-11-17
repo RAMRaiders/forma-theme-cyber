@@ -4844,9 +4844,9 @@ kbd.pad {
   text-overflow: ellipsis;
 }
 
-/* The selection: a still frame in the shelf's middle, the rows gliding under it, those above
-   and below it dimmed by two still panels (collector.ts, the lens). Nothing on a row changes as
-   the selection moves: only the track does. */
+/* The selection: in the shelf's middle, the rows gliding under it, those above and below it
+   dimmed by two still panels (collector.ts, the lens). The selected spine itself stands out a
+   little bigger, once the steps pause: while a direction is held only the track moves. */
 .shelf .lens {
   position: absolute;
   z-index: 2;
@@ -4878,9 +4878,27 @@ kbd.pad {
 .shelf .lens .frame {
   top: calc(var(--pad, 50%) - 0.15rem);
   height: calc(var(--spine-h) + 0.3rem);
-  border: 1px solid var(--game);
-  border-radius: 0.25rem;
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 10%);
+}
+
+/* Bigger, lifted off the shelf: a transform, the compositor's, the row's look unchanged. */
+.spine-row {
+  transition: transform 140ms ease-out;
+}
+
+.spine-row[aria-selected='true'] {
+  z-index: 1;
+  transform: scale(1.06);
+  box-shadow: 0 0.35rem 1rem rgb(0 0 0 / 70%);
+}
+
+/* Held: the rows glide by as they are, none growing and shrinking at every step. */
+.shelf .track.held .spine-row {
+  transition: none;
+}
+
+.shelf .track.held .spine-row[aria-selected='true'] {
+  transform: none;
+  box-shadow: none;
 }
 
 /* The showcase: label, case, poses, prints. */
