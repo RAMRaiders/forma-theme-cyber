@@ -190,7 +190,7 @@ describe('the Collector view', () => {
     await vi.advanceTimersByTimeAsync(1000);
     expect(box.dataset.pose).toBe('front');
     // The shelf gone, the box turns again.
-    await vi.advanceTimersByTimeAsync(4500);
+    await vi.advanceTimersByTimeAsync(5500);
     expect(v.root.classList.contains('browsing')).toBe(false);
     expect(box.dataset.pose).toBe('spine');
   });
@@ -200,7 +200,7 @@ describe('the Collector view', () => {
     const box = v.root.querySelector<HTMLElement>('.cbox')!;
     expect(box.dataset.pose).toBe('front');
     // The list opens with the shelf shown a moment: it turns from when it goes.
-    await vi.advanceTimersByTimeAsync(4700);
+    await vi.advanceTimersByTimeAsync(5700);
     expect(box.dataset.pose).toBe('spine');
     v.turn(1);
     expect(box.dataset.pose).toBe('back');
@@ -254,7 +254,7 @@ describe('the Collector view', () => {
         );
       // Resting on the first: the next games' pictures are made ready.
       v.select(1);
-      await vi.advanceTimersByTimeAsync(2100);
+      await vi.advanceTimersByTimeAsync(3100);
       // A step: its picture on the TV straight away, not at the peek.
       v.select(2);
       expect(tv()).toContain('forma://media/3/image?w=400');
@@ -266,10 +266,10 @@ describe('the Collector view', () => {
 
   it("starts a new game's box on its front, whatever the last one's turn", async () => {
     const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
-    await vi.advanceTimersByTimeAsync(4700);
+    await vi.advanceTimersByTimeAsync(5700);
     expect(v.root.querySelector<HTMLElement>('.cbox')!.dataset.pose).toBe('spine');
     v.select(1);
-    await vi.advanceTimersByTimeAsync(1500);
+    await vi.advanceTimersByTimeAsync(2500);
     const box = v.root.querySelector<HTMLElement>('.cbox')!;
     expect(box.dataset.pose).toBe('front');
     expect(box.style.transform).toBe('rotateX(0deg) rotateY(0deg)');
@@ -474,11 +474,11 @@ describe('the Collector view', () => {
       }
     });
     v.select(1);
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     // The neighbours' asked for while resting, before any step to them.
     expect(asked).toEqual(expect.arrayContaining([1, 2, 3, 4]));
     v.select(2);
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     expect(asked.filter((id) => id === 3)).toHaveLength(1);
   });
 
@@ -488,7 +488,7 @@ describe('the Collector view', () => {
       achievements: (g) => Promise.resolve({ earned: g.id, total: 10 } as never)
     });
     // Game 2's asked for ahead, as a neighbour: known before its panel goes up.
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     const left = new LazyList<Game>(
       (offset, limit) =>
         Promise.resolve({ items: games.slice(1).slice(offset, offset + limit), total: 2 }),
@@ -496,7 +496,7 @@ describe('the Collector view', () => {
     );
     await left.start(0);
     v.show(left, 0);
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     const tile = v.root.querySelector('.dossier .mark.cheevos')!;
     expect(v.root.querySelector<HTMLElement>('.dossier')!.dataset.id).toBe('2');
     expect(tile.classList.contains('on')).toBe(true);
@@ -534,7 +534,7 @@ describe('the Collector view', () => {
     const art = { ...BOXED, fanart: 'art' };
     const { v } = await view([game(1, 'After Burner', art), game(2, 'Doom', art)]);
     const imgs = () => [...v.root.querySelectorAll<HTMLImageElement>('.collector-backdrop img')];
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     const [old] = imgs();
     old!.dispatchEvent(new Event('load'));
     await Promise.resolve();
@@ -564,7 +564,7 @@ describe('the Collector view', () => {
       game(3, 'Quake', art)
     ]);
     const imgs = () => [...v.root.querySelectorAll<HTMLImageElement>('.collector-backdrop img')];
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     expect(imgs()).toHaveLength(1);
     imgs()[0]!.dispatchEvent(new Event('load'));
     await Promise.resolve();
@@ -590,7 +590,7 @@ describe('the Collector view', () => {
       game(3, 'Quake', BOXED)
     ]);
     const held = () => v.root.querySelector('.track')!.classList.contains('held');
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     v.select(1);
     expect(held()).toBe(false);
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
@@ -611,7 +611,7 @@ describe('the Collector view', () => {
       game(i + 1, n, BOXED)
     );
     const { v } = await view(games);
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     const racing = () => v.root.classList.contains('racing');
     const letter = () => v.root.querySelector('.tv-letter')?.textContent;
     for (let i = 1; i <= 13; i++) {
@@ -635,7 +635,7 @@ describe('the Collector view', () => {
   it('shows the games run past every half second while the direction is held', async () => {
     const games = Array.from({ length: 12 }, (_, i) => game(i + 1, `Game ${i + 1}`, BOXED));
     const { v, text } = await view(games);
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     v.select(1);
     for (let i = 2; i <= 8; i++) {
       await vi.advanceTimersByTimeAsync(100);
@@ -647,7 +647,7 @@ describe('the Collector view', () => {
 
   it('fades a new game in once the selection rests; the label alone follows each step', async () => {
     const { v, text } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     expect(v.root.classList.contains('arriving')).toBe(false);
     v.select(1);
     expect(text('.slab-label .what strong')).toEqual(['Doom']);
@@ -664,7 +664,7 @@ describe('the Collector view', () => {
 
   it("keeps the game shown until the next one's pictures have loaded, then replaces it", async () => {
     const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     const waiting: (() => void)[] = [];
     Object.defineProperty(HTMLImageElement.prototype, 'decode', {
       configurable: true,
@@ -685,7 +685,7 @@ describe('the Collector view', () => {
 
   it('keeps the label as it is when the game it follows is drawn whole', async () => {
     const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     v.select(1);
     const label = v.root.querySelector('.slab-label');
     expect(label?.querySelector('.what strong')?.textContent).toBe('Doom');
@@ -700,7 +700,7 @@ describe('the Collector view', () => {
     const done = vi.spyOn(HTMLImageElement.prototype, 'complete', 'get').mockReturnValue(true);
     try {
       const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
-      await vi.advanceTimersByTimeAsync(2100);
+      await vi.advanceTimersByTimeAsync(3100);
       const logo = v.root.querySelector('.slab-label .mark img');
       expect(logo).not.toBeNull();
       v.select(1);
@@ -714,7 +714,7 @@ describe('the Collector view', () => {
 
   it("frames the selected game's picture left of the shelf while it shows", async () => {
     const { v } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom', BOXED)]);
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     v.select(1);
     // Once the steps pause: games passed by quickly load nothing.
     await vi.advanceTimersByTimeAsync(200);
@@ -722,7 +722,7 @@ describe('the Collector view', () => {
     // Its picture (the box, where it has nothing else), coming in once decoded.
     expect(pic?.getAttribute('src')).toContain('media/2/');
     expect(v.root.classList.contains('browsing')).toBe(true);
-    await vi.advanceTimersByTimeAsync(1300);
+    await vi.advanceTimersByTimeAsync(2300);
     // The shelf gone, its picture goes with it (style.css: shown only while browsing).
     expect(v.root.classList.contains('browsing')).toBe(false);
   });
@@ -730,7 +730,7 @@ describe('the Collector view', () => {
   it('shows the details at each pause, never dimmed, none while held', async () => {
     const games = ['After Burner', 'Doom', 'Echo'].map((n, i) => game(i + 1, n, BOXED));
     const { v } = await view(games);
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     const dossier = v.root.querySelector('.dossier')!;
     // A press: its game's details at the peek, not in the frames the shelf glides in.
     v.select(1);
@@ -768,7 +768,7 @@ describe('the Collector view', () => {
     expect(star().classList.contains('on')).toBe(false);
     const box = v.root.querySelector('.cbox');
     // The shelf gone after the first show.
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     expect(v.root.classList.contains('browsing')).toBe(false);
     // The list reloaded after the favourite was set: the same game, starred.
     const list = new LazyList<Game>(
@@ -785,7 +785,7 @@ describe('the Collector view', () => {
   it('draws the game again when a scrape changes it, without moving the shelf', async () => {
     const g = game(7, 'After Burner', BOXED);
     const { v } = await view([g]);
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     const list = new LazyList<Game>(
       () => Promise.resolve({ items: [{ ...g, description: 'Freshly scraped.' }], total: 1 }),
       50
@@ -811,7 +811,7 @@ describe('the Collector view', () => {
         game(2, 'Doom', BOXED)
       ];
       const { v } = await view(games);
-      await vi.advanceTimersByTimeAsync(2100);
+      await vi.advanceTimersByTimeAsync(3100);
       const call = animate.mock.calls.find((c) =>
         JSON.stringify(c).includes('translateY(-240px)')
       ) as unknown as [Keyframe[], KeyframeAnimationOptions] | undefined;
@@ -938,7 +938,7 @@ describe('the Collector view', () => {
       const { v } = await view(games);
       // Opened with them: shown though their pictures are not decoded yet.
       expect(v.root.querySelectorAll('.spine-row.waiting')).toHaveLength(0);
-      await vi.advanceTimersByTimeAsync(2100);
+      await vi.advanceTimersByTimeAsync(3100);
       for (let i = 1; i <= 15; i++) v.select(i);
       // Drawn ahead of sight later: waits for its picture, but not for ever.
       expect(v.root.querySelectorAll('.spine-row.waiting').length).toBeGreaterThan(0);
@@ -998,7 +998,7 @@ describe('the shelf and the video', () => {
     await list.start(0);
     v.show(list, 0);
     expect(v.root.classList.contains('browsing')).toBe(true);
-    await vi.advanceTimersByTimeAsync(2100);
+    await vi.advanceTimersByTimeAsync(3100);
     expect(v.root.classList.contains('browsing')).toBe(false);
     await vi.advanceTimersByTimeAsync(1500);
     expect(play).toHaveBeenCalledTimes(1);

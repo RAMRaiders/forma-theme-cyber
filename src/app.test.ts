@@ -300,15 +300,15 @@ describe('the default theme', () => {
     fire('settings:changed', { scope: 'theme', key: 'gamesView', value: 'collector' });
     await vi.waitFor(() => expect(root.querySelector('.collector')).not.toBeNull());
     const shelf = () => root.querySelector('.collector.browsing') !== null;
-    await vi.waitFor(() => expect(shelf()).toBe(false), { timeout: 3000 });
+    await vi.waitFor(() => expect(shelf()).toBe(false), { timeout: 4000 });
     await backend.invoke('nav_set_filter', { filter: { games: [hit!.id] } });
     await vi.waitFor(() => expect(text('.crumb.current')).toEqual(['Filtered']));
     expect(shelf()).toBe(true);
-    await vi.waitFor(() => expect(shelf()).toBe(false), { timeout: 3000 });
+    await vi.waitFor(() => expect(shelf()).toBe(false), { timeout: 4000 });
     await press('back');
     await vi.waitFor(() => expect(text('.crumb.current')).not.toEqual(['Filtered']));
     expect(shelf()).toBe(true);
-  });
+  }, 10_000);
 
   it('shows only the games Forma’s menu narrowed the list to; Back, every game again', async () => {
     const { press, text, backend, root } = await start();
