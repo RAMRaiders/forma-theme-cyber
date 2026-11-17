@@ -54,6 +54,12 @@ const PAGE = 100;
 const CONTEXT_DELAY_MS = 120;
 /** A screen that loads faster than this never shows the loader: no flash on quick moves. */
 const LOADER_DELAY_MS = 150;
+/** A page asked for ahead is used this long after; older, it is asked for again. */
+const PREFETCH_FRESH_MS = 60_000;
+
+function pageKey(view: string, path: string[], offset: number, limit: number): string {
+  return JSON.stringify([view, path, offset, limit]);
+}
 /**
  * Forma's systems view: Cyber shows it as categories, then systems, then that system's games.
  * It is the one view Cyber shows (its theme.json says so): Forma offers no other.
@@ -210,6 +216,8 @@ export class App {
   #stack: Level[] = [{ path: [], index: 0 }];
   /** Where each list was left, so it opens there again until Forma restarts. */
   readonly #places = new Map<string, Pick<Level, 'index' | 'game'>>();
+  /** Pages asked for ahead (the system selected on the systems page): used once, if fresh. */
+  readonly #prefetched = new Map<string, { at: number; page: Promise<Browse> }>();
   #page: Browse | null = null;
   #cards: Card[] = [];
   #list: LazyList<Game> | null = null;
@@ -258,6 +266,7 @@ export class App {
       this.#onInput(e);
     });
     this.forma.events.on('library:changed', () => {
+      this.#prefetched.clear();
       this.#reloadSoon();
     });
     // The scraper on the selected game: Cyber shows it at work, then what it brought.
@@ -270,6 +279,7 @@ export class App {
     });
     // Views change with collections too: the shortcuts' counts follow.
     this.forma.events.on('views:changed', () => {
+      this.#prefetched.clear();
       void this.#loadViews();
       this.#reloadSoon();
     });
@@ -365,15 +375,19 @@ export class App {
    * The Forma view and path the current level browses. Cyber's category is its own level, not
    * part of Forma's path; a shortcut's level browses the view it opens.
    */
-  #target(): { view: string; path: string[]; shortcut: string | null } {
-    const [first, ...rest] = this.#level.path;
+  #target(levelPath = this.#level.path): {
+    view: string;
+    path: string[];
+    shortcut: string | null;
+  } {
+    const [first, ...rest] = levelPath;
     if (this.#view === CYBER_VIEW && first?.startsWith(SHORTCUT)) {
       const id = first.slice(SHORTCUT.length);
       return { view: SHORTCUT_VIEWS[id]?.view ?? id, path: rest, shortcut: id };
     }
     return {
       view: this.#view,
-      path: this.#view === CYBER_VIEW ? rest : this.#level.path,
+      path: this.#view === CYBER_VIEW ? rest : levelPath,
       shortcut: null
     };
   }
@@ -404,13 +418,20 @@ export class App {
     const { view, path } = target;
     const loading = this.#loading('Loading games…');
     try {
-      const first = await this.forma.nav.browse(view, path, { offset: 0, limit: PAGE });
+      const first = await this.#browse(view, path, 0);
       this.#page = first;
       const listing = first.listing;
       if (listing.kind === 'games') {
+        // Its first page is the one just loaded: not asked for again.
+        let firstPage: typeof listing | null = listing;
         const list = new LazyList<Game>(
           async (offset, limit) => {
-            const page = await this.forma.nav.browse(view, path, { offset, limit });
+            if (offset === 0 && firstPage) {
+              const page = firstPage;
+              firstPage = null;
+              return page;
+            }
+            const page = await this.#browse(view, path, offset, limit);
             return page.listing.kind === 'games' ? page.listing : { items: [], total: 0 };
           },
           PAGE,
@@ -426,6 +447,8 @@ export class App {
         // under it (built under the boot, they also made it stutter on a Pi).
         const booting = Math.max(0, this.#bootedUntil - performance.now());
         this.#bootedUntil = 0;
+        // The boot is not loading: no loader while it plays.
+        loading();
         if (booting > 0) {
           await new Promise((done) => setTimeout(done, booting));
           if (round !== this.#loadRound) return;
@@ -547,6 +570,41 @@ export class App {
    * Shows the loader in place of the screen if loading takes long enough to notice. Returns what
    * ends it: the screen that replaces it, or nothing (on an error, the loader just goes).
    */
+  /** A page of a list: the one asked for ahead if it is there and fresh, else Forma's now. */
+  #browse(view: string, path: string[], offset: number, limit = PAGE): Promise<Browse> {
+    const key = pageKey(view, path, offset, limit);
+    const ahead = this.#prefetched.get(key);
+    this.#prefetched.delete(key);
+    const now = () => this.forma.nav.browse(view, path, { offset, limit });
+    if (!ahead || performance.now() - ahead.at > PREFETCH_FRESH_MS) return now();
+    return ahead.page.catch(now);
+  }
+
+  /**
+   * The games of the system selected on the systems page, asked for while it is only selected
+   * (its first page and the one it was left at): opening it then plays its boot and shows them,
+   * nothing left to load.
+   */
+  #prefetchSystem(): void {
+    const system = this.#systemView.selected;
+    if (this.#mode !== 'systems' || !system) return;
+    const levelPath = [...this.#level.path, system.summary.name];
+    const { view, path } = this.#target(levelPath);
+    const left = this.#places.get(levelPath.join('/'))?.index ?? 0;
+    for (const offset of new Set([0, Math.floor(left / PAGE) * PAGE])) {
+      const key = pageKey(view, path, offset, PAGE);
+      const had = this.#prefetched.get(key);
+      if (had && performance.now() - had.at <= PREFETCH_FRESH_MS) continue;
+      const page = this.forma.nav.browse(view, path, { offset, limit: PAGE });
+      page.catch(() => {});
+      this.#prefetched.set(key, { at: performance.now(), page });
+    }
+    // Only the latest few kept: the systems gone past are not opened.
+    while (this.#prefetched.size > 6) {
+      this.#prefetched.delete(this.#prefetched.keys().next().value!);
+    }
+  }
+
   #loading(label: string): () => void {
     const timer = setTimeout(() => this.#main.replaceChildren(loader(label)), LOADER_DELAY_MS);
     return () => {
@@ -846,6 +904,7 @@ export class App {
               ? 'games'
               : null;
       this.forma.shell.setContext({ view: this.#view, system, game, list }).catch(() => {});
+      this.#prefetchSystem();
     }, CONTEXT_DELAY_MS);
   }
 

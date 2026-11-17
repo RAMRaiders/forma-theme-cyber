@@ -109,6 +109,21 @@ describe('the default theme', () => {
     expect(root.querySelector('.trail .crumb-logo')).toBeNull();
   });
 
+  it("asks for the selected system's games ahead, so opening it loads nothing", async () => {
+    const { press, text, calls } = await start();
+    await press('confirm');
+    expect(text('.trail .crumb')).toEqual(['Consoles']);
+    // The selection resting on the NES: its games asked for already.
+    await vi.waitFor(() => expect(calls).toContain('nav_browse'));
+    await new Promise((r) => setTimeout(r, 200));
+    const asked = calls.filter((c) => c === 'nav_browse').length;
+    await press('confirm');
+    await vi.waitFor(() =>
+      expect(text('.trail .crumb')).toEqual(['Consoles', 'Nintendo Entertainment System'])
+    );
+    expect(calls.filter((c) => c === 'nav_browse').length).toBe(asked);
+  });
+
   it('goes category → system → games, and back to where it was', async () => {
     const { press, text, root, calls } = await start([], {}, infos, true);
     await press('confirm');
