@@ -468,6 +468,8 @@ export class SystemView {
         this.#rows.delete(place);
       }
     }
+    // The logos round the selected one make room for it (style.css).
+    this.#list.style.setProperty('--sel', String(this.#place));
     for (let place = first; place <= last; place++) {
       let node = this.#rows.get(place);
       if (!node) {

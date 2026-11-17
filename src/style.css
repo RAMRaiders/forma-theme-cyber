@@ -899,7 +899,11 @@ main {
   height: var(--strip-item);
   padding: 0 2.2rem;
   opacity: 0.68;
-  transition: opacity 260ms ease;
+  /* Those above the selected logo a little up, those below a little down: room round it. */
+  transform: translateY(calc(clamp(-1, (var(--place) - var(--sel, 0)) * 1000, 1) * 0.6rem));
+  transition:
+    opacity 260ms ease,
+    transform 260ms cubic-bezier(0.22, 0.7, 0.3, 1);
 }
 
 /* Each logo centred in the same small box, as large as it fits in it. */
@@ -4935,8 +4939,13 @@ kbd.pad {
   height: calc(var(--spine-h) + 0.3rem);
 }
 
-/* Bigger, lifted off the shelf: a transform, the compositor's, the row's look unchanged. */
+/* Bigger, lifted off the shelf: a transform, the compositor's, the row's look unchanged. The
+   rows above it move up a little and those below down (by their place, --i, against the
+   selected one's, --sel), so it stands clear of them. */
 .spine-row {
+  transform: translateY(
+    calc(clamp(-1, (var(--i) - var(--sel, 0)) * 1000, 1) * var(--spine-h) * 0.22)
+  );
   transition: transform 140ms ease-out;
 }
 
@@ -4948,6 +4957,7 @@ kbd.pad {
 
 /* Held: the rows glide by as they are, none growing and shrinking at every step. */
 .shelf .track.held .spine-row {
+  transform: none;
   transition: none;
 }
 
