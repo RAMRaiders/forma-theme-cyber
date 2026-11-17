@@ -929,6 +929,21 @@ describe('the Collector view', () => {
     expect(row('Kolibri').classList.contains('marked')).toBe(false);
   });
 
+  it('takes a spine picture shown before back, decoded, when its game shows again', async () => {
+    const { v, list } = await view([game(1, 'After Burner', BOXED), game(2, 'Doom')]);
+    const first = v.root.querySelector<HTMLImageElement>('.spine-row .spine-pic')!;
+    Object.defineProperty(first, 'naturalWidth', { value: 96 });
+    Object.defineProperty(first, 'naturalHeight', { value: 680 });
+    Object.defineProperty(first, 'complete', { value: true });
+    // The list shown again: the same picture, in place at once, in its shape.
+    v.show(list, 1);
+    const again = v.root.querySelector<HTMLImageElement>('.spine-row .spine-pic')!;
+    expect(again).toBe(first);
+    const row = again.closest('.spine-row') as HTMLElement;
+    expect(row.classList.contains('waiting')).toBe(false);
+    expect(row.style.getPropertyValue('--shape')).toBe('7.08');
+  });
+
   it('keeps every game on the shelf, the selected one pulled out', async () => {
     const { v, text } = await view([
       game(1, 'After Burner', BOXED),

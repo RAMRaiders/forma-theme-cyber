@@ -234,6 +234,27 @@ function picture(src: string, cls: string): HTMLImageElement {
   return el('img', { src, alt: '', decoding: 'async', class: cls });
 }
 
+/** Spine pictures kept, decoded, after their rows go: about two lists' worth of scrolling. */
+const SPINE_POOL = 160;
+const spinePool = new Map<string, HTMLImageElement>();
+
+/** A row's spine picture, kept for when its game comes back into sight (newest last). */
+function keepSpine(row: Element): void {
+  const img = row.querySelector<HTMLImageElement>('img.spine-pic');
+  const src = img?.getAttribute('src');
+  if (!img || !src || !img.complete || !img.naturalWidth) return;
+  spinePool.delete(src);
+  spinePool.set(src, img);
+  while (spinePool.size > SPINE_POOL) spinePool.delete(spinePool.keys().next().value!);
+}
+
+/** A kept spine picture of `src`, decoded already; taken out of the pool. */
+function keptSpine(src: string): HTMLImageElement | undefined {
+  const img = spinePool.get(src);
+  spinePool.delete(src);
+  return img;
+}
+
 /**
  * Pictures already on screen under `from` reused in `parts` (being drawn in its place) where
  * they show the same thing: a new picture is blank until decoded, so a part drawn again at each
@@ -413,7 +434,10 @@ export class CollectorView {
   show(source: LazyList<Game>, selected: number): void {
     this.#source = source;
     this.#shelfH = 0;
-    this.#rows.forEach((row) => row.remove());
+    this.#rows.forEach((row) => {
+      keepSpine(row);
+      row.remove();
+    });
     this.#rows.clear();
     this.#selected = -1;
     // Straight to it, no glide from wherever the last list was.
@@ -702,6 +726,7 @@ export class CollectorView {
     }
     for (const [i, node] of this.#rows) {
       if (i < first || i > last) {
+        keepSpine(node);
         node.remove();
         this.#rows.delete(i);
       }
@@ -721,6 +746,7 @@ export class CollectorView {
       const key = game ? String(game.id) : '';
       if (node.dataset.key !== key) {
         node.dataset.key = key;
+        keepSpine(node);
         node.replaceChildren(
           ...(game ? this.#shelfRow(game, node) : [el('span', { class: 'title' }, '…')])
         );
@@ -766,6 +792,14 @@ export class CollectorView {
     node.classList.remove('lying', 'waiting');
     node.style.removeProperty('--shape');
     if (!src) return parts;
+    // Its picture from when it was last in sight, decoded: in place at once, nothing to wait for.
+    const kept = keptSpine(src);
+    if (kept) {
+      const { naturalWidth: w, naturalHeight: h } = kept;
+      node.classList.toggle('lying', w > h);
+      node.style.setProperty('--shape', (Math.max(w, h) / Math.min(w, h)).toFixed(2));
+      return [kept, ...parts];
+    }
     const img = picture(src, 'spine-pic');
     // Decoded now, rows before it comes into sight (WebKit leaves a picture out of sight
     // undecoded, and it came in blank, then popped in turning and resizing). The row shows once
