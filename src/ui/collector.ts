@@ -205,6 +205,8 @@ const UNDER_REM = 1.6;
 /** Until its pictures say otherwise: a Mega Drive case's shape. */
 const FRONT_RATIO = 0.72;
 const SPINE_RATIO = 0.14;
+/** The most a box is drawn bigger when turned to its spine. */
+const MOST_SPINE_ZOOM = 1.5;
 /** The thinnest case, its depth over its height: a Japanese Mega CD's jewel case is about 0.04. */
 const SLIMMEST_DEPTH = 0.035;
 
@@ -1827,6 +1829,11 @@ export class CollectorView {
         node.style.setProperty('--w', `${(h * size.ratio).toFixed(2)}rem`);
         node.style.setProperty('--d', `${(h * size.depth).toFixed(2)}rem`);
       }
+      // Turned to its spine, only the spine's width needs room: a box kept small by a wide front
+      // (a European Mega CD's) shows its spine as tall as the case lets it, readable.
+      const tall = display?.clientHeight ? display.clientHeight / remPx() - UNDER_REM : h;
+      const zoom = size.lying ? 1 : clamp(Math.min(tall, BOX_MAX_REM) / h, 1, MOST_SPINE_ZOOM);
+      box.style.setProperty('--spine-zoom', zoom.toFixed(3));
     };
     resize();
     this.#fit = resize;
@@ -2220,10 +2227,12 @@ export function shelfShape(shape: number, room: number): number {
 
 /**
  * How tall the box stands, in rem, in `width` × `height` rem (its case): as tall as fits above
- * the poses, turned too (front and spine side by side).
+ * the poses and turning between them, when it is at its widest: front and spine seen
+ * corner on, as wide as the diagonal of its top (a wide, slim European Mega CD case's little
+ * more than its front; reserving front and spine side by side drew it smaller than need be).
  */
 export function boxHeight(width: number, height: number, ratio: number, depth: number): number {
-  const fits = Math.min(height - UNDER_REM, (width - 1) / (ratio + depth));
+  const fits = Math.min(height - UNDER_REM, (width - 1) / Math.hypot(ratio, depth));
   return clamp(fits, BOX_MIN_REM, BOX_MAX_REM);
 }
 
