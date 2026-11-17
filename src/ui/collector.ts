@@ -763,30 +763,28 @@ export class CollectorView {
       );
       return [parts[0]!, logo, parts[1]!];
     }
-    node.classList.remove('lying');
+    node.classList.remove('lying', 'waiting');
     node.style.removeProperty('--shape');
     if (!src) return parts;
     const img = picture(src, 'spine-pic');
-    // A spine along its box's top (a Super Nintendo's) already lies as the row does. Its shape
-    // lets style.css draw a much slenderer spine than the row (a Mega CD jewel case's among
-    // longboxes) thinner, not squashed.
-    img.addEventListener(
-      'load',
-      () => {
-        const { naturalWidth: w, naturalHeight: h } = img;
-        node.classList.toggle('lying', w > h);
-        if (w && h) node.style.setProperty('--shape', (Math.max(w, h) / Math.min(w, h)).toFixed(2));
-      },
-      { once: true }
-    );
-    img.addEventListener(
-      'error',
-      () => {
-        img.remove();
-        node.classList.remove('pictured');
-      },
-      { once: true }
-    );
+    // Decoded now, rows before it comes into sight (WebKit leaves a picture out of sight
+    // undecoded, and it came in blank, then popped in turning and resizing). The row shows once
+    // it is ready, in its shape: a spine along its box's top (a Super Nintendo's) already lies
+    // as the row does, and a much slenderer spine than the row (a Mega CD jewel case's among
+    // longboxes) is drawn thinner, not squashed.
+    node.classList.add('waiting');
+    const ready = () => {
+      if (img.parentNode !== node) return;
+      const { naturalWidth: w, naturalHeight: h } = img;
+      node.classList.toggle('lying', w > h);
+      if (w && h) node.style.setProperty('--shape', (Math.max(w, h) / Math.min(w, h)).toFixed(2));
+      node.classList.remove('waiting');
+    };
+    (typeof img.decode === 'function' ? img.decode() : Promise.resolve()).then(ready, () => {
+      if (img.parentNode !== node) return;
+      img.remove();
+      node.classList.remove('pictured', 'waiting');
+    });
     return [img, ...parts];
   }
 
