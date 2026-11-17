@@ -123,13 +123,13 @@ describe('the Collector view', () => {
     expect(box.dataset.pose).toBe('cartridge');
     expect(display.classList.contains('cart-out')).toBe(true);
     // Not turned while it goes.
-    expect(box.style.transform).toBe('rotateY(180deg)');
+    expect(box.style.transform).toBe('rotateX(0deg) rotateY(180deg)');
     v.turn(1);
     // The cartridge on out, the box back in already on its front.
     expect(display.classList.contains('cart-out')).toBe(false);
     expect(display.classList.contains('cart-leaving')).toBe(true);
     expect(box.dataset.pose).toBe('front');
-    expect(box.style.transform).toBe('rotateY(360deg)');
+    expect(box.style.transform).toBe('rotateX(0deg) rotateY(360deg)');
     await vi.advanceTimersByTimeAsync(2400);
     expect(display.classList.contains('cart-leaving')).toBe(false);
     // And the other way: out on its front, back in on its back (the same face as 180°).
@@ -137,7 +137,7 @@ describe('the Collector view', () => {
     expect(display.classList.contains('cart-out')).toBe(true);
     v.turn(-1);
     expect(box.dataset.pose).toBe('back');
-    expect(box.style.transform).toBe('rotateY(540deg)');
+    expect(box.style.transform).toBe('rotateX(0deg) rotateY(540deg)');
   });
 
   it('makes up the spine and back a game has no picture of', async () => {
@@ -208,7 +208,22 @@ describe('the Collector view', () => {
     expect(box.dataset.pose).toBe('back');
     v.turn(-1);
     expect(box.dataset.pose).toBe('spine');
-    expect(box.style.transform).toBe('rotateY(90deg)');
+    expect(box.style.transform).toBe('rotateX(0deg) rotateY(90deg)');
+  });
+
+  it('tips a box with its spine on top forward to show it, and turns it on to its back', async () => {
+    const { v } = await view([game(7, 'Super Mario World', BOXED)]);
+    const box = v.root.querySelector<HTMLElement>('.cbox')!;
+    box.classList.add('lying');
+    v.turn(1);
+    expect(box.dataset.pose).toBe('spine');
+    expect(box.style.transform).toBe('rotateX(-90deg) rotateY(0deg)');
+    v.turn(1);
+    expect(box.style.transform).toBe('rotateX(0deg) rotateY(180deg)');
+    v.turn(-1);
+    v.turn(-1);
+    expect(box.dataset.pose).toBe('front');
+    expect(box.style.transform).toBe('rotateX(0deg) rotateY(0deg)');
   });
 
   it("puts the first game's shot on the shelf's TV as the list opens", async () => {
@@ -256,7 +271,7 @@ describe('the Collector view', () => {
     await vi.advanceTimersByTimeAsync(1500);
     const box = v.root.querySelector<HTMLElement>('.cbox')!;
     expect(box.dataset.pose).toBe('front');
-    expect(box.style.transform).toBe('rotateY(0deg)');
+    expect(box.style.transform).toBe('rotateX(0deg) rotateY(0deg)');
     // Turning from when it is seen, the shelf gone.
     await vi.advanceTimersByTimeAsync(2000);
     expect(box.dataset.pose).toBe('front');
@@ -1129,10 +1144,12 @@ describe('the shelf in the shape of its spines', () => {
   });
 
   it('keeps a Mega Drive spine as it was, makes a PC Engine one longer, as far as there is room', () => {
-    expect(shelfShape(7.1, 100)).toBe(22);
+    // Shorter than the usual (a Jaguar's): as its shape asks, never stretched.
+    expect(shelfShape(7.1, 100)).toBe(20.24);
+    expect(shelfShape(2, 100)).toBe(14);
     expect(shelfShape(18.4, 100)).toBe(49.29);
     expect(shelfShape(18.4, 40)).toBe(36);
-    // Not measured yet, or a narrow screen: never shorter than the usual.
+    // Not measured yet, or a narrow screen: a long one no shorter than the usual.
     expect(shelfShape(18.4, 0)).toBe(22);
   });
 });
