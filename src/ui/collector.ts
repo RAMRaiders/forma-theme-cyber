@@ -130,8 +130,14 @@ const SPINE_PROBES = 8;
  * is there before the shelf reaches it, never rows of "…". */
 const LOAD_AHEAD = 60;
 
-/** Each system's spine length (rem), worked out once: its shelf never changes while browsed. */
-const spineLengths = new Map<string, number>();
+/** Each system's spines (length in rem, and size), worked out once: its shelf never changes
+ * while browsed. */
+const spineFits = new Map<string, ShelfFit>();
+
+/** The biggest a shelf's rows are drawn, short spines (a Super Nintendo's) grown to it. */
+const MOST_SPINE_SCALE = 1.3;
+/** What a short spine grows towards: a little longer than the usual. */
+const GROWN_SPINE_REM = SPINE_LEN_REM * 1.2;
 
 /** Row height of the shelf in rem: each a box on its side. */
 const ROW_REM = 3.2;
@@ -265,7 +271,7 @@ export class CollectorView {
   readonly root = el('div', { class: 'collector' });
   readonly #backdrop = el('div', { class: 'collector-backdrop', 'aria-hidden': 'true' });
   readonly #shelf = el('div', { class: 'shelf', role: 'listbox' });
-  /** The system whose shelf is sized; its spine length kept in `spineLengths`. */
+  /** The system whose shelf is sized; its spines kept in `spineFits`. */
   #shelfSystem: string | null = null;
   /** How much bigger than usual this system's spines are (BIGGER_SPINES). */
   #spineScale = 1;
@@ -764,11 +770,9 @@ export class CollectorView {
    * Only the length differs from system to system; the shelf moves the same for all.
    */
   #sizeShelf(system: string, source: LazyList<Game>, selected: number): void {
-    this.#spineScale = BIGGER_SPINES.test(system) ? BIGGER_SCALE : 1;
-    if (this.#spineScale === 1) this.#shelf.style.removeProperty('--spine-h');
-    else this.#shelf.style.setProperty('--spine-h', `${this.#len(SPINE_H_REM)}rem`);
-    const known = spineLengths.get(system);
-    this.#shelf.style.setProperty('--spine-len', `${known ?? this.#len(SPINE_LEN_REM)}rem`);
+    const base = BIGGER_SPINES.test(system) ? BIGGER_SCALE : 1;
+    const known = spineFits.get(system);
+    this.#fitShelf(known ?? { length: SPINE_LEN_REM * base, scale: base });
     if (known !== undefined) return;
     const urls: string[] = [];
     for (let i = 0; i < source.total && urls.length < SPINE_PROBES; i++) {
@@ -778,20 +782,35 @@ export class CollectorView {
       if (url) urls.push(url);
     }
     if (urls.length === 0) {
-      spineLengths.set(system, this.#len(SPINE_LEN_REM));
+      spineFits.set(system, { length: SPINE_LEN_REM * base, scale: base });
       return;
     }
     void Promise.all(urls.map(spineShapeOf)).then((shapes) => {
       const known = shapes.filter((s): s is number => s !== null);
       if (!this.#shelfRoom) this.#centreShelf();
-      const length = this.#len(
-        known.length ? shelfShape(Math.min(...known), this.#shelfRoom) : SPINE_LEN_REM
-      );
-      spineLengths.set(system, length);
-      if (this.#shelfSystem === system) {
-        this.#shelf.style.setProperty('--spine-len', `${length}rem`);
-      }
+      const fit = known.length
+        ? shelfFit(Math.min(...known), this.#shelfRoom, base)
+        : { length: SPINE_LEN_REM * base, scale: base };
+      spineFits.set(system, fit);
+      if (this.#shelfSystem === system) this.#fitShelf(fit);
     });
+  }
+
+  /** The shelf's rows at a size: their spines, and the rows laid out again round the selected. */
+  #fitShelf(fit: ShelfFit): void {
+    const changed = fit.scale !== this.#spineScale;
+    this.#spineScale = fit.scale;
+    if (fit.scale === 1) this.#shelf.style.removeProperty('--spine-h');
+    else this.#shelf.style.setProperty('--spine-h', `${this.#len(SPINE_H_REM)}rem`);
+    this.#shelf.style.setProperty('--spine-len', `${fit.length}rem`);
+    if (!changed || this.#rows.size === 0) return;
+    for (const [i, node] of this.#rows) {
+      node.style.top = `${Math.round(i * this.#rowRem * 1000) / 1000}rem`;
+    }
+    this.#measure();
+    const row = this.#rowRem * remPx();
+    this.#track.style.transform = `translateY(${Math.round(this.#pad - this.#place * row)}px)`;
+    this.render();
   }
 
   /** A spine length (rem) at this system's spine size. */
@@ -2149,6 +2168,31 @@ export function tvEra(category?: string, released?: number | null): string {
  * never stretched (a Jaguar's or a Super Nintendo's, shorter than the usual, were). A long one
  * as far as there is room, a touch shorter (a spine squeezed that little does not show it).
  */
+export interface ShelfFit {
+  /** The spines' length, rem. */
+  length: number;
+  /** The rows' size, 1 the usual. */
+  scale: number;
+}
+
+/**
+ * A shelf's spines for pictures `shape` times as long as wide, with `room` (rem) about its middle
+ * and rows `base` times the usual size: as `shelfShape` says, but a short spine (a Super
+ * Nintendo's, a Jaguar's) grown, its row with it, towards a little longer than the usual, never
+ * past the room there is nor too big. Grown whole, the picture keeps its shape.
+ */
+export function shelfFit(shape: number, room: number, base: number): ShelfFit {
+  const natural = SPINE_H_REM * shape;
+  const length = shelfShape(shape, room / base);
+  if (natural >= SPINE_LEN_REM || length < natural) {
+    return { length: Math.round(length * base * 100) / 100, scale: base };
+  }
+  const target = Math.min(GROWN_SPINE_REM, (room - 4) / base);
+  const grow = clamp(target / natural, 1, MOST_SPINE_SCALE / base);
+  const scale = Math.round(base * grow * 1000) / 1000;
+  return { length: Math.round(natural * scale * 100) / 100, scale };
+}
+
 export function shelfShape(shape: number, room: number): number {
   const exact = SPINE_H_REM * shape;
   const most = Math.max(SPINE_LEN_REM, room - 4);

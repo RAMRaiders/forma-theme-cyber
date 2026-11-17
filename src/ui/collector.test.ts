@@ -15,6 +15,7 @@ import {
   paginate,
   releaseOf,
   serial,
+  shelfFit,
   shelfShape,
   tvEra,
   type ScreenArea,
@@ -1151,6 +1152,21 @@ describe('the shelf in the shape of its spines', () => {
     expect(shelfShape(18.4, 40)).toBe(36);
     // Not measured yet, or a narrow screen: a long one no shorter than the usual.
     expect(shelfShape(18.4, 0)).toBe(22);
+  });
+
+  it('grows a short spine and its row, whole, as far as there is room', () => {
+    // A Super Nintendo's (680x97) with room: as big as allowed, its shape kept.
+    const snes = shelfFit(680 / 97, 34, 1);
+    expect(snes.scale).toBe(1.3);
+    expect(snes.length / snes.scale).toBeCloseTo(2.85 * (680 / 97), 1);
+    // Little room: only as far as it.
+    const tight = shelfFit(680 / 97, 26, 1);
+    expect(tight.length).toBeLessThanOrEqual(22);
+    expect(tight.scale).toBeGreaterThanOrEqual(1);
+    // A Jaguar's, already bigger (Atari): never past the most.
+    expect(shelfFit(680 / 98, 34, 1.12).scale).toBe(1.3);
+    // A long one: the usual size.
+    expect(shelfFit(18.4, 100, 1)).toEqual({ length: 49.29, scale: 1 });
   });
 });
 
