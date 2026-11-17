@@ -95,7 +95,7 @@ describe('the Collector view', () => {
   it('puts the box in the case from its front, spine and back, its cartridge behind it', async () => {
     const { v, src, text } = await view([game(7, 'After Burner', BOXED)]);
     expect(src('.cbox .front img')).toBe('forma://media/7/thumbnail?w=640');
-    expect(src('.cbox .spine img')).toBe('forma://media/7/boxside?w=160');
+    expect(src('.cbox .spine img')).toBe('forma://media/7/boxside?w=640');
     expect(src('.cbox .back img')).toBe('forma://media/7/boxback?w=640');
     // The cartridge behind the box, until its turn.
     expect(src('.display .cart-stage img')).toBe('forma://media/7/cartridge?w=400');

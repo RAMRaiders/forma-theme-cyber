@@ -86,10 +86,16 @@ export interface CollectorOptions {
  * (a quarter of the pixels to decode and hold on a Pi). */
 const BACKDROP_W = 960;
 
+/**
+ * A spine picture's width: a standing one is narrower (served as it is, never enlarged); one
+ * lying along its box's top (a Super Nintendo's, 680 wide) was cut to 160 and blurred.
+ */
+const SPINE_W = 640;
+
 /** Every picture the view shows, at the width it asks, the most needed first. */
 export const COLLECTOR_PICTURES: readonly (readonly [Kind, number])[] = [
   ['thumbnail', 640],
-  ['boxside', 160],
+  ['boxside', SPINE_W],
   ['marquee', 320],
   ['fanart', BACKDROP_W],
   ['wheel', 560],
@@ -715,7 +721,7 @@ export class CollectorView {
       el('span', { class: 'band', 'aria-hidden': 'true' }),
       el('span', { class: 'title' }, game.name)
     ];
-    const src = this.#options.media(game, 'boxside', 160);
+    const src = this.#options.media(game, 'boxside', SPINE_W);
     node.classList.toggle('pictured', !!src);
     const marquee = src ? null : this.#options.media(game, 'marquee', 320);
     node.classList.toggle('marked', !!marquee);
@@ -768,7 +774,7 @@ export class CollectorView {
     for (let i = 0; i < source.total && urls.length < SPINE_PROBES; i++) {
       // The games round the one opened first: those are loaded.
       const game = source.get(loopIndex(selected + i, source.total));
-      const url = game ? this.#options.media(game, 'boxside', 160) : null;
+      const url = game ? this.#options.media(game, 'boxside', SPINE_W) : null;
       if (url) urls.push(url);
     }
     if (urls.length === 0) {
@@ -1823,7 +1829,7 @@ export class CollectorView {
       box.classList.add('ready', 'made');
     }
 
-    const spineSrc = media(game, 'boxside', 160);
+    const spineSrc = media(game, 'boxside', SPINE_W);
     const spine = el('div', { class: 'face spine' });
     if (spineSrc) {
       const img = picture(spineSrc, '');
