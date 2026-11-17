@@ -2041,14 +2041,17 @@ main {
   line-height: 1.4;
 }
 
-/* Words longer than their box scroll slowly through it and back, resting at each end. */
+/* Words longer than their box scroll slowly through it and back, resting at each end: a whole
+   pixel at a time (--scroll-steps, system.ts). On a Pi's WebKit a smooth endless animation is a
+   whole screen drawn at every frame however little moves; a stepped one only when it steps. */
 .system-panel .scroll-inner {
   display: block;
 }
 
 .system-panel .scrolling .scroll-inner {
   will-change: transform;
-  animation: read-through var(--scroll-s, 10s) ease-in-out 1.5s infinite alternate;
+  animation: read-through var(--scroll-s, 10s) steps(var(--scroll-steps, 60)) 1.5s infinite
+    alternate;
 }
 
 @keyframes read-through {
@@ -2090,7 +2093,9 @@ main {
   );
   transform-origin: left;
   will-change: transform;
-  animation: fact-timer var(--fact-ms, 10s) linear both;
+  /* In 24 steps, not smoothly: smooth, this thin line alone kept a Pi drawing every frame
+     (a fifth of Forma's main thread, a tenth of WebKit's compositor), all the time. */
+  animation: fact-timer var(--fact-ms, 10s) steps(24) both;
 }
 
 @keyframes fact-timer {
