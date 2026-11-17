@@ -765,6 +765,8 @@ export class SystemView {
           continue;
         }
         box.style.setProperty('--scroll', `${-over}px`);
+        // A pixel a step (style.css): WebKit draws only when it moves.
+        box.style.setProperty('--scroll-steps', String(Math.max(1, Math.round(over))));
         box.style.setProperty('--scroll-s', `${scrollSeconds(over)}s`);
         box.classList.add('scrolling');
       }
