@@ -650,6 +650,19 @@ main {
   animation-play-state: running;
 }
 
+/* No button for a while (idle.ts): what only decorates holds still where it is, and goes on
+   from there at the next. Not the words that scroll, the facts' timer or a video: those are
+   what is shown. */
+:root.idle .circuit .pulse,
+:root.idle .system-panel .stage .deck::before,
+:root.idle .system-panel .stage .deck .cross,
+:root.idle .stage-backdrop .fanart img,
+:root.idle .tile .logos-track.loops,
+:root.idle .song-card .disc,
+:root.idle .song-card .eq i {
+  animation-play-state: paused !important;
+}
+
 :root.resting .tile .logos-track.loops,
 :root[data-motion='off'] .tile .logos-track.loops {
   animation-play-state: paused;
