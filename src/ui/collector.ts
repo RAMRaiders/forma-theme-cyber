@@ -706,12 +706,15 @@ export class CollectorView {
         this.#rows.delete(i);
       }
     }
+    this.#track.style.setProperty('--sel', String(at));
     for (let i = first; i <= last; i++) {
       const game = source.get(loops ? loopIndex(i, source.total) : i);
       let node = this.#rows.get(i);
       if (!node) {
         node = el('div', { class: 'spine-row', role: 'option' });
         node.style.top = `${Math.round(i * this.#rowRem * 1000) / 1000}rem`;
+        // Its place, against the selected one's (--sel): the rows round it make room (CSS).
+        node.style.setProperty('--i', String(i));
         this.#track.append(node);
         this.#rows.set(i, node);
       }
