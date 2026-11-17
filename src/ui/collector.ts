@@ -150,7 +150,7 @@ const SHOWN_WITH_MS = 2000;
 /** The longest a row ahead of sight waits for its spine picture before it shows anyway. */
 const WAIT_MAX_MS = 400;
 /** The shelf over the middle while moving; this long after the last move it fades. */
-const DROP_MS = 1400;
+const DROP_MS = 2400;
 /** Steps closer together than this are the direction held: the shelf runs at an even speed. */
 const HELD_MS = 130;
 /** The fan art behind the shelf, a sneak peek, once the selection pauses this long: longer than
