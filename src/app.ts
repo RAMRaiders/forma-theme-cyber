@@ -867,7 +867,9 @@ export class App {
         await this.forma.launch.game(game.id);
       } catch (error) {
         this.#gameView.resume();
-        this.#notify(FormaError.from(error).message);
+        const e = FormaError.from(error);
+        // A missing BIOS: Forma's shell asks whether to start it anyway (SDK 1.39).
+        if ((e.code as string) !== 'biosMissing') this.#notify(e.message);
       }
       return;
     }
