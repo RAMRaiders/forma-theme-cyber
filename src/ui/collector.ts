@@ -514,16 +514,6 @@ export class CollectorView {
   }
 
   /**
-   * The shelf kept up `ms` more before it goes as after any move: the list opened under the
-   * system's switch-on (app.ts), whose dark hid it for most of its usual time.
-   */
-  holdShelf(ms: number): void {
-    if (this.#resting() || ms <= 0) return;
-    clearTimeout(this.#dropTimer);
-    this.#dropTimer = setTimeout(() => this.#drop(), ms + DROP_MS);
-  }
-
-  /**
    * Up or Down with the shelf gone: it shows again where it was, and only the next press moves.
    * Whether it was gone (the press is then spent).
    */

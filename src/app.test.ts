@@ -35,7 +35,9 @@ const infos = new InfoStore((url) =>
 async function start(
   permissions: string[] = [],
   slow: Record<string, number> = {},
-  store: InfoStore = infos
+  store: InfoStore = infos,
+  /** Cyber's motion on: a system's games then wait out its boot (1.5 s). */
+  motion = false
 ) {
   const backend = mockBackend({ playMs: 50, permissions: [...permissions, 'settings.system'] });
   // Systems oldest first (Forma's order, as its Select menu sets it): the NES leads.
@@ -66,6 +68,7 @@ async function start(
     for (const h of handlers.get(event) ?? []) h(payload);
   };
   const forma = await connect({ backend, keyboard: false });
+  await forma.settings.set('motion', motion);
   const root = document.querySelector<HTMLElement>('#app')!;
   await new App(forma, root, store).start();
 
@@ -107,7 +110,7 @@ describe('the default theme', () => {
   });
 
   it('goes category → system → games, and back to where it was', async () => {
-    const { press, text, root, calls } = await start();
+    const { press, text, root, calls } = await start([], {}, infos, true);
     await press('confirm');
     expect(text('.trail .crumb')).toEqual(['Consoles']);
     // In the order Forma lists them: oldest first here.
@@ -165,10 +168,13 @@ describe('the default theme', () => {
     await press('confirm'); // A opens it at once, the strip or not
     // Switched on as its games open: its logo or name, lit, over the whole screen a moment.
     expect(document.querySelector('body > .boot.whole')).not.toBeNull();
-    // The list's pictures are made once the boot is over, not during it.
-    await vi.waitFor(() => expect(text('.trail .crumb.current')).toHaveLength(1));
+    // Its games come once the boot is over, not under it; their pictures made then too.
+    expect(root.querySelector('.collector, .games')).toBeNull();
     expect(calls).not.toContain('library_prepare_list');
-    await vi.waitFor(() => expect(calls).toContain('library_prepare_list'), { timeout: 2500 });
+    await vi.waitFor(() => expect(document.querySelector('body > .boot.whole')).toBeNull(), {
+      timeout: 2500
+    });
+    await vi.waitFor(() => expect(calls).toContain('library_prepare_list'));
     expect(text('.trail .crumb')).toEqual(['Consoles', 'Nintendo Entertainment System']);
     // Breadcrumbs: the step you are on is the lit one.
     expect(text('.trail .crumb.current')).toEqual(['Nintendo Entertainment System']);

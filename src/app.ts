@@ -165,6 +165,8 @@ export class App {
 
   /** Until when a system's switch-on covers the screen (its games opening under it). */
   #bootedUntil = 0;
+  /** Each #load's number: one overtaken while it waited (for the boot) stops. */
+  #loadRound = 0;
 
   /** The game list on screen, for Forma to make its pictures ahead. */
   #listPlace: { view: string; path: string[] } | null = null;
@@ -378,6 +380,7 @@ export class App {
 
   /** Loads the current level and shows it, keeping the remembered selection. */
   async #load(reload = false): Promise<void> {
+    const round = ++this.#loadRound;
     // Whatever shows next, the game list's video (and its sound) stops. A reload stays on the
     // same list: the Collector's case goes on turning, and the list tells it what changed.
     this.#games.leave();
@@ -419,21 +422,23 @@ export class App {
             ? -1
             : await list.findIndex((g) => g.id === follow, remembered);
         const index = moved >= 0 ? moved : remembered;
+        // The system switched on as its games open: they come once its logo has gone, not
+        // under it (built under the boot, they also made it stutter on a Pi).
+        const booting = Math.max(0, this.#bootedUntil - performance.now());
+        this.#bootedUntil = 0;
+        if (booting > 0) {
+          await new Promise((done) => setTimeout(done, booting));
+          if (round !== this.#loadRound) return;
+        }
         this.#list = list;
         this.#level.index = Math.min(index, Math.max(0, list.total - 1));
         this.#main.replaceChildren(this.#gameView.root);
         this.#gameView.show(list, this.#level.index);
-        const booting = Math.max(0, this.#bootedUntil - performance.now());
-        if (this.#gameView instanceof CollectorView) this.#gameView.holdShelf(booting);
-        this.#bootedUntil = 0;
         if (wasFiltered !== null && wasFiltered !== first.filtered) this.#gameView.reveal();
         this.#listPlace = { view, path };
-        // The list's pictures made once the system's boot is over: on a first visit making them
-        // all took the Pi from the boot, which stuttered as the list came.
+        // After the boot too (above): on a first visit making them all took the Pi from it.
         clearTimeout(this.#prepareTimer);
-        const around = this.#level.index;
-        if (booting > 0) this.#prepareTimer = setTimeout(() => this.#prepareList(around), booting);
-        else this.#prepareList(around);
+        this.#prepareList(this.#level.index);
       } else {
         this.#list = null;
         this.#cards = await this.#allCards(first);
