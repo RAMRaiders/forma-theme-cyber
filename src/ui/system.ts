@@ -645,15 +645,14 @@ export class SystemView {
         ['Sold', sold ? soldShort(sold) : null]
       ])
     ]);
-    // Right of it, in turn: its best sellers, magazines about it, its peripherals.
+    // Right of it, in turn: its best sellers, magazines about it, its peripherals; three a
+    // shelf, more of them on the shelves after.
     const shelves = [
       iconicGames(bestsellers(s.name, info?.bestsellers), info?.bestsellersBy !== 'classics'),
-      shelf(
-        'mags',
-        'Magazines',
-        system.magazines.slice(0, 3).map((m) => ({ src: m.src, name: m.title }))
+      ...threes(system.magazines.map((m) => ({ src: m.src, name: m.title }))).map((row) =>
+        shelf('mags', 'Magazines', row)
       ),
-      shelf('gear', 'Peripherals', system.peripherals.slice(0, 3))
+      ...threes(system.peripherals).map((row) => shelf('gear', 'Peripherals', row))
     ].filter((part) => part !== null);
     const showcase = shelves.length ? el('div', { class: 'rotator' }, ...shelves) : null;
     parts.push(['games', showcase]);
@@ -1160,4 +1159,11 @@ function shelf(
     return item;
   });
   return section(`rack ${cls}`, title, el('ol', {}, ...items));
+}
+
+/** `items` three at a time (a shelf holds three): the last row as many as are left. */
+export function threes<T>(items: T[]): T[][] {
+  const rows: T[][] = [];
+  for (let i = 0; i < items.length; i += 3) rows.push(items.slice(i, i + 3));
+  return rows;
 }

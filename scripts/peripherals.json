@@ -9,12 +9,28 @@
       "name": "R.O.B. robot"
     },
     {
-      "file": "NES-power-pad.jpg",
-      "name": "Power Pad"
-    },
-    {
       "file": "Nintendo-NES-Advantage-Controller.jpg",
       "name": "NES Advantage"
+    },
+    {
+      "file": "NES-Four-Score.jpg",
+      "name": "Four Score"
+    },
+    {
+      "file": "NES-Satellite.jpg",
+      "name": "NES Satellite"
+    },
+    {
+      "file": "Game-Genie-NES.jpg",
+      "name": "Game Genie"
+    },
+    {
+      "file": "Nintendo-Famicom-Disk-System.jpg",
+      "name": "Famicom Disk System"
+    },
+    {
+      "file": "NES-power-pad.jpg",
+      "name": "Power Pad"
     }
   ],
   "snes": [
@@ -29,6 +45,14 @@
     {
       "file": "Nintendo-Super-NES-Controller.jpg",
       "name": "Controller"
+    },
+    {
+      "file": "Nintendo-Super-Game-Boy.jpg",
+      "name": "Super Game Boy"
+    },
+    {
+      "file": "Asciiware-AsciiPad-Super-Nintendo-Controller.jpg",
+      "name": "asciiPad"
     }
   ],
   "n64": [
@@ -106,6 +130,26 @@
     {
       "file": "Sega-Saturn-Net-Link-US-Keyboard.jpg",
       "name": "Net Link keyboard"
+    },
+    {
+      "file": "Sega-Saturn-Backup.jpg",
+      "name": "Backup memory"
+    },
+    {
+      "file": "Sega-Saturn-4MB.jpg",
+      "name": "4MB RAM cartridge"
+    },
+    {
+      "file": "Sega-Saturn-Multitap.jpg",
+      "name": "Multitap"
+    },
+    {
+      "file": "Sega-Saturn-NetLink.jpg",
+      "name": "Net Link modem"
+    },
+    {
+      "file": "Sega-Saturn-Mouse-US.jpg",
+      "name": "Shuttle Mouse"
     }
   ],
   "dreamcast": [
@@ -416,6 +460,24 @@
     {
       "file": "Atari-Jaguar-Pro-Controller-Flat.jpg",
       "name": "Pro Controller"
+    }
+  ],
+  "megacd": [
+    {
+      "file": "Sega-Genesis-6But-Cont.jpg",
+      "name": "Six-button pad"
+    },
+    {
+      "file": "Konami-Justifiers-Genesis-Light-Gun.jpg",
+      "name": "Justifier light gun"
+    },
+    {
+      "file": "Sega-CD-Model2-Set.jpg",
+      "name": "Mega-CD II"
+    },
+    {
+      "file": "Sega-CDX-BR.jpg",
+      "name": "CDX (Multi-Mega)"
     }
   ]
 }

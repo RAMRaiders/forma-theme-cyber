@@ -8,7 +8,8 @@ import {
   readingMs,
   soldShort,
   SystemView,
-  systemColours
+  systemColours,
+  threes
 } from './system.js';
 import type { CyberSystem, InfoStore } from '../data/catalog.js';
 
@@ -213,5 +214,12 @@ describe('units sold', () => {
     expect(soldShort('About 118.69 million (Game Boy and Game Boy Color combined)')).toBe(
       '118.69 million'
     );
+  });
+});
+
+describe('threes', () => {
+  it('puts three on a shelf, what is left on the last', () => {
+    expect(threes([1, 2, 3, 4, 5, 6, 7])).toEqual([[1, 2, 3], [4, 5, 6], [7]]);
+    expect(threes([])).toEqual([]);
   });
 });

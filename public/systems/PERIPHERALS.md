@@ -5,11 +5,17 @@ screen. Built by `scripts/build-peripherals.mjs`.
 
 - **nes**: Zapper light gun, [Nintendo-Entertainment-System-NES-Zapper-Orange-R.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Entertainment-System-NES-Zapper-Orange-R.jpg), by Evan-Amos, Public domain.
 - **nes**: R.O.B. robot, [NES-ROB.jpg](https://commons.wikimedia.org/wiki/File:NES-ROB.jpg), by Evan-Amos, CC BY-SA 3.0.
-- **nes**: Power Pad, [NES-power-pad.jpg](https://commons.wikimedia.org/wiki/File:NES-power-pad.jpg), by Evan-Amos, Public domain.
 - **nes**: NES Advantage, [Nintendo-NES-Advantage-Controller.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-NES-Advantage-Controller.jpg), by Evan-Amos, Public domain.
+- **nes**: Four Score, [NES-Four-Score.jpg](https://commons.wikimedia.org/wiki/File:NES-Four-Score.jpg), by Evan-Amos, Public domain.
+- **nes**: NES Satellite, [NES-Satellite.jpg](https://commons.wikimedia.org/wiki/File:NES-Satellite.jpg), by Evan-Amos, Public domain.
+- **nes**: Game Genie, [Game-Genie-NES.jpg](https://commons.wikimedia.org/wiki/File:Game-Genie-NES.jpg), by Evan-Amos, Public domain.
+- **nes**: Famicom Disk System, [Nintendo-Famicom-Disk-System.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Famicom-Disk-System.jpg), by Evan-Amos, Public domain.
+- **nes**: Power Pad, [NES-power-pad.jpg](https://commons.wikimedia.org/wiki/File:NES-power-pad.jpg), by Evan-Amos, Public domain.
 - **snes**: Super Scope, [Nintendo-SNES-Super-Scope-R.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-SNES-Super-Scope-R.jpg), by Evan-Amos, Public domain.
 - **snes**: Super NES Mouse, [SNES-Mouse-and-Pad.jpg](https://commons.wikimedia.org/wiki/File:SNES-Mouse-and-Pad.jpg), by Evan-Amos, Public domain.
 - **snes**: Controller, [Nintendo-Super-NES-Controller.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Super-NES-Controller.jpg), by Evan-Amos, Public domain.
+- **snes**: Super Game Boy, [Nintendo-Super-Game-Boy.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Super-Game-Boy.jpg), by Evan-Amos, Public domain.
+- **snes**: asciiPad, [Asciiware-AsciiPad-Super-Nintendo-Controller.jpg](https://commons.wikimedia.org/wiki/File:Asciiware-AsciiPad-Super-Nintendo-Controller.jpg), by Evan-Amos, Public domain.
 - **n64**: Rumble Pak, [N64-Rumble-Pak.jpg](https://commons.wikimedia.org/wiki/File:N64-Rumble-Pak.jpg), by Evan-Amos, Public domain.
 - **n64**: Controller Pak, [Nintendo-64-Controller-Pak.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-64-Controller-Pak.jpg), by Evan-Amos, Public domain.
 - **n64**: Transfer Pak, [Nintendo-64-GB-Transfer-Pak.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-64-GB-Transfer-Pak.jpg), by Evan-Amos, Public domain.
@@ -25,6 +31,11 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **saturn**: 3D Control Pad, [Sega-Saturn-3D-Controller.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-3D-Controller.jpg), by Evan-Amos, Public domain.
 - **saturn**: Control Pad, [Sega-Saturn-Controller-NA-Mk-II-FL.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-Controller-NA-Mk-II-FL.jpg), by Evan-Amos, Public domain.
 - **saturn**: Net Link keyboard, [Sega-Saturn-Net-Link-US-Keyboard.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-Net-Link-US-Keyboard.jpg), by Evan-Amos, Public domain.
+- **saturn**: Backup memory, [Sega-Saturn-Backup.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-Backup.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **saturn**: 4MB RAM cartridge, [Sega-Saturn-4MB.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-4MB.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **saturn**: Multitap, [Sega-Saturn-Multitap.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-Multitap.jpg), by Evan-Amos, Public domain.
+- **saturn**: Net Link modem, [Sega-Saturn-NetLink.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-NetLink.jpg), by Evan-Amos, Public domain.
+- **saturn**: Shuttle Mouse, [Sega-Saturn-Mouse-US.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-Mouse-US.jpg), by Evan-Amos, Public domain.
 - **dreamcast**: Controller with VMU, [Sega-Dreamcast-Controller-wVMU-FL.jpg](https://commons.wikimedia.org/wiki/File:Sega-Dreamcast-Controller-wVMU-FL.jpg), by Evan-Amos, Public domain.
 - **dreamcast**: Visual Memory Unit, [Sega-Dreamcast-VMU.jpg](https://commons.wikimedia.org/wiki/File:Sega-Dreamcast-VMU.jpg), by Evan-Amos, Public domain.
 - **dreamcast**: Keyboard, [Sega-Dreamcast-Keyboard.jpg](https://commons.wikimedia.org/wiki/File:Sega-Dreamcast-Keyboard.jpg), by Evan-Amos, Public domain.
@@ -89,3 +100,7 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **jaguarcd**: Memory Track, [Atari-Jaguar-CD-Memory-Track-Cart.jpg](https://commons.wikimedia.org/wiki/File:Atari-Jaguar-CD-Memory-Track-Cart.jpg), by Evan-Amos, Public domain.
 - **jaguarcd**: Controller, [Atari-Jaguar-Controller-Flat.jpg](https://commons.wikimedia.org/wiki/File:Atari-Jaguar-Controller-Flat.jpg), by Evan-Amos, Public domain.
 - **jaguarcd**: Pro Controller, [Atari-Jaguar-Pro-Controller-Flat.jpg](https://commons.wikimedia.org/wiki/File:Atari-Jaguar-Pro-Controller-Flat.jpg), by Evan-Amos, Public domain.
+- **megacd**: Six-button pad, [Sega-Genesis-6But-Cont.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-6But-Cont.jpg), by Evan-Amos, Public domain.
+- **megacd**: Justifier light gun, [Konami-Justifiers-Genesis-Light-Gun.jpg](https://commons.wikimedia.org/wiki/File:Konami-Justifiers-Genesis-Light-Gun.jpg), by Evan-Amos, Public domain.
+- **megacd**: Mega-CD II, [Sega-CD-Model2-Set.jpg](https://commons.wikimedia.org/wiki/File:Sega-CD-Model2-Set.jpg), by Evan-Amos, Public domain.
+- **megacd**: CDX (Multi-Mega), [Sega-CDX-BR.jpg](https://commons.wikimedia.org/wiki/File:Sega-CDX-BR.jpg), by Evan-Amos, Public domain.
