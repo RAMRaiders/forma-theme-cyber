@@ -1475,18 +1475,22 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "Atari Fan #5"
+        "title": "Jaguar Japan #1"
       },
       {
         "file": "mag-3.webp",
-        "title": "Electronic Games"
+        "title": "Atari Fan #5"
       },
       {
         "file": "mag-4.webp",
-        "title": "Cat Rap #1"
+        "title": "Electronic Games"
       },
       {
         "file": "mag-5.webp",
+        "title": "Cat Rap #1"
+      },
+      {
+        "file": "mag-6.webp",
         "title": "Cat Rap #2"
       }
     ],
@@ -1770,6 +1774,32 @@
       {
         "file": "mag-1.webp",
         "title": "Mega CD Guide"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Mega-CD Fan #1"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "BEEP! Mega-CD"
+      }
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Six-button pad"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Justifier light gun"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "Mega-CD II"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "CDX (Multi-Mega)"
       }
     ]
   },
@@ -2201,7 +2231,7 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "Nintendo Fun Club #3"
+        "title": "Family Computer Magazine"
       },
       {
         "file": "mag-3.webp",
@@ -2209,10 +2239,22 @@
       },
       {
         "file": "mag-4.webp",
-        "title": "Nintendo Power #2"
+        "title": "Game Player's"
       },
       {
         "file": "mag-5.webp",
+        "title": "EGM 1989"
+      },
+      {
+        "file": "mag-6.webp",
+        "title": "Nintendo Fun Club #3"
+      },
+      {
+        "file": "mag-7.webp",
+        "title": "Nintendo Power #2"
+      },
+      {
+        "file": "mag-8.webp",
         "title": "Nintendo Power #3"
       }
     ],
@@ -2227,11 +2269,27 @@
       },
       {
         "file": "gear-3.webp",
-        "name": "Power Pad"
+        "name": "NES Advantage"
       },
       {
         "file": "gear-4.webp",
-        "name": "NES Advantage"
+        "name": "Four Score"
+      },
+      {
+        "file": "gear-5.webp",
+        "name": "NES Satellite"
+      },
+      {
+        "file": "gear-6.webp",
+        "name": "Game Genie"
+      },
+      {
+        "file": "gear-7.webp",
+        "name": "Famicom Disk System"
+      },
+      {
+        "file": "gear-8.webp",
+        "name": "Power Pad"
       }
     ],
     "hues": [
@@ -2699,14 +2757,22 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "Saturn Guide"
+        "title": "Saturn Fan"
       },
       {
         "file": "mag-3.webp",
-        "title": "Saturn Magazine #2"
+        "title": "Sega Saturn Magazine #1"
       },
       {
         "file": "mag-4.webp",
+        "title": "Saturn Guide"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Saturn Magazine #2"
+      },
+      {
+        "file": "mag-6.webp",
         "title": "Saturn Magazine #22"
       }
     ],
@@ -2722,6 +2788,26 @@
       {
         "file": "gear-3.webp",
         "name": "Net Link keyboard"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "Backup memory"
+      },
+      {
+        "file": "gear-5.webp",
+        "name": "4MB RAM cartridge"
+      },
+      {
+        "file": "gear-6.webp",
+        "name": "Multitap"
+      },
+      {
+        "file": "gear-7.webp",
+        "name": "Net Link modem"
+      },
+      {
+        "file": "gear-8.webp",
+        "name": "Shuttle Mouse"
       }
     ],
     "hues": [
@@ -2881,14 +2967,30 @@
       },
       {
         "file": "mag-2.webp",
-        "title": "SNES Force #7"
+        "title": "The Super Famicom #3"
       },
       {
         "file": "mag-3.webp",
-        "title": "Super Gamer #11"
+        "title": "Super Pro #1"
       },
       {
         "file": "mag-4.webp",
+        "title": "SNES Force #7"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Marukatsu Super Famicom"
+      },
+      {
+        "file": "mag-6.webp",
+        "title": "Nintendo Magazine System #10"
+      },
+      {
+        "file": "mag-7.webp",
+        "title": "Super Gamer #11"
+      },
+      {
+        "file": "mag-8.webp",
         "title": "SNES Force #1"
       }
     ],
@@ -2904,6 +3006,14 @@
       {
         "file": "gear-3.webp",
         "name": "Controller"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "Super Game Boy"
+      },
+      {
+        "file": "gear-5.webp",
+        "name": "asciiPad"
       }
     ],
     "hues": [

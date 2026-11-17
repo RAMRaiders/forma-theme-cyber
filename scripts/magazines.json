@@ -17,14 +17,21 @@
   ],
   "snes": [
     "sup01",
+    "the-super-famicom-1990-12-28-number-3-volume-1-issue-3",
+    "super-pro-01",
     "SNES_Force_Issue_07_1993-12_Impact_Magazines_GB",
+    "marukatsu-super-famicom-february-26-1993-02-26-600dpi-ozidual",
+    "nintendo-magazine-system-10",
     "super-gamer-11",
     "snes-force-01"
   ],
   "nes": [
     "nintendo_power_issue1",
-    "Nintendo_Fun_Club_News_Issue_03_Fall_1987",
+    "family-computer-magazine-issue-105-june-22nd-1990",
     "total-nintendo-uk-issue-2",
+    "game-players-strategy-guide-to-nintendo-games-vol.-2-no.-3-june-july-1989",
+    "electronic-gaming-monthly-1989-06",
+    "Nintendo_Fun_Club_News_Issue_03_Fall_1987",
     "NintendoPowerIssue002SeptemberOctober1988",
     "nintendopowerissue003novemberdecember1988"
   ],
@@ -51,6 +58,8 @@
   ],
   "saturn": [
     "Official_Sega_Saturn_Magazine_001",
+    "saturn-fan-1995-7",
+    "sega-saturn-magazine-ja-1994-12-01",
     "sup53saturnguide",
     "Sega_Saturn_Magazine_Issue_02_1995-12_EMAP_Images_GB",
     "official-sega-saturn-magazine-issue-22"
@@ -71,6 +80,7 @@
   ],
   "jaguar": [
     "EDGE.N022.1995.07.Supplement.Atari.Jaguar",
+    "jaguar-japan-1",
     {
       "url": "https://www.atarimania.com/mags/pdf/AtariFan-05.pdf",
       "title": "Atari Fan N°5 (Primavera 1995)",
@@ -146,7 +156,11 @@
   ],
   "cplus4": ["Commodore_C16_Plus4_Reference_Book", "Videobasic-C16", "C16MSXN40"],
   "gamegear": ["OfficialSegaGenesisGameGearStrategies3rdEdition"],
-  "megacd": ["mega-tech-supplement-mega-cd-guide"],
+  "megacd": [
+    "mega-tech-supplement-mega-cd-guide",
+    "mega-drive-fan-1991-12-15-appendix-mega-cd-fan-volume-1",
+    "beepmega-cdappendix-booklet-march-1992"
+  ],
   "sg1000": ["beep-1986-04"],
   "gb": [
     "game-boy-official-magazine-3",

@@ -4964,7 +4964,7 @@ kbd.pad {
    selected one's, --sel), so it stands clear of them. */
 .spine-row {
   transform: translateY(
-    calc(clamp(-1, (var(--i) - var(--sel, 0)) * 1000, 1) * var(--spine-h) * 0.22)
+    calc(clamp(-1, (var(--i) - var(--sel, 0)) * 1000, 1) * var(--spine-h) * 0.4)
   );
   transition: transform 140ms ease-out;
 }
