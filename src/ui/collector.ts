@@ -145,6 +145,10 @@ const LEAST_SPINE_SCALE = 0.6;
 /** Row height of the shelf in rem: each a box on its side. */
 const ROW_REM = 3.2;
 const OVERSCAN = 10;
+/** Rows drawn this soon after the list shows are the ones in sight: they show at once. */
+const SHOWN_WITH_MS = 2000;
+/** The longest a row ahead of sight waits for its spine picture before it shows anyway. */
+const WAIT_MAX_MS = 400;
 /** The shelf over the middle while moving; this long after the last move it fades. */
 const DROP_MS = 1400;
 /** Steps closer together than this are the direction held: the shelf runs at an even speed. */
@@ -335,6 +339,8 @@ export class CollectorView {
   #source: LazyList<Game> | null = null;
   #selected = 0;
   #pending = false;
+  /** When the list was shown: the rows drawn with it show at once, not waiting (#shelfRow). */
+  #shownAt = 0;
   #settle: ReturnType<typeof setTimeout> | undefined;
   #peek: ReturnType<typeof setTimeout> | undefined;
   /** When the fan art and the label last followed a held shelf. */
@@ -433,6 +439,7 @@ export class CollectorView {
 
   show(source: LazyList<Game>, selected: number): void {
     this.#source = source;
+    this.#shownAt = performance.now();
     this.#shelfH = 0;
     this.#rows.forEach((row) => {
       keepSpine(row);
@@ -806,7 +813,15 @@ export class CollectorView {
     // it is ready, in its shape: a spine along its box's top (a Super Nintendo's) already lies
     // as the row does, and a much slenderer spine than the row (a Mega CD jewel case's among
     // longboxes) is drawn thinner, not squashed.
-    node.classList.add('waiting');
+    // Only a row drawn ahead of sight waits; those the list opens with show at once (on a first
+    // visit Forma is still making the list's pictures and the shelf stayed black), and none
+    // waits longer than WAIT_MAX_MS.
+    if (performance.now() - this.#shownAt > SHOWN_WITH_MS) {
+      node.classList.add('waiting');
+      setTimeout(() => {
+        if (img.parentNode === node) node.classList.remove('waiting');
+      }, WAIT_MAX_MS);
+    }
     const ready = () => {
       if (img.parentNode !== node) return;
       const { naturalWidth: w, naturalHeight: h } = img;

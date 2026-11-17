@@ -944,6 +944,27 @@ describe('the Collector view', () => {
     expect(row.style.getPropertyValue('--shape')).toBe('7.08');
   });
 
+  it('shows the rows a list opens with at once, and one coming into sight within a moment', async () => {
+    Object.defineProperty(HTMLImageElement.prototype, 'decode', {
+      configurable: true,
+      value: () => new Promise<void>(() => {})
+    });
+    try {
+      const games = Array.from({ length: 60 }, (_, i) => game(i + 1, `Game ${i + 1}`, BOXED));
+      const { v } = await view(games);
+      // Opened with them: shown though their pictures are not decoded yet.
+      expect(v.root.querySelectorAll('.spine-row.waiting')).toHaveLength(0);
+      await vi.advanceTimersByTimeAsync(2100);
+      for (let i = 1; i <= 15; i++) v.select(i);
+      // Drawn ahead of sight later: waits for its picture, but not for ever.
+      expect(v.root.querySelectorAll('.spine-row.waiting').length).toBeGreaterThan(0);
+      await vi.advanceTimersByTimeAsync(400);
+      expect(v.root.querySelectorAll('.spine-row.waiting')).toHaveLength(0);
+    } finally {
+      delete (HTMLImageElement.prototype as { decode?: unknown }).decode;
+    }
+  });
+
   it('keeps every game on the shelf, the selected one pulled out', async () => {
     const { v, text } = await view([
       game(1, 'After Burner', BOXED),
