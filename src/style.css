@@ -1681,12 +1681,29 @@ main {
   --sys-45: color-mix(in srgb, var(--sys) 45%, transparent);
 }
 
-/* Scanlines over it all, as on a tube. */
+/* Scanlines over it all, as on a tube, while it is dark: gone before the page shows through,
+   or they lay over it as it fades in. */
 .boot::after {
   content: '';
   position: absolute;
   inset: 0;
   background: repeating-linear-gradient(0deg, rgb(0 0 0 / 35%) 0 2px, transparent 2px 4px);
+  animation: boot-lines 1500ms linear var(--boot-wait, 0ms) both;
+}
+
+/* The flash the beam opens into: a glow over the whole screen, its opacity only (stretching the
+   2px beam into it was heavy and stepped on a Pi). */
+.boot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 70% 45% at 50% 50%,
+    var(--sys-45, rgb(80 200 255 / 45%)),
+    transparent
+  );
+  opacity: 0;
+  animation: boot-flash 1500ms ease-out var(--boot-wait, 0ms) both;
 }
 
 .boot .beam {
@@ -1746,13 +1763,37 @@ main {
     opacity: 1;
   }
 
-  32% {
-    transform: scaleX(1) scaleY(160);
+  30%,
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+@keyframes boot-flash {
+  0%,
+  14% {
     opacity: 0;
   }
 
+  24% {
+    opacity: 1;
+  }
+
+  55%,
   100% {
-    transform: scaleX(1) scaleY(160);
+    opacity: 0;
+  }
+}
+
+@keyframes boot-lines {
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  64%,
+  100% {
     opacity: 0;
   }
 }
@@ -1778,8 +1819,9 @@ main {
 
 @keyframes boot-out {
   0%,
-  70% {
+  64% {
     opacity: 1;
+    animation-timing-function: ease-out;
   }
 
   100% {
