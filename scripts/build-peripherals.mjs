@@ -10,7 +10,7 @@
  *
  *   node scripts/build-peripherals.mjs          ONLY=snes,n64 to fetch just some
  */
-import { readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
@@ -165,10 +165,14 @@ for (const [id, items] of Object.entries(picks)) {
   }
   const dir = join(SYSTEMS, id);
   mkdirSync(dir, { recursive: true });
-  for (const old of readdirSync(dir).filter((f) => /^gear-\d+\.webp$/.test(f))) {
-    rmSync(join(dir, old));
-  }
   const entry = (art[id] ??= { logo: null, picture: null });
+  // What it has now, by name: kept when Commons won't hand a photo over this time.
+  const had = new Map(
+    (entry.peripherals ?? [])
+      .filter((p) => existsSync(join(dir, p.file)))
+      .map((p) => [p.name, readFileSync(join(dir, p.file))])
+  );
+  const credited = (name) => before.find((line) => line.startsWith(`- **${id}**: ${name}, `));
   const peripherals = [];
   for (const { file, name, crop, limit, largest, holes } of items) {
     try {
@@ -188,8 +192,19 @@ for (const [id, items] of Object.entries(picks)) {
       // Commons asks for a gentle pace.
       await new Promise((r) => setTimeout(r, 1500));
     } catch (e) {
-      console.warn(`${id}: ${file} skipped (${e.message})`);
+      const kept = had.get(name);
+      if (kept && credited(name)) {
+        const out = `gear-${peripherals.length + 1}.webp`;
+        writeFileSync(join(dir, out), kept);
+        peripherals.push({ file: out, name });
+        credits.push(credited(name));
+        console.warn(`${id}: ${name} kept as it was (${e.message})`);
+      } else console.warn(`${id}: ${file} skipped (${e.message})`);
     }
+  }
+  // Only now are the photos it no longer has gone: a stopped run leaves none missing.
+  for (const old of readdirSync(dir).filter((f) => /^gear-\d+\.webp$/.test(f))) {
+    if (Number(old.match(/\d+/)[0]) > peripherals.length) rmSync(join(dir, old));
   }
   if (peripherals.length) entry.peripherals = peripherals;
   else delete entry.peripherals;
