@@ -113,6 +113,8 @@ const SPINE_H_REM = 2.85;
  * read small at the usual size. */
 const BIGGER_SPINES = /^atari/;
 const BIGGER_SCALE = 1.12;
+/** The shortest a shelf's spines are drawn, whatever their pictures. */
+const SHORTEST_SPINE_REM = 14;
 /** How much shorter than its shape asks a long spine is drawn. */
 const SPINE_SQUEEZE = 0.94;
 
@@ -729,8 +731,15 @@ export class CollectorView {
       );
       return [parts[0]!, logo, parts[1]!];
     }
+    node.classList.remove('lying');
     if (!src) return parts;
     const img = picture(src, 'spine-pic');
+    // A spine along its box's top (a Super Nintendo's) already lies as the row does.
+    img.addEventListener(
+      'load',
+      () => node.classList.toggle('lying', img.naturalWidth > img.naturalHeight),
+      { once: true }
+    );
     img.addEventListener(
       'error',
       () => {
@@ -1232,21 +1241,24 @@ export class CollectorView {
     } else if (!from || from.angle === null) {
       // Out of sight on the left: turned to its pose at once, to come in from there over the
       // cartridge (style.css: box-swallows).
-      this.#angle += (((to.angle - this.#angle) % 360) + 360) % 360;
+      const yaw = poseYaw(box, to);
+      this.#angle += (((yaw - this.#angle) % 360) + 360) % 360;
       box.style.transition = 'none';
-      box.style.transform = boxTransform(this.#angle);
+      box.style.transform = boxTransform(this.#angle, poseTilt(box, to));
       void box.offsetWidth;
       box.style.removeProperty('transition');
       display?.classList.remove('cart-out');
       display?.classList.add('cart-leaving');
       this.#slideDone = setTimeout(() => display?.classList.remove('cart-leaving'), SLIDE_MS + 100);
     } else {
-      let delta = to.angle - from.angle;
-      // Always on round the same way: never back the long way.
-      if (direction > 0 && delta <= 0) delta += 360;
-      if (direction < 0 && delta >= 0) delta -= 360;
+      let delta = poseYaw(box, to) - poseYaw(box, from);
+      // Always on round the same way: never back the long way. A box only tipping forward or
+      // back (to its spine on top) does not turn.
+      const tips = poseTilt(box, to) !== poseTilt(box, from);
+      if (direction > 0 && delta <= 0 && !(tips && delta === 0)) delta += 360;
+      if (direction < 0 && delta >= 0 && !(tips && delta === 0)) delta -= 360;
       this.#angle += delta;
-      box.style.transform = boxTransform(this.#angle);
+      box.style.transform = boxTransform(this.#angle, poseTilt(box, to));
     }
     box.dataset.pose = to.id;
     this.#dots
@@ -1759,8 +1771,10 @@ export class CollectorView {
     this.#angle = 0;
     const box = el('div', { class: 'cbox', 'data-pose': 'front' });
     box.style.transform = boxTransform(0);
-    const size = { ratio: FRONT_RATIO, depth: SPINE_RATIO };
+    // `lying`: a spine along the top, its height over its length (depth from the box's width).
+    const size = { ratio: FRONT_RATIO, depth: SPINE_RATIO, lying: 0 };
     const resize = () => {
+      if (size.lying) size.depth = clamp(size.lying * size.ratio, 0.05, 0.3);
       const display = box.closest<HTMLElement>('.display');
       const h = display?.clientHeight
         ? boxHeight(
@@ -1817,6 +1831,11 @@ export class CollectorView {
         'load',
         () => {
           if (img.naturalHeight > 0) {
+            // Lying, it runs along the box's top (a Super Nintendo's): as long as the box is
+            // wide, and the box tips forward to show it.
+            const lying = img.naturalWidth > img.naturalHeight;
+            box.classList.toggle('lying', lying);
+            size.lying = lying ? img.naturalHeight / img.naturalWidth : 0;
             size.depth = clamp(img.naturalWidth / img.naturalHeight, 0.05, 0.3);
             resize();
           }
@@ -2119,14 +2138,16 @@ export function tvEra(category?: string, released?: number | null): string {
 }
 
 /**
- * How long a shelf's spines are, in rem, for pictures `shape` times as tall as wide, with `room`
- * about the shelf's middle: as long as their shape asks at the usual height, as far as there is
- * room, a touch shorter (a spine squeezed that little does not show it). Never shorter than the
- * usual, nor thinner: rows of spines with gaps between look wrong.
+ * How long a shelf's spines are, in rem, for pictures `shape` times as long as wide, with `room`
+ * about the shelf's middle: as long as their shape asks at the usual height, so a picture is
+ * never stretched (a Jaguar's or a Super Nintendo's, shorter than the usual, were). A long one
+ * as far as there is room, a touch shorter (a spine squeezed that little does not show it).
  */
 export function shelfShape(shape: number, room: number): number {
+  const exact = SPINE_H_REM * shape;
   const most = Math.max(SPINE_LEN_REM, room - 4);
-  return Math.round(clamp(SPINE_H_REM * shape * SPINE_SQUEEZE, SPINE_LEN_REM, most) * 100) / 100;
+  const length = exact > SPINE_LEN_REM ? exact * SPINE_SQUEEZE : exact;
+  return Math.round(clamp(length, SHORTEST_SPINE_REM, most) * 100) / 100;
 }
 
 /**
@@ -2257,8 +2278,17 @@ function videoArea(screen: HTMLElement): ScreenArea | null {
   };
 }
 
-function boxTransform(angle: number): string {
-  return `rotateY(${angle}deg)`;
+function boxTransform(angle: number, tilt = 0): string {
+  return `rotateX(${tilt}deg) rotateY(${angle}deg)`;
+}
+
+/** A box with its spine on top (`lying`) shows it tipped forward, not turned. */
+function poseYaw(box: HTMLElement, pose: { id: string; angle: number | null }): number {
+  return pose.id === 'spine' && box.classList.contains('lying') ? 0 : (pose.angle ?? 0);
+}
+
+function poseTilt(box: HTMLElement, pose: { id: string }): number {
+  return pose.id === 'spine' && box.classList.contains('lying') ? -90 : 0;
 }
 
 function clamp(n: number, min: number, max: number): number {
@@ -2582,12 +2612,17 @@ export function dumpText(
   );
 }
 
-/** How many times as tall as wide a spine picture is; `null` if it will not load. */
+/**
+ * How many times as long as wide a spine picture is, standing (most) or lying (a Super
+ * Nintendo's, along its box's top); `null` if it will not load.
+ */
 function spineShapeOf(url: string): Promise<number | null> {
   return new Promise((resolve) => {
     const img = new Image();
-    img.onload = () =>
-      resolve(img.naturalWidth && img.naturalHeight ? img.naturalHeight / img.naturalWidth : null);
+    img.onload = () => {
+      const { naturalWidth: w, naturalHeight: h } = img;
+      resolve(w && h ? Math.max(w, h) / Math.min(w, h) : null);
+    };
     img.onerror = () => resolve(null);
     img.src = url;
   });

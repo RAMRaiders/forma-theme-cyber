@@ -4811,6 +4811,13 @@ kbd.pad {
   object-fit: fill;
 }
 
+/* A spine that lies already (a Super Nintendo's): as it is. */
+.spine-row.lying .spine-pic {
+  width: calc(var(--spine-len) - 2px);
+  height: calc(var(--spine-h) - 2px);
+  transform: none;
+}
+
 .spine-row.pictured .band,
 .spine-row.pictured .title,
 .spine-row.marked .band {
@@ -5480,6 +5487,23 @@ kbd.pad {
 
 .cbox .bottom {
   transform: rotateX(-90deg) translateZ(calc(var(--h) / 2));
+}
+
+/* A spine along the top (a Super Nintendo's): the spine and the top change places. */
+.cbox.lying .spine {
+  top: calc((var(--h) - var(--d)) / 2);
+  left: 0;
+  width: var(--w);
+  height: var(--d);
+  transform: rotateX(90deg) translateZ(calc(var(--h) / 2));
+}
+
+.cbox.lying .top {
+  top: 0;
+  left: calc((var(--w) - var(--d)) / 2);
+  width: var(--d);
+  height: var(--h);
+  transform: rotateY(-90deg) translateZ(calc(var(--w) / 2));
 }
 
 /* Light on the shrink-wrap, fixed to the front. */
