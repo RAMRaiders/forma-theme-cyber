@@ -775,6 +775,8 @@ export class App {
       // The systems run down a column: up and down step through them, as left and right do;
       // the shoulders jump five.
       const step = move === 'left' ? 'up' : move === 'right' ? 'down' : move;
+      // The strip gone (the system's page read): this press brings it back where it was.
+      if (!repeat && this.#systemView.wake()) return;
       level.index = moveList(level.index, this.#systemView.count, step, 5, repeat);
       this.#systemView.select(level.index);
     } else if (
@@ -787,6 +789,8 @@ export class App {
       return;
     } else if (this.#list) {
       const view = this.#gameView;
+      // The Collector's shelf gone (the game's details read): this press brings it back.
+      if (!repeat && view === this.#collector && this.#collector.wake()) return;
       // Held, it races: further at each repeat the longer it is held.
       const now = performance.now();
       if (!repeat) this.#heldSince = now;

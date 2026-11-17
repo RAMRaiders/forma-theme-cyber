@@ -145,7 +145,10 @@ describe('the default theme', () => {
     expect(root.querySelector('.backdrop .circuit')).toBeNull();
     expect(text('.hint')).toContain('AGames');
 
-    // A system without info.json still shows, from Forma's data.
+    // A system without info.json still shows, from Forma's data. The first press, the strip
+    // gone, only brings it back where it was; the next moves.
+    await press('down');
+    expect(text('.system-list li.selected .name')).toEqual(['Nintendo Entertainment System']);
     await press('down');
     // The strip moves at once; the page changes under it when the selection rests.
     expect(text('.system-list li.selected .name')).toEqual(['Mega Drive']);
@@ -557,6 +560,8 @@ describe('the default theme', () => {
     const { press, root, text } = await start();
     await press('confirm');
     await vi.waitFor(() => expect(text('.system-list li.selected .name')).toHaveLength(1));
+    // The strip back, then a step.
+    await press('down');
     await press('down');
     expect(text('.system-list li.selected .name')).toEqual(['Mega Drive']);
     await press('back');
@@ -564,6 +569,7 @@ describe('the default theme', () => {
     await press('confirm');
     await vi.waitFor(() => expect(text('.system-list li.selected .name')).toEqual(['Mega Drive']));
 
+    await press('up');
     await press('up');
     await press('confirm');
     await vi.waitFor(() => expect(text('.row.selected')).toEqual(['Homebrew Demo']));
