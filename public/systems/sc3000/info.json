@@ -1,4 +1,10 @@
 {
   "bestsellers": ["Bank Panic", "Hustle Chumy", "Monaco GP"],
-  "bestsellersBy": "classics"
+  "bestsellersBy": "classics",
+  "curiosities": [
+    "It is the computer version of the SG-1000, Sega's first console, and plays its cartridges.",
+    "It came out in 1983 alongside the SG-1000, which reached Japanese shops the same day as Nintendo's Famicom.",
+    "Its BASIC came on a cartridge, not built in.",
+    "It was also sold in Australia and New Zealand."
+  ]
 }
