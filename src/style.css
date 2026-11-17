@@ -5362,11 +5362,11 @@ kbd.pad {
 }
 
 /* The box's sled and the cartridge's (SLIDE_MS in collector.ts). After its back, the box swipes
-   off to the left, out of the bay; the cartridge comes in from there to the middle. Then the
-   cartridge backs off to the left as the box, on its front, comes in from the left: they meet,
-   and the box, over it, swallows it and carries it back to the middle. Out of the case's bay
-   they are cut off: no opacity, the Pi's WebKit ghosts layers under a changing one. Each on its
-   own layer from the start: layers made mid-slide flickered. Both share one middle. */
+   off to the left, out of the bay, and the cartridge rises from below to the middle. Then the
+   cartridge sinks back down out of sight, and the box, on its front, comes in from the left.
+   Out of the case's bay they are cut off: no opacity, the Pi's WebKit ghosts layers under a
+   changing one. Each on its own layer from the start: layers made mid-slide flickered. Both
+   share one middle. */
 .bay.case {
   overflow: hidden;
 }
@@ -5386,44 +5386,40 @@ kbd.pad {
 }
 
 /* Off to the left, gathering speed, as if out of the screen. Its transition here only: on the
-   sled itself, the Pi's WebKit replayed it as the swallowing below ended (the box jumped back
+   sled itself, the Pi's WebKit replayed it as the box's return below ended (the box jumped back
    out to the left and slid in again). */
 .display.cart-out .mover {
   transform: translateX(-110%);
   transition: transform 1s cubic-bezier(0.55, 0, 0.75, 0.3);
 }
 
-/* Waiting out of sight on the left (past the bay's edge, which cuts it off). Never hidden: a
-   layer hidden until it moves is first drawn mid-slide on the Pi, and that showed as a jump. */
+/* Waiting out of sight below (past the bay's edge, which cuts it off). Never hidden: a layer
+   hidden until it moves is first drawn mid-slide on the Pi, and that showed as a jump. */
 .display .cart-stage {
-  transform: translateX(-110%);
+  transform: translateY(110%);
 }
 
-/* In from where the box went, once it has gone. */
+/* Up from below, once the box has gone. */
 .display.cart-out .cart-stage {
   transform: none;
   transition: transform 1.1s cubic-bezier(0.2, 0.7, 0.3, 1) 0.85s;
 }
 
-/* Both at once, ending where they began: the box at the middle, the cartridge inside it (and
-   back out of sight on the left once over, unseen under the box). */
+/* One after the other, ending where they began: the cartridge down out of sight first, then
+   the box in from the left to the middle. */
 .display.cart-leaving .mover {
-  animation: box-swallows 2.2s both;
+  animation: box-returns 2.2s both;
 }
 
 .display.cart-leaving .cart-stage {
-  animation: cart-swallowed 2.2s both;
+  animation: cart-sinks 2.2s both;
 }
 
-@keyframes box-swallows {
-  from {
+@keyframes box-returns {
+  from,
+  32% {
     transform: translateX(-110%);
-    animation-timing-function: cubic-bezier(0.3, 0.5, 0.6, 1);
-  }
-
-  45% {
-    transform: translateX(-28%);
-    animation-timing-function: cubic-bezier(0.3, 0, 0.3, 1);
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.3, 1);
   }
 
   to {
@@ -5431,19 +5427,15 @@ kbd.pad {
   }
 }
 
-@keyframes cart-swallowed {
+@keyframes cart-sinks {
   from {
     transform: none;
-    animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.75, 0.3);
   }
 
-  45% {
-    transform: translateX(-28%) scale(0.94);
-    animation-timing-function: cubic-bezier(0.3, 0, 0.3, 1);
-  }
-
+  38%,
   to {
-    transform: scale(0.94);
+    transform: translateY(110%);
   }
 }
 

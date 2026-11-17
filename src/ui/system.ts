@@ -391,6 +391,16 @@ export class SystemView {
     this.#dropTimer = setTimeout(() => this.#browsing(false), DROP_MS);
   }
 
+  /**
+   * A press with the strip gone: it shows again where it was, and only the next press moves.
+   * Whether it was gone (the press is then spent).
+   */
+  wake(): boolean {
+    if (this.root.classList.contains('browsing')) return false;
+    this.#browse();
+    return true;
+  }
+
   #browsing(on: boolean): void {
     this.root.classList.toggle('browsing', on);
     document.documentElement.classList.toggle('systems-browsing', on);

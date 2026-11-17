@@ -181,7 +181,7 @@ const STORY_FADE_MS = 300;
  * that quick presses pass games by undrawn, short enough that each slow press shows its game
  * before the next. The colours, the dossier and the TV come at the peek, sooner. */
 const SETTLE_MS = 320;
-/** The box swallowing the cartridge again (as in style.css). */
+/** The cartridge going down and the box coming back (as in style.css). */
 const SLIDE_MS = 2200;
 /** On a game: the box first turns after this, then every `TURN_MS`. */
 const FIRST_TURN_MS = 3200;
@@ -490,6 +490,16 @@ export class CollectorView {
     if (this.#resting() || ms <= 0) return;
     clearTimeout(this.#dropTimer);
     this.#dropTimer = setTimeout(() => this.#drop(), ms + DROP_MS);
+  }
+
+  /**
+   * Up or Down with the shelf gone: it shows again where it was, and only the next press moves.
+   * Whether it was gone (the press is then spent).
+   */
+  wake(): boolean {
+    if (!this.#resting()) return false;
+    this.#browse();
+    return true;
   }
 
   /** The shelf goes, the selection at rest. */
@@ -1251,9 +1261,8 @@ export class CollectorView {
 
   /**
    * The next pose (`1`) or the last (`-1`). Between the box's, it turns. After its back, the
-   * box swipes off to the left and its cartridge comes in from there; then the cartridge backs
-   * off to the left as the box comes in from the left, already turned to its pose, and swallows
-   * it on the way back to the middle.
+   * box swipes off to the left and its cartridge rises from below; then the cartridge sinks
+   * back down and the box comes in from the left, already turned to its pose.
    */
   #turnTo(direction: 1 | -1): void {
     const done = span('collector.turnTo');
@@ -1278,8 +1287,8 @@ export class CollectorView {
       display?.classList.remove('cart-leaving');
       display?.classList.add('cart-out');
     } else if (!from || from.angle === null) {
-      // Out of sight on the left: turned to its pose at once, to come in from there over the
-      // cartridge (style.css: box-swallows).
+      // Out of sight on the left: turned to its pose at once, to come in from there once the
+      // cartridge has gone down (style.css: box-returns).
       const yaw = poseYaw(box, to);
       this.#angle += (((yaw - this.#angle) % 360) + 360) % 360;
       box.style.transition = 'none';
