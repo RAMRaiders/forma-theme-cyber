@@ -1002,8 +1002,10 @@ describe('the box in its case', () => {
   it('stands as tall as the case allows, within bounds', () => {
     // A tall case, a narrow box: its height is what limits it.
     expect(boxHeight(40, 20, 0.72, 0.14)).toBeCloseTo(20 - 1.6);
-    // A wide box (an N64's) in a narrow case: its width is.
-    expect(boxHeight(30, 30, 1.4, 0.2)).toBeCloseTo(29 / 1.6);
+    // A wide box (an N64's) in a narrow case: its width is, at its widest as it turns.
+    expect(boxHeight(30, 30, 1.4, 0.2)).toBeCloseTo(29 / Math.hypot(1.4, 0.2));
+    // A European Mega CD's, wide and slim: hardly smaller than its front alone allows.
+    expect(boxHeight(16, 30, 801 / 680, 73 / 680)).toBeGreaterThan((15 / (801 / 680)) * 0.99);
     // Never taller than this, however big the case.
     expect(boxHeight(200, 200, 0.7, 0.1)).toBe(22);
     expect(boxHeight(5, 5, 1, 0.1)).toBe(12);
