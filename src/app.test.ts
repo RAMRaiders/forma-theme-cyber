@@ -46,7 +46,9 @@ async function start(
   });
   // Commands answered late, as on a slow box.
   const invoke = backend.invoke.bind(backend);
+  const calls: string[] = [];
   backend.invoke = async <T>(command: string, args?: Record<string, unknown>) => {
+    calls.push(command);
     const delay = slow[command];
     if (delay) await new Promise((r) => setTimeout(r, delay));
     return invoke<T>(command, args);
@@ -75,7 +77,7 @@ async function start(
   };
   const text = (selector: string) =>
     [...root.querySelectorAll(selector)].map((n) => n.textContent?.trim() ?? '');
-  return { fire, root, press, text, forma, backend };
+  return { fire, root, press, text, forma, backend, calls };
 }
 
 describe('the default theme', () => {
@@ -105,7 +107,7 @@ describe('the default theme', () => {
   });
 
   it('goes category → system → games, and back to where it was', async () => {
-    const { press, text, root } = await start();
+    const { press, text, root, calls } = await start();
     await press('confirm');
     expect(text('.trail .crumb')).toEqual(['Consoles']);
     // In the order Forma lists them: oldest first here.
@@ -159,9 +161,14 @@ describe('the default theme', () => {
     expect(root.querySelector('.systems.browsing')).not.toBeNull(); // still over the new page
     await press('up');
 
+    calls.length = 0;
     await press('confirm'); // A opens it at once, the strip or not
     // Switched on as its games open: its logo or name, lit, over the whole screen a moment.
     expect(document.querySelector('body > .boot.whole')).not.toBeNull();
+    // The list's pictures are made once the boot is over, not during it.
+    await vi.waitFor(() => expect(text('.trail .crumb.current')).toHaveLength(1));
+    expect(calls).not.toContain('library_prepare_list');
+    await vi.waitFor(() => expect(calls).toContain('library_prepare_list'), { timeout: 2500 });
     expect(text('.trail .crumb')).toEqual(['Consoles', 'Nintendo Entertainment System']);
     // Breadcrumbs: the step you are on is the lit one.
     expect(text('.trail .crumb.current')).toEqual(['Nintendo Entertainment System']);

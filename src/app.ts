@@ -423,13 +423,17 @@ export class App {
         this.#level.index = Math.min(index, Math.max(0, list.total - 1));
         this.#main.replaceChildren(this.#gameView.root);
         this.#gameView.show(list, this.#level.index);
-        if (this.#gameView instanceof CollectorView) {
-          this.#gameView.holdShelf(this.#bootedUntil - performance.now());
-        }
+        const booting = Math.max(0, this.#bootedUntil - performance.now());
+        if (this.#gameView instanceof CollectorView) this.#gameView.holdShelf(booting);
         this.#bootedUntil = 0;
         if (wasFiltered !== null && wasFiltered !== first.filtered) this.#gameView.reveal();
         this.#listPlace = { view, path };
-        this.#prepareList(this.#level.index);
+        // The list's pictures made once the system's boot is over: on a first visit making them
+        // all took the Pi from the boot, which stuttered as the list came.
+        clearTimeout(this.#prepareTimer);
+        const around = this.#level.index;
+        if (booting > 0) this.#prepareTimer = setTimeout(() => this.#prepareList(around), booting);
+        else this.#prepareList(around);
       } else {
         this.#list = null;
         this.#cards = await this.#allCards(first);
