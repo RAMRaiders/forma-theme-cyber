@@ -4748,10 +4748,16 @@ kbd.pad {
 }
 
 .spine-row {
+  /* Its thickness: the shelf's, or thinner for a spine picture much slenderer than the shelf's
+     shape (a Mega CD jewel case's among longboxes), kept in shape and centred in its place.
+     Within an eighth of the shelf's, it fills the row as the others. */
+  --t: min(var(--spine-h), var(--spine-len) * 1.12 / var(--shape, 0.01));
+
   position: absolute;
   left: calc(var(--mid) - var(--spine-len) / 2);
   width: var(--spine-len);
-  height: var(--spine-h);
+  height: var(--t);
+  margin-top: calc((var(--spine-h) - var(--t)) / 2);
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -4804,17 +4810,17 @@ kbd.pad {
   position: absolute;
   top: 0;
   left: 0;
-  width: calc(var(--spine-h) - 2px);
+  width: calc(var(--t) - 2px);
   height: calc(var(--spine-len) - 2px);
   transform-origin: 0 0;
-  transform: translateY(calc(var(--spine-h) - 2px)) rotate(-90deg);
+  transform: translateY(calc(var(--t) - 2px)) rotate(-90deg);
   object-fit: fill;
 }
 
 /* A spine that lies already (a Super Nintendo's): as it is. */
 .spine-row.lying .spine-pic {
   width: calc(var(--spine-len) - 2px);
-  height: calc(var(--spine-h) - 2px);
+  height: calc(var(--t) - 2px);
   transform: none;
 }
 

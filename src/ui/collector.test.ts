@@ -1168,6 +1168,18 @@ describe('the shelf in the shape of its spines', () => {
     // A long one: the usual size.
     expect(shelfFit(18.4, 100, 1)).toEqual({ length: 49.29, scale: 1 });
   });
+
+  it('draws spines too long for the room thinner, not squashed', () => {
+    // A European Mega CD's (63x1290) in 34rem: as long as the room lets, its rows thinner.
+    const megacd = shelfFit(1290 / 63, 34, 1);
+    expect(megacd.length).toBe(30);
+    expect(megacd.scale).toBeLessThan(1);
+    expect(megacd.scale).toBeGreaterThanOrEqual(0.6);
+    // One that nearly fits, a little thinner only.
+    const near = shelfFit(11.5, 34, 1);
+    expect(near.scale).toBeGreaterThan(0.9);
+    expect(near.scale).toBeLessThanOrEqual(1);
+  });
 });
 
 describe('collector words', () => {
