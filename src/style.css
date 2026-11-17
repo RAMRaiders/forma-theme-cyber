@@ -4163,8 +4163,9 @@ kbd.pad {
   content: '';
   position: absolute;
   inset: 0;
-  /* One even shade all over: the art shows the same everywhere, the words read on it. */
-  background: rgb(4 6 12 / 55%);
+  /* One even shade all over: the art shows the same everywhere, the words read on it (a bright
+     fan art too, at 64%: still the game's own picture, not a black screen). */
+  background: rgb(4 6 12 / 64%);
 }
 
 /* The game's video plays under the page, in the footage bay's window only: the fan art has a
@@ -4295,8 +4296,8 @@ kbd.pad {
   display: grid;
   place-items: center;
   padding: 0.5rem;
-  /* Into the middle column, up to the shelf's dark band: its rows (22rem) leave its edges free. */
-  margin-right: -3.5rem;
+  /* In the case's column alone: the shelf has the room from it to the dossier, its spines
+     centred there (collector.ts). */
   container-type: size;
   /* Faded out, never hidden: hidden, it was painted anew each time the shelf came (as the case
      was, measured: 80 ms on a Pi). Its layer is kept, ready, painted once. */

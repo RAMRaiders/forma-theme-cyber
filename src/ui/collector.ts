@@ -790,21 +790,24 @@ export class CollectorView {
   }
 
   /**
-   * The shelf's middle over the footage; a long spine may reach over the case's side (put away
-   * while the shelf shows), never over the dossier, lit beside it (a PC Engine's ran into it).
+   * The shelf's middle: halfway between the TV standing in the case's place and the dossier,
+   * lit beside it, so the spines sit in the middle of the room they have; over the footage
+   * until those are laid out. A long spine reaches neither (a PC Engine's ran into the dossier).
    */
   #centreShelf(): void {
     const bay = this.root.querySelector('.bay.footage');
     const shelf = this.#shelf.getBoundingClientRect();
     const footage = bay?.getBoundingClientRect();
     if (!footage?.width || !shelf.width) return;
-    const mid = footage.left + footage.width / 2 - shelf.left;
-    this.#shelf.style.setProperty('--mid', `${mid}px`);
     const dossier = this.#dossier.getBoundingClientRect();
+    const tv = this.#tv.getBoundingClientRect();
     // Up to the dossier, when it is beside the footage (not laid out yet: the whole view).
     const edge = dossier.left - shelf.left;
-    const right = dossier.width && edge > mid ? edge : shelf.width;
-    this.#shelfRoom = (2 * Math.min(mid, right - mid)) / remPx();
+    const right = dossier.width && edge > 0 ? edge : shelf.width;
+    const left = tv.width && tv.right - shelf.left < right ? tv.right - shelf.left : 0;
+    const mid = left > 0 ? (left + right) / 2 : footage.left + footage.width / 2 - shelf.left;
+    this.#shelf.style.setProperty('--mid', `${mid}px`);
+    this.#shelfRoom = (2 * Math.min(mid - left, right - mid)) / remPx();
   }
 
   /** A game's pictures were replaced: draws again its spine and, if it is the one shown, its case. */
