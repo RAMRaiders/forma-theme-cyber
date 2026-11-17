@@ -4283,6 +4283,8 @@ kbd.pad {
   /* Long and soft: the rows sink away gradually, no edge where the list ends. */
   height: 30%;
   pointer-events: none;
+  /* Layers of their own, still: always over the rows' layers moving under them. */
+  will-change: transform;
 }
 
 .shelf::before {
@@ -4964,12 +4966,13 @@ kbd.pad {
   transform: translateY(
     calc(clamp(-1, (var(--i) - var(--sel, 0)) * 1000, 1) * var(--spine-h) * 0.22)
   );
-  transition:
-    transform 140ms ease-out,
-    opacity 160ms ease-out;
+  transition: transform 140ms ease-out;
 }
 
-/* Its spine picture not decoded yet: out of sight until it is, then faded in, in its shape. */
+/* Its spine picture not decoded yet: out of sight until it is, then there, in its shape. Not
+   faded in: a row fading is a layer of its own, which a Pi's WebKit drew over the shelf's dark
+   ends until the fade was over (rows came in bright, darkened after). They come in under the
+   dark ends anyway. */
 .spine-row.waiting {
   opacity: 0;
 }
@@ -4983,7 +4986,7 @@ kbd.pad {
 /* Held: the rows glide by as they are, none growing and shrinking at every step. */
 .shelf .track.held .spine-row {
   transform: none;
-  transition: opacity 160ms ease-out;
+  transition: none;
 }
 
 .shelf .track.held .spine-row[aria-selected='true'] {
