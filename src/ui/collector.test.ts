@@ -99,8 +99,9 @@ describe('the Collector view', () => {
     expect(src('.cbox .back img')).toBe('forma://media/7/boxback?w=640');
     // The cartridge behind the box, until its turn.
     expect(src('.display .cart-stage img')).toBe('forma://media/7/cartridge?w=400');
-    // Its screenshots on the footage bay's screen, the first showing.
-    expect(v.root.querySelectorAll('.bay.footage .screen img')).toHaveLength(2);
+    // Its screenshot on the footage bay's screen (not its title screen, which Cyber does not
+    // show), showing.
+    expect(v.root.querySelectorAll('.bay.footage .screen img')).toHaveLength(1);
     expect(v.root.querySelectorAll('.bay.footage .screen img.on')).toHaveLength(1);
     expect(text('.poses span')).toEqual(['Front', 'Spine', 'Back', 'Cartridge']);
     expect(text('.poses .on')).toEqual(['Front']);

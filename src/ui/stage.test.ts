@@ -101,10 +101,8 @@ describe('the game stage', () => {
     expect(srcs('.case .front')).toEqual(['forma://media/1/thumbnail?w=520']);
     expect(srcs('.case .back')).toEqual(['forma://media/1/boxback?w=520']);
     expect(srcs('.cartridge')).toEqual(['forma://media/1/cartridge?w=360']);
-    expect(srcs('.shot img')).toEqual([
-      'forma://media/1/image?w=480',
-      'forma://media/1/titleshot?w=480'
-    ]);
+    // Its screenshot; not its title screen, which Cyber does not show.
+    expect(srcs('.shot img')).toEqual(['forma://media/1/image?w=480']);
     expect(text('.facts dt')).toEqual([
       'Released',
       'Developer',

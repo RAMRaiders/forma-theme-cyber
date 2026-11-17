@@ -97,9 +97,7 @@ export const COLLECTOR_PICTURES: readonly (readonly [Kind, number])[] = [
   ['cartridge', 400],
   ['thumbnail', 64],
   ['marquee', 560],
-  ['titleshot', 400],
   ['image', 400],
-  ['mix', 400],
   ['map', 400]
 ];
 
@@ -207,7 +205,7 @@ const POSES: readonly Pose[] = [
 ];
 
 /** Screenshots, as prints. */
-const PRINTS: Kind[] = ['titleshot', 'image', 'mix', 'map'];
+const PRINTS: Kind[] = ['image', 'map'];
 
 const motion = () => document.documentElement.dataset.motion !== 'off';
 
@@ -1460,10 +1458,10 @@ export class CollectorView {
     );
   }
 
-  /** The TV's picture for `game`: its screenshot, else its title screen, else its box. */
+  /** The TV's picture for `game`: its screenshot, else its box. */
   #navPicOf(game: Game): { shot: string | null; src: string | null } {
     const media = this.#options.media;
-    const shot = media(game, 'image', 400) ?? media(game, 'titleshot', 400);
+    const shot = media(game, 'image', 400);
     return { shot, src: shot ?? media(game, 'thumbnail', 640) };
   }
 

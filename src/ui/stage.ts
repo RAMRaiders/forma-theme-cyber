@@ -95,10 +95,6 @@ export const STAGE_PICTURES: readonly (readonly [Kind, number])[] = [
   ['cartridge', 360],
   ['image', 480],
   ['image', 960],
-  ['titleshot', 480],
-  ['titleshot', 960],
-  ['mix', 480],
-  ['mix', 960],
   ['map', 480],
   ['map', 960]
 ];
@@ -114,7 +110,7 @@ const STILL_MS = 5000;
 const CAPTION_CHARS = 170;
 
 /** Screenshots, in the order they are shown. */
-const STILLS: Kind[] = ['image', 'titleshot', 'mix', 'map'];
+const STILLS: Kind[] = ['image', 'map'];
 
 /** Systems whose games' descriptions are arcade histories. */
 export const ARCADE = new Set([
