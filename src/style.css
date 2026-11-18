@@ -4254,12 +4254,13 @@ kbd.pad {
   /* Over the footage (collector.ts measures it), though the shelf spans the whole view. */
   --mid: 50%;
   overflow: hidden;
-  /* Near black only round the spines; beyond it the screen shows, dimmed, as a sneak peek. */
+  /* A shade round the spines, light enough that the fan art shows through it: a black box's
+     spine stands out on it, not into it. Beyond it the screen shows, dimmed, as a sneak peek. */
   background: linear-gradient(
     90deg,
     transparent calc(var(--mid) - var(--spine-len) / 2 - 3rem),
-    rgb(3 5 11 / 94%) calc(var(--mid) - var(--spine-len) / 2 - 0.8rem),
-    rgb(3 5 11 / 94%) calc(var(--mid) + var(--spine-len) / 2 + 0.8rem),
+    rgb(3 5 11 / 45%) calc(var(--mid) - var(--spine-len) / 2 - 0.8rem),
+    rgb(3 5 11 / 45%) calc(var(--mid) + var(--spine-len) / 2 + 0.8rem),
     transparent calc(var(--mid) + var(--spine-len) / 2 + 3rem)
   );
   opacity: 0;
@@ -4291,9 +4292,9 @@ kbd.pad {
   top: 0;
   background: linear-gradient(
     180deg,
-    rgb(3 5 11 / 97%) 0%,
-    rgb(3 5 11 / 80%) 25%,
-    rgb(3 5 11 / 40%) 60%,
+    rgb(3 5 11 / 80%) 0%,
+    rgb(3 5 11 / 55%) 25%,
+    rgb(3 5 11 / 25%) 60%,
     rgb(3 5 11 / 0%) 100%
   );
 }
@@ -4302,9 +4303,9 @@ kbd.pad {
   bottom: 0;
   background: linear-gradient(
     0deg,
-    rgb(3 5 11 / 97%) 0%,
-    rgb(3 5 11 / 80%) 25%,
-    rgb(3 5 11 / 40%) 60%,
+    rgb(3 5 11 / 80%) 0%,
+    rgb(3 5 11 / 55%) 25%,
+    rgb(3 5 11 / 25%) 60%,
     rgb(3 5 11 / 0%) 100%
   );
 }

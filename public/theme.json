@@ -1,7 +1,7 @@
 {
   "id": "cyber",
   "name": "Cyber",
-  "version": "0.18.30",
+  "version": "0.18.31",
   "entry": "index.html",
   "logo": "logo.svg",
   "sdk": "^1.26",
