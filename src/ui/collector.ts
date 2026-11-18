@@ -2040,7 +2040,7 @@ export class CollectorView {
     // The copy at hand: what kind it is, as released (a release, a prototype, a demo, homebrew,
     // unlicensed…) and as changed since (a fan translation, a hack), together; its number
     // apart; who made a translation's patch; in what languages; and whether the file is the
-    // dump No-Intro or Redump lists, once Forma has checked it.
+    // dump No-Intro, Redump or TOSEC lists, once Forma has checked it.
     const changed = tags.status
       ? versionText(tags.status).replace(/\bTranslation\b/, 'Fan translation')
       : null;
@@ -2687,7 +2687,11 @@ function madeBack(game: Game, media: MediaUrl): HTMLElement[] {
   ];
 }
 
-const CATALOGUES: Record<string, string> = { 'no-intro': 'No-Intro', redump: 'Redump' };
+const CATALOGUES: Record<string, string> = {
+  'no-intro': 'No-Intro',
+  redump: 'Redump',
+  tosec: 'TOSEC'
+};
 
 /** A dump check's verdict in words, and how sure it is: `verified`, `doubtful`, `unknown`. */
 function verdictOf(status: string): [string, string] {

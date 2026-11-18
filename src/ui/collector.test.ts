@@ -375,6 +375,15 @@ describe('the Collector view', () => {
       'No-IntroVerified',
       'RedumpCRC32 match'
     ]);
+    // TOSEC, for what No-Intro leaves out (an Atari 2600 pirate cart, say).
+    const tosec = dumpText({
+      status: 'verified',
+      // Newer than the SDK this theme is built with: Forma sends it all the same.
+      catalogue: 'tosec' as 'redump',
+      name: 'A Misterious Thief (CCE)',
+      region: null
+    });
+    expect(tosec!.querySelector('.badge')!.textContent).toBe('TOSECVerified');
     // Just the labels: not the catalogue's name for the dump.
     expect(both!.querySelector('.listed')).toBeNull();
     expect(
