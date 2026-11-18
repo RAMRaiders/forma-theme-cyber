@@ -2919,6 +2919,36 @@
       {
         "file": "mag-1.webp",
         "title": "Beep"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Sega Computer 7/84"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "BEEP! #1"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "John Sands catalogue"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Sega Computer 6/85"
+      },
+      {
+        "file": "mag-6.webp",
+        "title": "Sega Computer 10/85"
+      }
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "SG-1000 II"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "SC-3000 computer"
       }
     ]
   },

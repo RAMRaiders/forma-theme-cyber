@@ -161,7 +161,14 @@
     "mega-drive-fan-1991-12-15-appendix-mega-cd-fan-volume-1",
     "beepmega-cdappendix-booklet-march-1992"
   ],
-  "sg1000": ["beep-1986-04"],
+  "sg1000": [
+    "beep-1986-04",
+    "Sega_Computer_1984-07_Nomac_Publishing_NZ",
+    "beep-1985-01-01-number-1-volume-1-issue-1",
+    "John_Sands_Sega_Home_Computers_1984_John_Sands_Electronics_AU",
+    "Sega_Computer_1985-06_Nomac_Publishing_NZ",
+    "Sega_Computer_1985-10_Nomac_Publishing_NZ"
+  ],
   "gb": [
     "game-boy-official-magazine-3",
     "game-boy-players-guide",

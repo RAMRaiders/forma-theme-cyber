@@ -104,3 +104,5 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **megacd**: Justifier light gun, [Konami-Justifiers-Genesis-Light-Gun.jpg](https://commons.wikimedia.org/wiki/File:Konami-Justifiers-Genesis-Light-Gun.jpg), by Evan-Amos, Public domain.
 - **megacd**: Mega-CD II, [Sega-CD-Model2-Set.jpg](https://commons.wikimedia.org/wiki/File:Sega-CD-Model2-Set.jpg), by Evan-Amos, Public domain.
 - **megacd**: CDX (Multi-Mega), [Sega-CDX-BR.jpg](https://commons.wikimedia.org/wiki/File:Sega-CDX-BR.jpg), by Evan-Amos, Public domain.
+- **sg1000**: SG-1000 II, [Sega-SG-1000-MkII-Console-FL.jpg](https://commons.wikimedia.org/wiki/File:Sega-SG-1000-MkII-Console-FL.jpg), by Evan-Amos, Public domain.
+- **sg1000**: SC-3000 computer, [Sega SC-3000 wb.jpg](https://commons.wikimedia.org/wiki/File:Sega_SC-3000_wb.jpg), by Bilby, CC BY 3.0.
