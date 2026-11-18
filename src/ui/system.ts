@@ -805,9 +805,7 @@ export class SystemView {
       'aside',
       { class: 'fact' },
       el('span', { class: 'label' }, 'Did you know?'),
-      scroller('p', fact),
-      // How long until the next one, when they move on by themselves (see `#scheduleFact`).
-      facts.length > 1 && this.rotateFacts ? el('span', { class: 'timer' }) : null
+      scroller('p', fact)
     );
   }
 
@@ -817,7 +815,6 @@ export class SystemView {
     if (facts.length < 2 || !this.rotateFacts) return;
     const strip = this.#slots.get('fact');
     const ms = stayMs(strip?.querySelector<HTMLElement>('.scroll'), facts[this.#fact] ?? '');
-    strip?.querySelector<HTMLElement>('.timer')?.style.setProperty('--fact-ms', `${ms}ms`);
     this.#factTimer = setTimeout(
       awake(() => this.nextFact()),
       ms
