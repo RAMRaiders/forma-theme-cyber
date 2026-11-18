@@ -651,7 +651,7 @@ main {
 }
 
 /* No button for a while (idle.ts): what only decorates holds still where it is, and goes on
-   from there at the next. Not the words that scroll, the facts' timer or a video: those are
+   from there at the next. Not the words that scroll or a video: those are
    what is shown. */
 :root.idle .circuit .pulse,
 :root.idle .system-panel .stage .deck::before,
@@ -2078,32 +2078,6 @@ main {
   mask-image: linear-gradient(transparent, #000 0.6em, #000 calc(100% - 0.6em), transparent);
 }
 
-.system-panel .fact .timer {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    var(--sys),
-    rgb(var(--sys2-rgb)),
-    rgb(var(--sys3-rgb)),
-    rgb(var(--sys4-rgb))
-  );
-  transform-origin: left;
-  will-change: transform;
-  /* In 24 steps, not smoothly: smooth, this thin line alone kept a Pi drawing every frame
-     (a fifth of Forma's main thread, a tenth of WebKit's compositor), all the time. */
-  animation: fact-timer var(--fact-ms, 10s) steps(24) both;
-}
-
-@keyframes fact-timer {
-  from {
-    transform: scaleX(0);
-  }
-}
-
 /* Moving from system to system: the stage changes once the selection rests and its pictures
    are ready, the last one fading out as the next fades in. Opacity only: cheap on a Pi. */
 .system-panel .entering {
@@ -2167,8 +2141,7 @@ main {
   animation: none !important;
 }
 
-:root[data-motion='off'] .system-panel .leaving,
-:root[data-motion='off'] .system-panel .fact .timer {
+:root[data-motion='off'] .system-panel .leaving {
   display: none;
 }
 
