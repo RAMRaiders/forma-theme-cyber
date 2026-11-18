@@ -3,37 +3,12 @@
 Front pages of magazines about each system, from the Internet Archive, shown on the systems
 screen. Built by `scripts/build-magazines.mjs`.
 
-- **snes**: [Super Play Super Nintendo Magazine](https://archive.org/details/sup01)
-- **snes**: [The Super Famicom 1990-12-28 - Number 3 - Volume 1 - Issue 3](https://archive.org/details/the-super-famicom-1990-12-28-number-3-volume-1-issue-3)
-- **snes**: [Super Pro Issue 01](https://archive.org/details/super-pro-01)
-- **snes**: [SNES Force - Issue 07](https://archive.org/details/SNES_Force_Issue_07_1993-12_Impact_Magazines_GB)
-- **snes**: [Marukatsu Super Famicom (マル勝スーパーファミコン) February 26 1993 02 26](https://archive.org/details/marukatsu-super-famicom-february-26-1993-02-26-600dpi-ozidual)
-- **snes**: [Nintendo Magazine System #10](https://archive.org/details/nintendo-magazine-system-10)
-- **snes**: [Super Gamer Issue 11](https://archive.org/details/super-gamer-11)
-- **snes**: [SNES Force Issue 01](https://archive.org/details/snes-force-01)
-- **nes**: [Nintendo Power Issue #1(July/August 1988)](https://archive.org/details/nintendo_power_issue1)
-- **nes**: [Family Computer Magazine - Issue 105 June 22nd 1990](https://archive.org/details/family-computer-magazine-issue-105-june-22nd-1990)
-- **nes**: [Total Nintendo Magazine UK Issue 2 February 1992](https://archive.org/details/total-nintendo-uk-issue-2)
-- **nes**: [Game Player's Strategy Guide to Nintendo Games Vol.2 No.3 (June/July 1989)](https://archive.org/details/game-players-strategy-guide-to-nintendo-games-vol.-2-no.-3-june-july-1989)
-- **nes**: [Electronic Gaming Monthly — 1989](https://archive.org/details/electronic-gaming-monthly-1989-06)
-- **nes**: [Nintendo Fun Club News Issue 03 Fall 1987](https://archive.org/details/Nintendo_Fun_Club_News_Issue_03_Fall_1987)
-- **nes**: [Nintendo Power Issue 002 September October 1988](https://archive.org/details/NintendoPowerIssue002SeptemberOctober1988)
-- **nes**: [Nintendo Power Issue #3 November December 1988](https://archive.org/details/nintendopowerissue003novemberdecember1988)
-- **saturn**: [Official Sega Saturn Magazine Issue 1](https://archive.org/details/Official_Sega_Saturn_Magazine_001)
-- **saturn**: [Saturn Fan 1995 7](https://archive.org/details/saturn-fan-1995-7)
-- **saturn**: [Sega Saturn Magazine 1994 01](https://archive.org/details/sega-saturn-magazine-ja-1994-12-01)
-- **saturn**: [Supplement Issue 53 SEGA MegaZone Saturn Guide](https://archive.org/details/sup53saturnguide)
-- **saturn**: [Sega Saturn Magazine - Issue 02](https://archive.org/details/Sega_Saturn_Magazine_Issue_02_1995-12_EMAP_Images_GB)
-- **saturn**: [Official Sega Saturn Magazine Issue 22 (Resident Evil 1)](https://archive.org/details/official-sega-saturn-magazine-issue-22)
-- **jaguar**: [EDGE #022 (1995) - Supplement: Atari Jaguar](https://archive.org/details/EDGE.N022.1995.07.Supplement.Atari.Jaguar)
-- **jaguar**: [JAGUAR JAPAN 1](https://archive.org/details/jaguar-japan-1)
-- **jaguar**: [Atari Fan N°5 (Primavera 1995)](https://www.atarimania.com/magazines/134)
-- **jaguar**: [Electronic Games 1993-09](https://archive.org/details/Electronic-Games-1993-09)
-- **jaguar**: [Cat Rap: News Source for the Atari Jaguar — Issue 1 — September 1993](https://archive.org/details/cat-rap-01-1993-09)
-- **jaguar**: [Cat Rap: News Source for the Atari Jaguar — Issue 2 — January 1994](https://archive.org/details/cat-rap-02-1994-01)
-- **megacd**: [Megatech Supplement Mega CD Guide](https://archive.org/details/mega-tech-supplement-mega-cd-guide)
-- **megacd**: [Mega Drive Fan - 1991-12-15 - Appendix - Mega-CD Fan Volume 1](https://archive.org/details/mega-drive-fan-1991-12-15-appendix-mega-cd-fan-volume-1)
-- **megacd**: [BEEP Mega CD Appendix Booklet (March 1992)](https://archive.org/details/beepmega-cdappendix-booklet-march-1992)
+- **sg1000**: [Beep 1986 04](https://archive.org/details/beep-1986-04)
+- **sg1000**: [Sega Computer](https://archive.org/details/Sega_Computer_1984-07_Nomac_Publishing_NZ)
+- **sg1000**: [Beep - 1985-01-01 - Number 1 - Volume 1 - Issue 1](https://archive.org/details/beep-1985-01-01-number-1-volume-1-issue-1)
+- **sg1000**: [Sega 3000 Catalog: John Sands Sega Home Computers (1984)(John Sands Electronics)](https://archive.org/details/John_Sands_Sega_Home_Computers_1984_John_Sands_Electronics_AU)
+- **sg1000**: [Sega Computer](https://archive.org/details/Sega_Computer_1985-06_Nomac_Publishing_NZ)
+- **sg1000**: [Sega Computer](https://archive.org/details/Sega_Computer_1985-10_Nomac_Publishing_NZ)
 - **3do**: [3DO Magazine](https://archive.org/details/3DOMagazineIssue10199605ParagonPublishingGB)
 - **3do**: [Electronic Games 1993-11](https://archive.org/details/Electronic-Games-1993-11)
 - **3do**: [Ultimate Future Games - Issue 02](https://archive.org/details/Ultimate_Future_Games_Issue_02_1995-01_Future_Publishing_GB)
@@ -115,6 +90,12 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **gbc2players**: [Total Game Boy Issue 01](https://archive.org/details/Total_Game_Boy_Issue_01)
 - **gbc2players**: [GBX Game Boy Xtreme 06](https://archive.org/details/gbx-2001-12-06)
 - **gbc2players**: [Total Game Boy Issue 03](https://archive.org/details/Total_Game_Boy_Issue_03)
+- **jaguar**: [EDGE #022 (1995) - Supplement: Atari Jaguar](https://archive.org/details/EDGE.N022.1995.07.Supplement.Atari.Jaguar)
+- **jaguar**: [JAGUAR JAPAN 1](https://archive.org/details/jaguar-japan-1)
+- **jaguar**: [Atari Fan N°5 (Primavera 1995)](https://www.atarimania.com/magazines/134)
+- **jaguar**: [Electronic Games 1993-09](https://archive.org/details/Electronic-Games-1993-09)
+- **jaguar**: [Cat Rap: News Source for the Atari Jaguar — Issue 1 — September 1993](https://archive.org/details/cat-rap-01-1993-09)
+- **jaguar**: [Cat Rap: News Source for the Atari Jaguar — Issue 2 — January 1994](https://archive.org/details/cat-rap-02-1994-01)
 - **jaguarcd**: [Atari Fan N°6 (Verano 1995)](https://www.atarimania.com/magazines/134)
 - **jaguarcd**: [A.P.E. — Atari Power Entertainment, No. 21, Fall Holiday 1995](https://archive.org/details/ape-atari-newsletter-issue-21)
 - **jaguarcd**: [A.P.E. — Atari Power Entertainment, No. 20, Summer 1995](https://archive.org/details/ape-atari-newsletter-issue-20)
@@ -129,6 +110,9 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **mastersystem**: [Sega Force Issue 01](https://archive.org/details/sega-force-01)
 - **mastersystem**: [Mean Machines Sega Issues 1-53](https://archive.org/details/MMSega01Oct92)
 - **mastersystem**: [Mean Machines Sega Magazine Issue 03](https://archive.org/details/mean-machines-sega-magazine-03)
+- **megacd**: [Megatech Supplement Mega CD Guide](https://archive.org/details/mega-tech-supplement-mega-cd-guide)
+- **megacd**: [Mega Drive Fan - 1991-12-15 - Appendix - Mega-CD Fan Volume 1](https://archive.org/details/mega-drive-fan-1991-12-15-appendix-mega-cd-fan-volume-1)
+- **megacd**: [BEEP Mega CD Appendix Booklet (March 1992)](https://archive.org/details/beepmega-cdappendix-booklet-march-1992)
 - **megadrive**: [Sega Mega Drive Advanced Gaming Issue 05](https://archive.org/details/segamegadriveadvancedgaming05)
 - **megadrive**: [Sega Force Issue 10](https://archive.org/details/sega-force-10)
 - **megadrive**: [Mean Machines Sega Issue 09](https://archive.org/details/mean-machines-sega-09)
@@ -162,6 +146,14 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **neogeocd**: Neo Geo CD Software Catalogue
 - **neogeocd**: SNK Neo-Geo CD WW Magazine Advertisements & Reviews
 - **neogeocd**: 電玩玩味叢書 013 NEO GEO CD特辑
+- **nes**: [Nintendo Power Issue #1(July/August 1988)](https://archive.org/details/nintendo_power_issue1)
+- **nes**: [Family Computer Magazine - Issue 105 June 22nd 1990](https://archive.org/details/family-computer-magazine-issue-105-june-22nd-1990)
+- **nes**: [Total Nintendo Magazine UK Issue 2 February 1992](https://archive.org/details/total-nintendo-uk-issue-2)
+- **nes**: [Game Player's Strategy Guide to Nintendo Games Vol.2 No.3 (June/July 1989)](https://archive.org/details/game-players-strategy-guide-to-nintendo-games-vol.-2-no.-3-june-july-1989)
+- **nes**: [Electronic Gaming Monthly — 1989](https://archive.org/details/electronic-gaming-monthly-1989-06)
+- **nes**: [Nintendo Fun Club News Issue 03 Fall 1987](https://archive.org/details/Nintendo_Fun_Club_News_Issue_03_Fall_1987)
+- **nes**: [Nintendo Power Issue 002 September October 1988](https://archive.org/details/NintendoPowerIssue002SeptemberOctober1988)
+- **nes**: [Nintendo Power Issue #3 November December 1988](https://archive.org/details/nintendopowerissue003novemberdecember1988)
 - **ngp**: NeoGeo Pocket Soft Information Vol. 2
 - **ngp**: SNK Neo-Geo Pocket Color WW Magazine Advertisements & Reviews
 - **ngpc**: SNK Neo-Geo Pocket Color WW Magazine Advertisements & Reviews
@@ -178,14 +170,27 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **psx**: [Official US PlayStation Magazine - Volume 3 Issue 1](https://archive.org/details/Official_US_PlayStation_Magazine_Volume_3_Issue_1_1999-10_Ziff_Davis_US)
 - **satellaview**: Satellaview Tsushin Monthly FamicomTsushin May extra issue
 - **satellaview**: Satellaview Tsushin サテラビュー通信 1995年9月号
+- **saturn**: [Official Sega Saturn Magazine Issue 1](https://archive.org/details/Official_Sega_Saturn_Magazine_001)
+- **saturn**: [Saturn Fan 1995 7](https://archive.org/details/saturn-fan-1995-7)
+- **saturn**: [Sega Saturn Magazine 1994 01](https://archive.org/details/sega-saturn-magazine-ja-1994-12-01)
+- **saturn**: [Supplement Issue 53 SEGA MegaZone Saturn Guide](https://archive.org/details/sup53saturnguide)
+- **saturn**: [Sega Saturn Magazine - Issue 02](https://archive.org/details/Sega_Saturn_Magazine_Issue_02_1995-12_EMAP_Images_GB)
+- **saturn**: [Official Sega Saturn Magazine Issue 22 (Resident Evil 1)](https://archive.org/details/official-sega-saturn-magazine-issue-22)
 - **scummvm**: LucasArts "The Adventurer" Magazine Complete 13 Issues
 - **scummvm**: Curse of Monkey Island, The Prima
 - **scummvm**: The Adventurer magazine
 - **sega32x**: [Mean Machines Sega Magazine Issue 29](https://archive.org/details/mean-machines-sega-magazine-29)
 - **sega32x**: [SEGA Magazine Issue 12 Supplement - Megadrive 32X Guide](https://archive.org/details/sega-magazine-uk-12-supplement-megadrive-32-x-guide)
 - **sega32x**: [Digital Pictures on the Megadrive 32X (advert, 1995)](https://tse1.mm.bing.net/th/id/OIP.B1yD2CNNVH7MS8svfLGcMAHaKK)
-- **sg1000**: Beep 1986 04
 - **sgb**: Nintendo Player's Guide Super Game Boy
+- **snes**: [Super Play Super Nintendo Magazine](https://archive.org/details/sup01)
+- **snes**: [The Super Famicom 1990-12-28 - Number 3 - Volume 1 - Issue 3](https://archive.org/details/the-super-famicom-1990-12-28-number-3-volume-1-issue-3)
+- **snes**: [Super Pro Issue 01](https://archive.org/details/super-pro-01)
+- **snes**: [SNES Force - Issue 07](https://archive.org/details/SNES_Force_Issue_07_1993-12_Impact_Magazines_GB)
+- **snes**: [Marukatsu Super Famicom (マル勝スーパーファミコン) February 26 1993 02 26](https://archive.org/details/marukatsu-super-famicom-february-26-1993-02-26-600dpi-ozidual)
+- **snes**: [Nintendo Magazine System #10](https://archive.org/details/nintendo-magazine-system-10)
+- **snes**: [Super Gamer Issue 11](https://archive.org/details/super-gamer-11)
+- **snes**: [SNES Force Issue 01](https://archive.org/details/snes-force-01)
 - **supergrafx**: NEC Super Grafx JAP Magazine Advertisements
 - **supergrafx**: Daimakaimura (NEC Supergrafx) - Box, Manual and Card Scans
 - **videopacplus**: Videopac Philips

@@ -6,7 +6,8 @@
  * `{ "url": <a picture, or a scanned PDF whose first picture is its cover>, "title": …,
  * "page": <where it is credited> }` (Atarimania's scans, say). Each cover is written as
  * public/systems/<id>/mag-<n>.webp, and listed in public/systems/art.json as `magazines`, with
- * its short name from scripts/magazine-names.json (its full title without one);
+ * its short name from scripts/magazine-names.json, by archive.org id or by full title (its full
+ * title without one);
  * public/systems/MAGAZINES.md says where each came from, by full title.
  *
  *   node scripts/build-magazines.mjs
@@ -113,7 +114,8 @@ async function fetchCover(id, item, file) {
     .toFile(join(SYSTEMS, id, file));
   const page = typeof item === 'object' ? item.page : `https://archive.org/details/${item}`;
   credits.push(`- **${id}**: [${title}](${page})`);
-  const name = NAMES[title] ?? title;
+  // By its archive.org id when issues share a title (`Sega Computer`), else by its title.
+  const name = (typeof item === 'string' && NAMES[item]) || NAMES[title] || title;
   console.log(`${id}: ${name}${name === title ? ' (no short name in magazine-names.json)' : ''}`);
   return { file, title: name };
 }
