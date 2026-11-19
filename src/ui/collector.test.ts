@@ -141,6 +141,26 @@ describe('the Collector view', () => {
     expect(box.style.transform).toBe('rotateX(0deg) rotateY(540deg)');
   });
 
+  it('shapes a box with no pictures as its system’s case', async () => {
+    const shaped = async (system: string) => {
+      const { v } = await view([{ ...game(3, 'Doom'), system }]);
+      const box = v.root.querySelector<HTMLElement>('.cbox')!;
+      const h = parseFloat(box.style.getPropertyValue('--h'));
+      return {
+        ratio: parseFloat(box.style.getPropertyValue('--w')) / h,
+        depth: parseFloat(box.style.getPropertyValue('--d')) / h,
+        lying: box.classList.contains('lying')
+      };
+    };
+    const snes = await shaped('snes');
+    expect(snes.lying).toBe(true);
+    expect(snes.ratio).toBeCloseTo(1.39, 1);
+    const psp = await shaped('psp');
+    expect(psp.lying).toBe(false);
+    expect(psp.ratio).toBeCloseTo(0.58, 1);
+    expect(psp.depth).toBeCloseTo(0.078, 1);
+  });
+
   it('makes up the spine and back a game has no picture of', async () => {
     const { v, src, text } = await view([game(3, 'Doom', { thumbnail: 'front', wheel: 'logo' })]);
     expect(v.root.querySelector('.cbox .spine .made-spine')).not.toBeNull();
@@ -883,7 +903,8 @@ describe('the Collector view', () => {
     ]);
     const shelf = v.root.querySelector<HTMLElement>('.shelf')!;
     expect(shelf.style.getPropertyValue('--spine-h')).toBe('3.19rem');
-    expect(shelf.style.getPropertyValue('--spine-len')).toBe('24.64rem');
+    // An Atari box's spine, shorter than a Mega Drive's.
+    expect(shelf.style.getPropertyValue('--spine-len')).toBe('18.77rem');
     const rows = [...v.root.querySelectorAll<HTMLElement>('.spine-row')].map((r) => r.style.top);
     expect(rows).toContain('3.584rem');
   });
@@ -1143,7 +1164,8 @@ describe('the shelf in the shape of its spines', () => {
         .mockReturnValue({ left: 0, top: 0, width: 1600, height: 900 } as DOMRect);
       const { v } = await view(games);
       const shelf = v.root.querySelector<HTMLElement>('.shelf')!;
-      expect(shelf.style.getPropertyValue('--spine-len')).toBe('22rem');
+      // A TurboGrafx-16 case's spine until its pictures are measured.
+      expect(shelf.style.getPropertyValue('--spine-len')).toBe('29.77rem');
       for (let i = 0; i < 5; i++) await Promise.resolve();
       rect.mockRestore();
       expect(shelf.style.getPropertyValue('--spine-len')).toBe('49.29rem');

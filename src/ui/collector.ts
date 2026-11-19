@@ -28,6 +28,7 @@ import {
   playtime
 } from './stage.js';
 import { awake } from './rest.js';
+import { caseShape, spineShape } from '../data/cases.js';
 import { borderOf, placeTrimmed, placedBox, trimmedAspect } from './trim.js';
 
 /**
@@ -121,6 +122,8 @@ const BIGGER_SPINES = /^atari/;
 const BIGGER_SCALE = 1.12;
 /** The shortest a shelf's spines are drawn, whatever their pictures. */
 const SHORTEST_SPINE_REM = 14;
+/** The room about the shelf's middle taken, before the view is laid out to measure it. */
+const UNLAID_ROOM_REM = 44;
 /** How much shorter than its shape asks a long spine is drawn. */
 const SPINE_SQUEEZE = 0.94;
 
@@ -206,9 +209,6 @@ const BOX_MIN_REM = 12;
 const BOX_MAX_REM = 22;
 /** Kept clear under the box. */
 const UNDER_REM = 1.6;
-/** Until its pictures say otherwise: a Mega Drive case's shape. */
-const FRONT_RATIO = 0.72;
-const SPINE_RATIO = 0.14;
 /** The most a box is drawn bigger when turned to its spine. */
 const MOST_SPINE_ZOOM = 1.5;
 /** The thinnest case, its depth over its height: a Japanese Mega CD's jewel case is about 0.04. */
@@ -836,7 +836,10 @@ export class CollectorView {
   #sizeShelf(system: string, source: LazyList<Game>, selected: number): void {
     const base = BIGGER_SPINES.test(system) ? BIGGER_SCALE : 1;
     const known = spineFits.get(system);
-    this.#fitShelf(known ?? { length: SPINE_LEN_REM * base, scale: base });
+    // Until its pictures say otherwise, spines of the shape of the system's own case.
+    if (!known && !this.#shelfRoom) this.#centreShelf();
+    const cased = shelfFit(spineShape(caseShape(system)), this.#shelfRoom || UNLAID_ROOM_REM, base);
+    this.#fitShelf(known ?? cased);
     if (known !== undefined) return;
     const urls: string[] = [];
     for (let i = 0; i < source.total && urls.length < SPINE_PROBES; i++) {
@@ -846,15 +849,13 @@ export class CollectorView {
       if (url) urls.push(url);
     }
     if (urls.length === 0) {
-      spineFits.set(system, { length: SPINE_LEN_REM * base, scale: base });
+      spineFits.set(system, cased);
       return;
     }
     void Promise.all(urls.map(spineShapeOf)).then((shapes) => {
       const known = shapes.filter((s): s is number => s !== null);
       if (!this.#shelfRoom) this.#centreShelf();
-      const fit = known.length
-        ? shelfFit(Math.min(...known), this.#shelfRoom, base)
-        : { length: SPINE_LEN_REM * base, scale: base };
+      const fit = known.length ? shelfFit(Math.min(...known), this.#shelfRoom, base) : cased;
       spineFits.set(system, fit);
       if (this.#shelfSystem === system) this.#fitShelf(fit);
     });
@@ -1859,8 +1860,15 @@ export class CollectorView {
     this.#angle = 0;
     const box = el('div', { class: 'cbox', 'data-pose': 'front' });
     box.style.transform = boxTransform(0);
-    // `lying`: a spine along the top, its height over its length (depth from the box's width).
-    const size = { ratio: FRONT_RATIO, depth: SPINE_RATIO, lying: 0 };
+    // Its system's case until its pictures say otherwise. `lying`: a spine along the top, its
+    // height over its length (depth from the box's width).
+    const shape = caseShape(game.system);
+    const size = {
+      ratio: shape.ratio,
+      depth: shape.depth,
+      lying: shape.lying ? shape.depth / shape.ratio : 0
+    };
+    box.classList.toggle('lying', shape.lying);
     const resize = () => {
       if (size.lying) size.depth = clamp(size.lying * size.ratio, SLIMMEST_DEPTH, 0.3);
       const display = box.closest<HTMLElement>('.display');
