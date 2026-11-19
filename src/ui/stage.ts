@@ -5,6 +5,7 @@ import { gameTags } from '../logic/romname.js';
 import { DEFAULT_BACK, DEFAULT_FRONT } from './cover.js';
 import { el } from './dom.js';
 import { awake } from './rest.js';
+import { caseShape } from '../data/cases.js';
 
 /**
  * The selected game on a stage of its own: it fills the screen and plays out in acts while
@@ -447,13 +448,16 @@ export class Stage {
 
     const box = el('div', { class: 'box3d' });
     const turn = el('div', { class: 'case' });
-    // Sized to the box's own shape once its picture is in: the faces and spine follow it.
+    // Shaped as its system's case, then as its own front once that picture is in (a made-up
+    // front keeps the case's shape); the spine as deep as the case.
+    const shape = caseShape(game.system);
+    turn.style.aspectRatio = String(shape.ratio);
     const face = picture(front, 'front');
     face.addEventListener(
       'load',
       () => {
         if (face.naturalWidth > 0) {
-          turn.style.aspectRatio = `${face.naturalWidth} / ${face.naturalHeight}`;
+          if (scanned) turn.style.aspectRatio = `${face.naturalWidth} / ${face.naturalHeight}`;
           box.classList.add('ready');
         }
       },
@@ -463,7 +467,9 @@ export class Stage {
       once: true
     });
     turn.append(face);
-    turn.append(el('div', { class: 'spine' }));
+    const spine = el('div', { class: 'spine' });
+    spine.style.aspectRatio = String(shape.depth);
+    turn.append(spine);
     if (back) {
       turn.append(picture(back, 'back'));
       box.classList.add('has-back');

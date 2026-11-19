@@ -2945,7 +2945,8 @@ main {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 1.6rem;
+  /* As deep as its case: its depth over its height, set as its aspect ratio. */
+  aspect-ratio: 0.08;
   background: linear-gradient(90deg, #111, #2a2f3a);
   transform-origin: left center;
   transform: rotateY(-90deg);
@@ -5627,6 +5628,21 @@ kbd.pad {
   align-items: center;
   justify-content: center;
   transform: rotate(90deg);
+}
+
+/* Along the top of a wide box (a Super Nintendo's): as long as the box is wide, read level. */
+.cbox.lying .made-spine {
+  background: linear-gradient(
+    180deg,
+    hsl(var(--hue) 70% 22%),
+    hsl(var(--hue) 70% 40%) 50%,
+    hsl(var(--hue) 70% 22%)
+  );
+}
+
+.cbox.lying .made-spine .along {
+  width: var(--w);
+  transform: none;
 }
 
 .made-spine .logo {
