@@ -141,9 +141,11 @@ const spineFits = new Map<string, ShelfFit>();
 const MOST_SPINE_SCALE = 1.3;
 /** What a short spine grows towards: a little longer than the usual. */
 const GROWN_SPINE_REM = SPINE_LEN_REM * 1.2;
-/** The thinnest a shelf's rows are drawn, for spines too long for the room (a Mega CD's jewel
- * case, some 21 times as long as wide): thinner rows, not squashed pictures. */
-const LEAST_SPINE_SCALE = 0.6;
+/** The thinnest a shelf's rows are drawn, for spines too long for the room (a jewel case's, some
+ * 20 times as long as wide): thinner rows, not squashed pictures. Slenderer still, they run past
+ * the room instead (over the TV's and the dossier's edges while the shelf shows): at 0.6 a
+ * PlayStation's were too thin to read. */
+const LEAST_SPINE_SCALE = 0.85;
 
 /** Row height of the shelf in rem: each a box on its side. */
 const ROW_REM = 3.2;
@@ -2261,11 +2263,13 @@ export function shelfFit(shape: number, room: number, base: number): ShelfFit {
   const natural = SPINE_H_REM * shape;
   const length = shelfShape(shape, room / base);
   if (natural >= SPINE_LEN_REM || length < natural) {
-    // Longer than the room lets it be: its rows thinner, so the picture keeps its shape.
+    // Longer than the room lets it be: its rows thinner, so the picture keeps its shape; never
+    // thinner than the least, longer than the room then.
     const squeezed = natural * SPINE_SQUEEZE;
     const thin = squeezed > length ? clamp(length / squeezed, LEAST_SPINE_SCALE, 1) : 1;
+    const long = Math.max(length, squeezed * thin);
     return {
-      length: Math.round(length * base * 100) / 100,
+      length: Math.round(long * base * 100) / 100,
       scale: Math.round(base * thin * 1000) / 1000
     };
   }

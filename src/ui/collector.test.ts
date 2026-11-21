@@ -1223,11 +1223,18 @@ describe('the shelf in the shape of its spines', () => {
   });
 
   it('draws spines too long for the room thinner, not squashed', () => {
-    // A European Mega CD's (63x1290) in 34rem: as long as the room lets, its rows thinner.
+    // A European Mega CD's (63x1290) in 34rem: its rows thinner, but never past the least;
+    // longer than the room then, in shape.
     const megacd = shelfFit(1290 / 63, 34, 1);
-    expect(megacd.length).toBe(30);
-    expect(megacd.scale).toBeLessThan(1);
-    expect(megacd.scale).toBeGreaterThanOrEqual(0.6);
+    expect(megacd.scale).toBe(0.85);
+    expect(megacd.length).toBeGreaterThan(30);
+    expect(megacd.length / megacd.scale).toBeCloseTo(2.85 * (1290 / 63) * 0.94, 0);
+    // A PlayStation's (34x680) likewise: no thinner than the least.
+    expect(shelfFit(680 / 34, 34, 1).scale).toBe(0.85);
+    // One a little long for the room: only as long as the room, a little thinner.
+    const fair = shelfFit(13, 34, 1);
+    expect(fair.length).toBe(30);
+    expect(fair.scale).toBeGreaterThan(0.85);
     // One that nearly fits, a little thinner only.
     const near = shelfFit(11.5, 34, 1);
     expect(near.scale).toBeGreaterThan(0.9);
