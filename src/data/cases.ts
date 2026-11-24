@@ -318,20 +318,19 @@ export function spineShape(shape: CaseShape): number {
 }
 
 /**
- * Systems whose games' spines differ by region, and how much longer than the shelf's a slim
- * region's row is drawn (its picture kept in shape, so it is that much thicker too).
+ * Systems whose games' cases differ by region: how tall they stand (mm), and how many times as
+ * long as wide their spine pictures are; PAL's, and everywhere else's.
  */
-const REGIONAL_SIZES: Record<string, { pal: number; other: number }> = {
-  // PAL boxes' spines (7.8 times as long as wide) set the shelf; US and Japanese jewel cases'
-  // spine cards (17.4) would be half as thick at that length, barely readable: drawn longer.
-  dreamcast: { pal: 1, other: 1.3 }
+const REGIONAL: Record<string, { pal: RegionalCase; other: RegionalCase }> = {
+  // A PAL box (190 mm, its spine 7.8 times as long as wide); a US or Japanese thick jewel case
+  // (125 mm), its spine card 17.4 times.
+  dreamcast: { pal: { mm: 190, spine: 7.8 }, other: { mm: 125, spine: 17.4 } }
 };
 
-/** The same systems' cases, how tall they stand (mm): PAL's, and everywhere else's. */
-const REGIONAL_HEIGHTS: Record<string, { pal: number; other: number }> = {
-  // A PAL box (190 mm); a US or Japanese thick jewel case (125 mm).
-  dreamcast: { pal: 190, other: 125 }
-};
+interface RegionalCase {
+  mm: number;
+  spine: number;
+}
 
 /** Cyber's region codes that are PAL Europe (and Australia, sold the same boxes). */
 const PAL_REGIONS: ReadonlySet<string> = new Set([
@@ -356,13 +355,29 @@ const PAL_REGIONS: ReadonlySet<string> = new Set([
   'ru'
 ]);
 
+/** Every region a game's name gives is PAL's (none given: not PAL). */
+function isPal(regions: readonly string[]): boolean {
+  return regions.length > 0 && regions.every((r) => PAL_REGIONS.has(r));
+}
+
+/** Whether a system's cases differ by region (its shelf rows then as thick as each one's). */
+export function regionalCases(system: string): boolean {
+  return system in REGIONAL;
+}
+
 /**
- * How long a game's row is against the shelf's, by its regions (Cyber's codes, its name's):
- * PAL's when every region it names is; 1 where the system's spines do not differ by region.
+ * How many times as long as wide a game's spine is, by its regions (Cyber's codes, its name's):
+ * PAL's when every region it names is; `null` where the system's cases do not differ by region.
  */
-export function spineSize(system: string, regions: readonly string[]): number {
-  const sizes = REGIONAL_SIZES[system];
-  return sizes ? (isPal(regions) ? sizes.pal : sizes.other) : 1;
+export function regionalSpine(system: string, regions: readonly string[]): number | null {
+  const cases = REGIONAL[system];
+  return cases ? (isPal(regions) ? cases.pal : cases.other).spine : null;
+}
+
+/** The stubbiest spine of a system whose cases differ by region: what its shelf is sized to. */
+export function stubbiestSpine(system: string): number | null {
+  const cases = REGIONAL[system];
+  return cases ? Math.min(cases.pal.spine, cases.other.spine) : null;
 }
 
 /**
@@ -370,18 +385,7 @@ export function spineSize(system: string, regions: readonly string[]): number {
  * Japanese Dreamcast's jewel case two thirds of a PAL box. 1 where cases do not differ by region.
  */
 export function caseScale(system: string, regions: readonly string[]): number {
-  const mm = REGIONAL_HEIGHTS[system];
-  if (!mm) return 1;
-  return (isPal(regions) ? mm.pal : mm.other) / Math.max(mm.pal, mm.other);
-}
-
-/** Every region a game's name gives is PAL's (none given: not PAL). */
-function isPal(regions: readonly string[]): boolean {
-  return regions.length > 0 && regions.every((r) => PAL_REGIONS.has(r));
-}
-
-/** The longest a system's row is against its shelf's: what its shade and fades span. */
-export function widestSpine(system: string): number {
-  const sizes = REGIONAL_SIZES[system];
-  return sizes ? Math.max(sizes.pal, sizes.other) : 1;
+  const cases = REGIONAL[system];
+  if (!cases) return 1;
+  return (isPal(regions) ? cases.pal : cases.other).mm / Math.max(cases.pal.mm, cases.other.mm);
 }

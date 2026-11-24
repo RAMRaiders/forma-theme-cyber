@@ -28,7 +28,14 @@ import {
   playtime
 } from './stage.js';
 import { awake } from './rest.js';
-import { caseScale, caseShape, spineShape, spineSize, widestSpine } from '../data/cases.js';
+import {
+  caseScale,
+  caseShape,
+  regionalCases,
+  regionalSpine,
+  spineShape,
+  stubbiestSpine
+} from '../data/cases.js';
 import { borderOf, placeTrimmed, placedBox, trimmedAspect } from './trim.js';
 
 /**
@@ -139,6 +146,9 @@ const spineFits = new Map<string, ShelfFit>();
 
 /** The biggest a shelf's rows are drawn, short spines (a Super Nintendo's) grown to it. */
 const MOST_SPINE_SCALE = 1.3;
+/** How much bigger a shelf whose cases differ by region is drawn (a Dreamcast's: its US and
+ * Japanese spine cards, slim, readable), as far as there is room. */
+const REGIONAL_SCALE = 1.4;
 /** What a short spine grows towards: a little longer than the usual. */
 const GROWN_SPINE_REM = SPINE_LEN_REM * 1.2;
 /** The thinnest a shelf's rows are drawn, for spines too long for the room (a Mega CD's jewel
@@ -309,6 +319,18 @@ export class CollectorView {
   #spineScale = 1;
   /** How long a spine can be, in rem, about the shelf's middle; 0 until measured. */
   #shelfRoom = 0;
+  /** Rows as thick as each one's case (a shelf whose cases differ by region), each taking only
+   * its own room: positions counted from the row the list opened at, `#anchor`. */
+  #variable = false;
+  /** The shelf's spine length (rem), as `--spine-len` has it. */
+  #spineLen = SPINE_LEN_REM;
+  /** Whether the list loops, as last laid out. */
+  #loopsNow = false;
+  /** Where rows of a varying shelf start (rem), those worked out from loaded games. */
+  #rowYs = new Map<number, number>();
+  #anchor = 0;
+  /** The track's position last set (px), to set it again only when it moves. */
+  #trackY = NaN;
   /** The rows, moved as one so the selected sits in the middle: a transform, gliding. */
   readonly #track = el('div', { class: 'track' });
   /**
@@ -452,6 +474,10 @@ export class CollectorView {
     // The same game as before (the list reloaded, after a favourite say): no shelf, the case
     // goes on as it was, only what changed about the game is shown.
     const now = source.get(selected);
+    this.#variable = !!now && regionalCases(now.system);
+    this.#anchor = selected;
+    this.#rowYs.clear();
+    this.#trackY = NaN;
     if (now && now.system !== this.#shelfSystem) {
       this.#shelfSystem = now.system;
       this.#sizeShelf(now.system, source, selected);
@@ -612,9 +638,9 @@ export class CollectorView {
     // The selected row in the middle, at the ends of the list too; the rows glide there. Whole
     // pixels: text on a layer moved by a fraction of one shimmers.
     const total = this.#source?.total ?? 0;
-    this.#place =
-      from >= 0 && this.#loops(total, row) ? loopPlace(this.#place, from, index, total) : index;
-    this.#track.style.transform = `translateY(${Math.round(this.#pad - this.#place * row)}px)`;
+    this.#loopsNow = this.#loops(total, row);
+    this.#place = from >= 0 && this.#loopsNow ? loopPlace(this.#place, from, index, total) : index;
+    this.#moveTrack();
     this.render();
     if (!changed || quiet) return;
     clearTimeout(this.#aroundTimer);
@@ -711,7 +737,7 @@ export class CollectorView {
     if (!source) return;
     const row = this.#rowRem * remPx();
     // Those in sight round the selected one, and a few more for the glide.
-    const half = Math.ceil(this.#shelfHeight / row / 2) + OVERSCAN;
+    const half = Math.ceil(this.#shelfHeight / (this.#variable ? row / 2 : row) / 2) + OVERSCAN;
     const loops = this.#loops(source.total, row);
     const at = loops ? this.#place : Math.max(0, this.#selected);
     const first = loops ? at - half : Math.max(0, at - half);
@@ -734,12 +760,12 @@ export class CollectorView {
       let node = this.#rows.get(i);
       if (!node) {
         node = el('div', { class: 'spine-row', role: 'option' });
-        node.style.top = `${Math.round(i * this.#rowRem * 1000) / 1000}rem`;
         // Its place, against the selected one's (--sel): the rows round it make room (CSS).
         node.style.setProperty('--i', String(i));
         this.#track.append(node);
         this.#rows.set(i, node);
       }
+      this.#placeRow(i, node);
       const key = game ? String(game.id) : '';
       if (node.dataset.key !== key) {
         node.dataset.key = key;
@@ -749,7 +775,6 @@ export class CollectorView {
         );
         node.classList.remove('tinted');
         if (game) this.#spineColour(game, node);
-        this.#caseSize(game, node);
       }
       // Which is selected: for screen readers, and the selected spine stands out bigger (CSS).
       const selected = i === (loops ? at : this.#selected);
@@ -757,18 +782,9 @@ export class CollectorView {
         node.setAttribute('aria-selected', String(selected));
       }
     }
+    // Games loaded since: a varying shelf's rows may have moved, the selected one kept centred.
+    if (this.#variable) this.#moveTrack();
     if (this.#pending && this.selected) this.#showSelected();
-  }
-
-  /**
-   * A row longer than the shelf's for a slim region's spine (a US Dreamcast's jewel case among
-   * PAL boxes, see cases.ts): style.css keeps its picture's shape, so it is thicker too, readable.
-   */
-  #caseSize(game: Game | undefined, node: HTMLElement): void {
-    const size = game ? spineSize(game.system, gameTags(game).regions) : 1;
-    if (size !== 1) node.style.setProperty('--size', String(size));
-    else node.style.removeProperty('--size');
-    node.classList.toggle('sized', size !== 1);
   }
 
   /**
@@ -807,6 +823,7 @@ export class CollectorView {
       const { naturalWidth: w, naturalHeight: h } = kept;
       node.classList.toggle('lying', w > h);
       node.style.setProperty('--shape', (Math.max(w, h) / Math.min(w, h)).toFixed(2));
+      this.#markSlim(node, Math.max(w, h) / Math.min(w, h));
       return [kept, ...parts];
     }
     const img = picture(src, 'spine-pic');
@@ -828,7 +845,10 @@ export class CollectorView {
       if (img.parentNode !== node) return;
       const { naturalWidth: w, naturalHeight: h } = img;
       node.classList.toggle('lying', w > h);
-      if (w && h) node.style.setProperty('--shape', (Math.max(w, h) / Math.min(w, h)).toFixed(2));
+      if (w && h) {
+        node.style.setProperty('--shape', (Math.max(w, h) / Math.min(w, h)).toFixed(2));
+        this.#markSlim(node, Math.max(w, h) / Math.min(w, h));
+      }
       node.classList.remove('waiting');
     };
     (typeof img.decode === 'function' ? img.decode() : Promise.resolve()).then(ready, () => {
@@ -847,6 +867,14 @@ export class CollectorView {
    */
   #sizeShelf(system: string, source: LazyList<Game>, selected: number): void {
     const base = BIGGER_SPINES.test(system) ? BIGGER_SCALE : 1;
+    // Cases differing by region (a Dreamcast's): sized to the stubbiest region's spine, bigger,
+    // each row then as thick as its own case's spine.
+    const stubbiest = stubbiestSpine(system);
+    if (stubbiest) {
+      if (!this.#shelfRoom) this.#centreShelf();
+      this.#fitShelf(shelfFit(stubbiest, this.#shelfRoom || UNLAID_ROOM_REM, REGIONAL_SCALE));
+      return;
+    }
     const known = spineFits.get(system);
     // Until its pictures say otherwise, spines of the shape of the system's own case.
     if (!known && !this.#shelfRoom) this.#centreShelf();
@@ -880,18 +908,91 @@ export class CollectorView {
     if (fit.scale === 1) this.#shelf.style.removeProperty('--spine-h');
     else this.#shelf.style.setProperty('--spine-h', `${this.#len(SPINE_H_REM)}rem`);
     this.#shelf.style.setProperty('--spine-len', `${fit.length}rem`);
-    // Its shade, fades and lens as wide as its longest rows (a US Dreamcast's).
-    const wide = widestSpine(this.#shelfSystem ?? '');
-    if (wide > 1) this.#shelf.style.setProperty('--spine-wide', `${fit.length * wide}rem`);
-    else this.#shelf.style.removeProperty('--spine-wide');
+    this.#spineLen = fit.length;
+    this.#rowYs.clear();
     if (!changed || this.#rows.size === 0) return;
-    for (const [i, node] of this.#rows) {
-      node.style.top = `${Math.round(i * this.#rowRem * 1000) / 1000}rem`;
-    }
+    for (const [i, node] of this.#rows) this.#placeRow(i, node);
     this.#measure();
-    const row = this.#rowRem * remPx();
-    this.#track.style.transform = `translateY(${Math.round(this.#pad - this.#place * row)}px)`;
+    this.#moveTrack();
     this.render();
+  }
+
+  /**
+   * A spine picture `shape` times as long as wide much slimmer than its row asks (a US
+   * Dreamcast's among PAL boxes): drawn exactly in shape, not given the eighth that lets a
+   * nearly full one fill the row (style.css).
+   */
+  #markSlim(node: HTMLElement, shape: number): void {
+    node.classList.toggle('slim', (this.#spineLen * 1.12) / shape < this.#len(SPINE_H_REM));
+  }
+
+  /**
+   * How thick row `i`'s spine is (rem), from its game's case where the system's cases differ by
+   * region (known before its picture is), else the shelf's, as style.css draws it; `known` once
+   * its game is loaded.
+   */
+  #thickness(i: number): { t: number; known: boolean } {
+    const h = this.#len(SPINE_H_REM);
+    if (!this.#variable) return { t: h, known: true };
+    const source = this.#source;
+    const game = source?.get(this.#loopsNow ? loopIndex(i, source.total) : i);
+    if (!game) return { t: h, known: false };
+    const shape = regionalSpine(game.system, gameTags(game).regions);
+    const len = this.#spineLen;
+    const t = !shape || (len * 1.12) / shape >= h ? h : len / shape;
+    return { t, known: true };
+  }
+
+  /**
+   * Where row `i`'s room starts (rem): rows of a varying shelf each take their own, counted from
+   * the row the list opened at; kept once the games on the way are loaded.
+   */
+  #rowY(i: number): number {
+    if (!this.#variable) return i * this.#rowRem;
+    if (i === this.#anchor) return 0;
+    const kept = this.#rowYs.get(i);
+    if (kept !== undefined) return kept;
+    const gap = this.#rowRem - this.#len(SPINE_H_REM);
+    const dir = i > this.#anchor ? 1 : -1;
+    let k = i;
+    while (k !== this.#anchor && !this.#rowYs.has(k)) k -= dir;
+    let y = k === this.#anchor ? 0 : (this.#rowYs.get(k) ?? 0);
+    let known = true;
+    while (k !== i) {
+      const from = dir > 0 ? k : k - 1;
+      const { t, known: loaded } = this.#thickness(from);
+      y += dir * (t + gap);
+      k += dir;
+      known &&= loaded;
+      if (known) this.#rowYs.set(k, y);
+    }
+    return y;
+  }
+
+  /** Row `i` in its place: style.css centres a row in the shelf's thickness, so a thinner one is
+   * moved up by as much, its own room starting where it is. */
+  #placeRow(i: number, node: HTMLElement): void {
+    const y = this.#variable
+      ? this.#rowY(i) - (this.#len(SPINE_H_REM) - this.#thickness(i).t) / 2
+      : this.#rowY(i);
+    const top = `${Math.round(y * 1000) / 1000}rem`;
+    if (node.style.top !== top) node.style.top = top;
+  }
+
+  /** The track moved so the selected row is in the middle (under the lens). Whole pixels: text
+   * on a layer moved by a fraction of one shimmers. */
+  #moveTrack(): void {
+    const rem = remPx();
+    const h = this.#len(SPINE_H_REM);
+    const y = this.#variable
+      ? this.#pad +
+        (h / 2) * rem -
+        (this.#rowY(this.#place) + this.#thickness(this.#place).t / 2) * rem
+      : this.#pad - this.#place * this.#rowRem * rem;
+    const px = Math.round(y);
+    if (px === this.#trackY) return;
+    this.#trackY = px;
+    this.#track.style.transform = `translateY(${px}px)`;
   }
 
   /** A spine length (rem) at this system's spine size. */

@@ -2,7 +2,15 @@ import { describe, expect, it } from 'vitest';
 
 import { readFileSync } from 'node:fs';
 
-import { CASED_SYSTEMS, caseScale, caseShape, spineShape, spineSize } from './cases.js';
+import {
+  CASED_SYSTEMS,
+  caseScale,
+  caseShape,
+  regionalCases,
+  regionalSpine,
+  spineShape,
+  stubbiestSpine
+} from './cases.js';
 
 describe('cases', () => {
   it('gives every Batocera system a case of its own', () => {
@@ -32,19 +40,23 @@ describe('cases', () => {
   });
 });
 
-describe('spineSize', () => {
-  it('draws a US or Japanese Dreamcast spine longer than a PAL one', () => {
-    expect(spineSize('dreamcast', ['eu'])).toBe(1);
-    expect(spineSize('dreamcast', ['uk', 'fr'])).toBe(1);
-    expect(spineSize('dreamcast', ['us'])).toBe(1.3);
-    expect(spineSize('dreamcast', ['jp'])).toBe(1.3);
+describe('regionalSpine', () => {
+  it('knows a US or Japanese Dreamcast spine is slimmer than a PAL one', () => {
+    expect(regionalSpine('dreamcast', ['eu'])).toBe(7.8);
+    expect(regionalSpine('dreamcast', ['uk', 'fr'])).toBe(7.8);
+    expect(regionalSpine('dreamcast', ['us'])).toBe(17.4);
+    expect(regionalSpine('dreamcast', ['jp'])).toBe(17.4);
     // Sold in Europe and elsewhere, or no region named: the jewel case.
-    expect(spineSize('dreamcast', ['us', 'eu'])).toBe(1.3);
-    expect(spineSize('dreamcast', [])).toBe(1.3);
+    expect(regionalSpine('dreamcast', ['us', 'eu'])).toBe(17.4);
+    expect(regionalSpine('dreamcast', [])).toBe(17.4);
+    expect(stubbiestSpine('dreamcast')).toBe(7.8);
   });
 
-  it('leaves alone systems whose spines do not differ by region', () => {
-    expect(spineSize('megadrive', ['us'])).toBe(1);
+  it('leaves alone systems whose cases do not differ by region', () => {
+    expect(regionalSpine('megadrive', ['us'])).toBeNull();
+    expect(stubbiestSpine('megadrive')).toBeNull();
+    expect(regionalCases('megadrive')).toBe(false);
+    expect(regionalCases('dreamcast')).toBe(true);
   });
 });
 

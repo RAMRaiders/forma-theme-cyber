@@ -4225,9 +4225,6 @@ kbd.pad {
      (collector.ts sets it then). */
   --spine-len: 22rem;
   --spine-h: 2.85rem;
-  /* Its longest rows (collector.ts: a US Dreamcast's, longer than the shelf's): the shade, fades
-     and lens span them. */
-  --spine-wide: var(--spine-len);
   /* Over the footage (collector.ts measures it), though the shelf spans the whole view. */
   --mid: 50%;
   overflow: hidden;
@@ -4235,10 +4232,10 @@ kbd.pad {
      spine stands out on it, not into it. Beyond it the screen shows, dimmed, as a sneak peek. */
   background: linear-gradient(
     90deg,
-    transparent calc(var(--mid) - var(--spine-wide) / 2 - 3rem),
-    rgb(3 5 11 / 45%) calc(var(--mid) - var(--spine-wide) / 2 - 0.8rem),
-    rgb(3 5 11 / 45%) calc(var(--mid) + var(--spine-wide) / 2 + 0.8rem),
-    transparent calc(var(--mid) + var(--spine-wide) / 2 + 3rem)
+    transparent calc(var(--mid) - var(--spine-len) / 2 - 3rem),
+    rgb(3 5 11 / 45%) calc(var(--mid) - var(--spine-len) / 2 - 0.8rem),
+    rgb(3 5 11 / 45%) calc(var(--mid) + var(--spine-len) / 2 + 0.8rem),
+    transparent calc(var(--mid) + var(--spine-len) / 2 + 3rem)
   );
   opacity: 0;
   visibility: hidden;
@@ -4256,8 +4253,8 @@ kbd.pad {
   content: '';
   position: absolute;
   z-index: 1;
-  left: calc(var(--mid) - var(--spine-wide) / 2 - 0.8rem);
-  width: calc(var(--spine-wide) + 1.6rem);
+  left: calc(var(--mid) - var(--spine-len) / 2 - 0.8rem);
+  width: calc(var(--spine-len) + 1.6rem);
   /* Long and soft: the rows sink away gradually, no edge where the list ends. */
   height: 30%;
   pointer-events: none;
@@ -4792,17 +4789,15 @@ kbd.pad {
 }
 
 .spine-row {
-  /* Its length: the shelf's, or longer for a slim region's spine (--size, collector.ts: a US
-     Dreamcast's jewel case among PAL boxes), so it is drawn thicker, readable.
-     Its thickness: the shelf's, or thinner for a spine picture much slenderer than its length
-     asks (a Mega CD jewel case's among longboxes), kept in shape and centred in its place.
-     Within an eighth of the shelf's, it fills the row as the others. */
-  --l: calc(var(--spine-len) * var(--size, 1));
-  --t: min(var(--spine-h), var(--l) * var(--give, 1.12) / var(--shape, 0.01));
+  /* Its thickness: the shelf's, or thinner for a spine picture much slenderer than the shelf's
+     shape (a Mega CD jewel case's among longboxes), kept in shape and centred in its place.
+     Within an eighth of the shelf's, it fills the row as the others; slimmer (.slim, set by
+     collector.ts), exactly in shape, none of that give (it squashed a US Dreamcast's spine). */
+  --t: min(var(--spine-h), var(--spine-len) * var(--give, 1.12) / var(--shape, 0.01));
 
   position: absolute;
-  left: calc(var(--mid) - var(--l) / 2);
-  width: var(--l);
+  left: calc(var(--mid) - var(--spine-len) / 2);
+  width: var(--spine-len);
   height: var(--t);
   margin-top: calc((var(--spine-h) - var(--t)) / 2);
   display: flex;
@@ -4826,9 +4821,7 @@ kbd.pad {
   /* Never restyled as the selection moves (the lens shows it): no layer, no paint per step. */
 }
 
-/* A row longer than the shelf's (--size): its picture exactly in shape, none of the give that
-   lets a nearly full one fill the row (it squashed a US Dreamcast's spine card). */
-.spine-row.sized {
+.spine-row.slim {
   --give: 1;
 }
 
@@ -4864,7 +4857,7 @@ kbd.pad {
   top: 0;
   left: 0;
   width: calc(var(--t) - 2px);
-  height: calc(var(--l) - 2px);
+  height: calc(var(--spine-len) - 2px);
   transform-origin: 0 0;
   transform: translateY(calc(var(--t) - 2px)) rotate(-90deg);
   object-fit: fill;
@@ -4872,7 +4865,7 @@ kbd.pad {
 
 /* A spine that lies already (a Super Nintendo's): as it is. */
 .spine-row.lying .spine-pic {
-  width: calc(var(--l) - 2px);
+  width: calc(var(--spine-len) - 2px);
   height: calc(var(--t) - 2px);
   transform: none;
 }
@@ -4922,8 +4915,8 @@ kbd.pad {
 
 .shelf .lens i {
   position: absolute;
-  left: calc(var(--mid) - var(--spine-wide) / 2 - 0.2rem);
-  width: calc(var(--spine-wide) + 0.4rem);
+  left: calc(var(--mid) - var(--spine-len) / 2 - 0.2rem);
+  width: calc(var(--spine-len) + 0.4rem);
 }
 
 .shelf .lens .above,
