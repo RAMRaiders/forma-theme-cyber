@@ -309,6 +309,10 @@ export class CollectorView {
   #spineScale = 1;
   /** How long a spine can be, in rem, about the shelf's middle; 0 until measured. */
   #shelfRoom = 0;
+  /** The longest row drawn on this shelf yet (rem): its shade, fades and lens are that wide. */
+  #spineWide = 0;
+  /** The shelf's spine length (rem), as `--spine-len` has it. */
+  #spineLen = SPINE_LEN_REM;
   /** The rows, moved as one so the selected sits in the middle: a transform, gliding. */
   readonly #track = el('div', { class: 'track' });
   /**
@@ -795,6 +799,7 @@ export class CollectorView {
       const { naturalWidth: w, naturalHeight: h } = kept;
       node.classList.toggle('lying', w > h);
       node.style.setProperty('--shape', (Math.max(w, h) / Math.min(w, h)).toFixed(2));
+      this.#widen(Math.max(w, h) / Math.min(w, h));
       return [kept, ...parts];
     }
     const img = picture(src, 'spine-pic');
@@ -816,7 +821,10 @@ export class CollectorView {
       if (img.parentNode !== node) return;
       const { naturalWidth: w, naturalHeight: h } = img;
       node.classList.toggle('lying', w > h);
-      if (w && h) node.style.setProperty('--shape', (Math.max(w, h) / Math.min(w, h)).toFixed(2));
+      if (w && h) {
+        node.style.setProperty('--shape', (Math.max(w, h) / Math.min(w, h)).toFixed(2));
+        this.#widen(Math.max(w, h) / Math.min(w, h));
+      }
       node.classList.remove('waiting');
     };
     (typeof img.decode === 'function' ? img.decode() : Promise.resolve()).then(ready, () => {
@@ -868,6 +876,17 @@ export class CollectorView {
     if (fit.scale === 1) this.#shelf.style.removeProperty('--spine-h');
     else this.#shelf.style.setProperty('--spine-h', `${this.#len(SPINE_H_REM)}rem`);
     this.#shelf.style.setProperty('--spine-len', `${fit.length}rem`);
+    this.#spineLen = fit.length;
+    // A slimmer spine than the shelf's (a US Dreamcast's jewel case among PAL boxes) is drawn
+    // longer, up to the room there is, rather than thinner: as tall a row as the others.
+    const most = Math.max(fit.length, Math.round((this.#shelfRoom - 4) * 100) / 100);
+    this.#shelf.style.setProperty('--spine-most', `${most}rem`);
+    this.#spineWide = fit.length;
+    this.#shelf.style.setProperty('--spine-wide', `${fit.length}rem`);
+    for (const node of this.#rows.values()) {
+      const shape = Number(node.style.getPropertyValue('--shape'));
+      if (shape) this.#widen(shape);
+    }
     if (!changed || this.#rows.size === 0) return;
     for (const [i, node] of this.#rows) {
       node.style.top = `${Math.round(i * this.#rowRem * 1000) / 1000}rem`;
@@ -876,6 +895,20 @@ export class CollectorView {
     const row = this.#rowRem * remPx();
     this.#track.style.transform = `translateY(${Math.round(this.#pad - this.#place * row)}px)`;
     this.render();
+  }
+
+  /**
+   * A row's spine picture is `shape` times as long as wide: the shelf's shade, fades and lens
+   * grow to the length its row takes (style.css: as long as needed to be as tall as the others,
+   * up to the room), so a long row is shaded and framed as the rest.
+   */
+  #widen(shape: number): void {
+    const len = this.#spineLen;
+    const most = Math.max(len, this.#shelfRoom - 4);
+    const wide = slimRow(shape, this.#len(SPINE_H_REM), len, most);
+    if (wide <= this.#spineWide + 0.01) return;
+    this.#spineWide = wide;
+    this.#shelf.style.setProperty('--spine-wide', `${wide}rem`);
   }
 
   /** A spine length (rem) at this system's spine size. */
@@ -2273,6 +2306,16 @@ export function shelfFit(shape: number, room: number, base: number): ShelfFit {
   const grow = clamp(target / natural, 1, MOST_SPINE_SCALE / base);
   const scale = Math.round(base * grow * 1000) / 1000;
   return { length: Math.round(natural * scale * 100) / 100, scale };
+}
+
+/**
+ * How long a row is (rem) for a spine picture `shape` times as long as wide, rows `thick` rem
+ * thick, on a shelf of `len` rem with `most` rem of room: long enough for its picture to fill the
+ * row's thickness (an eighth's give, as style.css allows), never shorter than the shelf's, never
+ * longer than the room. style.css works out the same.
+ */
+export function slimRow(shape: number, thick: number, len: number, most: number): number {
+  return Math.round(clamp((thick * shape) / 1.12, len, Math.max(len, most)) * 100) / 100;
 }
 
 export function shelfShape(shape: number, room: number): number {

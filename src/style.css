@@ -4225,6 +4225,10 @@ kbd.pad {
      (collector.ts sets it then). */
   --spine-len: 22rem;
   --spine-h: 2.85rem;
+  /* A slim spine's row may grow up to this (the room about the middle), and the shade, fades
+     and lens span the longest row drawn: collector.ts sets both. */
+  --spine-most: var(--spine-len);
+  --spine-wide: var(--spine-len);
   /* Over the footage (collector.ts measures it), though the shelf spans the whole view. */
   --mid: 50%;
   overflow: hidden;
@@ -4232,10 +4236,10 @@ kbd.pad {
      spine stands out on it, not into it. Beyond it the screen shows, dimmed, as a sneak peek. */
   background: linear-gradient(
     90deg,
-    transparent calc(var(--mid) - var(--spine-len) / 2 - 3rem),
-    rgb(3 5 11 / 45%) calc(var(--mid) - var(--spine-len) / 2 - 0.8rem),
-    rgb(3 5 11 / 45%) calc(var(--mid) + var(--spine-len) / 2 + 0.8rem),
-    transparent calc(var(--mid) + var(--spine-len) / 2 + 3rem)
+    transparent calc(var(--mid) - var(--spine-wide) / 2 - 3rem),
+    rgb(3 5 11 / 45%) calc(var(--mid) - var(--spine-wide) / 2 - 0.8rem),
+    rgb(3 5 11 / 45%) calc(var(--mid) + var(--spine-wide) / 2 + 0.8rem),
+    transparent calc(var(--mid) + var(--spine-wide) / 2 + 3rem)
   );
   opacity: 0;
   visibility: hidden;
@@ -4253,8 +4257,8 @@ kbd.pad {
   content: '';
   position: absolute;
   z-index: 1;
-  left: calc(var(--mid) - var(--spine-len) / 2 - 0.8rem);
-  width: calc(var(--spine-len) + 1.6rem);
+  left: calc(var(--mid) - var(--spine-wide) / 2 - 0.8rem);
+  width: calc(var(--spine-wide) + 1.6rem);
   /* Long and soft: the rows sink away gradually, no edge where the list ends. */
   height: 30%;
   pointer-events: none;
@@ -4789,14 +4793,21 @@ kbd.pad {
 }
 
 .spine-row {
-  /* Its thickness: the shelf's, or thinner for a spine picture much slenderer than the shelf's
-     shape (a Mega CD jewel case's among longboxes), kept in shape and centred in its place.
-     Within an eighth of the shelf's, it fills the row as the others. */
-  --t: min(var(--spine-h), var(--spine-len) * 1.12 / var(--shape, 0.01));
+  /* Its length: the shelf's, or longer for a spine picture slenderer than the shelf's shape (a
+     US Dreamcast's jewel case among PAL boxes), as long as it takes to be as thick as the others,
+     up to the room there is (collector.ts slimRow works out the same). Its thickness: the
+     shelf's, thinner only for a spine too slender even then, kept in shape and centred in its
+     place. Within an eighth of the shelf's, it fills the row as the others. */
+  --l: clamp(
+    var(--spine-len),
+    var(--spine-h) * var(--shape, 0.01) / 1.12,
+    max(var(--spine-len), var(--spine-most))
+  );
+  --t: min(var(--spine-h), var(--l) * 1.12 / var(--shape, 0.01));
 
   position: absolute;
-  left: calc(var(--mid) - var(--spine-len) / 2);
-  width: var(--spine-len);
+  left: calc(var(--mid) - var(--l) / 2);
+  width: var(--l);
   height: var(--t);
   margin-top: calc((var(--spine-h) - var(--t)) / 2);
   display: flex;
@@ -4852,7 +4863,7 @@ kbd.pad {
   top: 0;
   left: 0;
   width: calc(var(--t) - 2px);
-  height: calc(var(--spine-len) - 2px);
+  height: calc(var(--l) - 2px);
   transform-origin: 0 0;
   transform: translateY(calc(var(--t) - 2px)) rotate(-90deg);
   object-fit: fill;
@@ -4860,7 +4871,7 @@ kbd.pad {
 
 /* A spine that lies already (a Super Nintendo's): as it is. */
 .spine-row.lying .spine-pic {
-  width: calc(var(--spine-len) - 2px);
+  width: calc(var(--l) - 2px);
   height: calc(var(--t) - 2px);
   transform: none;
 }
@@ -4910,8 +4921,8 @@ kbd.pad {
 
 .shelf .lens i {
   position: absolute;
-  left: calc(var(--mid) - var(--spine-len) / 2 - 0.2rem);
-  width: calc(var(--spine-len) + 0.4rem);
+  left: calc(var(--mid) - var(--spine-wide) / 2 - 0.2rem);
+  width: calc(var(--spine-wide) + 0.4rem);
 }
 
 .shelf .lens .above,
