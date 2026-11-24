@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { readFileSync } from 'node:fs';
 
-import { CASED_SYSTEMS, caseHeight, caseShape, spineShape } from './cases.js';
+import { CASED_SYSTEMS, caseShape, spineShape, spineSize } from './cases.js';
 
 describe('cases', () => {
   it('gives every Batocera system a case of its own', () => {
@@ -32,18 +32,18 @@ describe('cases', () => {
   });
 });
 
-describe('caseHeight', () => {
-  it('stands a PAL Dreamcast box taller than a US or Japanese jewel case', () => {
-    expect(caseHeight('dreamcast', ['eu'])).toBe(190);
-    expect(caseHeight('dreamcast', ['uk', 'fr'])).toBe(190);
-    expect(caseHeight('dreamcast', ['us'])).toBe(125);
-    expect(caseHeight('dreamcast', ['jp'])).toBe(125);
-    // A disc sold in Europe and elsewhere, or that names no region: the jewel case.
-    expect(caseHeight('dreamcast', ['us', 'eu'])).toBe(125);
-    expect(caseHeight('dreamcast', [])).toBe(125);
+describe('spineSize', () => {
+  it('draws a US or Japanese Dreamcast spine longer than a PAL one', () => {
+    expect(spineSize('dreamcast', ['eu'])).toBe(1);
+    expect(spineSize('dreamcast', ['uk', 'fr'])).toBe(1);
+    expect(spineSize('dreamcast', ['us'])).toBe(1.3);
+    expect(spineSize('dreamcast', ['jp'])).toBe(1.3);
+    // Sold in Europe and elsewhere, or no region named: the jewel case.
+    expect(spineSize('dreamcast', ['us', 'eu'])).toBe(1.3);
+    expect(spineSize('dreamcast', [])).toBe(1.3);
   });
 
-  it('knows no height where the cases do not differ by region', () => {
-    expect(caseHeight('megadrive', ['eu'])).toBeNull();
+  it('leaves alone systems whose spines do not differ by region', () => {
+    expect(spineSize('megadrive', ['us'])).toBe(1);
   });
 });

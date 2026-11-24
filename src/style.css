@@ -4225,6 +4225,9 @@ kbd.pad {
      (collector.ts sets it then). */
   --spine-len: 22rem;
   --spine-h: 2.85rem;
+  /* Its longest rows (collector.ts: a US Dreamcast's, longer than the shelf's): the shade, fades
+     and lens span them. */
+  --spine-wide: var(--spine-len);
   /* Over the footage (collector.ts measures it), though the shelf spans the whole view. */
   --mid: 50%;
   overflow: hidden;
@@ -4232,10 +4235,10 @@ kbd.pad {
      spine stands out on it, not into it. Beyond it the screen shows, dimmed, as a sneak peek. */
   background: linear-gradient(
     90deg,
-    transparent calc(var(--mid) - var(--spine-len) / 2 - 3rem),
-    rgb(3 5 11 / 45%) calc(var(--mid) - var(--spine-len) / 2 - 0.8rem),
-    rgb(3 5 11 / 45%) calc(var(--mid) + var(--spine-len) / 2 + 0.8rem),
-    transparent calc(var(--mid) + var(--spine-len) / 2 + 3rem)
+    transparent calc(var(--mid) - var(--spine-wide) / 2 - 3rem),
+    rgb(3 5 11 / 45%) calc(var(--mid) - var(--spine-wide) / 2 - 0.8rem),
+    rgb(3 5 11 / 45%) calc(var(--mid) + var(--spine-wide) / 2 + 0.8rem),
+    transparent calc(var(--mid) + var(--spine-wide) / 2 + 3rem)
   );
   opacity: 0;
   visibility: hidden;
@@ -4253,8 +4256,8 @@ kbd.pad {
   content: '';
   position: absolute;
   z-index: 1;
-  left: calc(var(--mid) - var(--spine-len) / 2 - 0.8rem);
-  width: calc(var(--spine-len) + 1.6rem);
+  left: calc(var(--mid) - var(--spine-wide) / 2 - 0.8rem);
+  width: calc(var(--spine-wide) + 1.6rem);
   /* Long and soft: the rows sink away gradually, no edge where the list ends. */
   height: 30%;
   pointer-events: none;
@@ -4789,8 +4792,8 @@ kbd.pad {
 }
 
 .spine-row {
-  /* Its length: the shelf's, or shorter for a game in a shorter case than the shelf's tallest
-     (--size, collector.ts: a US Dreamcast's jewel case among PAL boxes), as real boxes stand.
+  /* Its length: the shelf's, or longer for a slim region's spine (--size, collector.ts: a US
+     Dreamcast's jewel case among PAL boxes), so it is drawn thicker, readable.
      Its thickness: the shelf's, or thinner for a spine picture much slenderer than its length
      asks (a Mega CD jewel case's among longboxes), kept in shape and centred in its place.
      Within an eighth of the shelf's, it fills the row as the others. */
@@ -4913,8 +4916,8 @@ kbd.pad {
 
 .shelf .lens i {
   position: absolute;
-  left: calc(var(--mid) - var(--spine-len) / 2 - 0.2rem);
-  width: calc(var(--spine-len) + 0.4rem);
+  left: calc(var(--mid) - var(--spine-wide) / 2 - 0.2rem);
+  width: calc(var(--spine-wide) + 0.4rem);
 }
 
 .shelf .lens .above,

@@ -318,12 +318,13 @@ export function spineShape(shape: CaseShape): number {
 }
 
 /**
- * Systems whose games came in cases of another height by region, in mm tall: PAL's, and
- * everywhere else's. On the shelf a game's spine is as long, against the others, as its case.
+ * Systems whose games' spines differ by region, and how much longer than the shelf's a slim
+ * region's row is drawn (its picture kept in shape, so it is that much thicker too).
  */
-const REGIONAL_HEIGHTS: Record<string, { pal: number; other: number }> = {
-  // US and Japanese games in a thick jewel case (125 mm); PAL ones in a tall box (190 mm).
-  dreamcast: { pal: 190, other: 125 }
+const REGIONAL_SIZES: Record<string, { pal: number; other: number }> = {
+  // PAL boxes' spines (7.8 times as long as wide) set the shelf; US and Japanese jewel cases'
+  // spine cards (17.4) would be half as thick at that length, barely readable: drawn longer.
+  dreamcast: { pal: 1, other: 1.3 }
 };
 
 /** Cyber's region codes that are PAL Europe (and Australia, sold the same boxes). */
@@ -350,12 +351,18 @@ const PAL_REGIONS: ReadonlySet<string> = new Set([
 ]);
 
 /**
- * How tall a game's case stands (mm), by its regions (Cyber's codes, its name's): PAL's when
- * every region it names is; `null` where the system's cases do not differ by region.
+ * How long a game's row is against the shelf's, by its regions (Cyber's codes, its name's):
+ * PAL's when every region it names is; 1 where the system's spines do not differ by region.
  */
-export function caseHeight(system: string, regions: readonly string[]): number | null {
-  const heights = REGIONAL_HEIGHTS[system];
-  if (!heights) return null;
+export function spineSize(system: string, regions: readonly string[]): number {
+  const sizes = REGIONAL_SIZES[system];
+  if (!sizes) return 1;
   const pal = regions.length > 0 && regions.every((r) => PAL_REGIONS.has(r));
-  return pal ? heights.pal : heights.other;
+  return pal ? sizes.pal : sizes.other;
+}
+
+/** The longest a system's row is against its shelf's: what its shade and fades span. */
+export function widestSpine(system: string): number {
+  const sizes = REGIONAL_SIZES[system];
+  return sizes ? Math.max(sizes.pal, sizes.other) : 1;
 }

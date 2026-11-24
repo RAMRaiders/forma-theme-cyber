@@ -28,7 +28,7 @@ import {
   playtime
 } from './stage.js';
 import { awake } from './rest.js';
-import { caseHeight, caseShape, spineShape } from '../data/cases.js';
+import { caseShape, spineShape, spineSize, widestSpine } from '../data/cases.js';
 import { borderOf, placeTrimmed, placedBox, trimmedAspect } from './trim.js';
 
 /**
@@ -136,9 +136,6 @@ const LOAD_AHEAD = 60;
 /** Each system's spines (length in rem, and size), worked out once: its shelf never changes
  * while browsed. */
 const spineFits = new Map<string, ShelfFit>();
-/** Each system's tallest case among the games its shelf was sized from (mm), where its cases
- * differ by region: a shorter one's spines are drawn that much shorter. */
-const tallestCases = new Map<string, number>();
 
 /** The biggest a shelf's rows are drawn, short spines (a Super Nintendo's) grown to it. */
 const MOST_SPINE_SCALE = 1.3;
@@ -312,8 +309,6 @@ export class CollectorView {
   #spineScale = 1;
   /** How long a spine can be, in rem, about the shelf's middle; 0 until measured. */
   #shelfRoom = 0;
-  /** The shelf's tallest case (mm), where its system's cases differ by region; 0 if not. */
-  #tallest = 0;
   /** The rows, moved as one so the selected sits in the middle: a transform, gliding. */
   readonly #track = el('div', { class: 'track' });
   /**
@@ -766,14 +761,12 @@ export class CollectorView {
   }
 
   /**
-   * A row as long, against the shelf's, as its game's case is tall against the shelf's tallest
-   * (a US Dreamcast's jewel case among PAL boxes, two thirds): style.css keeps its picture's
-   * shape, so its row is as much thinner. Where cases do not differ by region, as long as all.
+   * A row longer than the shelf's for a slim region's spine (a US Dreamcast's jewel case among
+   * PAL boxes, see cases.ts): style.css keeps its picture's shape, so it is thicker too, readable.
    */
   #caseSize(game: Game | undefined, node: HTMLElement): void {
-    const mm = game && this.#tallest ? caseHeight(game.system, gameTags(game).regions) : null;
-    const size = mm ? Math.min(1, mm / this.#tallest) : 1;
-    if (size < 1) node.style.setProperty('--size', size.toFixed(3));
+    const size = game ? spineSize(game.system, gameTags(game).regions) : 1;
+    if (size !== 1) node.style.setProperty('--size', String(size));
     else node.style.removeProperty('--size');
   }
 
@@ -853,15 +846,6 @@ export class CollectorView {
    */
   #sizeShelf(system: string, source: LazyList<Game>, selected: number): void {
     const base = BIGGER_SPINES.test(system) ? BIGGER_SCALE : 1;
-    this.#tallest = tallestCases.get(system) ?? 0;
-    if (!tallestCases.has(system)) {
-      for (let i = 0; i < source.total && i < SPINE_PROBES; i++) {
-        const game = source.get(loopIndex(selected + i, source.total));
-        const mm = game ? caseHeight(system, gameTags(game).regions) : null;
-        if (mm) this.#tallest = Math.max(this.#tallest, mm);
-      }
-      tallestCases.set(system, this.#tallest);
-    }
     const known = spineFits.get(system);
     // Until its pictures say otherwise, spines of the shape of the system's own case.
     if (!known && !this.#shelfRoom) this.#centreShelf();
@@ -895,6 +879,10 @@ export class CollectorView {
     if (fit.scale === 1) this.#shelf.style.removeProperty('--spine-h');
     else this.#shelf.style.setProperty('--spine-h', `${this.#len(SPINE_H_REM)}rem`);
     this.#shelf.style.setProperty('--spine-len', `${fit.length}rem`);
+    // Its shade, fades and lens as wide as its longest rows (a US Dreamcast's).
+    const wide = widestSpine(this.#shelfSystem ?? '');
+    if (wide > 1) this.#shelf.style.setProperty('--spine-wide', `${fit.length * wide}rem`);
+    else this.#shelf.style.removeProperty('--spine-wide');
     if (!changed || this.#rows.size === 0) return;
     for (const [i, node] of this.#rows) {
       node.style.top = `${Math.round(i * this.#rowRem * 1000) / 1000}rem`;
