@@ -316,3 +316,46 @@ export function caseShape(system: string): CaseShape {
 export function spineShape(shape: CaseShape): number {
   return (shape.lying ? shape.ratio : 1) / shape.depth;
 }
+
+/**
+ * Systems whose games came in cases of another height by region, in mm tall: PAL's, and
+ * everywhere else's. On the shelf a game's spine is as long, against the others, as its case.
+ */
+const REGIONAL_HEIGHTS: Record<string, { pal: number; other: number }> = {
+  // US and Japanese games in a thick jewel case (125 mm); PAL ones in a tall box (190 mm).
+  dreamcast: { pal: 190, other: 125 }
+};
+
+/** Cyber's region codes that are PAL Europe (and Australia, sold the same boxes). */
+const PAL_REGIONS: ReadonlySet<string> = new Set([
+  'eu',
+  'uk',
+  'fr',
+  'de',
+  'es',
+  'it',
+  'nl',
+  'se',
+  'pt',
+  'au',
+  'dk',
+  'fi',
+  'no',
+  'be',
+  'ch',
+  'at',
+  'gr',
+  'pl',
+  'ru'
+]);
+
+/**
+ * How tall a game's case stands (mm), by its regions (Cyber's codes, its name's): PAL's when
+ * every region it names is; `null` where the system's cases do not differ by region.
+ */
+export function caseHeight(system: string, regions: readonly string[]): number | null {
+  const heights = REGIONAL_HEIGHTS[system];
+  if (!heights) return null;
+  const pal = regions.length > 0 && regions.every((r) => PAL_REGIONS.has(r));
+  return pal ? heights.pal : heights.other;
+}

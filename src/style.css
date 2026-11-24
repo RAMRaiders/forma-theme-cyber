@@ -4789,14 +4789,17 @@ kbd.pad {
 }
 
 .spine-row {
-  /* Its thickness: the shelf's, or thinner for a spine picture much slenderer than the shelf's
-     shape (a Mega CD jewel case's among longboxes), kept in shape and centred in its place.
+  /* Its length: the shelf's, or shorter for a game in a shorter case than the shelf's tallest
+     (--size, collector.ts: a US Dreamcast's jewel case among PAL boxes), as real boxes stand.
+     Its thickness: the shelf's, or thinner for a spine picture much slenderer than its length
+     asks (a Mega CD jewel case's among longboxes), kept in shape and centred in its place.
      Within an eighth of the shelf's, it fills the row as the others. */
-  --t: min(var(--spine-h), var(--spine-len) * 1.12 / var(--shape, 0.01));
+  --l: calc(var(--spine-len) * var(--size, 1));
+  --t: min(var(--spine-h), var(--l) * 1.12 / var(--shape, 0.01));
 
   position: absolute;
-  left: calc(var(--mid) - var(--spine-len) / 2);
-  width: var(--spine-len);
+  left: calc(var(--mid) - var(--l) / 2);
+  width: var(--l);
   height: var(--t);
   margin-top: calc((var(--spine-h) - var(--t)) / 2);
   display: flex;
@@ -4852,7 +4855,7 @@ kbd.pad {
   top: 0;
   left: 0;
   width: calc(var(--t) - 2px);
-  height: calc(var(--spine-len) - 2px);
+  height: calc(var(--l) - 2px);
   transform-origin: 0 0;
   transform: translateY(calc(var(--t) - 2px)) rotate(-90deg);
   object-fit: fill;
@@ -4860,7 +4863,7 @@ kbd.pad {
 
 /* A spine that lies already (a Super Nintendo's): as it is. */
 .spine-row.lying .spine-pic {
-  width: calc(var(--spine-len) - 2px);
+  width: calc(var(--l) - 2px);
   height: calc(var(--t) - 2px);
   transform: none;
 }
