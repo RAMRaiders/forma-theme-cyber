@@ -4258,6 +4258,8 @@ kbd.pad {
   /* Long and soft: the rows sink away gradually, no edge where the list ends. */
   height: 30%;
   pointer-events: none;
+  /* No mask to soften its sides: a masked layer over the moving rows flickered on a Pi's
+     WebKit as the spines' pictures came in. */
   /* Layers of their own, still: always over the rows' layers moving under them. */
   will-change: transform;
 }
@@ -4791,8 +4793,9 @@ kbd.pad {
 .spine-row {
   /* Its thickness: the shelf's, or thinner for a spine picture much slenderer than the shelf's
      shape (a Mega CD jewel case's among longboxes), kept in shape and centred in its place.
-     Within an eighth of the shelf's, it fills the row as the others. */
-  --t: min(var(--spine-h), var(--spine-len) * 1.12 / var(--shape, 0.01));
+     Within an eighth of the shelf's, it fills the row as the others; slimmer (.slim, set by
+     collector.ts), exactly in shape, none of that give (it squashed a US Dreamcast's spine). */
+  --t: min(var(--spine-h), var(--spine-len) * var(--give, 1.12) / var(--shape, 0.01));
 
   position: absolute;
   left: calc(var(--mid) - var(--spine-len) / 2);
@@ -4818,6 +4821,10 @@ kbd.pad {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   /* Never restyled as the selection moves (the lens shows it): no layer, no paint per step. */
+}
+
+.spine-row.slim {
+  --give: 1;
 }
 
 .spine-row .band {
@@ -4898,9 +4905,11 @@ kbd.pad {
   text-overflow: ellipsis;
 }
 
-/* The selection: in the shelf's middle, the rows gliding under it, those above and below it
-   dimmed by two still panels (collector.ts, the lens). The selected spine itself stands out a
-   little bigger, once the steps pause: while a direction is held only the track moves. */
+/* The selection: at the screen's middle (--pad, collector.ts), framed by a soft glow, the rows
+   gliding under it (the lens), as thick as the selected spine (--sel-t, a US Dreamcast's
+   thinner). No panels dimming the rows round it: flat boxes over the fan art, seen as black
+   squares. The selected spine itself stands out a little bigger, once the steps pause: while a
+   direction is held only the track moves, and the glow dims. */
 .shelf .lens {
   position: absolute;
   z-index: 2;
@@ -4914,24 +4923,29 @@ kbd.pad {
   width: calc(var(--spine-len) + 0.4rem);
 }
 
-.shelf .lens .above,
-.shelf .lens .below {
-  background: rgb(3 5 11 / 34%);
-}
-
-.shelf .lens .above {
-  top: 0;
-  height: calc(var(--pad, 50%) - 0.15rem);
-}
-
-.shelf .lens .below {
-  top: calc(var(--pad, 50%) + var(--spine-h) + 0.15rem);
-  bottom: 0;
-}
-
 .shelf .lens .frame {
-  top: calc(var(--pad, 50%) - 0.15rem);
-  height: calc(var(--spine-h) + 0.3rem);
+  /* Round the selected spine as it stands out (1.06 times as big), a little clear of it. */
+  --ft: calc(var(--sel-t, var(--spine-h)) * 1.06 + 0.5rem);
+
+  top: calc(var(--pad, 50%) + var(--spine-h) / 2 - var(--ft) / 2);
+  left: calc(var(--mid) - var(--spine-len) * 0.53 - 0.35rem);
+  width: calc(var(--spine-len) * 1.06 + 0.7rem);
+  height: var(--ft);
+  border: 1px solid rgb(120 220 255 / 70%);
+  border-radius: 0.35rem;
+  box-shadow:
+    0 0 0.7rem rgb(80 200 255 / 45%),
+    0 0 2.2rem rgb(80 200 255 / 18%),
+    inset 0 0 0.6rem rgb(80 200 255 / 18%);
+  /* Its own layer: only its opacity changes as the steps run and pause. */
+  will-change: opacity;
+  transition: opacity 220ms ease-out;
+}
+
+/* A direction held: the glow dims while the rows run under it, and comes back as they stop. */
+.shelf .track.held ~ .lens .frame {
+  opacity: 0.35;
+  transition-duration: 80ms;
 }
 
 /* Bigger, lifted off the shelf: a transform, the compositor's, the row's look unchanged. The
@@ -4939,7 +4953,10 @@ kbd.pad {
    selected one's, --sel), so it stands clear of them. */
 .spine-row {
   transform: translateY(
-    calc(clamp(-1, (var(--i) - var(--sel, 0)) * 1000, 1) * var(--spine-h) * 0.4)
+    calc(
+      clamp(-1, (var(--i) - var(--sel, 0)) * 1000, 1) *
+        (var(--sel-t, var(--spine-h)) * 0.35 + 0.75rem)
+    )
   );
   transition: transform 140ms ease-out;
 }

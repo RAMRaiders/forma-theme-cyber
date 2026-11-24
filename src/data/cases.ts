@@ -316,3 +316,76 @@ export function caseShape(system: string): CaseShape {
 export function spineShape(shape: CaseShape): number {
   return (shape.lying ? shape.ratio : 1) / shape.depth;
 }
+
+/**
+ * Systems whose games' cases differ by region: how tall they stand (mm), and how many times as
+ * long as wide their spine pictures are; PAL's, and everywhere else's.
+ */
+const REGIONAL: Record<string, { pal: RegionalCase; other: RegionalCase }> = {
+  // A PAL box (190 mm, its spine 7.8 times as long as wide); a US or Japanese thick jewel case
+  // (125 mm), its spine card 17.4 times.
+  dreamcast: { pal: { mm: 190, spine: 7.8 }, other: { mm: 125, spine: 17.4 } }
+};
+
+interface RegionalCase {
+  mm: number;
+  spine: number;
+}
+
+/** Cyber's region codes that are PAL Europe (and Australia, sold the same boxes). */
+const PAL_REGIONS: ReadonlySet<string> = new Set([
+  'eu',
+  'uk',
+  'fr',
+  'de',
+  'es',
+  'it',
+  'nl',
+  'se',
+  'pt',
+  'au',
+  'dk',
+  'fi',
+  'no',
+  'be',
+  'ch',
+  'at',
+  'gr',
+  'pl',
+  'ru'
+]);
+
+/** Every region a game's name gives is PAL's (none given: not PAL). */
+function isPal(regions: readonly string[]): boolean {
+  return regions.length > 0 && regions.every((r) => PAL_REGIONS.has(r));
+}
+
+/** Whether a system's cases differ by region (its shelf rows then as thick as each one's). */
+export function regionalCases(system: string): boolean {
+  return system in REGIONAL;
+}
+
+/**
+ * How many times as long as wide a game's spine is, by its regions (Cyber's codes, its name's):
+ * PAL's when every region it names is; `null` where the system's cases do not differ by region.
+ */
+export function regionalSpine(system: string, regions: readonly string[]): number | null {
+  const cases = REGIONAL[system];
+  return cases ? (isPal(regions) ? cases.pal : cases.other).spine : null;
+}
+
+/** The stubbiest spine of a system whose cases differ by region: what its shelf is sized to. */
+export function stubbiestSpine(system: string): number | null {
+  const cases = REGIONAL[system];
+  return cases ? Math.min(cases.pal.spine, cases.other.spine) : null;
+}
+
+/**
+ * How big a game's case is drawn against its system's tallest, as real ones stand: a US or
+ * Japanese Dreamcast's jewel case two thirds of a PAL box. 1 where cases do not differ by region.
+ */
+export function caseScale(system: string, regions: readonly string[]): number {
+  const cases = REGIONAL[system];
+  if (!cases) return 1;
+  return (isPal(regions) ? cases.pal : cases.other).mm / Math.max(cases.pal.mm, cases.other.mm);
+}
