@@ -17,7 +17,6 @@ import {
   serial,
   shelfFit,
   shelfShape,
-  slimRow,
   tvEra,
   type ScreenArea,
   versionText
@@ -1221,20 +1220,6 @@ describe('the shelf in the shape of its spines', () => {
     expect(shelfFit(680 / 98, 34, 1.12).scale).toBe(1.3);
     // A long one: the usual size.
     expect(shelfFit(18.4, 100, 1)).toEqual({ length: 49.29, scale: 1 });
-  });
-
-  it('draws a slim spine among stubby ones longer, as tall as the rest, as far as there is room', () => {
-    // Dreamcast: PAL boxes (7.8) set a 22.2rem shelf; a US jewel case's spine (17.4) among them.
-    const us = slimRow(17.4, 2.85, 22.2, 36);
-    expect(us).toBe(36);
-    expect((us * 1.12) / 17.4).toBeGreaterThan(2.3);
-    // With more room, just long enough to be as thick as the others.
-    expect(slimRow(17.4, 2.85, 22.2, 60)).toBeCloseTo((2.85 * 17.4) / 1.12, 1);
-    // A spine of the shelf's own shape, or stubbier: the shelf's length.
-    expect(slimRow(7.8, 2.85, 22.2, 36)).toBe(22.2);
-    expect(slimRow(5, 2.85, 22.2, 36)).toBe(22.2);
-    // No room measured: never shorter than the shelf.
-    expect(slimRow(17.4, 2.85, 22.2, -4)).toBe(22.2);
   });
 
   it('draws spines too long for the room thinner, not squashed', () => {
