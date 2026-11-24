@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { readFileSync } from 'node:fs';
 
-import { CASED_SYSTEMS, caseShape, spineShape, spineSize } from './cases.js';
+import { CASED_SYSTEMS, caseScale, caseShape, spineShape, spineSize } from './cases.js';
 
 describe('cases', () => {
   it('gives every Batocera system a case of its own', () => {
@@ -45,5 +45,14 @@ describe('spineSize', () => {
 
   it('leaves alone systems whose spines do not differ by region', () => {
     expect(spineSize('megadrive', ['us'])).toBe(1);
+  });
+});
+
+describe('caseScale', () => {
+  it('draws a US or Japanese Dreamcast case two thirds as big as a PAL one', () => {
+    expect(caseScale('dreamcast', ['eu'])).toBe(1);
+    expect(caseScale('dreamcast', ['us'])).toBeCloseTo(125 / 190, 3);
+    expect(caseScale('dreamcast', ['jp'])).toBeCloseTo(125 / 190, 3);
+    expect(caseScale('saturn', ['us'])).toBe(1);
   });
 });

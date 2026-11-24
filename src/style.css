@@ -4798,7 +4798,7 @@ kbd.pad {
      asks (a Mega CD jewel case's among longboxes), kept in shape and centred in its place.
      Within an eighth of the shelf's, it fills the row as the others. */
   --l: calc(var(--spine-len) * var(--size, 1));
-  --t: min(var(--spine-h), var(--l) * 1.12 / var(--shape, 0.01));
+  --t: min(var(--spine-h), var(--l) * var(--give, 1.12) / var(--shape, 0.01));
 
   position: absolute;
   left: calc(var(--mid) - var(--l) / 2);
@@ -4824,6 +4824,12 @@ kbd.pad {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   /* Never restyled as the selection moves (the lens shows it): no layer, no paint per step. */
+}
+
+/* A row longer than the shelf's (--size): its picture exactly in shape, none of the give that
+   lets a nearly full one fill the row (it squashed a US Dreamcast's spine card). */
+.spine-row.sized {
+  --give: 1;
 }
 
 .spine-row .band {

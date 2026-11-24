@@ -327,6 +327,12 @@ const REGIONAL_SIZES: Record<string, { pal: number; other: number }> = {
   dreamcast: { pal: 1, other: 1.3 }
 };
 
+/** The same systems' cases, how tall they stand (mm): PAL's, and everywhere else's. */
+const REGIONAL_HEIGHTS: Record<string, { pal: number; other: number }> = {
+  // A PAL box (190 mm); a US or Japanese thick jewel case (125 mm).
+  dreamcast: { pal: 190, other: 125 }
+};
+
 /** Cyber's region codes that are PAL Europe (and Australia, sold the same boxes). */
 const PAL_REGIONS: ReadonlySet<string> = new Set([
   'eu',
@@ -356,9 +362,22 @@ const PAL_REGIONS: ReadonlySet<string> = new Set([
  */
 export function spineSize(system: string, regions: readonly string[]): number {
   const sizes = REGIONAL_SIZES[system];
-  if (!sizes) return 1;
-  const pal = regions.length > 0 && regions.every((r) => PAL_REGIONS.has(r));
-  return pal ? sizes.pal : sizes.other;
+  return sizes ? (isPal(regions) ? sizes.pal : sizes.other) : 1;
+}
+
+/**
+ * How big a game's case is drawn against its system's tallest, as real ones stand: a US or
+ * Japanese Dreamcast's jewel case two thirds of a PAL box. 1 where cases do not differ by region.
+ */
+export function caseScale(system: string, regions: readonly string[]): number {
+  const mm = REGIONAL_HEIGHTS[system];
+  if (!mm) return 1;
+  return (isPal(regions) ? mm.pal : mm.other) / Math.max(mm.pal, mm.other);
+}
+
+/** Every region a game's name gives is PAL's (none given: not PAL). */
+function isPal(regions: readonly string[]): boolean {
+  return regions.length > 0 && regions.every((r) => PAL_REGIONS.has(r));
 }
 
 /** The longest a system's row is against its shelf's: what its shade and fades span. */

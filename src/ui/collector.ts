@@ -28,7 +28,7 @@ import {
   playtime
 } from './stage.js';
 import { awake } from './rest.js';
-import { caseShape, spineShape, spineSize, widestSpine } from '../data/cases.js';
+import { caseScale, caseShape, spineShape, spineSize, widestSpine } from '../data/cases.js';
 import { borderOf, placeTrimmed, placedBox, trimmedAspect } from './trim.js';
 
 /**
@@ -768,6 +768,7 @@ export class CollectorView {
     const size = game ? spineSize(game.system, gameTags(game).regions) : 1;
     if (size !== 1) node.style.setProperty('--size', String(size));
     else node.style.removeProperty('--size');
+    node.classList.toggle('sized', size !== 1);
   }
 
   /**
@@ -1884,10 +1885,13 @@ export class CollectorView {
       lying: shape.lying ? shape.depth / shape.ratio : 0
     };
     box.classList.toggle('lying', shape.lying);
+    // As big against its system's other cases as real ones are (a US Dreamcast's jewel case,
+    // two thirds of a PAL box).
+    const scale = caseScale(game.system, gameTags(game).regions);
     const resize = () => {
       if (size.lying) size.depth = clamp(size.lying * size.ratio, SLIMMEST_DEPTH, 0.3);
       const display = box.closest<HTMLElement>('.display');
-      const h = display?.clientHeight
+      let h = display?.clientHeight
         ? boxHeight(
             display.clientWidth / remPx(),
             display.clientHeight / remPx(),
@@ -1895,6 +1899,7 @@ export class CollectorView {
             size.depth
           )
         : BOX_REM;
+      h *= scale;
       // On the case's stage too: the cartridge is never bigger than the box hiding it.
       for (const node of display ? [box, display] : [box]) {
         node.style.setProperty('--h', `${h.toFixed(2)}rem`);
