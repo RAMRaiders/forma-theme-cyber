@@ -28,14 +28,7 @@ import {
   playtime
 } from './stage.js';
 import { awake } from './rest.js';
-import {
-  caseScale,
-  caseShape,
-  regionalCases,
-  regionalSpine,
-  spineShape,
-  stubbiestSpine
-} from '../data/cases.js';
+import { caseScale, caseShape, regionalSpine, spineShape, stubbiestSpine } from '../data/cases.js';
 import { borderOf, placeTrimmed, placedBox, trimmedAspect } from './trim.js';
 
 /**
@@ -149,6 +142,13 @@ const MOST_SPINE_SCALE = 1.3;
 /** How much bigger a shelf whose cases differ by region is drawn (a Dreamcast's: its US and
  * Japanese spine cards, slim, readable), as far as there is room. */
 const REGIONAL_SCALE = 1.2;
+
+/**
+ * Each game's spine picture's shape (how many times as long as wide) once it was drawn, by its
+ * id; 0 when its row is drawn full (no picture, a marquee, a picture that failed). Kept across
+ * lists, so a row comes back the thickness it was.
+ */
+const spineShapes = new Map<number, number>();
 /** What a short spine grows towards: a little longer than the usual. */
 const GROWN_SPINE_REM = SPINE_LEN_REM * 1.2;
 /** The thinnest a shelf's rows are drawn, for spines too long for the room (a Mega CD's jewel
@@ -319,8 +319,9 @@ export class CollectorView {
   #spineScale = 1;
   /** How long a spine can be, in rem, about the shelf's middle; 0 until measured. */
   #shelfRoom = 0;
-  /** Rows as thick as each one's case (a shelf whose cases differ by region), each taking only
-   * its own room: positions counted from the row the list opened at, `#anchor`. */
+  /** Rows each as thick as their spine is drawn, each taking only its own room (every shelf;
+   * a spine much slimmer than the shelf's, a US Dreamcast's or a Mega CD jewel case's, takes
+   * less): positions counted from the row the list opened at, `#anchor`. */
   #variable = false;
   /** The shelf's spine length (rem), as `--spine-len` has it. */
   #spineLen = SPINE_LEN_REM;
@@ -332,6 +333,7 @@ export class CollectorView {
   #thick = new Map<number, number>();
   /** The selected spine's thickness last set (`--sel-t`), to set it only when it changes. */
   #selT = '';
+  #relayoutQueued = false;
   #anchor = 0;
   /** The track's position last set (px), to set it again only when it moves. */
   #trackY = NaN;
@@ -472,7 +474,8 @@ export class CollectorView {
     // The same game as before (the list reloaded, after a favourite say): no shelf, the case
     // goes on as it was, only what changed about the game is shown.
     const now = source.get(selected);
-    this.#variable = !!now && regionalCases(now.system);
+    // Every shelf: each row takes its own spine's thickness (style.css draws it).
+    this.#variable = true;
     this.#anchor = selected;
     this.#rowYs.clear();
     this.#trackY = NaN;
@@ -810,11 +813,15 @@ export class CollectorView {
         },
         { once: true }
       );
+      this.#learnShape(game, 0);
       return [parts[0]!, logo, parts[1]!];
     }
     node.classList.remove('lying', 'waiting');
     node.style.removeProperty('--shape');
-    if (!src) return parts;
+    if (!src) {
+      this.#learnShape(game, 0);
+      return parts;
+    }
     // Its picture from when it was last in sight, decoded: in place at once, nothing to wait for.
     const kept = keptSpine(src);
     if (kept) {
@@ -822,6 +829,7 @@ export class CollectorView {
       node.classList.toggle('lying', w > h);
       node.style.setProperty('--shape', (Math.max(w, h) / Math.min(w, h)).toFixed(2));
       this.#markSlim(node, Math.max(w, h) / Math.min(w, h));
+      this.#learnShape(game, Math.max(w, h) / Math.min(w, h));
       return [kept, ...parts];
     }
     const img = picture(src, 'spine-pic');
@@ -846,6 +854,7 @@ export class CollectorView {
       if (w && h) {
         node.style.setProperty('--shape', (Math.max(w, h) / Math.min(w, h)).toFixed(2));
         this.#markSlim(node, Math.max(w, h) / Math.min(w, h));
+        this.#learnShape(game, Math.max(w, h) / Math.min(w, h));
       }
       node.classList.remove('waiting');
     };
@@ -853,6 +862,7 @@ export class CollectorView {
       if (img.parentNode !== node) return;
       img.remove();
       node.classList.remove('pictured', 'waiting');
+      this.#learnShape(game, 0);
     });
     return [img, ...parts];
   }
@@ -917,6 +927,34 @@ export class CollectorView {
   }
 
   /**
+   * A row's spine drawn `shape` times as long as wide (0: drawn full): where it differs from what
+   * its room was laid out for, the rows are laid out again, once for all that came in this frame.
+   */
+  #learnShape(game: Game, shape: number): void {
+    const rounded = Math.round(shape * 100) / 100;
+    if (spineShapes.get(game.id) === rounded) return;
+    spineShapes.set(game.id, rounded);
+    const before = this.#thick.get(game.id);
+    this.#thick.delete(game.id);
+    // Laid out as it is drawn already (most rows): nothing moves.
+    if (before === undefined || Math.abs(before - this.#thicknessOf(rounded)) < 0.01) return;
+    if (!this.#variable || this.#relayoutQueued) return;
+    this.#relayoutQueued = true;
+    requestAnimationFrame(() => {
+      this.#relayoutQueued = false;
+      this.#rowYs.clear();
+      this.render();
+    });
+  }
+
+  /** How thick style.css draws a spine `shape` times as long as wide (0: full), in rem. */
+  #thicknessOf(shape: number): number {
+    const h = this.#len(SPINE_H_REM);
+    const len = this.#spineLen;
+    return !shape || (len * 1.12) / shape >= h ? h : len / shape;
+  }
+
+  /**
    * A spine picture `shape` times as long as wide much slimmer than its row asks (a US
    * Dreamcast's among PAL boxes): drawn exactly in shape, not given the eighth that lets a
    * nearly full one fill the row (style.css).
@@ -938,9 +976,15 @@ export class CollectorView {
     if (!game) return { t: h, known: false };
     let t = this.#thick.get(game.id);
     if (t === undefined) {
-      const shape = regionalSpine(game.system, gameTags(game).regions);
-      const len = this.#spineLen;
-      t = !shape || (len * 1.12) / shape >= h ? h : len / shape;
+      // Its picture's own shape once drawn; until then its region's (a US Dreamcast's slim jewel
+      // case, cases.ts), else the shelf's; no picture, drawn full.
+      const learned = spineShapes.get(game.id);
+      const shape =
+        learned ??
+        (this.#options.media(game, 'boxside', SPINE_W)
+          ? (regionalSpine(game.system, gameTags(game).regions) ?? 0)
+          : 0);
+      t = this.#thicknessOf(shape);
       this.#thick.set(game.id, t);
     }
     return { t, known: true };
