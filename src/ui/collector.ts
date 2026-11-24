@@ -148,7 +148,7 @@ const spineFits = new Map<string, ShelfFit>();
 const MOST_SPINE_SCALE = 1.3;
 /** How much bigger a shelf whose cases differ by region is drawn (a Dreamcast's: its US and
  * Japanese spine cards, slim, readable), as far as there is room. */
-const REGIONAL_SCALE = 1.4;
+const REGIONAL_SCALE = 1.2;
 /** What a short spine grows towards: a little longer than the usual. */
 const GROWN_SPINE_REM = SPINE_LEN_REM * 1.2;
 /** The thinnest a shelf's rows are drawn, for spines too long for the room (a Mega CD's jewel
@@ -328,6 +328,10 @@ export class CollectorView {
   #loopsNow = false;
   /** Where rows of a varying shelf start (rem), those worked out from loaded games. */
   #rowYs = new Map<number, number>();
+  /** Each game's spine thickness on a varying shelf (rem), by its id. */
+  #thick = new Map<number, number>();
+  /** The selected spine's thickness last set (`--sel-t`), to set it only when it changes. */
+  #selT = '';
   #anchor = 0;
   /** The track's position last set (px), to set it again only when it moves. */
   #trackY = NaN;
@@ -338,13 +342,7 @@ export class CollectorView {
    * above and below dimmed by its two panels): a step only moves the track. A selected row
    * restyled (bigger, brighter, framed) was painted again at each step, it and the last one.
    */
-  readonly #lens = el(
-    'div',
-    { class: 'lens', 'aria-hidden': 'true' },
-    el('i', { class: 'above' }),
-    el('i', { class: 'frame' }),
-    el('i', { class: 'below' })
-  );
+  readonly #lens = el('div', { class: 'lens', 'aria-hidden': 'true' }, el('i', { class: 'frame' }));
   readonly #showcase = el('section', { class: 'showcase' });
   readonly #dossier = el('aside', { class: 'dossier' });
   /** Over it all while the scraper is on the selected game. */
@@ -910,6 +908,7 @@ export class CollectorView {
     this.#shelf.style.setProperty('--spine-len', `${fit.length}rem`);
     this.#spineLen = fit.length;
     this.#rowYs.clear();
+    this.#thick.clear();
     if (!changed || this.#rows.size === 0) return;
     for (const [i, node] of this.#rows) this.#placeRow(i, node);
     this.#measure();
@@ -937,9 +936,13 @@ export class CollectorView {
     const source = this.#source;
     const game = source?.get(this.#loopsNow ? loopIndex(i, source.total) : i);
     if (!game) return { t: h, known: false };
-    const shape = regionalSpine(game.system, gameTags(game).regions);
-    const len = this.#spineLen;
-    const t = !shape || (len * 1.12) / shape >= h ? h : len / shape;
+    let t = this.#thick.get(game.id);
+    if (t === undefined) {
+      const shape = regionalSpine(game.system, gameTags(game).regions);
+      const len = this.#spineLen;
+      t = !shape || (len * 1.12) / shape >= h ? h : len / shape;
+      this.#thick.set(game.id, t);
+    }
     return { t, known: true };
   }
 
@@ -989,6 +992,13 @@ export class CollectorView {
         (h / 2) * rem -
         (this.#rowY(this.#place) + this.#thickness(this.#place).t / 2) * rem
       : this.#pad - this.#place * this.#rowRem * rem;
+    // The lens and the rows round the selected one as thick as it is.
+    const selT = this.#variable ? `${this.#thickness(this.#place).t.toFixed(3)}rem` : '';
+    if (selT !== this.#selT) {
+      this.#selT = selT;
+      if (selT) this.#shelf.style.setProperty('--sel-t', selT);
+      else this.#shelf.style.removeProperty('--sel-t');
+    }
     const px = Math.round(y);
     if (px === this.#trackY) return;
     this.#trackY = px;

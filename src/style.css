@@ -621,6 +621,13 @@ main {
     #000 calc(100% - 1.6rem),
     transparent
   );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 0.3rem,
+    #000 calc(100% - 1.6rem),
+    transparent
+  );
   mask-image: linear-gradient(
     90deg,
     transparent,
@@ -4258,6 +4265,15 @@ kbd.pad {
   /* Long and soft: the rows sink away gradually, no edge where the list ends. */
   height: 30%;
   pointer-events: none;
+  /* Soft at the sides too, as the shade is: no dark box edge over the fan art. A still layer,
+     masked once when drawn. */
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 1.6rem,
+    #000 calc(100% - 1.6rem),
+    transparent
+  );
   /* Layers of their own, still: always over the rows' layers moving under them. */
   will-change: transform;
 }
@@ -4903,9 +4919,11 @@ kbd.pad {
   text-overflow: ellipsis;
 }
 
-/* The selection: in the shelf's middle, the rows gliding under it, those above and below it
-   dimmed by two still panels (collector.ts, the lens). The selected spine itself stands out a
-   little bigger, once the steps pause: while a direction is held only the track moves. */
+/* The selection: in the shelf's middle, framed, the rows gliding under it (collector.ts, the
+   lens), as thick as the selected spine (--sel-t, a US Dreamcast's thinner). No panels dimming
+   the rows round it: flat boxes over the fan art, seen as black squares. The selected spine
+   itself stands out a little bigger, once the steps pause: while a direction is held only the
+   track moves. */
 .shelf .lens {
   position: absolute;
   z-index: 2;
@@ -4919,24 +4937,9 @@ kbd.pad {
   width: calc(var(--spine-len) + 0.4rem);
 }
 
-.shelf .lens .above,
-.shelf .lens .below {
-  background: rgb(3 5 11 / 34%);
-}
-
-.shelf .lens .above {
-  top: 0;
-  height: calc(var(--pad, 50%) - 0.15rem);
-}
-
-.shelf .lens .below {
-  top: calc(var(--pad, 50%) + var(--spine-h) + 0.15rem);
-  bottom: 0;
-}
-
 .shelf .lens .frame {
-  top: calc(var(--pad, 50%) - 0.15rem);
-  height: calc(var(--spine-h) + 0.3rem);
+  top: calc(var(--pad, 50%) + (var(--spine-h) - var(--sel-t, var(--spine-h))) / 2 - 0.15rem);
+  height: calc(var(--sel-t, var(--spine-h)) + 0.3rem);
 }
 
 /* Bigger, lifted off the shelf: a transform, the compositor's, the row's look unchanged. The
@@ -4944,7 +4947,7 @@ kbd.pad {
    selected one's, --sel), so it stands clear of them. */
 .spine-row {
   transform: translateY(
-    calc(clamp(-1, (var(--i) - var(--sel, 0)) * 1000, 1) * var(--spine-h) * 0.4)
+    calc(clamp(-1, (var(--i) - var(--sel, 0)) * 1000, 1) * var(--sel-t, var(--spine-h)) * 0.4)
   );
   transition: transform 140ms ease-out;
 }
