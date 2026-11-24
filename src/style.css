@@ -4258,22 +4258,8 @@ kbd.pad {
   /* Long and soft: the rows sink away gradually, no edge where the list ends. */
   height: 30%;
   pointer-events: none;
-  /* Soft at the sides too, as the shade is: no dark box edge over the fan art. A still layer,
-     masked once when drawn. */
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 1.6rem,
-    #000 calc(100% - 1.6rem),
-    transparent
-  );
-  mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 1.6rem,
-    #000 calc(100% - 1.6rem),
-    transparent
-  );
+  /* No mask to soften its sides: a masked layer over the moving rows flickered on a Pi's
+     WebKit as the spines' pictures came in. */
   /* Layers of their own, still: always over the rows' layers moving under them. */
   will-change: transform;
 }

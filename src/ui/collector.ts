@@ -166,6 +166,8 @@ const WAIT_MAX_MS = 400;
 const DROP_MS = 2400;
 /** Steps closer together than this are the direction held: the shelf runs at an even speed. */
 const HELD_MS = 130;
+/** How long after the last step rows whose spines came in thicker or thinner move to fit. */
+const RELAYOUT_REST_MS = 260;
 /** The fan art behind the shelf, a sneak peek, once the selection pauses this long: longer than
  * between two quick presses, or the whole screen changes at each of them. */
 const PEEK_MS = 180;
@@ -334,6 +336,8 @@ export class CollectorView {
   /** The selected spine's thickness last set (`--sel-t`), to set it only when it changes. */
   #selT = '';
   #relayoutQueued = false;
+  /** The thinnest spine yet laid out on this shelf (rem). */
+  #thinnest = SPINE_H_REM;
   #anchor = 0;
   /** The track's position last set (px), to set it again only when it moves. */
   #trackY = NaN;
@@ -738,7 +742,10 @@ export class CollectorView {
     if (!source) return;
     const row = this.#rowRem * remPx();
     // Those in sight round the selected one, and a few more for the glide.
-    const half = Math.ceil(this.#shelfHeight / (this.#variable ? row / 2 : row) / 2) + OVERSCAN;
+    // Rows as thin as the thinnest yet drawn on this shelf: that many more in sight.
+    const gap = this.#rowRem - this.#len(SPINE_H_REM);
+    const pitch = this.#variable ? (this.#thinnest + gap) * remPx() : row;
+    const half = Math.ceil(this.#shelfHeight / Math.min(row, pitch) / 2) + OVERSCAN;
     const loops = this.#loops(source.total, row);
     const at = loops ? this.#place : Math.max(0, this.#selected);
     const first = loops ? at - half : Math.max(0, at - half);
@@ -919,6 +926,7 @@ export class CollectorView {
     this.#spineLen = fit.length;
     this.#rowYs.clear();
     this.#thick.clear();
+    this.#thinnest = this.#len(SPINE_H_REM);
     if (!changed || this.#rows.size === 0) return;
     for (const [i, node] of this.#rows) this.#placeRow(i, node);
     this.#measure();
@@ -940,6 +948,16 @@ export class CollectorView {
     if (before === undefined || Math.abs(before - this.#thicknessOf(rounded)) < 0.01) return;
     if (!this.#variable || this.#relayoutQueued) return;
     this.#relayoutQueued = true;
+    this.#relayoutSoon();
+  }
+
+  /** The rows laid out again once the steps pause: rows shifting under a gliding track jerked. */
+  #relayoutSoon(): void {
+    const wait = RELAYOUT_REST_MS - (performance.now() - this.#steppedAt);
+    if (wait > 0) {
+      setTimeout(() => this.#relayoutSoon(), wait);
+      return;
+    }
     requestAnimationFrame(() => {
       this.#relayoutQueued = false;
       this.#rowYs.clear();
@@ -986,6 +1004,7 @@ export class CollectorView {
           : 0);
       t = this.#thicknessOf(shape);
       this.#thick.set(game.id, t);
+      this.#thinnest = Math.min(this.#thinnest, t);
     }
     return { t, known: true };
   }
@@ -1040,8 +1059,12 @@ export class CollectorView {
     const selT = this.#variable ? `${this.#thickness(this.#place).t.toFixed(3)}rem` : '';
     if (selT !== this.#selT) {
       this.#selT = selT;
-      if (selT) this.#shelf.style.setProperty('--sel-t', selT);
-      else this.#shelf.style.removeProperty('--sel-t');
+      // On the moving rows' track and the lens only: on the shelf, its still layers (the fades,
+      // the shade) were styled again at every step.
+      for (const node of [this.#track, this.#lens]) {
+        if (selT) node.style.setProperty('--sel-t', selT);
+        else node.style.removeProperty('--sel-t');
+      }
     }
     const px = Math.round(y);
     if (px === this.#trackY) return;
