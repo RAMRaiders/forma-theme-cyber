@@ -4955,7 +4955,7 @@ kbd.pad {
   transform: translateY(
     calc(
       clamp(-1, (var(--i) - var(--sel, 0)) * 1000, 1) *
-        (var(--sel-t, var(--spine-h)) * 0.35 + 0.75rem)
+        (var(--sel-t, var(--spine-h)) * 0.08 + 0.3rem)
     )
   );
   transition: transform 140ms ease-out;

@@ -141,7 +141,7 @@ const spineFits = new Map<string, ShelfFit>();
 const MOST_SPINE_SCALE = 1.3;
 /** How much bigger a shelf whose cases differ by region is drawn (a Dreamcast's: its US and
  * Japanese spine cards, slim, readable), as far as there is room. */
-const REGIONAL_SCALE = 1.2;
+const REGIONAL_SCALE = 1.08;
 
 /**
  * Each game's spine picture's shape (how many times as long as wide) once it was drawn, by its
@@ -451,9 +451,21 @@ export class CollectorView {
 
   constructor(options: CollectorOptions) {
     this.#options = options;
-    window.addEventListener('resize', () => {
+    // The window's size changed (a game's video mode, as it ends), or it is back from a game:
+    // the shelf measured again, its middle in px (it was left where it was, at the left).
+    const again = () => {
       this.#shelfH = 0;
       this.#middle = 0;
+      requestAnimationFrame(() => {
+        this.#centreShelf();
+        this.#measure();
+        this.#moveTrack();
+      });
+    };
+    window.addEventListener('resize', again);
+    window.addEventListener('focus', again);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') again();
     });
     this.#shelf.append(this.#track, this.#lens);
     this.#navScreen.append(this.#letter);
