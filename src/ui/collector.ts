@@ -385,6 +385,7 @@ export class CollectorView {
    * step: measuring right after a step's class change made the page work out all its styles
    * and layout in the key press. */
   #shelfH = 0;
+  #middle = 0;
   /** The game whose colours are on the page. */
   #tinted: number | null = null;
   /** Which draw of a game is the latest: one whose pictures load after another began is dropped. */
@@ -450,7 +451,10 @@ export class CollectorView {
 
   constructor(options: CollectorOptions) {
     this.#options = options;
-    window.addEventListener('resize', () => (this.#shelfH = 0));
+    window.addEventListener('resize', () => {
+      this.#shelfH = 0;
+      this.#middle = 0;
+    });
     this.#shelf.append(this.#track, this.#lens);
     this.#navScreen.append(this.#letter);
     this.root.append(
@@ -467,6 +471,7 @@ export class CollectorView {
     this.#source = source;
     this.#shownAt = performance.now();
     this.#shelfH = 0;
+    this.#middle = 0;
     this.#rows.forEach((row) => {
       keepSpine(row);
       row.remove();
@@ -512,6 +517,15 @@ export class CollectorView {
     return shown > 0 && total >= Math.ceil(shown / row) + 2;
   }
 
+  /** The screen's middle, from the shelf's top (px); measured with the shelf's height. */
+  get #screenMiddle(): number {
+    if (!this.#shelfH || !this.#middle) {
+      const top = this.#shelf.getBoundingClientRect().top;
+      this.#middle = window.innerHeight / 2 - top || this.#shelfHeight / 2;
+    }
+    return this.#middle;
+  }
+
   get #shelfHeight(): number {
     if (!this.#shelfH) this.#shelfH = this.#shelf.clientHeight;
     return this.#shelfH;
@@ -519,8 +533,9 @@ export class CollectorView {
 
   /** The shelf's room above the first row, so any row can sit in the middle. */
   #measure(): void {
-    const row = this.#rowRem * remPx();
-    const pad = Math.max(0, (this.#shelfHeight - row) / 2);
+    // The selected row's middle at the screen's (the shelf starts lower, under the game's bar).
+    const h = this.#len(SPINE_H_REM) * remPx();
+    const pad = Math.max(0, this.#screenMiddle - h / 2);
     if (pad === this.#pad) return;
     this.#pad = pad;
     // Where the selected row sits: the lens there.
