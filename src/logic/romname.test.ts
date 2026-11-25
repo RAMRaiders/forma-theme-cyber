@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { releaseOf } from '../ui/collector.js';
 import {
+  discCount,
   fileOf,
   flaggedRegions,
   gameTags,
@@ -203,5 +204,20 @@ describe('a playlist', () => {
 
   it('is its own file without discs (an older Forma)', () => {
     expect(fileOf({ path: 'Deep Fear.m3u' })).toBe('Deep Fear.m3u');
+  });
+});
+
+describe('discCount', () => {
+  it("counts a playlist's discs in its system's words", () => {
+    const discs = (n: number) => Array.from({ length: n }, (_, i) => `Disc ${i + 1}.chd`);
+    expect(discCount({ system: 'saturn', path: 'G.m3u', discs: discs(3) })).toBe('3 CDs');
+    expect(discCount({ system: 'psx', path: 'G.m3u', discs: discs(1) })).toBe('1 CD');
+    expect(discCount({ system: 'dreamcast', path: 'G.m3u', discs: discs(2) })).toBe('2 GD-ROMs');
+    expect(discCount({ system: 'ps2', path: 'G.m3u', discs: discs(2) })).toBe('2 DVDs');
+  });
+
+  it('is nothing for a game that is not a playlist, or an older Forma', () => {
+    expect(discCount({ system: 'saturn', path: 'G.chd', discs: [] })).toBeNull();
+    expect(discCount({ system: 'saturn', path: 'G.m3u' })).toBeNull();
   });
 });

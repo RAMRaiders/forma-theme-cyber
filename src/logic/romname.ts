@@ -242,6 +242,26 @@ export function fileOf(game: Catalogued): string {
   return game.discs?.[0] ?? game.path;
 }
 
+/** What a system's games come on, one disc of it: a Dreamcast's GD-ROMs, a PS2's DVDs. */
+const MEDIA: [RegExp, string, string][] = [
+  [/^dreamcast$|^naomi/, 'GD-ROM', 'GD-ROMs'],
+  [/^(ps2|xbox|xbox360|wii|ps3)$/, 'DVD', 'DVDs'],
+  [/^gamecube$/, 'disc', 'discs'],
+  [/^wiiu$/, 'disc', 'discs'],
+  [/^psp$/, 'UMD', 'UMDs']
+];
+
+/**
+ * How many discs a playlist's game comes on, in its system's words (`3 CDs`, `2 GD-ROMs`);
+ * `null` for a game that is not a playlist (Forma 1.43.0 on says).
+ */
+export function discCount(game: Catalogued & { system: string }): string | null {
+  const n = game.discs?.length ?? 0;
+  if (!n) return null;
+  const [, one, many] = MEDIA.find(([re]) => re.test(game.system)) ?? [null, 'CD', 'CDs'];
+  return `${n} ${n === 1 ? one : many}`;
+}
+
 /** How a game was released, not changed after: kept from the file even when matched. */
 const RELEASED = /^(unl|unlicensed|pirate|bootleg|aftermarket|homebrew)$/i;
 

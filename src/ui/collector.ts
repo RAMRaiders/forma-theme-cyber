@@ -4,6 +4,7 @@ import { mark as perfMark, perfOn, span, timing } from './perf.js';
 import type { LazyList } from '../logic/pager.js';
 import { ageRatings, asPegi } from '../logic/agerating.js';
 import {
+  discCount,
   fileOf,
   flaggedRegions,
   languageFlag,
@@ -2276,6 +2277,8 @@ export class CollectorView {
       'Dump',
       row('Type', [tags.kind, changed].filter(Boolean).join(' · ') || 'Release'),
       row('Version', tags.number),
+      // A playlist's: how many discs it comes on.
+      row('Discs', discCount(game)),
       row('Patch', patchBy(fileOf(game))),
       row('Languages', flags(languages, LANGUAGES, languageFlag)),
       row('Integrity', dumpText(game.dump))
