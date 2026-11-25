@@ -28,6 +28,7 @@ import {
 import { type Move, moveGrid, moveHome, moveList, raceStep } from './logic/nav.js';
 import { LazyList } from './logic/pager.js';
 import { el } from './ui/dom.js';
+import { BOOT_DARK_MS, releaseBoot } from './ui/boot.js';
 import { type Card, GridView } from './ui/grid.js';
 import { COLLECTOR_PICTURES, CollectorView } from './ui/collector.js';
 import { launchScreen } from './ui/launch.js';
@@ -404,7 +405,8 @@ export class App {
       return this.#loadCyber();
     }
     this.#mode = 'browse';
-    this.#systemView.hide();
+    // The systems page put away only as the list takes its place (below): put away now, its
+    // dark strip went too, and the page under it showed in the frame before the boot did.
     // A system's games keep its board behind them; other views have none.
     if (this.#view !== CYBER_VIEW || target.shortcut) this.#backdrop.replaceChildren();
     const remembered = this.#level.index;
@@ -443,8 +445,9 @@ export class App {
             ? -1
             : await list.findIndex((g) => g.id === follow, remembered);
         const index = moved >= 0 ? moved : remembered;
-        // The system switched on as its games open: they come once its logo has gone, not
-        // under it (built under the boot, they also made it stutter on a Pi).
+        // The system switched on as its games open: they come as it starts to fade, still dark
+        // (built from its start, they made it stutter on a Pi; after it, the systems page
+        // showed through first).
         const booting = Math.max(0, this.#bootedUntil - performance.now());
         this.#bootedUntil = 0;
         // The boot is not loading: no loader while it plays.
@@ -455,8 +458,11 @@ export class App {
         }
         this.#list = list;
         this.#level.index = Math.min(index, Math.max(0, list.total - 1));
+        this.#systemView.hide();
         this.#main.replaceChildren(this.#gameView.root);
         this.#gameView.show(list, this.#level.index);
+        // The system's boot, held dark till now, fades out over its games.
+        releaseBoot();
         if (wasFiltered !== null && wasFiltered !== first.filtered) this.#gameView.reveal();
         this.#listPlace = { view, path };
         // After the boot too (above): on a first visit making them all took the Pi from it.
@@ -466,6 +472,7 @@ export class App {
         this.#list = null;
         this.#cards = await this.#allCards(first);
         this.#level.index = Math.min(remembered, Math.max(0, this.#cards.length - 1));
+        this.#systemView.hide();
         this.#main.replaceChildren(this.#grid.root);
         this.#grid.show(this.#cards, this.#level.index);
       }
@@ -475,6 +482,8 @@ export class App {
       this.#notify(FormaError.from(error).message);
     } finally {
       loading();
+      // Never left dark: a list that failed to load lets the boot go too.
+      releaseBoot();
     }
   }
 
@@ -933,8 +942,11 @@ export class App {
       const system = this.#systemView.selected;
       if (!system) return;
       // Switched on as its games open (not as the systems go by); the list's shelf stays up
-      // past it.
-      this.#bootedUntil = performance.now() + this.#systemView.bootSelected();
+      // past it. Its games come in while it is still dark, and it fades out over them: once it
+      // had faded, the systems page showed through first, the console before the last step
+      // when the steps had not paused yet (its page is drawn only then).
+      const boot = this.#systemView.bootSelected();
+      this.#bootedUntil = boot > 0 ? performance.now() + BOOT_DARK_MS : 0;
       return this.#enter([...this.#level.path, system.summary.name]);
     }
     if (this.#list) {

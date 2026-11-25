@@ -1708,6 +1708,22 @@ main {
   animation: boot-lines 1500ms linear var(--boot-wait, 0ms) both;
 }
 
+/* Held (boot.ts): dark until what comes under it is there, however long it takes; then it fades
+   out over it (.out), as a boot does from its 64%. */
+.boot.held {
+  animation: none;
+}
+
+.boot.held.out {
+  animation: boot-lift 540ms ease-out both;
+}
+
+@keyframes boot-lift {
+  to {
+    opacity: 0;
+  }
+}
+
 /* The flash the beam opens into: a glow over the whole screen, its opacity only (stretching the
    2px beam into it was heavy and stepped on a Pi). */
 .boot::before {
