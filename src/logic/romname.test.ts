@@ -1,7 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
 import { releaseOf } from '../ui/collector.js';
-import { flaggedRegions, gameTags, languageFlag, patchBy, regionFlag, romName } from './romname.js';
+import {
+  fileOf,
+  flaggedRegions,
+  gameTags,
+  languageFlag,
+  patchBy,
+  regionFlag,
+  romName
+} from './romname.js';
 
 describe('a ROM’s file name', () => {
   it('gives No-Intro’s regions, languages and revision', () => {
@@ -173,5 +181,27 @@ describe('patchBy', () => {
     expect(patchBy('A (Japan) [T-En by Ann & Bo v0.99] [n].zip')).toBe('Ann & Bo v0.99');
     expect(patchBy('Bare Knuckle III (Japan) (Translated En).zip')).toBeNull();
     expect(patchBy('Sonic (USA) (by Sega).zip')).toBeNull();
+  });
+});
+
+describe('a playlist', () => {
+  const deathMask = {
+    path: 'DeathMask (Japan).m3u',
+    dump: null,
+    discs: [1, 2, 3].map(
+      (n) => `DeathMask (Japan) (Disc ${n}) [T-En by A Murder of Crows & ShadowMask v0.2j RC].chd`
+    )
+  };
+
+  it('is told by its first disc, its own name bare', () => {
+    const tags = gameTags(deathMask);
+    expect(tags.status).toBe('Translation');
+    expect(tags.languages).toEqual(['en']);
+    expect(tags.regions).toEqual(['jp']);
+    expect(patchBy(fileOf(deathMask))).toBe('A Murder of Crows & ShadowMask v0.2j RC');
+  });
+
+  it('is its own file without discs (an older Forma)', () => {
+    expect(fileOf({ path: 'Deep Fear.m3u' })).toBe('Deep Fear.m3u');
   });
 });
