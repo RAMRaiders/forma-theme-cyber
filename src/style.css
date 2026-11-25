@@ -4820,7 +4820,12 @@ kbd.pad {
   font-size: 0.95rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  /* Never restyled as the selection moves (the lens shows it): no layer, no paint per step. */
+  /* A layer of its own for good. Each step glides the old and new selected rows' transforms
+     (below), and a Pi's WebKit put a row on a layer only while it moved, and the rows painted
+     after it with it: at each step the track's rows (and the TV over the shelf) were
+     re-layered, and a frame showed them blank (measured: 9 to 14 blank frames in a recorded
+     run of steps, none with this). */
+  will-change: transform;
 }
 
 .spine-row.slim {
