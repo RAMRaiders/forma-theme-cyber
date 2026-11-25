@@ -404,6 +404,8 @@ export class CollectorView {
   #timers: ReturnType<typeof setTimeout>[] = [];
   /** The story scrolling (#scrollStory); paused while the shelf is up. */
   #storyScroll: Animation | null = null;
+  /** Each story bay's start of its scroll or pages, run once it is drawn (#draw). */
+  readonly #storyStarts = new WeakMap<HTMLElement, () => void>();
   #intervals: ReturnType<typeof setInterval>[] = [];
   #accents = new Map<number, Promise<string | null>>();
   /** The shelf's colours, worked out one after another. */
@@ -1487,6 +1489,8 @@ export class CollectorView {
     requestAnimationFrame(() => {
       this.#fit?.();
       this.#centreShelf();
+      // Its story scrolling (or turning its pages), now that it is on screen to be measured.
+      for (const part of showcase) this.#storyStarts.get(part)?.();
     });
     // Its turns from when it is first seen: drawn under the shelf, it waits there on its front
     // (it had turned to its spine or back under the shelf, and came out so).
@@ -1966,7 +1970,9 @@ export class CollectorView {
     // No story: the footage has its room.
     this.root.classList.toggle('no-story', !all);
     const id = game.id;
-    requestAnimationFrame(() => {
+    // Started once drawn, not now: another game's bays stay until this one's pictures load (up
+    // to SWAP_WAIT_MS), and a story measured before it was on screen never scrolled.
+    this.#storyStarts.set(story, () => {
       if (this.#game?.id !== id || !box.clientHeight) return;
       if (document.documentElement.dataset.motion !== 'off') {
         this.#scrollStory(lines, lines.scrollHeight - box.clientHeight);
