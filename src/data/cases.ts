@@ -334,18 +334,6 @@ interface RegionalCase {
   spine: number;
 }
 
-/**
- * Systems whose spine pictures differ in shape but whose cases do not: a PlayStation's PAL
- * spines are 9 times as long as wide, its US and Japanese spine cards 20, every one a jewel
- * case as thick. Their shelf's rows are all alike, each picture filling its row.
- */
-const EVEN_SPINES: ReadonlySet<string> = new Set(['psx']);
-
-/** Whether a system's shelf draws every row alike, whatever its spine picture's shape. */
-export function evenSpines(system: string): boolean {
-  return EVEN_SPINES.has(system);
-}
-
 /** Cyber's region codes that are PAL Europe (and Australia, sold the same boxes). */
 const PAL_REGIONS: ReadonlySet<string> = new Set([
   'eu',
