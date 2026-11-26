@@ -230,6 +230,36 @@ export function languageFlag(code: string): string | null {
 export interface Catalogued {
   path: string;
   dump?: { status: string; name: string | null } | null;
+  /** A playlist's discs (Forma 1.43.0 on), in its order. */
+  discs?: string[];
+}
+
+/**
+ * The file whose name says what the game is: a playlist's first disc (`DeathMask (Japan) (Disc
+ * 1) [T-En by …].chd`), its own name often bare (`DeathMask (Japan).m3u`); else its own.
+ */
+export function fileOf(game: Catalogued): string {
+  return game.discs?.[0] ?? game.path;
+}
+
+/** What a system's games come on, one disc of it: a Dreamcast's GD-ROMs, a PS2's DVDs. */
+const MEDIA: [RegExp, string, string][] = [
+  [/^dreamcast$|^naomi/, 'GD-ROM', 'GD-ROMs'],
+  [/^(ps2|xbox|xbox360|wii|ps3)$/, 'DVD', 'DVDs'],
+  [/^gamecube$/, 'disc', 'discs'],
+  [/^wiiu$/, 'disc', 'discs'],
+  [/^psp$/, 'UMD', 'UMDs']
+];
+
+/**
+ * How many discs a playlist's game comes on, in its system's words (`3 CDs`, `2 GD-ROMs`);
+ * `null` for a game that is not a playlist (Forma 1.43.0 on says).
+ */
+export function discCount(game: Catalogued & { system: string }): string | null {
+  const n = game.discs?.length ?? 0;
+  if (!n) return null;
+  const [, one, many] = MEDIA.find(([re]) => re.test(game.system)) ?? [null, 'CD', 'CDs'];
+  return `${n} ${n === 1 ? one : many}`;
 }
 
 /** How a game was released, not changed after: kept from the file even when matched. */
@@ -244,7 +274,7 @@ const RELEASED = /^(unl|unlicensed|pirate|bootleg|aftermarket|homebrew)$/i;
  * cart) the file's name says too: No-Intro's names leave `(Unl)` out of some.
  */
 export function gameTags(game: Catalogued): RomName & { fromCatalogue: boolean } {
-  const file = romName(game.path);
+  const file = romName(fileOf(game));
   const name = game.dump && game.dump.status !== 'notCatalogued' ? game.dump.name : null;
   if (!name) return { ...file, fromCatalogue: false };
   const listed = romName(name);

@@ -3,7 +3,15 @@ import { mark as perfMark, perfOn, span, timing } from './perf.js';
 
 import type { LazyList } from '../logic/pager.js';
 import { ageRatings, asPegi } from '../logic/agerating.js';
-import { flaggedRegions, languageFlag, regionFlag, gameTags, patchBy } from '../logic/romname.js';
+import {
+  discCount,
+  fileOf,
+  flaggedRegions,
+  languageFlag,
+  regionFlag,
+  gameTags,
+  patchBy
+} from '../logic/romname.js';
 import { DEFAULT_BACK, DEFAULT_FRONT, hue } from './cover.js';
 import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
@@ -2277,7 +2285,9 @@ export class CollectorView {
       'Dump',
       row('Type', [tags.kind, changed].filter(Boolean).join(' · ') || 'Release'),
       row('Version', tags.number),
-      row('Patch', patchBy(game.path)),
+      // A playlist's: how many discs it comes on.
+      row('Discs', discCount(game)),
+      row('Patch', patchBy(fileOf(game))),
       row('Languages', flags(languages, LANGUAGES, languageFlag)),
       row('Integrity', dumpText(game.dump))
     );
