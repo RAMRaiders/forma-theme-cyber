@@ -2,8 +2,8 @@ import { remPx } from './dom.js';
 
 /** Its start read this long before it moves. */
 const HOLD_START_MS = 5000;
-/** Up at about a line in two seconds: slow enough to read as it goes. */
-const REM_PER_S = 0.6;
+/** Up at about a line in four seconds: read at ease as it goes (a line in two was too quick). */
+const REM_PER_S = 0.3;
 /** Its end read this long before it starts over. */
 const HOLD_END_MS = 4000;
 /** Fading out at the end, and in again at the start. */

@@ -3,7 +3,15 @@ import { mark as perfMark, perfOn, span, timing } from './perf.js';
 
 import type { LazyList } from '../logic/pager.js';
 import { ageRatings, asPegi } from '../logic/agerating.js';
-import { flaggedRegions, languageFlag, regionFlag, gameTags, patchBy } from '../logic/romname.js';
+import {
+  discCount,
+  fileOf,
+  flaggedRegions,
+  languageFlag,
+  regionFlag,
+  gameTags,
+  patchBy
+} from '../logic/romname.js';
 import { DEFAULT_BACK, DEFAULT_FRONT, hue } from './cover.js';
 import { loopIndex, loopPlace } from '../logic/nav.js';
 import { el, remPx } from './dom.js';
@@ -28,14 +36,7 @@ import {
   playtime
 } from './stage.js';
 import { awake } from './rest.js';
-import {
-  caseScale,
-  caseShape,
-  regionalSpine,
-  spineBoost,
-  spineShape,
-  stubbiestSpine
-} from '../data/cases.js';
+import { caseShape, regionalSpine, spineBoost, spineShape, stubbiestSpine } from '../data/cases.js';
 import { borderOf, placeTrimmed, placedBox, trimmedAspect } from './trim.js';
 
 /**
@@ -152,7 +153,7 @@ const MOST_SPINE_SCALE = 1.5;
 const MOST_SHORT_GROWTH = 1.15;
 /** How much bigger a shelf whose cases differ by region is drawn (a Dreamcast's: its US and
  * Japanese spine cards, slim, readable), as far as there is room. */
-const REGIONAL_SCALE = 1.2;
+const REGIONAL_SCALE = 1.08;
 
 /**
  * Each game's spine picture's shape (how many times as long as wide) once it was drawn, by its
@@ -415,6 +416,8 @@ export class CollectorView {
   #timers: ReturnType<typeof setTimeout>[] = [];
   /** The story scrolling (#scrollStory); paused while the shelf is up. */
   #storyScroll: Animation | null = null;
+  /** Each story bay's start of its scroll or pages, run once it is drawn (#draw). */
+  readonly #storyStarts = new WeakMap<HTMLElement, () => void>();
   #intervals: ReturnType<typeof setInterval>[] = [];
   #accents = new Map<number, Promise<string | null>>();
   /** The shelf's colours, worked out one after another. */
@@ -462,9 +465,21 @@ export class CollectorView {
 
   constructor(options: CollectorOptions) {
     this.#options = options;
-    window.addEventListener('resize', () => {
+    // The window's size changed (a game's video mode, as it ends), or it is back from a game:
+    // the shelf measured again, its middle in px (it was left where it was, at the left).
+    const again = () => {
       this.#shelfH = 0;
       this.#middle = 0;
+      requestAnimationFrame(() => {
+        this.#centreShelf();
+        this.#measure();
+        this.#moveTrack();
+      });
+    };
+    window.addEventListener('resize', again);
+    window.addEventListener('focus', again);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') again();
     });
     this.#shelf.append(this.#track, this.#lens);
     this.#navScreen.append(this.#letter);
@@ -1498,6 +1513,8 @@ export class CollectorView {
     requestAnimationFrame(() => {
       this.#fit?.();
       this.#centreShelf();
+      // Its story scrolling (or turning its pages), now that it is on screen to be measured.
+      for (const part of showcase) this.#storyStarts.get(part)?.();
     });
     // Its turns from when it is first seen: drawn under the shelf, it waits there on its front
     // (it had turned to its spine or back under the shelf, and came out so).
@@ -1977,7 +1994,9 @@ export class CollectorView {
     // No story: the footage has its room.
     this.root.classList.toggle('no-story', !all);
     const id = game.id;
-    requestAnimationFrame(() => {
+    // Started once drawn, not now: another game's bays stay until this one's pictures load (up
+    // to SWAP_WAIT_MS), and a story measured before it was on screen never scrolled.
+    this.#storyStarts.set(story, () => {
       if (this.#game?.id !== id || !box.clientHeight) return;
       if (document.documentElement.dataset.motion !== 'off') {
         this.#scrollStory(lines, lines.scrollHeight - box.clientHeight);
@@ -2089,13 +2108,10 @@ export class CollectorView {
       lying: shape.lying ? shape.depth / shape.ratio : 0
     };
     box.classList.toggle('lying', shape.lying);
-    // As big against its system's other cases as real ones are (a US Dreamcast's jewel case,
-    // two thirds of a PAL box).
-    const scale = caseScale(game.system, gameTags(game).regions);
     const resize = () => {
       if (size.lying) size.depth = clamp(size.lying * size.ratio, SLIMMEST_DEPTH, 0.3);
       const display = box.closest<HTMLElement>('.display');
-      let h = display?.clientHeight
+      const h = display?.clientHeight
         ? boxHeight(
             display.clientWidth / remPx(),
             display.clientHeight / remPx(),
@@ -2103,7 +2119,6 @@ export class CollectorView {
             size.depth
           )
         : BOX_REM;
-      h *= scale;
       // On the case's stage too: the cartridge is never bigger than the box hiding it.
       for (const node of display ? [box, display] : [box]) {
         node.style.setProperty('--h', `${h.toFixed(2)}rem`);
@@ -2280,7 +2295,9 @@ export class CollectorView {
       'Dump',
       row('Type', [tags.kind, changed].filter(Boolean).join(' · ') || 'Release'),
       row('Version', tags.number),
-      row('Patch', patchBy(game.path)),
+      // A playlist's: how many discs it comes on.
+      row('Discs', discCount(game)),
+      row('Patch', patchBy(fileOf(game))),
       row('Languages', flags(languages, LANGUAGES, languageFlag)),
       row('Integrity', dumpText(game.dump))
     );

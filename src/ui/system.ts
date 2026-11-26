@@ -705,8 +705,9 @@ export class SystemView {
   /**
    * The selected system switched on as its games open: dark, a line of light across the middle
    * opening into the picture, its logo lit in it in its colour, then its games underneath. Over
-   * the whole screen (the game list takes this view's place under it); gone in `BOOT_MS`. Only
-   * then: moving from one system to the next, its page just changes.
+   * the whole screen (the game list takes this view's place under it); held dark until the list
+   * is there (`releaseBoot`), however long it takes to load, so this page never shows through.
+   * Only then: moving from one system to the next, its page just changes.
    */
   bootSelected(): number {
     const system = this.selected;
@@ -716,7 +717,7 @@ export class SystemView {
     logo?.addEventListener('error', () => logo.replaceWith(name));
     // Its colour as this view put it on the page (no style worked out to read it).
     const colour = document.documentElement.style.getPropertyValue('--sys').trim() || '#fff';
-    return boot(this.root, logo ?? name, 0, { colour });
+    return boot(this.root, logo ?? name, 0, { colour, held: true });
   }
 
   /**

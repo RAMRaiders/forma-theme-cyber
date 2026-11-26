@@ -320,17 +320,16 @@ export function spineShape(shape: CaseShape): number {
 }
 
 /**
- * Systems whose games' cases differ by region: how tall they stand (mm), and how many times as
- * long as wide their spine pictures are; PAL's, and everywhere else's.
+ * Systems whose games' cases differ by region: how many times as long as wide their spine
+ * pictures are, PAL's and everywhere else's (a shelf row's thickness until its picture is in).
  */
 const REGIONAL: Record<string, { pal: RegionalCase; other: RegionalCase }> = {
-  // A PAL box (190 mm, its spine 7.8 times as long as wide); a US or Japanese thick jewel case
-  // (125 mm), its spine card 17.4 times.
-  dreamcast: { pal: { mm: 190, spine: 7.8 }, other: { mm: 125, spine: 17.4 } }
+  // A PAL box's spine, 7.8 times as long as wide; a US or Japanese thick jewel case's spine
+  // card, 17.4 times.
+  dreamcast: { pal: { spine: 7.8 }, other: { spine: 17.4 } }
 };
 
 interface RegionalCase {
-  mm: number;
   spine: number;
 }
 
@@ -392,14 +391,4 @@ export function regionalSpine(system: string, regions: readonly string[]): numbe
 export function stubbiestSpine(system: string): number | null {
   const cases = REGIONAL[system];
   return cases ? Math.min(cases.pal.spine, cases.other.spine) : null;
-}
-
-/**
- * How big a game's case is drawn against its system's tallest, as real ones stand: a US or
- * Japanese Dreamcast's jewel case two thirds of a PAL box. 1 where cases do not differ by region.
- */
-export function caseScale(system: string, regions: readonly string[]): number {
-  const cases = REGIONAL[system];
-  if (!cases) return 1;
-  return (isPal(regions) ? cases.pal : cases.other).mm / Math.max(cases.pal.mm, cases.other.mm);
 }
