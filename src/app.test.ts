@@ -578,10 +578,10 @@ describe('the default theme', () => {
     const game = asked.mock.calls.filter((c) => c[1] !== 'boxside').at(-1)![0];
     asked.mockClear();
     fire('media:changed', { game });
-    const again = asked.mock.calls.filter((c) => c[0] === game);
-    expect(again.map((c) => c[1])).toContain('boxside');
-    expect(again.some((c) => c[1] !== 'boxside')).toBe(true);
-    expect(again.every((c) => c[3] === 1)).toBe(true);
+    const again = () => asked.mock.calls.filter((c) => c[0] === game);
+    await vi.waitFor(() => expect(again().map((c) => c[1])).toContain('boxside'));
+    expect(again().some((c) => c[1] !== 'boxside')).toBe(true);
+    expect(again().every((c) => c[3] === 1)).toBe(true);
   });
 
   it('opens a list where it was left, systems and games alike', async () => {

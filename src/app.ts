@@ -274,8 +274,13 @@ export class App {
       if (this.#list) this.#gameView.scrapeProgress(status);
     });
     // A scrape replaced a game's pictures, often under the same names: nothing else says so.
+    // Drawn a moment later: Forma calls a page's listeners in no set order, and the SDK's own
+    // (which gives the game new URLs) could come after this one, the old picture drawn again
+    // (a turned spine stayed as it was on the shelf).
     this.forma.events.on('media:changed', ({ game }) => {
-      if (this.#list) this.#gameView.mediaChanged(game);
+      setTimeout(() => {
+        if (this.#list) this.#gameView.mediaChanged(game);
+      });
     });
     // Views change with collections too: the shortcuts' counts follow.
     this.forma.events.on('views:changed', () => {
