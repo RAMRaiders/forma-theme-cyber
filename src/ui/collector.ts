@@ -116,10 +116,11 @@ export const COLLECTOR_PICTURES: readonly (readonly [Kind, number])[] = [
  */
 const SPINE_LEN_REM = 22;
 const SPINE_H_REM = 2.85;
-/** Systems whose spines are drawn a little bigger, rows and all: Atari's short cartridge labels
- * read small at the usual size. */
-const BIGGER_SPINES = /^atari/;
-const BIGGER_SCALE = 1.12;
+/** The case spine the usual row is drawn as thick as, mm: a Mega Drive clamshell's. */
+const USUAL_SPINE_MM = 24;
+/** The thinnest and thickest a system's rows are drawn for its case's spine (thicknessScale). */
+const THINNEST_CASE_SCALE = 0.6;
+const THICKEST_CASE_SCALE = 1.4;
 /** The shortest a shelf's spines are drawn, whatever their pictures. */
 const SHORTEST_SPINE_REM = 14;
 /** The room about the shelf's middle taken, before the view is laid out to measure it. */
@@ -137,8 +138,11 @@ const LOAD_AHEAD = 60;
  * while browsed. */
 const spineFits = new Map<string, ShelfFit>();
 
-/** The biggest a shelf's rows are drawn, short spines (a Super Nintendo's) grown to it. */
-const MOST_SPINE_SCALE = 1.3;
+/** The biggest a shelf's rows are drawn. */
+const MOST_SPINE_SCALE = 1.5;
+/** How much a short spine (a Super Nintendo's) is grown at most, its row with it: a little, so
+ * rows stay as thick as their cases against other systems'. */
+const MOST_SHORT_GROWTH = 1.15;
 /** How much bigger a shelf whose cases differ by region is drawn (a Dreamcast's: its US and
  * Japanese spine cards, slim, readable), as far as there is room. */
 const REGIONAL_SCALE = 1.2;
@@ -317,7 +321,7 @@ export class CollectorView {
   readonly #shelf = el('div', { class: 'shelf', role: 'listbox' });
   /** The system whose shelf is sized; its spines kept in `spineFits`. */
   #shelfSystem: string | null = null;
-  /** How much bigger than usual this system's spines are (BIGGER_SPINES). */
+  /** How much bigger than usual this system's spines are drawn (shelfFit). */
   #spineScale = 1;
   /** How long a spine can be, in rem, about the shelf's middle; 0 until measured. */
   #shelfRoom = 0;
@@ -896,7 +900,7 @@ export class CollectorView {
    * Only the length differs from system to system; the shelf moves the same for all.
    */
   #sizeShelf(system: string, source: LazyList<Game>, selected: number): void {
-    const base = BIGGER_SPINES.test(system) ? BIGGER_SCALE : 1;
+    const base = thicknessScale(caseShape(system).spine);
     // Cases differing by region (a Dreamcast's): sized to the stubbiest region's spine, bigger,
     // each row then as thick as its own case's spine.
     const stubbiest = stubbiestSpine(system);
@@ -2483,9 +2487,20 @@ export function shelfFit(shape: number, room: number, base: number): ShelfFit {
     };
   }
   const target = Math.min(GROWN_SPINE_REM, (room - 4) / base);
-  const grow = clamp(target / natural, 1, MOST_SPINE_SCALE / base);
+  const grow = clamp(target / natural, 1, Math.min(MOST_SHORT_GROWTH, MOST_SPINE_SCALE / base));
   const scale = Math.round(base * grow * 1000) / 1000;
   return { length: Math.round(natural * scale * 100) / 100, scale };
+}
+
+/**
+ * How thick a system's rows are drawn against the usual, for its case's spine `mm` thick: as
+ * against a Mega Drive's, so a Mega CD's slim case reads thinner on the shelf and a Super
+ * Nintendo's box thicker, but softened (its square root), so a jewel case's spine card stays
+ * readable and a Neo Geo's box does not take the whole shelf.
+ */
+export function thicknessScale(mm: number): number {
+  const scale = clamp(Math.sqrt(mm / USUAL_SPINE_MM), THINNEST_CASE_SCALE, THICKEST_CASE_SCALE);
+  return Math.round(scale * 1000) / 1000;
 }
 
 export function shelfShape(shape: number, room: number): number {

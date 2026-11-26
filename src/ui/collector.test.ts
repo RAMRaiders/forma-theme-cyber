@@ -5,6 +5,7 @@ import type { CollectorOptions } from './collector.js';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LazyList } from '../logic/pager.js';
+import { caseShape } from '../data/cases.js';
 import {
   boxHeight,
   CollectorView,
@@ -16,6 +17,7 @@ import {
   releaseOf,
   serial,
   shelfFit,
+  thicknessScale,
   shelfShape,
   tvEra,
   type ScreenArea,
@@ -896,17 +898,17 @@ describe('the Collector view', () => {
     ]);
   });
 
-  it("draws an Atari's spines a little bigger, rows and all", async () => {
+  it("draws an Atari's spines bigger, rows and all, as its thick box's spine is", async () => {
     const { v } = await view([
       { ...game(1, 'Asteroids'), system: 'atari7800' },
       { ...game(2, 'Xevious'), system: 'atari7800' }
     ]);
     const shelf = v.root.querySelector<HTMLElement>('.shelf')!;
-    expect(shelf.style.getPropertyValue('--spine-h')).toBe('3.19rem');
+    expect(shelf.style.getPropertyValue('--spine-h')).toBe('3.34rem');
     // An Atari box's spine, shorter than a Mega Drive's.
-    expect(shelf.style.getPropertyValue('--spine-len')).toBe('18.77rem');
+    expect(shelf.style.getPropertyValue('--spine-len')).toBe('19.66rem');
     const rows = [...v.root.querySelectorAll<HTMLElement>('.spine-row')].map((r) => r.style.top);
-    expect(rows).toContain('3.584rem');
+    expect(rows).toContain('3.754rem');
   });
 
   it('with more games than it shows, puts the last ones before the first', async () => {
@@ -1165,10 +1167,10 @@ describe('the shelf in the shape of its spines', () => {
       const { v } = await view(games);
       const shelf = v.root.querySelector<HTMLElement>('.shelf')!;
       // A TurboGrafx-16 case's spine until its pictures are measured.
-      expect(shelf.style.getPropertyValue('--spine-len')).toBe('29.77rem');
+      expect(shelf.style.getPropertyValue('--spine-len')).toBe('25.07rem');
       for (let i = 0; i < 5; i++) await Promise.resolve();
       rect.mockRestore();
-      expect(shelf.style.getPropertyValue('--spine-len')).toBe('49.29rem');
+      expect(shelf.style.getPropertyValue('--spine-len')).toBe('41.5rem');
       const sized = shelf.style.getPropertyValue('--spine-len');
       expect(loaded.length).toBeLessThanOrEqual(8);
       // Browsing loads no more pictures to measure, and the length stays.
@@ -1207,17 +1209,17 @@ describe('the shelf in the shape of its spines', () => {
     expect(shelfShape(18.4, 0)).toBe(22);
   });
 
-  it('grows a short spine and its row, whole, as far as there is room', () => {
-    // A Super Nintendo's (680x97) with room: as big as allowed, its shape kept.
+  it('grows a short spine and its row a little, whole, as far as there is room', () => {
+    // A Super Nintendo's (680x97) with room: a little bigger, its shape kept.
     const snes = shelfFit(680 / 97, 34, 1);
-    expect(snes.scale).toBe(1.3);
+    expect(snes.scale).toBe(1.15);
     expect(snes.length / snes.scale).toBeCloseTo(2.85 * (680 / 97), 1);
     // Little room: only as far as it.
     const tight = shelfFit(680 / 97, 26, 1);
     expect(tight.length).toBeLessThanOrEqual(22);
     expect(tight.scale).toBeGreaterThanOrEqual(1);
-    // A Jaguar's, already bigger (Atari): never past the most.
-    expect(shelfFit(680 / 98, 34, 1.12).scale).toBe(1.3);
+    // A thick case's, already bigger: never past the most.
+    expect(shelfFit(680 / 98, 40, 1.4).scale).toBe(1.5);
     // A long one: the usual size.
     expect(shelfFit(18.4, 100, 1)).toEqual({ length: 49.29, scale: 1 });
   });
@@ -1232,6 +1234,22 @@ describe('the shelf in the shape of its spines', () => {
     const near = shelfFit(11.5, 34, 1);
     expect(near.scale).toBeGreaterThan(0.9);
     expect(near.scale).toBeLessThanOrEqual(1);
+  });
+});
+
+describe('thicknessScale', () => {
+  it("draws a system's rows as thick as its case's spine against a Mega Drive's, softened", () => {
+    const of = (system: string) => thicknessScale(caseShape(system).spine);
+    expect(of('megadrive')).toBe(1);
+    // A Mega CD's slim case thinner, a Saturn's a little; a Super Nintendo's box thicker.
+    expect(of('megacd')).toBeCloseTo(0.71, 2);
+    expect(of('saturn')).toBeCloseTo(0.91, 2);
+    expect(of('snes')).toBeCloseTo(1.24, 2);
+    expect(of('megacd')).toBeLessThan(of('saturn'));
+    expect(of('saturn')).toBeLessThan(of('nes'));
+    // A jewel case's spine card still readable; a Neo Geo's box not the whole shelf.
+    expect(of('psx')).toBe(0.6);
+    expect(of('neogeo')).toBe(1.4);
   });
 });
 
