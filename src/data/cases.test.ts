@@ -4,7 +4,6 @@ import { readFileSync } from 'node:fs';
 
 import {
   CASED_SYSTEMS,
-  caseScale,
   caseShape,
   regionalCases,
   regionalSpine,
@@ -57,14 +56,5 @@ describe('regionalSpine', () => {
     expect(stubbiestSpine('megadrive')).toBeNull();
     expect(regionalCases('megadrive')).toBe(false);
     expect(regionalCases('dreamcast')).toBe(true);
-  });
-});
-
-describe('caseScale', () => {
-  it('draws a US or Japanese Dreamcast case two thirds as big as a PAL one', () => {
-    expect(caseScale('dreamcast', ['eu'])).toBe(1);
-    expect(caseScale('dreamcast', ['us'])).toBeCloseTo(125 / 190, 3);
-    expect(caseScale('dreamcast', ['jp'])).toBeCloseTo(125 / 190, 3);
-    expect(caseScale('saturn', ['us'])).toBe(1);
   });
 });

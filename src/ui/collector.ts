@@ -28,7 +28,7 @@ import {
   playtime
 } from './stage.js';
 import { awake } from './rest.js';
-import { caseScale, caseShape, regionalSpine, spineShape, stubbiestSpine } from '../data/cases.js';
+import { caseShape, regionalSpine, spineShape, stubbiestSpine } from '../data/cases.js';
 import { borderOf, placeTrimmed, placedBox, trimmedAspect } from './trim.js';
 
 /**
@@ -141,7 +141,7 @@ const spineFits = new Map<string, ShelfFit>();
 const MOST_SPINE_SCALE = 1.3;
 /** How much bigger a shelf whose cases differ by region is drawn (a Dreamcast's: its US and
  * Japanese spine cards, slim, readable), as far as there is room. */
-const REGIONAL_SCALE = 1.2;
+const REGIONAL_SCALE = 1.08;
 
 /**
  * Each game's spine picture's shape (how many times as long as wide) once it was drawn, by its
@@ -451,9 +451,21 @@ export class CollectorView {
 
   constructor(options: CollectorOptions) {
     this.#options = options;
-    window.addEventListener('resize', () => {
+    // The window's size changed (a game's video mode, as it ends), or it is back from a game:
+    // the shelf measured again, its middle in px (it was left where it was, at the left).
+    const again = () => {
       this.#shelfH = 0;
       this.#middle = 0;
+      requestAnimationFrame(() => {
+        this.#centreShelf();
+        this.#measure();
+        this.#moveTrack();
+      });
+    };
+    window.addEventListener('resize', again);
+    window.addEventListener('focus', again);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') again();
     });
     this.#shelf.append(this.#track, this.#lens);
     this.#navScreen.append(this.#letter);
@@ -2078,13 +2090,10 @@ export class CollectorView {
       lying: shape.lying ? shape.depth / shape.ratio : 0
     };
     box.classList.toggle('lying', shape.lying);
-    // As big against its system's other cases as real ones are (a US Dreamcast's jewel case,
-    // two thirds of a PAL box).
-    const scale = caseScale(game.system, gameTags(game).regions);
     const resize = () => {
       if (size.lying) size.depth = clamp(size.lying * size.ratio, SLIMMEST_DEPTH, 0.3);
       const display = box.closest<HTMLElement>('.display');
-      let h = display?.clientHeight
+      const h = display?.clientHeight
         ? boxHeight(
             display.clientWidth / remPx(),
             display.clientHeight / remPx(),
@@ -2092,7 +2101,6 @@ export class CollectorView {
             size.depth
           )
         : BOX_REM;
-      h *= scale;
       // On the case's stage too: the cartridge is never bigger than the box hiding it.
       for (const node of display ? [box, display] : [box]) {
         node.style.setProperty('--h', `${h.toFixed(2)}rem`);

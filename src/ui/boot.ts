@@ -4,19 +4,29 @@ import { el } from './dom.js';
 
 /** How long the boot takes, from dark to the page; its CSS animations last as long. */
 const BOOT_MS = 1500;
+/** How long into the boot the screen stays wholly dark (boot-out's 64%, style.css): what is
+ * swapped under it before then is never seen, and the boot then fades out over the new. */
+export const BOOT_DARK_MS = Math.round(BOOT_MS * 0.64);
+
+/** How long a held boot (`held`) stays dark at most if it is never let go. */
+const HELD_MAX_MS = 10_000;
+
+/** The held boot up now, and when it started; `releaseBoot` lets it go. */
+let held: { screen: HTMLElement; start: number } | null = null;
 
 /**
  * Switched on, over `host`: dark, a line of light across the middle opening into a flash,
  * `mark` (a logo, or a name) lit in it, then `host` underneath. After `wait` (dark until
  * then). Gone in `BOOT_MS`; opacity and transforms only (cheap on a Pi). Not with motion off.
- * Returns how long it will be up, 0 when not shown.
+ * `held`: dark until `releaseBoot`, however long what comes under it takes, then fading out
+ * over it. Returns how long it will be up (at least), 0 when not shown.
  */
 export function boot(
   host: HTMLElement,
   mark: HTMLElement,
   wait = 0,
   /** Over the whole screen, header and hints too, lit in this colour (a game's). */
-  whole?: { colour: string }
+  whole?: { colour: string; held?: boolean }
 ): number {
   const over = whole ? document.body : host;
   for (const old of over.querySelectorAll(':scope > .boot')) old.remove();
@@ -30,8 +40,31 @@ export function boot(
   screen.style.setProperty('--boot-wait', `${Math.round(wait)}ms`);
   if (whole) screen.style.setProperty('--sys', whole.colour);
   over.append(screen);
-  setTimeout(() => screen.remove(), wait + BOOT_MS);
+  if (whole?.held) {
+    screen.classList.add('held');
+    held = { screen, start: performance.now() + wait };
+    setTimeout(() => {
+      if (held?.screen === screen) releaseBoot();
+    }, wait + HELD_MAX_MS);
+  } else {
+    setTimeout(() => screen.remove(), wait + BOOT_MS);
+  }
   return wait + BOOT_MS;
+}
+
+/**
+ * The held boot let go: it fades out over what is under it now, once it has been dark as long
+ * as a boot is (BOOT_DARK_MS). Nothing when none is held.
+ */
+export function releaseBoot(): void {
+  const h = held;
+  if (!h) return;
+  held = null;
+  const dark = Math.max(0, h.start + BOOT_DARK_MS - performance.now());
+  setTimeout(() => {
+    h.screen.classList.add('out');
+    setTimeout(() => h.screen.remove(), BOOT_MS - BOOT_DARK_MS);
+  }, dark);
 }
 
 /** How long a just-scraped game's logo is looked for: Forma may save it a little after the rest. */
