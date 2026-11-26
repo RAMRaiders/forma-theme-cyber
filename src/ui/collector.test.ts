@@ -1242,13 +1242,14 @@ describe('thicknessScale', () => {
     const of = (system: string) => thicknessScale(caseShape(system).spine);
     expect(of('megadrive')).toBe(1);
     // A Mega CD's slim case thinner, a Saturn's a little; a Super Nintendo's box thicker.
-    expect(of('megacd')).toBeCloseTo(0.71, 2);
+    expect(of('megacd')).toBe(0.75);
+    expect(of('gamecube')).toBeCloseTo(0.76, 2);
     expect(of('saturn')).toBeCloseTo(0.91, 2);
     expect(of('snes')).toBeCloseTo(1.24, 2);
-    expect(of('megacd')).toBeLessThan(of('saturn'));
+    expect(of('gamecube')).toBeLessThan(of('saturn'));
     expect(of('saturn')).toBeLessThan(of('nes'));
-    // A jewel case's spine card still readable; a Neo Geo's box not the whole shelf.
-    expect(of('psx')).toBe(0.6);
+    // A jewel case's spine card as readable as a Mega CD's; a Neo Geo's box not the whole shelf.
+    expect(of('psx')).toBe(0.75);
     expect(of('neogeo')).toBe(1.4);
   });
 });

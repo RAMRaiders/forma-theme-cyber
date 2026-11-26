@@ -119,7 +119,7 @@ const SPINE_H_REM = 2.85;
 /** The case spine the usual row is drawn as thick as, mm: a Mega Drive clamshell's. */
 const USUAL_SPINE_MM = 24;
 /** The thinnest and thickest a system's rows are drawn for its case's spine (thicknessScale). */
-const THINNEST_CASE_SCALE = 0.6;
+const THINNEST_CASE_SCALE = 0.75;
 const THICKEST_CASE_SCALE = 1.4;
 /** The shortest a shelf's spines are drawn, whatever their pictures. */
 const SHORTEST_SPINE_REM = 14;
