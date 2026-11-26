@@ -6,6 +6,7 @@ import {
   CASED_SYSTEMS,
   caseScale,
   caseShape,
+  evenSpines,
   regionalCases,
   regionalSpine,
   spineShape,
@@ -66,5 +67,13 @@ describe('caseScale', () => {
     expect(caseScale('dreamcast', ['us'])).toBeCloseTo(125 / 190, 3);
     expect(caseScale('dreamcast', ['jp'])).toBeCloseTo(125 / 190, 3);
     expect(caseScale('saturn', ['us'])).toBe(1);
+  });
+});
+
+describe('evenSpines', () => {
+  it('draws a PlayStation shelf alike, its jewel cases all as thick', () => {
+    expect(evenSpines('psx')).toBe(true);
+    expect(evenSpines('dreamcast')).toBe(false);
+    expect(evenSpines('megadrive')).toBe(false);
   });
 });

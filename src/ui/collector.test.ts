@@ -18,6 +18,7 @@ import {
   serial,
   shelfFit,
   thicknessScale,
+  typicalSpine,
   shelfShape,
   tvEra,
   type ScreenArea,
@@ -1277,5 +1278,13 @@ describe('tvEra', () => {
     expect(tvEra('consoles', 2001)).toBe('flat');
     expect(tvEra('consoles', null)).toBe('plain');
     expect(tvEra('handhelds', 1989)).toBe('plain');
+  });
+});
+
+describe('typicalSpine', () => {
+  it("sizes an even shelf to its games' middle spine, not the stubbiest", () => {
+    // A PlayStation's: a few PAL spines among many US and Japanese spine cards.
+    expect(typicalSpine([9.2, 21.9, 17.4, 20.1, 9.4])).toBe(17.4);
+    expect(typicalSpine([8, 12])).toBe(8);
   });
 });

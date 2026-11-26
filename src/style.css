@@ -4827,6 +4827,11 @@ kbd.pad {
   --give: 1;
 }
 
+/* An even shelf (a PlayStation's): every row alike, its picture filling it. */
+.shelf.even .spine-row {
+  --t: var(--spine-h);
+}
+
 .spine-row .band {
   flex: none;
   align-self: stretch;

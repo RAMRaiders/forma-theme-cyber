@@ -28,7 +28,14 @@ import {
   playtime
 } from './stage.js';
 import { awake } from './rest.js';
-import { caseScale, caseShape, regionalSpine, spineShape, stubbiestSpine } from '../data/cases.js';
+import {
+  caseScale,
+  caseShape,
+  evenSpines,
+  regionalSpine,
+  spineShape,
+  stubbiestSpine
+} from '../data/cases.js';
 import { borderOf, placeTrimmed, placedBox, trimmedAspect } from './trim.js';
 
 /**
@@ -487,8 +494,9 @@ export class CollectorView {
     // The same game as before (the list reloaded, after a favourite say): no shelf, the case
     // goes on as it was, only what changed about the game is shown.
     const now = source.get(selected);
-    // Every shelf: each row takes its own spine's thickness (style.css draws it).
-    this.#variable = true;
+    // Each row takes its own spine's thickness (style.css draws it), but on an even shelf.
+    this.#variable = !(now && evenSpines(now.system));
+    this.#shelf.classList.toggle('even', !this.#variable);
     this.#anchor = selected;
     this.#rowYs.clear();
     this.#trackY = NaN;
@@ -929,7 +937,9 @@ export class CollectorView {
     void Promise.all(urls.map(spineShapeOf)).then((shapes) => {
       const known = shapes.filter((s): s is number => s !== null);
       if (!this.#shelfRoom) this.#centreShelf();
-      const fit = known.length ? shelfFit(Math.min(...known), this.#shelfRoom, base) : cased;
+      // Even rows: sized to the usual picture, the stubbiest would squash the rest.
+      const shape = evenSpines(system) ? typicalSpine(known) : Math.min(...known);
+      const fit = known.length ? shelfFit(shape, this.#shelfRoom, base) : cased;
       spineFits.set(system, fit);
       if (this.#shelfSystem === system) this.#fitShelf(fit);
     });
@@ -2498,6 +2508,12 @@ export function shelfFit(shape: number, room: number, base: number): ShelfFit {
  * Nintendo's box thicker, but softened (its square root), so a jewel case's spine card stays
  * readable and a Neo Geo's box does not take the whole shelf.
  */
+/** The middle of a shelf's spine shapes: what an even shelf (cases.ts) is sized to. */
+export function typicalSpine(shapes: readonly number[]): number {
+  const sorted = [...shapes].sort((a, b) => a - b);
+  return sorted[Math.floor((sorted.length - 1) / 2)]!;
+}
+
 export function thicknessScale(mm: number): number {
   const scale = clamp(Math.sqrt(mm / USUAL_SPINE_MM), THINNEST_CASE_SCALE, THICKEST_CASE_SCALE);
   return Math.round(scale * 1000) / 1000;
