@@ -10,58 +10,60 @@ export interface CaseShape {
   depth: number;
   /** The spine runs along the top (a Super Nintendo's, a Nintendo 64's), the box being wide. */
   lying: boolean;
+  /** How thick its spine is, mm: the box's depth (a jewel case's, its spine card's). */
+  spine: number;
 }
 
 /** Cases by kind, from real ones (width × height × depth, mm). */
 const KINDS = {
   /** Sega's plastic clamshell: Mega Drive, Master System, 32X (134 × 187, its spine 24). */
-  clamshell: { ratio: 0.72, depth: 0.13, lying: false },
+  clamshell: { ratio: 0.72, depth: 0.13, lying: false, spine: 24 },
   /** An NES cardboard box (127 × 178 × 25). */
-  nes: { ratio: 0.71, depth: 0.14, lying: false },
+  nes: { ratio: 0.71, depth: 0.14, lying: false, spine: 25 },
   /** A Japanese cardboard cartridge box: Famicom Disk System, SG-1000, Epoch, Casio (110 × 160 × 20). */
-  jpbox: { ratio: 0.69, depth: 0.125, lying: false },
+  jpbox: { ratio: 0.69, depth: 0.125, lying: false, spine: 20 },
   /** A Super Nintendo box, wide, its spine along the top (190 × 137 × 37). */
-  snes: { ratio: 1.39, depth: 0.27, lying: true },
+  snes: { ratio: 1.39, depth: 0.27, lying: true, spine: 37 },
   /** A Nintendo 64 box, wide, its spine along the top (178 × 127 × 32). */
-  n64: { ratio: 1.4, depth: 0.25, lying: true },
+  n64: { ratio: 1.4, depth: 0.25, lying: true, spine: 32 },
   /** An Atari or Coleco-era cartridge box (140 × 192 × 33). */
-  cartbox: { ratio: 0.73, depth: 0.17, lying: false },
+  cartbox: { ratio: 0.73, depth: 0.17, lying: false, spine: 33 },
   /** A TurboGrafx-16 HuCard case (133 × 184 × 17). */
-  tg16: { ratio: 0.72, depth: 0.09, lying: false },
+  tg16: { ratio: 0.72, depth: 0.09, lying: false, spine: 17 },
   /** A PC Engine HuCard case, Japanese (124 × 141 × 8). */
-  hucard: { ratio: 0.88, depth: 0.055, lying: false },
+  hucard: { ratio: 0.88, depth: 0.055, lying: false, spine: 8 },
   /** A Neo Geo AES box, tall and deep (185 × 290 × 49). */
-  aes: { ratio: 0.64, depth: 0.17, lying: false },
+  aes: { ratio: 0.64, depth: 0.17, lying: false, spine: 49 },
   /** A CD jewel case (142 × 125, its spine card 7). */
-  jewel: { ratio: 1.14, depth: 0.06, lying: false },
+  jewel: { ratio: 1.14, depth: 0.06, lying: false, spine: 7 },
   /** A thick jewel case: Dreamcast, PC-FX (142 × 125 × 15). */
-  thickjewel: { ratio: 1.14, depth: 0.12, lying: false },
+  thickjewel: { ratio: 1.14, depth: 0.12, lying: false, spine: 15 },
   /** A Mega CD case, square-ish and slim (148 × 148 × 12). */
-  megacd: { ratio: 1, depth: 0.08, lying: false },
+  megacd: { ratio: 1, depth: 0.08, lying: false, spine: 12 },
   /** A Saturn case, tall and slim (142 × 198 × 20). */
-  saturn: { ratio: 0.72, depth: 0.1, lying: false },
+  saturn: { ratio: 0.72, depth: 0.1, lying: false, spine: 20 },
   /** A DVD keep case: GameCube, Wii, PC (135 × 190 × 14). */
-  dvd: { ratio: 0.71, depth: 0.074, lying: false },
+  dvd: { ratio: 0.71, depth: 0.074, lying: false, spine: 14 },
   /** A Game Boy box (95 × 120 × 25). */
-  gb: { ratio: 0.79, depth: 0.21, lying: false },
+  gb: { ratio: 0.79, depth: 0.21, lying: false, spine: 25 },
   /** A Game Boy Advance box (118 × 127 × 25). */
-  gba: { ratio: 0.93, depth: 0.2, lying: false },
+  gba: { ratio: 0.93, depth: 0.2, lying: false, spine: 25 },
   /** A small handheld box: WonderSwan, Neo Geo Pocket, Lynx's later ones (105 × 135 × 27). */
-  pocket: { ratio: 0.78, depth: 0.2, lying: false },
+  pocket: { ratio: 0.78, depth: 0.2, lying: false, spine: 27 },
   /** A Nintendo DS case (125 × 137 × 14). */
-  ds: { ratio: 0.91, depth: 0.1, lying: false },
+  ds: { ratio: 0.91, depth: 0.1, lying: false, spine: 14 },
   /** A PSP UMD case (105 × 180 × 14). */
-  umd: { ratio: 0.58, depth: 0.078, lying: false },
+  umd: { ratio: 0.58, depth: 0.078, lying: false, spine: 14 },
   /** An LCD game's box, wide: Game & Watch, Tiger (150 × 115 × 25). */
-  lcd: { ratio: 1.3, depth: 0.22, lying: false },
+  lcd: { ratio: 1.3, depth: 0.22, lying: false, spine: 25 },
   /** A Virtual Boy box (150 × 200 × 45). */
-  virtualboy: { ratio: 0.75, depth: 0.22, lying: false },
+  virtualboy: { ratio: 0.75, depth: 0.22, lying: false, spine: 45 },
   /** A home computer's big box: DOS, Amiga, ST, PC-98, X68000 (190 × 235 × 50). */
-  bigbox: { ratio: 0.8, depth: 0.21, lying: false },
+  bigbox: { ratio: 0.8, depth: 0.21, lying: false, spine: 50 },
   /** A cassette tape's case: Spectrum, CPC, C64 (70 × 110 × 17). */
-  tape: { ratio: 0.64, depth: 0.155, lying: false },
+  tape: { ratio: 0.64, depth: 0.155, lying: false, spine: 17 },
   /** An arcade game's flyer, folded in a sleeve (210 × 297 × 12). */
-  flyer: { ratio: 0.71, depth: 0.04, lying: false }
+  flyer: { ratio: 0.71, depth: 0.04, lying: false, spine: 12 }
 } satisfies Record<string, CaseShape>;
 
 type Kind = keyof typeof KINDS;
@@ -329,6 +331,18 @@ const REGIONAL: Record<string, { pal: RegionalCase; other: RegionalCase }> = {
 
 interface RegionalCase {
   spine: number;
+}
+
+/**
+ * Systems whose shelf rows are drawn a little bigger than their case's spine alone makes them:
+ * a PlayStation's spine pictures mix PAL spines with US and Japanese spine cards twice as
+ * long, and at a jewel case's thickness those read too small.
+ */
+const SPINE_BOOST: Readonly<Record<string, number>> = { psx: 1.15 };
+
+/** How much bigger a system's shelf rows are drawn than its case's spine makes them (1: not). */
+export function spineBoost(system: string): number {
+  return SPINE_BOOST[system] ?? 1;
 }
 
 /** Cyber's region codes that are PAL Europe (and Australia, sold the same boxes). */

@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs';
 import {
   CASED_SYSTEMS,
   caseShape,
+  spineBoost,
   regionalCases,
   regionalSpine,
   spineShape,
@@ -56,5 +57,11 @@ describe('regionalSpine', () => {
     expect(stubbiestSpine('megadrive')).toBeNull();
     expect(regionalCases('megadrive')).toBe(false);
     expect(regionalCases('dreamcast')).toBe(true);
+  });
+});
+describe('spineBoost', () => {
+  it("draws a PlayStation's shelf rows a little bigger, others as their case makes them", () => {
+    expect(spineBoost('psx')).toBe(1.15);
+    expect(spineBoost('megadrive')).toBe(1);
   });
 });
