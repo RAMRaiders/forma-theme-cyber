@@ -842,7 +842,7 @@ export class CollectorView {
       this.#learnShape(game, 0);
       return [parts[0]!, logo, parts[1]!];
     }
-    node.classList.remove('lying', 'waiting', 'slim', 'stubby');
+    node.classList.remove('lying', 'waiting');
     node.style.removeProperty('--shape');
     if (!src) {
       this.#learnShape(game, 0);
@@ -929,7 +929,7 @@ export class CollectorView {
     void Promise.all(urls.map(spineShapeOf)).then((shapes) => {
       const known = shapes.filter((s): s is number => s !== null);
       if (!this.#shelfRoom) this.#centreShelf();
-      const fit = known.length ? shelfFit(typicalSpine(known), this.#shelfRoom, base) : cased;
+      const fit = known.length ? shelfFit(Math.min(...known), this.#shelfRoom, base) : cased;
       spineFits.set(system, fit);
       if (this.#shelfSystem === system) this.#fitShelf(fit);
     });
@@ -997,10 +997,7 @@ export class CollectorView {
    * nearly full one fill the row (style.css).
    */
   #markSlim(node: HTMLElement, shape: number): void {
-    const h = this.#len(SPINE_H_REM);
-    node.classList.toggle('slim', (this.#spineLen * 1.12) / shape < h);
-    // Much stubbier than the shelf (a PAL PlayStation's among US spine cards): whole, shorter.
-    node.classList.toggle('stubby', shape * h * 1.12 < this.#spineLen);
+    node.classList.toggle('slim', (this.#spineLen * 1.12) / shape < this.#len(SPINE_H_REM));
   }
 
   /**
@@ -2501,16 +2498,6 @@ export function shelfFit(shape: number, room: number, base: number): ShelfFit {
  * Nintendo's box thicker, but softened (its square root), so a jewel case's spine card stays
  * readable and a Neo Geo's box does not take the whole shelf.
  */
-/**
- * The spine shape a shelf is sized to, from its games' pictures: the middle one's. The
- * stubbiest decided before, and a PlayStation's few PAL spines (9 times as long as wide) drew
- * its many US spine cards (20 times) as slivers; stubbier ones are drawn whole and shorter.
- */
-export function typicalSpine(shapes: readonly number[]): number {
-  const sorted = [...shapes].sort((a, b) => a - b);
-  return sorted[Math.floor((sorted.length - 1) / 2)]!;
-}
-
 export function thicknessScale(mm: number): number {
   const scale = clamp(Math.sqrt(mm / USUAL_SPINE_MM), THINNEST_CASE_SCALE, THICKEST_CASE_SCALE);
   return Math.round(scale * 1000) / 1000;

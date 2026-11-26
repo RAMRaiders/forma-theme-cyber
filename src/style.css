@@ -4796,13 +4796,10 @@ kbd.pad {
      Within an eighth of the shelf's, it fills the row as the others; slimmer (.slim, set by
      collector.ts), exactly in shape, none of that give (it squashed a US Dreamcast's spine). */
   --t: min(var(--spine-h), var(--spine-len) * var(--give, 1.12) / var(--shape, 0.01));
-  /* Its length: the shelf's; a stubbier picture (.stubby: a PAL PlayStation's among US spine
-     cards) whole, as long as its shape at the row's thickness, centred. */
-  --l: var(--spine-len);
 
   position: absolute;
-  left: calc(var(--mid) - var(--l) / 2);
-  width: var(--l);
+  left: calc(var(--mid) - var(--spine-len) / 2);
+  width: var(--spine-len);
   height: var(--t);
   margin-top: calc((var(--spine-h) - var(--t)) / 2);
   display: flex;
@@ -4828,10 +4825,6 @@ kbd.pad {
 
 .spine-row.slim {
   --give: 1;
-}
-
-.spine-row.stubby {
-  --l: calc(var(--t) * var(--shape));
 }
 
 .spine-row .band {
@@ -4866,7 +4859,7 @@ kbd.pad {
   top: 0;
   left: 0;
   width: calc(var(--t) - 2px);
-  height: calc(var(--l) - 2px);
+  height: calc(var(--spine-len) - 2px);
   transform-origin: 0 0;
   transform: translateY(calc(var(--t) - 2px)) rotate(-90deg);
   object-fit: fill;
@@ -4874,7 +4867,7 @@ kbd.pad {
 
 /* A spine that lies already (a Super Nintendo's): as it is. */
 .spine-row.lying .spine-pic {
-  width: calc(var(--l) - 2px);
+  width: calc(var(--spine-len) - 2px);
   height: calc(var(--t) - 2px);
   transform: none;
 }
