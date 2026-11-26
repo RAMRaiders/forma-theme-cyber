@@ -334,6 +334,18 @@ interface RegionalCase {
   spine: number;
 }
 
+/**
+ * Systems whose shelf rows are drawn a little bigger than their case's spine alone makes them:
+ * a PlayStation's spine pictures mix PAL spines with US and Japanese spine cards twice as
+ * long, and at a jewel case's thickness those read too small.
+ */
+const SPINE_BOOST: Readonly<Record<string, number>> = { psx: 1.15 };
+
+/** How much bigger a system's shelf rows are drawn than its case's spine makes them (1: not). */
+export function spineBoost(system: string): number {
+  return SPINE_BOOST[system] ?? 1;
+}
+
 /** Cyber's region codes that are PAL Europe (and Australia, sold the same boxes). */
 const PAL_REGIONS: ReadonlySet<string> = new Set([
   'eu',

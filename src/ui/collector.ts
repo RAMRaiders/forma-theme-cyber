@@ -28,7 +28,14 @@ import {
   playtime
 } from './stage.js';
 import { awake } from './rest.js';
-import { caseScale, caseShape, regionalSpine, spineShape, stubbiestSpine } from '../data/cases.js';
+import {
+  caseScale,
+  caseShape,
+  regionalSpine,
+  spineBoost,
+  spineShape,
+  stubbiestSpine
+} from '../data/cases.js';
 import { borderOf, placeTrimmed, placedBox, trimmedAspect } from './trim.js';
 
 /**
@@ -900,7 +907,7 @@ export class CollectorView {
    * Only the length differs from system to system; the shelf moves the same for all.
    */
   #sizeShelf(system: string, source: LazyList<Game>, selected: number): void {
-    const base = thicknessScale(caseShape(system).spine);
+    const base = thicknessScale(caseShape(system).spine) * spineBoost(system);
     // Cases differing by region (a Dreamcast's): sized to the stubbiest region's spine, bigger,
     // each row then as thick as its own case's spine.
     const stubbiest = stubbiestSpine(system);
