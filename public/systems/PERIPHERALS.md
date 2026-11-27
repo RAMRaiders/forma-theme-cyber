@@ -25,9 +25,11 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **megadrive**: Six-button pad, [Sega-Genesis-6But-Cont.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-6But-Cont.jpg), by Evan-Amos, Public domain.
 - **megadrive**: Arcade Power Stick, [Sega-Genesis-Arcade-Stick.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-Arcade-Stick.jpg), by Evan-Amos, Public domain.
 - **megadrive**: Justifier light gun, [Konami-Justifiers-Genesis-Set.jpg](https://commons.wikimedia.org/wiki/File:Konami-Justifiers-Genesis-Set.jpg), by Evan-Amos, Public domain.
+- **megadrive**: Three-button pad, [Sega-Genesis-3But-Cont.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-3But-Cont.jpg), by Evan-Amos, Public domain.
 - **mastersystem**: Control Pads, [Sega-Master-System-Controllers.jpg](https://commons.wikimedia.org/wiki/File:Sega-Master-System-Controllers.jpg), by Evan-Amos, Public domain.
 - **mastersystem**: Control Stick, [Sega-Master-System-Control-Stick.jpg](https://commons.wikimedia.org/wiki/File:Sega-Master-System-Control-Stick.jpg), by Evan-Amos, Public domain.
 - **mastersystem**: 3-D Glasses, [Sega-Masters-Sys-3D-Glasses.jpg](https://commons.wikimedia.org/wiki/File:Sega-Masters-Sys-3D-Glasses.jpg), by Evan-Amos, Public domain.
+- **mastersystem**: Light Phaser, [Sega Master System lightphaser.jpg](https://commons.wikimedia.org/wiki/File:Sega_Master_System_lightphaser.jpg), by Knife-thrower, CC BY 2.5.
 - **saturn**: 3D Control Pad, [Sega-Saturn-3D-Controller.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-3D-Controller.jpg), by Evan-Amos, Public domain.
 - **saturn**: Control Pad, [Sega-Saturn-Controller-NA-Mk-II-FL.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-Controller-NA-Mk-II-FL.jpg), by Evan-Amos, Public domain.
 - **saturn**: Net Link keyboard, [Sega-Saturn-Net-Link-US-Keyboard.jpg](https://commons.wikimedia.org/wiki/File:Sega-Saturn-Net-Link-US-Keyboard.jpg), by Evan-Amos, Public domain.
@@ -39,9 +41,15 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **dreamcast**: Controller with VMU, [Sega-Dreamcast-Controller-wVMU-FL.jpg](https://commons.wikimedia.org/wiki/File:Sega-Dreamcast-Controller-wVMU-FL.jpg), by Evan-Amos, Public domain.
 - **dreamcast**: Visual Memory Unit, [Sega-Dreamcast-VMU.jpg](https://commons.wikimedia.org/wiki/File:Sega-Dreamcast-VMU.jpg), by Evan-Amos, Public domain.
 - **dreamcast**: Keyboard, [Sega-Dreamcast-Keyboard.jpg](https://commons.wikimedia.org/wiki/File:Sega-Dreamcast-Keyboard.jpg), by Evan-Amos, Public domain.
+- **dreamcast**: Jump Pack, [Dreamcast-Jump-Pack.jpg](https://commons.wikimedia.org/wiki/File:Dreamcast-Jump-Pack.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **dreamcast**: Arcade Stick, [Sega-Dreamcast-Arcade-Stick.jpg](https://commons.wikimedia.org/wiki/File:Sega-Dreamcast-Arcade-Stick.jpg), by Evan-Amos, Public domain.
+- **dreamcast**: Mouse, [Sega-Dreamcast-Mouse-BR.jpg](https://commons.wikimedia.org/wiki/File:Sega-Dreamcast-Mouse-BR.jpg), by Evan-Amos, Public domain.
 - **psx**: DualShock, [PSX-DualShock-Controller.jpg](https://commons.wikimedia.org/wiki/File:PSX-DualShock-Controller.jpg), by Evan-Amos, Public domain.
 - **psx**: Original controller, [PSX-Original-Controller.jpg](https://commons.wikimedia.org/wiki/File:PSX-Original-Controller.jpg), by Evan-Amos, Public domain.
 - **psx**: Memory Card, [PSX-Memory-Card.jpg](https://commons.wikimedia.org/wiki/File:PSX-Memory-Card.jpg), by Evan-Amos, Public domain.
+- **psx**: GunCon light gun, [Namco-GunCon-PS1.jpg](https://commons.wikimedia.org/wiki/File:Namco-GunCon-PS1.jpg), by Evan-Amos, Public domain.
+- **psx**: Multitap, [PlayStation-Multitap-Adaptor.jpg](https://commons.wikimedia.org/wiki/File:PlayStation-Multitap-Adaptor.jpg), by Evan-Amos, Public domain.
+- **psx**: Link Cable, [Sony-PlayStation-Link-Cables.jpg](https://commons.wikimedia.org/wiki/File:Sony-PlayStation-Link-Cables.jpg), by Evan-Amos, Public domain.
 - **ps2**: DualShock 2, [PS2-DualShock2.jpg](https://commons.wikimedia.org/wiki/File:PS2-DualShock2.jpg), by Evan-Amos, Public domain.
 - **ps2**: EyeToy, [PS2-Eyetoy.jpg](https://commons.wikimedia.org/wiki/File:PS2-Eyetoy.jpg), by Evan-Amos, Public domain.
 - **ps2**: 8 MB Memory Card, [PS2-8MB-Mem-Card.jpg](https://commons.wikimedia.org/wiki/File:PS2-8MB-Mem-Card.jpg), by Evan-Amos, Public domain.
@@ -50,6 +58,7 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **gba**: e-Reader, [GameBoyAdvance-with-eReader.jpg](https://commons.wikimedia.org/wiki/File:GameBoyAdvance-with-eReader.jpg), by Gameboyadvance_gbacart_by_zeartul.JPG: Zeartul
 - **gba**: Wireless Adapter, [Game-Boy-Advance-Wireless-Adapter.jpg](https://commons.wikimedia.org/wiki/File:Game-Boy-Advance-Wireless-Adapter.jpg), by Evan-Amos, CC BY-SA 3.0.
 - **gba**: Game Boy Player, [Game-Boy-Advance-Player.jpg](https://commons.wikimedia.org/wiki/File:Game-Boy-Advance-Player.jpg), by Evan-Amos, Public domain.
+- **gba**: GameCube link cable, [GameCube-GBA-Link-Cable.jpg](https://commons.wikimedia.org/wiki/File:GameCube-GBA-Link-Cable.jpg), by Evan-Amos, CC BY-SA 3.0.
 - **virtualboy**: Controller, [Virtual-Boy-Controller.jpg](https://commons.wikimedia.org/wiki/File:Virtual-Boy-Controller.jpg), by Evan-Amos, Public domain.
 - **virtualboy**: Stand, [Nintendo-Virtual-Boy-Stand-FL.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Virtual-Boy-Stand-FL.jpg), by Evan-Amos, Public domain.
 - **virtualboy**: AC adapter pack, [Nintendo-Virtual-Boy-AC-Adapter-Pack.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Virtual-Boy-AC-Adapter-Pack.jpg), by Evan-Amos, Public domain.
@@ -72,6 +81,8 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **pcengine**: TurboPad, [NEC-TurboGrafx-16-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx-16-Controller-FL.jpg), by Evan-Amos, Public domain.
 - **pcengine**: TurboTap, [NEC-TurboGrafx-16-TurboTap.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx-16-TurboTap.jpg), by Evan-Amos, Public domain.
 - **pcengine**: CD-ROM² unit, [NEC-TurboGrafx-16-CD-Add-on-FL.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx-16-CD-Add-on-FL.jpg), by Evan-Amos, Public domain.
+- **pcengine**: TurboExpress handheld, [NEC-TurboExpress-Upright-FL.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboExpress-Upright-FL.jpg), by Evan-Amos, Public domain.
+- **pcengine**: TurboStick, [NEC-TurboGrafx16-TurboStick-FL.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx16-TurboStick-FL.jpg), by Evan-Amos, Public domain.
 - **pcenginecd**: CD-ROM² unit, [NEC-TurboGrafx-16-CD-Add-on-FL.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx-16-CD-Add-on-FL.jpg), by Evan-Amos, Public domain.
 - **pcenginecd**: TurboPad, [NEC-TurboGrafx-16-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx-16-Controller-FL.jpg), by Evan-Amos, Public domain.
 - **intellivision**: Controller, [Intellivision-Controller.jpg](https://commons.wikimedia.org/wiki/File:Intellivision-Controller.jpg), by Evan-Amos, CC BY-SA 3.0.
@@ -86,6 +97,7 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **atari5200**: Trak-Ball, [Atari-5200-Trak-Ball-Controller.jpg](https://commons.wikimedia.org/wiki/File:Atari-5200-Trak-Ball-Controller.jpg), by Evan-Amos, Public domain.
 - **atari7800**: CX78 Joypad, [Atari-CX78-7800-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Atari-CX78-7800-Controller-FL.jpg), by Evan-Amos, Public domain.
 - **atari7800**: XG-1 light gun, [Atari XG-1 light gun.jpg](https://commons.wikimedia.org/wiki/File:Atari_XG-1_light_gun.jpg), by Bilby, CC BY 3.0.
+- **atari7800**: CX24 Pro-Line joystick, [Atari CX24 Pro-Line.jpg](https://commons.wikimedia.org/wiki/File:Atari_CX24_Pro-Line.jpg), by Evan-Amos, CC BY-SA 3.0.
 - **atari800**: CX85 Keypad, [Atari-CX85.jpg](https://commons.wikimedia.org/wiki/File:Atari-CX85.jpg), by Evan-Amos, CC BY-SA 3.0.
 - **atari800**: 1050 Disk Drive, [Atari 1050 disk drive.jpg](https://commons.wikimedia.org/wiki/File:Atari_1050_disk_drive.jpg), by Bilby, CC BY 3.0.
 - **atari800**: 410 Program Recorder, [Atari 410 (transparent bg).png](https://commons.wikimedia.org/wiki/File:Atari_410_(transparent_bg).png), by Bilby, CC BY 3.0.
@@ -106,3 +118,5 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **megacd**: CDX (Multi-Mega), [Sega-CDX-BR.jpg](https://commons.wikimedia.org/wiki/File:Sega-CDX-BR.jpg), by Evan-Amos, Public domain.
 - **sg1000**: SG-1000 II, [Sega-SG-1000-MkII-Console-FL.jpg](https://commons.wikimedia.org/wiki/File:Sega-SG-1000-MkII-Console-FL.jpg), by Evan-Amos, Public domain.
 - **sg1000**: SC-3000 computer, [Sega SC-3000 wb.jpg](https://commons.wikimedia.org/wiki/File:Sega_SC-3000_wb.jpg), by Bilby, CC BY 3.0.
+- **sega32x**: The 32X add-on, [Sega-Genesis-32X-01.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-32X-01.jpg), by Evan-Amos, Public domain.
+- **sega32x**: Its cartridge connector, [Sega-Genesis-32X-03.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-32X-03.jpg), by Evan-Amos, Public domain.

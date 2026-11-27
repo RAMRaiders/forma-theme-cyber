@@ -3,12 +3,16 @@
 Front pages of magazines about each system, from the Internet Archive, shown on the systems
 screen. Built by `scripts/build-magazines.mjs`.
 
-- **sg1000**: [Beep 1986 04](https://archive.org/details/beep-1986-04)
-- **sg1000**: [Sega Computer](https://archive.org/details/Sega_Computer_1984-07_Nomac_Publishing_NZ)
-- **sg1000**: [Beep - 1985-01-01 - Number 1 - Volume 1 - Issue 1](https://archive.org/details/beep-1985-01-01-number-1-volume-1-issue-1)
-- **sg1000**: [Sega 3000 Catalog: John Sands Sega Home Computers (1984)(John Sands Electronics)](https://archive.org/details/John_Sands_Sega_Home_Computers_1984_John_Sands_Electronics_AU)
-- **sg1000**: [Sega Computer](https://archive.org/details/Sega_Computer_1985-06_Nomac_Publishing_NZ)
-- **sg1000**: [Sega Computer](https://archive.org/details/Sega_Computer_1985-10_Nomac_Publishing_NZ)
+- **sega32x**: [Mean Machines Sega Magazine Issue 29](https://archive.org/details/mean-machines-sega-magazine-29)
+- **sega32x**: [SEGA Magazine Issue 12 Supplement - Megadrive 32X Guide](https://archive.org/details/sega-magazine-uk-12-supplement-megadrive-32-x-guide)
+- **sega32x**: [Digital Pictures on the Megadrive 32X (advert, 1995)](https://tse1.mm.bing.net/th/id/OIP.B1yD2CNNVH7MS8svfLGcMAHaKK)
+- **sega32x**: [SEGA Megadrive 32X CD Product Catalogue](https://archive.org/details/sega-megadrive-32-x-cd-product-catalogue)
+- **sega32x**: [Knuckles Chaotix Sega 32X Manual](https://archive.org/details/knuckles-chaotix-32x-manual)
+- **colecovision**: [1980 Coleco Toys and Games Catalog](https://archive.org/details/1980-coleco-catalog)
+- **colecovision**: [ColecoVision Catalog (1982)](https://archive.org/details/coleco-vision-catalog-1982_202108)
+- **colecovision**: [Coleco Colecovision Catalog: CBS Electronics Catalog (1983)(CBS Electronics)](https://archive.org/details/CBS_Electronics_Catalog_1983_CBS_Electronics_FR)
+- **colecovision**: [Coleco Colecovision Catalog: CBS Electronics Modules Et Cassettes (1984)(CBS Electronics)](https://archive.org/details/CBS_Electronics_Modules_Et_Cassettes_1984_CBS_Electronics_FR)
+- **colecovision**: [Coleco ColecoVision Manual: Colecovision Owner's Manual (1982)(Coleco)](https://archive.org/details/Colecovision_Owners_Manual_1982_Coleco)
 - **3do**: [3DO Magazine](https://archive.org/details/3DOMagazineIssue10199605ParagonPublishingGB)
 - **3do**: [Electronic Games 1993-11](https://archive.org/details/Electronic-Games-1993-11)
 - **3do**: [Ultimate Future Games - Issue 02](https://archive.org/details/Ultimate_Future_Games_Issue_02_1995-01_Future_Publishing_GB)
@@ -38,6 +42,7 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **atari7800**: [Atarian Issue 1 (May/June 1989)](https://www.atarimania.com/magazines/33/286)
 - **atari7800**: [Atarian Issue 2 (August 1989)](https://www.atarimania.com/magazines/33/287)
 - **atari7800**: [Atarian Issue 3 (October 1989)](https://www.atarimania.com/magazines/33/288)
+- **atari7800**: [Atari 7800 ProSystem User Guide (PDF)](https://archive.org/details/atari-7800-prosystem)
 - **atari800**: [Atari Explorer (Atari)](https://archive.org/details/Atari_Explorer_1985-02_Atari_US)
 - **atari800**: [Antic Magazine Volume 3 Number 02 (Exploring the Atari XL)](https://archive.org/details/1984-06-anticmagazine)
 - **atari800**: [Analog Computing Magazine Issue 15 (Inside the 600XL)](https://archive.org/details/analog-computing-magazine-15)
@@ -54,9 +59,9 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **c20**: VIC-20 Programmers Reference Guide 1st Edition 6th Printing
 - **c64**: [Zzap!64 001-107 (May85 - Mar 02)](https://archive.org/details/Zzap044Dec88)
 - **c64**: [Commodore User Magazine Issue 43](https://archive.org/details/commodore-user-magazine-43)
-- **c64**: [ZZap!64 Magazine Issue 044](https://archive.org/details/zzap64-magazine-044)
+- **c64**: [ZZap!64 Magazine Issue 92 (Commodore Force Issue 02)](https://archive.org/details/zzap64-magazine--092)
 - **c64**: [ZZap!64 Magazine Issue 006](https://archive.org/details/zzap64-magazine-006)
-- **colecovision**: 1980 Coleco Toys and Games Catalog
+- **c64**: [Your_Commodore_Issue_34_Jul_87](https://archive.org/details/YourCommodoreIssue34Jul87)
 - **cplus4**: Commodore C16 Plus4 Reference Book
 - **cplus4**: Videobasic per Commodore 16
 - **cplus4**: C16-MSX
@@ -64,6 +69,8 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **dreamcast**: [Official Dreamcast Magazine, The - Special Issue](https://archive.org/details/Official_Dreamcast_Magazine_The_Special_Issue_1999-10_Dennis_Publishing_GB)
 - **dreamcast**: [Dreamcast Monthly - Issue 1](https://archive.org/details/Dreamcast_Monthly_Issue_1_1999-09_Quay_Publishing_GB)
 - **dreamcast**: [Official Dreamcast Magazine, The - Issue 01](https://archive.org/details/Official_Dreamcast_Magazine_The_Issue_01_1999-09_Imagine_Publishing_US)
+- **dreamcast**: [Dreamcast Magazine - No 04](https://archive.org/details/Dreamcast_Magazine_No_04_1999-12_Paragon_Publishing_GB)
+- **dreamcast**: [Dreamcast Magazine 1998 Vol. 4 ( 12 11)](https://archive.org/details/dreamcast-magazine-1998-vol.-4-12-11_202208)
 - **fbneo**: [Gamest 183](https://archive.org/details/gamest-183)
 - **fbneo**: [Play Meter - Volume 24, Number 4 - March 1998](https://archive.org/details/play-meter-volume-24-number-4-march-1998)
 - **fbneo**: [Gamest 0260](https://archive.org/details/gamest0260)
@@ -84,6 +91,10 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **gb2players**: [The Game Boy Companion - N64 Magazine](https://archive.org/details/n64-presents-the-game-boy-companion_202206)
 - **gb2players**: [Total Game Boy Issue 07](https://archive.org/details/Total_Game_Boy_Issue_07)
 - **gba**: [GBA Master Guide Issue 01](https://archive.org/details/gba-master-guide-01)
+- **gba**: [GBA Master Guide Issue 02](https://archive.org/details/gba-master-guide-02)
+- **gba**: [Game Boy Advance Perfect Catalogue - ゲームボーイアドバンスパーフェクトカタログ](https://archive.org/details/GameBoyAdvancePerfectCatalogue)
+- **gba**: [Famitsu 64+ Advance Separate Volume Appendix: Game Boy Advance Software All Catalog Vol.1 2001 First Half Edition scans 600dpi](https://archive.org/details/famitsu-64-advance-2001-09-separate-volume-appendix)
+- **gba**: [Weekly Famitsu, February or March 2001? inside cover (book) Game Boy Advance Greatest Catalogue ゲームボーイアドバンス グレイテスト カタログ 週刊ファミ通 600dpi](https://archive.org/details/weekly-famitsu-march-2001-inside-cover-book-game-boy-advance-greatest-catalog)
 - **gbc**: [Total Game Boy Issue 01](https://archive.org/details/Total_Game_Boy_Issue_01)
 - **gbc**: [GBX Game Boy Xtreme 06](https://archive.org/details/gbx-2001-12-06)
 - **gbc**: [Total Game Boy Issue 03](https://archive.org/details/Total_Game_Boy_Issue_03)
@@ -113,6 +124,8 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **megacd**: [Megatech Supplement Mega CD Guide](https://archive.org/details/mega-tech-supplement-mega-cd-guide)
 - **megacd**: [Mega Drive Fan - 1991-12-15 - Appendix - Mega-CD Fan Volume 1](https://archive.org/details/mega-drive-fan-1991-12-15-appendix-mega-cd-fan-volume-1)
 - **megacd**: [BEEP Mega CD Appendix Booklet (March 1992)](https://archive.org/details/beepmega-cdappendix-booklet-march-1992)
+- **megacd**: [Mega Drive Fan - 1992-01-15 - Appendix - Mega-CD Fan Volume 2](https://archive.org/details/mega-drive-fan-1992-01-15-appendix-mega-cd-fan-volume-2)
+- **megacd**: [Lunar the Silver Star ‐ Sega CD Guide](https://archive.org/details/lunari-thesilverstar-theofficialguide)
 - **megadrive**: [Sega Mega Drive Advanced Gaming Issue 05](https://archive.org/details/segamegadriveadvancedgaming05)
 - **megadrive**: [Sega Force Issue 10](https://archive.org/details/sega-force-10)
 - **megadrive**: [Mean Machines Sega Issue 09](https://archive.org/details/mean-machines-sega-09)
@@ -130,9 +143,12 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **msxturbor**: [MSX・FAN 1993-10月号](https://archive.org/details/MSXFAN199310)
 - **msxturbor**: [MSX Computer Magazine 02 1986](https://archive.org/details/h42_MSX_Computer_Magazine_02-1986)
 - **msxturbor**: [MSX Magazine Revival Vol. 1 - MSX MAGAZINE 永久保存版](https://archive.org/details/MSXMAGAZINE_201807)
-- **n64**: Nintendo Official Magazine Nintendo 64 THE GUIDE
-- **n64**: EGM's Player's Guide To Video Games For The Nintendo 64 - June 1998
-- **n64**: N64 Gamer - Issue 23
+- **n64**: [Nintendo Official Magazine Nintendo 64 THE GUIDE](https://archive.org/details/NintendoOfficialMagazineNintendo64THEGUIDE)
+- **n64**: [EGM's Player's Guide To Video Games For The Nintendo 64 - June 1998](https://archive.org/details/egms-players-guide-to-video-games-for-the-nintendo-64-june-1998)
+- **n64**: [N64 Gamer - Issue 23](https://archive.org/details/N64_Gamer_Issue_23_2000_01_Next_Publishing_AU)
+- **n64**: [64 Extreme Issue 01](https://archive.org/details/64-extreme-01)
+- **n64**: [64 Solutions UK Magazine 01](https://archive.org/details/64SolutionsUK01)
+- **n64**: [Total 64 Issue 09](https://archive.org/details/total-64-09)
 - **naomi**: Gamest 199
 - **naomi2**: [Gamest 0052](https://archive.org/details/gamest0052)
 - **naomi2**: [Arcadia Magazine No 32 January 01 2003 The House of the Dead III pages](https://archive.org/details/arcadia-magazine-32-Jan-HOD)
@@ -160,6 +176,9 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **ngpc**: NeoGeo Pocket Soft Information Vol. 2
 - **pcengine**: [Turbo Play US 12](https://archive.org/details/turbo-play-us-12)
 - **pcengine**: [Turbo Play](https://archive.org/details/turbo-play)
+- **pcengine**: [PC Engine Fan - December 1988](https://archive.org/details/pc-engine-fan-december-1988)
+- **pcengine**: [Super PC Engine Fan Vol. 1](https://archive.org/details/super-pc-engine-fan-1)
+- **pcengine**: [PC Engine Fan - September 1992](https://archive.org/details/pc-engine-fan-september-1992)
 - **prboom**: DOOM II Official Strategy Guide
 - **prboom**: Ultimate Future Games Issue 14 - Supplement Playstation Doom Guide
 - **prboom**: Doom III Gamespot Guide
@@ -168,6 +187,8 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **psx**: [Playstation Plus Vol 1 Issue 10](https://archive.org/details/playstation-plus-vol-1-issue-10)
 - **psx**: [Official UK Playstation Magazine (1999)](https://archive.org/details/Official_UK_Playstation_Magazine_1999_Future_Publishing_GB_platinum_special)
 - **psx**: [Official US PlayStation Magazine - Volume 3 Issue 1](https://archive.org/details/Official_US_PlayStation_Magazine_Volume_3_Issue_1_1999-10_Ziff_Davis_US)
+- **pv1000**: [CASIO PV 1000 The Book](https://archive.org/details/casio-pv-1000-the-book)
+- **pv1000**: [Casio PV-1000](https://archive.org/details/casio-pv-1000)
 - **satellaview**: Satellaview Tsushin Monthly FamicomTsushin May extra issue
 - **satellaview**: Satellaview Tsushin サテラビュー通信 1995年9月号
 - **saturn**: [Official Sega Saturn Magazine Issue 1](https://archive.org/details/Official_Sega_Saturn_Magazine_001)
@@ -179,9 +200,12 @@ screen. Built by `scripts/build-magazines.mjs`.
 - **scummvm**: LucasArts "The Adventurer" Magazine Complete 13 Issues
 - **scummvm**: Curse of Monkey Island, The Prima
 - **scummvm**: The Adventurer magazine
-- **sega32x**: [Mean Machines Sega Magazine Issue 29](https://archive.org/details/mean-machines-sega-magazine-29)
-- **sega32x**: [SEGA Magazine Issue 12 Supplement - Megadrive 32X Guide](https://archive.org/details/sega-magazine-uk-12-supplement-megadrive-32-x-guide)
-- **sega32x**: [Digital Pictures on the Megadrive 32X (advert, 1995)](https://tse1.mm.bing.net/th/id/OIP.B1yD2CNNVH7MS8svfLGcMAHaKK)
+- **sg1000**: [Beep 1986 04](https://archive.org/details/beep-1986-04)
+- **sg1000**: [Sega Computer](https://archive.org/details/Sega_Computer_1984-07_Nomac_Publishing_NZ)
+- **sg1000**: [Beep - 1985-01-01 - Number 1 - Volume 1 - Issue 1](https://archive.org/details/beep-1985-01-01-number-1-volume-1-issue-1)
+- **sg1000**: [Sega 3000 Catalog: John Sands Sega Home Computers (1984)(John Sands Electronics)](https://archive.org/details/John_Sands_Sega_Home_Computers_1984_John_Sands_Electronics_AU)
+- **sg1000**: [Sega Computer](https://archive.org/details/Sega_Computer_1985-06_Nomac_Publishing_NZ)
+- **sg1000**: [Sega Computer](https://archive.org/details/Sega_Computer_1985-10_Nomac_Publishing_NZ)
 - **sgb**: Nintendo Player's Guide Super Game Boy
 - **snes**: [Super Play Super Nintendo Magazine](https://archive.org/details/sup01)
 - **snes**: [The Super Famicom 1990-12-28 - Number 3 - Volume 1 - Issue 3](https://archive.org/details/the-super-famicom-1990-12-28-number-3-volume-1-issue-3)
