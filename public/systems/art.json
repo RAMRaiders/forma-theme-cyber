@@ -378,6 +378,10 @@
       {
         "file": "mag-4.webp",
         "title": "Atarian #3"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Atari 7800 ProSystem Guide"
       }
     ],
     "peripherals": [
@@ -388,6 +392,10 @@
       {
         "file": "gear-2.webp",
         "name": "XG-1 light gun"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "CX24 Pro-Line joystick"
       }
     ]
   },
@@ -590,11 +598,15 @@
       },
       {
         "file": "mag-3.webp",
-        "title": "Zzap!64 #44"
+        "title": "Commodore Force #2"
       },
       {
         "file": "mag-4.webp",
         "title": "Zzap!64 #6"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Your Commodore #34"
       }
     ],
     "peripherals": [
@@ -723,6 +735,22 @@
       {
         "file": "mag-1.webp",
         "title": "Coleco Catalog 1980"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "ColecoVision Catalog 1982"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "CBS Electronics 1983 (FR)"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "CBS Modules et Cassettes 1984"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "ColecoVision Owner’s Manual"
       }
     ],
     "peripherals": [
@@ -882,6 +910,14 @@
       {
         "file": "mag-4.webp",
         "title": "Dreamcast Magazine #1"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Dreamcast Magazine #4"
+      },
+      {
+        "file": "mag-6.webp",
+        "title": "Dreamcast Magazine (JP) 1998"
       }
     ],
     "peripherals": [
@@ -896,6 +932,18 @@
       {
         "file": "gear-3.webp",
         "name": "Keyboard"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "Jump Pack"
+      },
+      {
+        "file": "gear-5.webp",
+        "name": "Arcade Stick"
+      },
+      {
+        "file": "gear-6.webp",
+        "name": "Mouse"
       }
     ],
     "hues": [
@@ -1289,6 +1337,22 @@
       {
         "file": "mag-1.webp",
         "title": "GBA Master Guide #1"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "GBA Master Guide #2"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "GBA Perfect Catalogue"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Famitsu 64+ Advance"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Famitsu GBA Catalog 2001"
       }
     ],
     "peripherals": [
@@ -1303,6 +1367,10 @@
       {
         "file": "gear-3.webp",
         "name": "Game Boy Player"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "GameCube link cable"
       }
     ],
     "hues": [
@@ -1747,6 +1815,10 @@
       {
         "file": "gear-3.webp",
         "name": "3-D Glasses"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "Light Phaser"
       }
     ],
     "hues": [
@@ -1782,6 +1854,14 @@
       {
         "file": "mag-3.webp",
         "title": "BEEP! Mega-CD"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Mega-CD Fan #2"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Lunar Official Guide"
       }
     ],
     "peripherals": [
@@ -1841,6 +1921,10 @@
       {
         "file": "gear-3.webp",
         "name": "Justifier light gun"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "Three-button pad"
       }
     ],
     "hues": [
@@ -2041,6 +2125,18 @@
       {
         "file": "mag-3.webp",
         "title": "N64 Gamer #23"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "64 Extreme #1"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "64 Solutions #1"
+      },
+      {
+        "file": "mag-6.webp",
+        "title": "Total 64 #9"
       }
     ],
     "peripherals": [
@@ -2421,6 +2517,18 @@
       {
         "file": "mag-2.webp",
         "title": "Turbo Play"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "PC Engine Fan 12/1988"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Super PC Engine Fan #1"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "PC Engine Fan 9/1992"
       }
     ],
     "peripherals": [
@@ -2435,6 +2543,14 @@
       {
         "file": "gear-3.webp",
         "name": "CD-ROM² unit"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "TurboExpress handheld"
+      },
+      {
+        "file": "gear-5.webp",
+        "name": "TurboStick"
       }
     ],
     "hues": [
@@ -2620,6 +2736,18 @@
       {
         "file": "gear-3.webp",
         "name": "Memory Card"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "GunCon light gun"
+      },
+      {
+        "file": "gear-5.webp",
+        "name": "Multitap"
+      },
+      {
+        "file": "gear-6.webp",
+        "name": "Link Cable"
       }
     ],
     "hues": [
@@ -2635,6 +2763,16 @@
     "kind": "cutout",
     "hues": [
       215
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Casio PV-1000: The Book"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Casio PV-1000 Manual"
+      }
     ]
   },
   "pv2000": {
@@ -2893,10 +3031,28 @@
       {
         "file": "mag-3.webp",
         "title": "Digital Pictures ad"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Sega 32X & CD Catalogue"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Knuckles’ Chaotix Manual"
       }
     ],
     "hues": [
       215
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "The 32X add-on"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Its cartridge connector"
+      }
     ]
   },
   "segaai": {

@@ -6,7 +6,9 @@
       "url": "https://tse1.mm.bing.net/th/id/OIP.B1yD2CNNVH7MS8svfLGcMAHaKK?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
       "title": "Digital Pictures on the Megadrive 32X (advert, 1995)",
       "page": "https://tse1.mm.bing.net/th/id/OIP.B1yD2CNNVH7MS8svfLGcMAHaKK"
-    }
+    },
+    "sega-megadrive-32-x-cd-product-catalogue",
+    "knuckles-chaotix-32x-manual"
   ],
   "megadrive": [
     "segamegadriveadvancedgaming05",
@@ -38,11 +40,20 @@
   "n64": [
     "NintendoOfficialMagazineNintendo64THEGUIDE",
     "egms-players-guide-to-video-games-for-the-nintendo-64-june-1998",
-    "N64_Gamer_Issue_23_2000_01_Next_Publishing_AU"
+    "N64_Gamer_Issue_23_2000_01_Next_Publishing_AU",
+    "64-extreme-01",
+    "64SolutionsUK01",
+    "total-64-09"
   ],
   "gamecube": ["cube-01", "egms-unofficial-game-cube-guide-march-2002"],
   "gbc": ["Total_Game_Boy_Issue_01", "gbx-2001-12-06", "Total_Game_Boy_Issue_03"],
-  "gba": ["gba-master-guide-01"],
+  "gba": [
+    "gba-master-guide-01",
+    "gba-master-guide-02",
+    "GameBoyAdvancePerfectCatalogue",
+    "famitsu-64-advance-2001-09-separate-volume-appendix",
+    "weekly-famitsu-march-2001-inside-cover-book-game-boy-advance-greatest-catalog"
+  ],
   "psx": [
     "Official_US_PlayStation_Magazine_Volume_1_Issue_1_1997-10_Ziff_Davis_US",
     "PSM-001",
@@ -68,9 +79,17 @@
     "EDGE.N067.1999.01.Supplement.Dreamcast",
     "Official_Dreamcast_Magazine_The_Special_Issue_1999-10_Dennis_Publishing_GB",
     "Dreamcast_Monthly_Issue_1_1999-09_Quay_Publishing_GB",
-    "Official_Dreamcast_Magazine_The_Issue_01_1999-09_Imagine_Publishing_US"
+    "Official_Dreamcast_Magazine_The_Issue_01_1999-09_Imagine_Publishing_US",
+    "Dreamcast_Magazine_No_04_1999-12_Paragon_Publishing_GB",
+    "dreamcast-magazine-1998-vol.-4-12-11_202208"
   ],
-  "pcengine": ["turbo-play-us-12", "turbo-play"],
+  "pcengine": [
+    "turbo-play-us-12",
+    "turbo-play",
+    "pc-engine-fan-december-1988",
+    "super-pc-engine-fan-1",
+    "pc-engine-fan-september-1992"
+  ],
   "neogeo": [
     "neogeofreak0001",
     "gamest-199",
@@ -124,8 +143,9 @@
   "c64": [
     "Zzap044Dec88",
     "commodore-user-magazine-43",
-    "zzap64-magazine-044",
-    "zzap64-magazine-006"
+    "zzap64-magazine--092",
+    "zzap64-magazine-006",
+    "YourCommodoreIssue34Jul87"
   ],
   "amstradcpc": [
     "AmstradAction052",
@@ -159,7 +179,9 @@
   "megacd": [
     "mega-tech-supplement-mega-cd-guide",
     "mega-drive-fan-1991-12-15-appendix-mega-cd-fan-volume-1",
-    "beepmega-cdappendix-booklet-march-1992"
+    "beepmega-cdappendix-booklet-march-1992",
+    "mega-drive-fan-1992-01-15-appendix-mega-cd-fan-volume-2",
+    "lunari-thesilverstar-theofficialguide"
   ],
   "sg1000": [
     "beep-1986-04",
@@ -178,7 +200,13 @@
   "fds": ["famimaga-1992-apr-17", "famimagajune1987", "famimaga5111990"],
   "virtualboy": [],
   "intellivision": [],
-  "colecovision": ["1980-coleco-catalog"],
+  "colecovision": [
+    "1980-coleco-catalog",
+    "coleco-vision-catalog-1982_202108",
+    "CBS_Electronics_Catalog_1983_CBS_Electronics_FR",
+    "CBS_Electronics_Modules_Et_Cassettes_1984_CBS_Electronics_FR",
+    "Colecovision_Owners_Manual_1982_Coleco"
+  ],
   "atari5200": [
     "AtariAgeIssues1-7",
     "AtariAgeVol02num03",
@@ -202,7 +230,8 @@
       "url": "https://www.atarimania.com/mags/hi_res/atarian_issue_3.jpg",
       "title": "Atarian Issue 3 (October 1989)",
       "page": "https://www.atarimania.com/magazines/33/288"
-    }
+    },
+    "atari-7800-prosystem"
   ],
   "vectrex": [],
   "odyssey2": [],
@@ -301,5 +330,6 @@
     "ape-atari-newsletter-issue-21",
     "ape-atari-newsletter-issue-20",
     "ape-atari-newsletter-issue-18"
-  ]
+  ],
+  "pv1000": ["casio-pv-1000-the-book", "casio-pv-1000"]
 }

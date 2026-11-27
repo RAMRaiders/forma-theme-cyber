@@ -33,7 +33,14 @@
     "The 128 bytes of RAM live inside the 6532 RIOT chip, which also handles input and timers.",
     "Early cartridges held only 2 KB or 4 KB; larger games used bank switching.",
     "In 2014 excavators recovered E.T. cartridges from the 1983 landfill in Alamogordo, New Mexico.",
-    "Warren Robinett hid his name in a secret room in Adventure, one of the first known video game Easter eggs."
+    "Warren Robinett hid his name in a secret room in Adventure, one of the first known video game Easter eggs.",
+    "It launched in September 1977 at US$199.",
+    "It has no frame buffer: games draw the picture line by line as the TV's beam moves, a technique programmers call racing the beam.",
+    "Its graphics and sound chip, the TIA, was designed by Jay Miner, who later led the design of the Amiga's chips.",
+    "Its processor, the 6507, is a cut-down 6502 that can address only 8 KB.",
+    "Four Atari programmers left in 1979 to found Activision, the first independent maker of console games.",
+    "Space Invaders, in 1980, was the first arcade game licensed for a home console, and it sold consoles by the million.",
+    "The first models, with six switches on the front, are nicknamed Heavy Sixers for their weight."
   ],
   "unverified": [],
   "bestsellers": [

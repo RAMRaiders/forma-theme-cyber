@@ -102,6 +102,10 @@
       "largest": true,
       "holes": true,
       "limit": 225
+    },
+    {
+      "file": "Sega-Genesis-3But-Cont.jpg",
+      "name": "Three-button pad"
     }
   ],
   "mastersystem": [
@@ -116,6 +120,10 @@
     {
       "file": "Sega-Masters-Sys-3D-Glasses.jpg",
       "name": "3-D Glasses"
+    },
+    {
+      "file": "Sega Master System lightphaser.jpg",
+      "name": "Light Phaser"
     }
   ],
   "saturn": [
@@ -164,6 +172,18 @@
     {
       "file": "Sega-Dreamcast-Keyboard.jpg",
       "name": "Keyboard"
+    },
+    {
+      "file": "Dreamcast-Jump-Pack.jpg",
+      "name": "Jump Pack"
+    },
+    {
+      "file": "Sega-Dreamcast-Arcade-Stick.jpg",
+      "name": "Arcade Stick"
+    },
+    {
+      "file": "Sega-Dreamcast-Mouse-BR.jpg",
+      "name": "Mouse"
     }
   ],
   "psx": [
@@ -178,6 +198,18 @@
     {
       "file": "PSX-Memory-Card.jpg",
       "name": "Memory Card"
+    },
+    {
+      "file": "Namco-GunCon-PS1.jpg",
+      "name": "GunCon light gun"
+    },
+    {
+      "file": "PlayStation-Multitap-Adaptor.jpg",
+      "name": "Multitap"
+    },
+    {
+      "file": "Sony-PlayStation-Link-Cables.jpg",
+      "name": "Link Cable"
     }
   ],
   "ps2": [
@@ -216,6 +248,10 @@
     {
       "file": "Game-Boy-Advance-Player.jpg",
       "name": "Game Boy Player"
+    },
+    {
+      "file": "GameCube-GBA-Link-Cable.jpg",
+      "name": "GameCube link cable"
     }
   ],
   "virtualboy": [
@@ -320,6 +356,14 @@
     {
       "file": "NEC-TurboGrafx-16-CD-Add-on-FL.jpg",
       "name": "CD-ROM² unit"
+    },
+    {
+      "file": "NEC-TurboExpress-Upright-FL.jpg",
+      "name": "TurboExpress handheld"
+    },
+    {
+      "file": "NEC-TurboGrafx16-TurboStick-FL.jpg",
+      "name": "TurboStick"
     }
   ],
   "pcenginecd": [
@@ -392,6 +436,10 @@
     {
       "file": "Atari XG-1 light gun.jpg",
       "name": "XG-1 light gun"
+    },
+    {
+      "file": "Atari CX24 Pro-Line.jpg",
+      "name": "CX24 Pro-Line joystick"
     }
   ],
   "atari800": [
@@ -488,6 +536,16 @@
     {
       "file": "Sega SC-3000 wb.jpg",
       "name": "SC-3000 computer"
+    }
+  ],
+  "sega32x": [
+    {
+      "file": "Sega-Genesis-32X-01.jpg",
+      "name": "The 32X add-on"
+    },
+    {
+      "file": "Sega-Genesis-32X-03.jpg",
+      "name": "Its cartridge connector"
     }
   ]
 }

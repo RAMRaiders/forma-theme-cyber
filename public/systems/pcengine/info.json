@@ -31,7 +31,15 @@
     "HuCards are about the size of a credit card, and the Japanese PC Engine itself is only around 14 cm square.",
     "The American TurboChips have their pin order reversed relative to Japanese HuCards, which acts as a crude region lock.",
     "NEC's CD-ROM² add-on of 1988 was the first CD-ROM drive for a home video game console.",
-    "The HuC6280 is a modified 65C02 that includes the sound generator and a timer on the same die."
+    "The HuC6280 is a modified 65C02 that includes the sound generator and a timer on the same die.",
+    "Hudson Soft designed it and NEC built it; it launched in Japan on 30 October 1987.",
+    "In Japan it outsold Sega's Mega Drive.",
+    "The TurboGrafx-16, its North American version of 1989, is a much larger console in a black case.",
+    "Its HuC6280 processor is 8-bit, at a fast 7.16 MHz; the 16 in TurboGrafx-16 stands for its 16-bit graphics chip.",
+    "With a single controller port it needs a multitap for more players; Bomberman supports five.",
+    "The PC Engine GT and TurboExpress are handhelds that play the same HuCards.",
+    "The SuperGrafx of 1989, a more powerful model, got only a handful of games of its own.",
+    "CD-ROM² games could play CD audio, so many had recorded soundtracks and voice acting."
   ],
   "unverified": [],
   "bestsellers": ["Blazing Lazers", "Bonk's Adventure", "Alien Crush"],
