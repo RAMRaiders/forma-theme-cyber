@@ -26,6 +26,10 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **megadrive**: Arcade Power Stick, [Sega-Genesis-Arcade-Stick.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-Arcade-Stick.jpg), by Evan-Amos, Public domain.
 - **megadrive**: Justifier light gun, [Konami-Justifiers-Genesis-Set.jpg](https://commons.wikimedia.org/wiki/File:Konami-Justifiers-Genesis-Set.jpg), by Evan-Amos, Public domain.
 - **megadrive**: Three-button pad, [Sega-Genesis-3But-Cont.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-3But-Cont.jpg), by Evan-Amos, Public domain.
+- **megadrive**: Sega Mouse and Mega Mouse, [Sega Mouse and Sega Mega Mouse.jpg](https://commons.wikimedia.org/wiki/File:Sega_Mouse_and_Sega_Mega_Mouse.jpg), by 32X, CC BY 2.5.
+- **megadrive**: Menacer light gun, [Sega Menacer cropped.jpg](https://commons.wikimedia.org/wiki/File:Sega_Menacer_cropped.jpg), by David Quach
+
+Edited by czar, CC BY 3.0.
 - **mastersystem**: Control Pads, [Sega-Master-System-Controllers.jpg](https://commons.wikimedia.org/wiki/File:Sega-Master-System-Controllers.jpg), by Evan-Amos, Public domain.
 - **mastersystem**: Control Stick, [Sega-Master-System-Control-Stick.jpg](https://commons.wikimedia.org/wiki/File:Sega-Master-System-Control-Stick.jpg), by Evan-Amos, Public domain.
 - **mastersystem**: 3-D Glasses, [Sega-Masters-Sys-3D-Glasses.jpg](https://commons.wikimedia.org/wiki/File:Sega-Masters-Sys-3D-Glasses.jpg), by Evan-Amos, Public domain.
@@ -89,9 +93,15 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **colecovision**: Controller, [ColecoVision-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:ColecoVision-Controller-FL.jpg), by Evan-Amos, Public domain.
 - **colecovision**: Expansion Module #1, [ColecoVision-Expansion1-Front.jpg](https://commons.wikimedia.org/wiki/File:ColecoVision-Expansion1-Front.jpg), by Evan-Amos, Public domain.
 - **colecovision**: Expansion Module #2, [ColecoVision-Expansion2.jpg](https://commons.wikimedia.org/wiki/File:ColecoVision-Expansion2.jpg), by Evan-Amos, Public domain.
+- **colecovision**: Super Action Controllers, [Super Action Controller Coleco DSCF0353.JPG](https://commons.wikimedia.org/wiki/File:Super_Action_Controller_Coleco_DSCF0353.JPG), by Museo8bits, CC BY-SA 3.0.
+- **colecovision**: Adam (Expansion Module #3), [Coleco Adam (adjusted version).jpg](https://commons.wikimedia.org/wiki/File:Coleco_Adam_(adjusted_version).jpg), by Andrew Lih (AKA "Fuzheado"), CC BY-SA 2.0.
 - **vectrex**: Control panel, [GCE-Vectrex-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:GCE-Vectrex-Controller-FL.jpg), by Evan-Amos, Public domain.
 - **c64**: Datasette, [Commodore-Datasette-C2N-Mk1-Front.jpg](https://commons.wikimedia.org/wiki/File:Commodore-Datasette-C2N-Mk1-Front.jpg), by Evan-Amos, Public domain.
 - **c64**: 1541 disk drive, [Commodore-64-1541-Floppy-Drive-03.jpg](https://commons.wikimedia.org/wiki/File:Commodore-64-1541-Floppy-Drive-03.jpg), by Evan-Amos, Public domain.
+- **c64**: 1702 monitor, [Commodore 1702 Video Monitor.jpg](https://commons.wikimedia.org/wiki/File:Commodore_1702_Video_Monitor.jpg), by shane doucette from Saskatoon, CA, CC BY-SA 2.0.
+- **c64**: Competition Pro joystick, [Competition pro first version 45deg.png](https://commons.wikimedia.org/wiki/File:Competition_pro_first_version_45deg.png), by Kshade, CC BY-SA 3.0.
+- **c64**: Quickshot II Turbo, [Spectravideo Quickshot II Turbo-IMG 1277-white.jpg](https://commons.wikimedia.org/wiki/File:Spectravideo_Quickshot_II_Turbo-IMG_1277-white.jpg), by Rama, CC BY-SA 3.0 fr.
+- **c64**: 1351 mouse, [Commodore blockomaus.jpg](https://commons.wikimedia.org/wiki/File:Commodore_blockomaus.jpg), by No machine-readable author provided. Boffy b assumed (based on copyright claims)., CC BY-SA 3.0.
 - **zxspectrum**: ZX Printer, [Sinclair.zx.thermal.printer.jpg](https://commons.wikimedia.org/wiki/File:Sinclair.zx.thermal.printer.jpg), by Jbattersby, Public domain.
 - **atari5200**: Controller, [Atari-5200-Controller.jpg](https://commons.wikimedia.org/wiki/File:Atari-5200-Controller.jpg), by Evan-Amos, Public domain.
 - **atari5200**: Trak-Ball, [Atari-5200-Trak-Ball-Controller.jpg](https://commons.wikimedia.org/wiki/File:Atari-5200-Trak-Ball-Controller.jpg), by Evan-Amos, Public domain.
@@ -120,3 +130,4 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **sg1000**: SC-3000 computer, [Sega SC-3000 wb.jpg](https://commons.wikimedia.org/wiki/File:Sega_SC-3000_wb.jpg), by Bilby, CC BY 3.0.
 - **sega32x**: The 32X add-on, [Sega-Genesis-32X-01.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-32X-01.jpg), by Evan-Amos, Public domain.
 - **sega32x**: Its cartridge connector, [Sega-Genesis-32X-03.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-32X-03.jpg), by Evan-Amos, Public domain.
+- **sega32x**: On a Mega Drive, [Mega Drive (PAL) + 32X (PAL).jpg](https://commons.wikimedia.org/wiki/File:Mega_Drive_(PAL)_%2B_32X_(PAL).jpg), by 32X, CC BY-SA 3.0.

@@ -106,6 +106,16 @@
     {
       "file": "Sega-Genesis-3But-Cont.jpg",
       "name": "Three-button pad"
+    },
+    {
+      "file": "Sega Mouse and Sega Mega Mouse.jpg",
+      "name": "Sega Mouse and Mega Mouse",
+      "mask": true
+    },
+    {
+      "file": "Sega Menacer cropped.jpg",
+      "name": "Menacer light gun",
+      "mask": true
     }
   ],
   "mastersystem": [
@@ -394,6 +404,18 @@
     {
       "file": "ColecoVision-Expansion2.jpg",
       "name": "Expansion Module #2"
+    },
+    {
+      "file": "Super Action Controller Coleco DSCF0353.JPG",
+      "name": "Super Action Controllers",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Coleco Adam (adjusted version).jpg",
+      "name": "Adam (Expansion Module #3)",
+      "mask": true,
+      "largest": true
     }
   ],
   "vectrex": [
@@ -410,6 +432,29 @@
     {
       "file": "Commodore-64-1541-Floppy-Drive-03.jpg",
       "name": "1541 disk drive"
+    },
+    {
+      "file": "Commodore 1702 Video Monitor.jpg",
+      "name": "1702 monitor",
+      "mask": true
+    },
+    {
+      "file": "Competition pro first version 45deg.png",
+      "name": "Competition Pro joystick",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Spectravideo Quickshot II Turbo-IMG 1277-white.jpg",
+      "name": "Quickshot II Turbo",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Commodore blockomaus.jpg",
+      "name": "1351 mouse",
+      "mask": true,
+      "largest": true
     }
   ],
   "zxspectrum": [
@@ -546,6 +591,12 @@
     {
       "file": "Sega-Genesis-32X-03.jpg",
       "name": "Its cartridge connector"
+    },
+    {
+      "file": "Mega Drive (PAL) + 32X (PAL).jpg",
+      "name": "On a Mega Drive",
+      "mask": true,
+      "largest": true
     }
   ]
 }

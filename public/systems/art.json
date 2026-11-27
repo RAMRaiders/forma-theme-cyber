@@ -617,6 +617,22 @@
       {
         "file": "gear-2.webp",
         "name": "1541 disk drive"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "1702 monitor"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "Competition Pro joystick"
+      },
+      {
+        "file": "gear-5.webp",
+        "name": "Quickshot II Turbo"
+      },
+      {
+        "file": "gear-6.webp",
+        "name": "1351 mouse"
       }
     ],
     "hues": [
@@ -765,6 +781,14 @@
       {
         "file": "gear-3.webp",
         "name": "Expansion Module #2"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "Super Action Controllers"
+      },
+      {
+        "file": "gear-5.webp",
+        "name": "Adam (Expansion Module #3)"
       }
     ]
   },
@@ -1925,6 +1949,14 @@
       {
         "file": "gear-4.webp",
         "name": "Three-button pad"
+      },
+      {
+        "file": "gear-5.webp",
+        "name": "Sega Mouse and Mega Mouse"
+      },
+      {
+        "file": "gear-6.webp",
+        "name": "Menacer light gun"
       }
     ],
     "hues": [
@@ -3052,6 +3084,10 @@
       {
         "file": "gear-2.webp",
         "name": "Its cartridge connector"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "On a Mega Drive"
       }
     ]
   },

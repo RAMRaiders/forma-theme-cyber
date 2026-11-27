@@ -5,6 +5,8 @@
  * scripts/peripherals.json as `{ "file": "<Commons file name>", "name": "<what it is>" }`. The
  * white studio background is taken away (a flood from the edges, so white parts of the thing
  * itself stay), the picture trimmed to it, and written as public/systems/<id>/gear-<n>.webp;
+ * a photo on any other background gives `"mask": true` and is cut out with its mask,
+ * scripts/peripheral-masks/<file>.png (how those are made: the README there);
  * public/systems/art.json lists them as `peripherals`, public/systems/PERIPHERALS.md credits
  * them.
  *
@@ -18,6 +20,7 @@ import sharp from 'sharp';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SYSTEMS = join(ROOT, 'public', 'systems');
 const ART = join(SYSTEMS, 'art.json');
+const MASKS = join(ROOT, 'scripts', 'peripheral-masks');
 const UA = { 'User-Agent': 'forma-theme-cyber build script' };
 /** Shown about 4.4rem tall: twice that at 1080p. */
 const HEIGHT = 220;
@@ -146,6 +149,30 @@ async function cutOut(buf, { limit = WHITE, largest = false, holes = false } = {
     .toBuffer();
 }
 
+/**
+ * The picture cut out with its mask (white is the thing), trimmed to it. `largest`: only the
+ * biggest shape stays, as with [cutOut].
+ */
+async function masked(buf, file, { largest = false } = {}) {
+  const { data, info: size } = await sharp(buf)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  const { width, height } = size;
+  const mask = await sharp(join(MASKS, `${file}.png`))
+    .resize(width, height, { fit: 'fill' })
+    .extractChannel(0)
+    .raw()
+    .toBuffer();
+  // Scaled to the photo, the mask's edge is soft: what is barely in goes.
+  for (let p = 0; p < width * height; p++) data[p * 4 + 3] = mask[p] < 64 ? 0 : mask[p];
+  if (largest) keepLargest(data, width, height);
+  return sharp(data, { raw: { width, height, channels: 4 } })
+    .trim()
+    .png()
+    .toBuffer();
+}
+
 const only = process.env.ONLY ? new Set(process.env.ONLY.split(',')) : null;
 const picks = JSON.parse(readFileSync(join(ROOT, 'scripts', 'peripherals.json'), 'utf8'));
 const art = JSON.parse(readFileSync(ART, 'utf8'));
@@ -174,11 +201,13 @@ for (const [id, items] of Object.entries(picks)) {
   );
   const credited = (name) => before.find((line) => line.startsWith(`- **${id}**: ${name}, `));
   const peripherals = [];
-  for (const { file, name, crop, limit, largest, holes } of items) {
+  for (const { file, name, crop, limit, largest, holes, mask } of items) {
     try {
       const about = await info(file);
       const whole = Buffer.from(await (await get(about.url)).arrayBuffer());
-      const png = await cutOut(await cropped(whole, crop), { limit, largest, holes });
+      const png = mask
+        ? await masked(whole, file, { largest })
+        : await cutOut(await cropped(whole, crop), { limit, largest, holes });
       const out = `gear-${peripherals.length + 1}.webp`;
       await sharp(png)
         .resize({ height: HEIGHT, width: HEIGHT * 2, fit: 'inside', withoutEnlargement: true })
