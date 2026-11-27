@@ -3,7 +3,14 @@
     "Acorn built it for the BBC's Computer Literacy Project, and it became a fixture of British classrooms.",
     "Elite was first released on it in 1984.",
     "Its designers Sophie Wilson and Steve Furber later created the ARM processor.",
-    "The 1986 BBC Domesday Project put a survey of the UK on LaserVision discs read by a BBC Master."
+    "The 1986 BBC Domesday Project put a survey of the UK on LaserVision discs read by a BBC Master.",
+    "It launched in December 1981.",
+    "Its processor is a 6502 at 2 MHz.",
+    "The Model A has 16 KB of memory and the Model B 32 KB.",
+    "BBC BASIC can include assembly language in a program.",
+    "Its Mode 7 shows teletext graphics, using little memory.",
+    "The BBC Master of 1986 was its successor.",
+    "Over 1.5 million were sold."
   ],
   "unverified": [],
   "bestsellers": ["Licence to Kill", "Chuckie Egg", "Elite"],

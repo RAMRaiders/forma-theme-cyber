@@ -81,6 +81,24 @@
     {
       "file": "Hori-Nintendo-GameCube-Controller-FL.jpg",
       "name": "Hori controller"
+    },
+    {
+      "file": "GameCube controller.png",
+      "name": "Controller"
+    },
+    {
+      "file": "Nintendo GameCube memory card.png",
+      "name": "Memory Card"
+    },
+    {
+      "file": "Nintendo-GameCube-Broadband-Adapter-01.jpg",
+      "name": "Broadband Adapter"
+    },
+    {
+      "file": "DK-Bongos.JPG",
+      "name": "DK Bongos",
+      "mask": true,
+      "largest": true
     }
   ],
   "megadrive": [
@@ -234,6 +252,10 @@
     {
       "file": "PS2-8MB-Mem-Card.jpg",
       "name": "8 MB Memory Card"
+    },
+    {
+      "file": "Sony-PlayStation-2-Hard-Drive-wNetwork-Adaptor.jpg",
+      "name": "Hard drive and Network Adaptor"
     }
   ],
   "gb": [
@@ -244,6 +266,18 @@
     {
       "file": "Nintendo-Game-Boy-Link-Cable-Dual.jpg",
       "name": "Link Cable"
+    },
+    {
+      "file": "Game Boy Printer.jpg",
+      "name": "Game Boy Printer"
+    },
+    {
+      "file": "Game-Boy-Pocket-FL.jpg",
+      "name": "Game Boy Pocket"
+    },
+    {
+      "file": "Game-Boy-Light-FL.jpg",
+      "name": "Game Boy Light"
     }
   ],
   "gba": [
@@ -282,6 +316,12 @@
     {
       "file": "Sega-Game-Gear-wTv-Tuner.jpg",
       "name": "TV Tuner"
+    },
+    {
+      "file": "Sega Game Gear (13334167513).jpg",
+      "name": "In white",
+      "mask": true,
+      "largest": true
     }
   ],
   "atari2600": [
@@ -332,6 +372,10 @@
     {
       "file": "Neo-Geo-Memory-Card.jpg",
       "name": "Memory Card"
+    },
+    {
+      "file": "Neo-Geo-Advanced-Controller.jpg",
+      "name": "Advanced controller"
     }
   ],
   "neogeocd": [
@@ -342,6 +386,22 @@
     {
       "file": "Neo-Geo-AES-Controller-FL.jpg",
       "name": "AES joystick"
+    },
+    {
+      "file": "Neo-Geo-CD-TL-FL.jpg",
+      "name": "Top-loader",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Neo-Geo-CD-FrontLoader-wController-FL.jpg",
+      "name": "Front-loader",
+      "mask": true,
+      "largest": false
+    },
+    {
+      "file": "Neo-Geo-CDZ-FL.jpg",
+      "name": "CDZ"
     }
   ],
   "3do": [
@@ -352,6 +412,18 @@
     {
       "file": "Capcom-3DO-Fighting-Controller.jpg",
       "name": "Capcom fighting pad"
+    },
+    {
+      "file": "3DO-101M-Controller.jpg",
+      "name": "GoldStar controller"
+    },
+    {
+      "file": "3DO-Goldstar-Console-FR.jpg",
+      "name": "GoldStar 3DO"
+    },
+    {
+      "file": "3DO-FZ-10-Console-FL.jpg",
+      "name": "Panasonic FZ-10"
     }
   ],
   "pcengine": [
@@ -384,12 +456,34 @@
     {
       "file": "NEC-TurboGrafx-16-Controller-FL.jpg",
       "name": "TurboPad"
+    },
+    {
+      "file": "PC-Engine-Duo-Console-Set.jpg",
+      "name": "PC Engine Duo",
+      "holes": true
+    },
+    {
+      "file": "PC-Engine-Duo-R.jpg",
+      "name": "Duo-R"
+    },
+    {
+      "file": "TurboDuo-Console-Set.jpg",
+      "name": "TurboDuo",
+      "holes": true
     }
   ],
   "intellivision": [
     {
       "file": "Intellivision-Controller.jpg",
       "name": "Controller"
+    },
+    {
+      "file": "Intellivision-II-Console-Set.jpg",
+      "name": "Intellivision II"
+    },
+    {
+      "file": "Intellivoice.jpg",
+      "name": "Intellivoice"
     }
   ],
   "colecovision": [
@@ -422,6 +516,16 @@
     {
       "file": "GCE-Vectrex-Controller-FL.jpg",
       "name": "Control panel"
+    },
+    {
+      "file": "Vectrex-Overlay.jpg",
+      "name": "Overlay and cartridge"
+    },
+    {
+      "file": "Vectrex controller MB.jpg",
+      "name": "Milton Bradley controller",
+      "mask": true,
+      "largest": true
     }
   ],
   "c64": [
@@ -461,6 +565,18 @@
     {
       "file": "Sinclair.zx.thermal.printer.jpg",
       "name": "ZX Printer"
+    },
+    {
+      "file": "ZX Spectrum128K.jpg",
+      "name": "Spectrum 128"
+    },
+    {
+      "file": "ZX Spectrum Plus2 (retouched).jpg",
+      "name": "Spectrum +2"
+    },
+    {
+      "file": "ZX Spectrum Plus3.jpeg",
+      "name": "Spectrum +3"
     }
   ],
   "atari5200": [
@@ -525,6 +641,22 @@
       "name": "Mouse",
       "limit": 190,
       "holes": true
+    },
+    {
+      "file": "Atari 1040STf.jpg",
+      "name": "With monitor and mouse"
+    },
+    {
+      "file": "Atari 1040 STE.jpg",
+      "name": "STE",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Atari Falcon030 LHmod.jpg",
+      "name": "Falcon030",
+      "mask": true,
+      "largest": true
     }
   ],
   "lynx": [
@@ -539,6 +671,10 @@
     {
       "file": "Atari-Lynx-Cig-Lighter-Adapter.jpg",
       "name": "Car Adapter"
+    },
+    {
+      "file": "Atari-Lynx-II-Handheld-Angled.jpg",
+      "name": "Lynx II"
     }
   ],
   "jaguarcd": [
@@ -595,6 +731,903 @@
     {
       "file": "Mega Drive (PAL) + 32X (PAL).jpg",
       "name": "On a Mega Drive",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "gbc": [
+    {
+      "file": "Nintendo-Game-Boy-Color-FL.jpg",
+      "name": "Game Boy Color"
+    },
+    {
+      "file": "Game-Boy-Color-Yellow.jpg",
+      "name": "In yellow"
+    },
+    {
+      "file": "Game Boy Camera 7996.jpg",
+      "name": "With the Game Boy Camera"
+    },
+    {
+      "file": "Game Boy Color Pikachu.jpg",
+      "name": "Pikachu edition",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "wii": [
+    {
+      "file": "Nintendo-Wii-Remote-wNunchuk.jpg",
+      "name": "Wii Remote and Nunchuk"
+    },
+    {
+      "file": "Wii Remote with MotionPlus.jpg",
+      "name": "With MotionPlus",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Wii-Classic-Controller-White.jpg",
+      "name": "Classic Controller",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Wii Balance Board transparent.png",
+      "name": "Balance Board"
+    },
+    {
+      "file": "Wii Zapper.jpg",
+      "name": "Wii Zapper",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "wiiu": [
+    {
+      "file": "Wii U Gamepad schwarz transparent.png",
+      "name": "GamePad"
+    },
+    {
+      "file": "Nintendo-Wii-U-Pro-Controller-Black.jpg",
+      "name": "Pro Controller"
+    },
+    {
+      "file": "Wii U \"Wind Waker\" edition GamePad and Console sitting together.jpg",
+      "name": "Zelda edition"
+    }
+  ],
+  "switch": [
+    {
+      "file": "Nintendo Switch Joy-Con Controllers.png",
+      "name": "Joy-Con"
+    },
+    {
+      "file": "Nintendo-Switch-Pro-Controller-FL.jpg",
+      "name": "Pro Controller"
+    },
+    {
+      "file": "Nintendo-Switch-Console-Docked-wJoyConRB.jpg",
+      "name": "Docked"
+    },
+    {
+      "file": "Nintendo-Switch-OLED-Docked.jpg",
+      "name": "OLED model"
+    },
+    {
+      "file": "Nintendo Switch Lite Grey - 01.jpg",
+      "name": "Switch Lite",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "nds": [
+    {
+      "file": "Nintendo-DS-Lite-Black-Open.jpg",
+      "name": "DS Lite"
+    },
+    {
+      "file": "Nintendo-DSi-Bl-Open.jpg",
+      "name": "DSi"
+    },
+    {
+      "file": "Nintendo-DSi-XL-Burg.jpg",
+      "name": "DSi XL"
+    },
+    {
+      "file": "Nintendo-DS Rumble Pack.png",
+      "name": "Rumble Pak"
+    }
+  ],
+  "3ds": [
+    {
+      "file": "Nintendo-3DS-XL-angled.jpg",
+      "name": "3DS XL"
+    },
+    {
+      "file": "New Nintendo 3DS.png",
+      "name": "New Nintendo 3DS"
+    },
+    {
+      "file": "Nintendo-2DS-angle.jpg",
+      "name": "Nintendo 2DS"
+    },
+    {
+      "file": "New Nintendo 2DS LL (White & Orange).png",
+      "name": "New 2DS XL"
+    },
+    {
+      "file": "3DS Circle Pad Pro.JPG",
+      "name": "Circle Pad Pro",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "ps3": [
+    {
+      "file": "PlayStation3-Sixaxis.jpg",
+      "name": "Sixaxis"
+    },
+    {
+      "file": "Sony-PlayStation-Move-Controller.jpg",
+      "name": "Move"
+    },
+    {
+      "file": "Sony-PlayStation-Move-Navigator.jpg",
+      "name": "Move Navigation"
+    },
+    {
+      "file": "Sony-PlayStation-3-Eye.jpg",
+      "name": "PlayStation Eye"
+    },
+    {
+      "file": "Sony BD Remote Control for PlayStation 3 CECH-ZRC1J.jpg",
+      "name": "Blu-ray remote"
+    }
+  ],
+  "ps4": [
+    {
+      "file": "DualShock 4.jpg",
+      "name": "DualShock 4"
+    },
+    {
+      "file": "Sony-PlayStation-4-PSVR-Headset-Mk1-FL.jpg",
+      "name": "PlayStation VR"
+    },
+    {
+      "file": "Sony-PlayStation-4-Camera-Mk1.jpg",
+      "name": "PlayStation Camera"
+    }
+  ],
+  "psp": [
+    {
+      "file": "PSP-Go-FL-Open.jpg",
+      "name": "PSP Go"
+    },
+    {
+      "file": "PSP-2000.jpg",
+      "name": "PSP-2000"
+    },
+    {
+      "file": "PSP-3000-Silver.jpg",
+      "name": "PSP-3000"
+    },
+    {
+      "file": "Universal Media Disc, an optical disc medium developed by Sony for use on the PlayStation Portable.jpg",
+      "name": "UMD",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "psvita": [
+    {
+      "file": "PlayStation-Vita-2001-FL.jpg",
+      "name": "Slim model"
+    },
+    {
+      "file": "PlayStation-TV-BL.jpg",
+      "name": "PlayStation TV"
+    },
+    {
+      "file": "Sony Playstation Vita Memory Card 16GB.jpg",
+      "name": "Memory card"
+    }
+  ],
+  "xbox": [
+    {
+      "file": "Xbox-Controller-Duke-FL.jpg",
+      "name": "Duke controller"
+    },
+    {
+      "file": "Xbox-Controller-S-FR.jpg",
+      "name": "Controller S"
+    },
+    {
+      "file": "Xbox-Remote-wReceiver.jpg",
+      "name": "DVD remote"
+    }
+  ],
+  "xbox360": [
+    {
+      "file": "Xbox-360-Wireless-Controller-White.jpg",
+      "name": "Wireless controller"
+    },
+    {
+      "file": "Xbox-360-Kinect-Standalone.png",
+      "name": "Kinect"
+    },
+    {
+      "file": "Microsoft-Xbox-360-HD-DVD-Drive-Front.jpg",
+      "name": "HD DVD drive",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Big button remotes.JPG",
+      "name": "Big Button pads",
+      "mask": true
+    },
+    {
+      "file": "Xbox-360S-Console-Set.jpg",
+      "name": "Xbox 360 S"
+    }
+  ],
+  "ngp": [
+    {
+      "file": "Neo-Geo-Pocket-Color-Anthra-Left.jpg",
+      "name": "Its successor, the Color"
+    },
+    {
+      "file": "NeoGeoPocketLinkCable.jpg",
+      "name": "Link cable",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "ngpc": [
+    {
+      "file": "Neo-Geo-Pocket-Color-Blue-Left.jpg",
+      "name": "In blue"
+    },
+    {
+      "file": "Neo-Geo-Pocket-Color-Anthra-Left.jpg",
+      "name": "Carbon"
+    },
+    {
+      "file": "Neo-Geo Pocket Color.JPG",
+      "name": "Platinum silver",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "NeoGeoPocketLinkCable.jpg",
+      "name": "Link cable",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "wswan": [
+    {
+      "file": "WonderSwan-Color-Blue-Left.jpg",
+      "name": "WonderSwan Color"
+    },
+    {
+      "file": "SwanCrystal-Wine-Left.jpg",
+      "name": "SwanCrystal"
+    }
+  ],
+  "wswanc": [
+    {
+      "file": "WonderSwan-Black-Left.jpg",
+      "name": "The first WonderSwan"
+    },
+    {
+      "file": "SwanCrystal-Wine-Left.jpg",
+      "name": "SwanCrystal"
+    },
+    {
+      "file": "WonderSwan-Color-Back-wBattery.jpg",
+      "name": "Its battery"
+    }
+  ],
+  "fds": [
+    {
+      "file": "Nintendo-Famicom-Disk-System.jpg",
+      "name": "On a Famicom"
+    },
+    {
+      "file": "Nintendo-Famicom-Disk-System-Deck-01.jpg",
+      "name": "Disk drive"
+    },
+    {
+      "file": "Nintendo-Famicom-Disk-System-Floppy.jpg",
+      "name": "Disk card"
+    },
+    {
+      "file": "Nintendo-Famicom-Disk-System-RAM-Adapter-3.jpg",
+      "name": "RAM Adapter",
+      "holes": true
+    }
+  ],
+  "supergrafx": [
+    {
+      "file": "NEC-PC-Engine-SuperGrafx-Controller.jpg",
+      "name": "Controller"
+    },
+    {
+      "file": "PCEngine SuperGrafx with SuperCDRom2.jpg",
+      "name": "With the CD-ROM²",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "odyssey2": [
+    {
+      "file": "Videopac G7200.jpg",
+      "name": "Videopac G7200",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Philips Videopac race cartridge N.1.jpg",
+      "name": "Videopac cartridge",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "cdi": [
+    {
+      "file": "Philips-CD-i-Paddle-Controller.jpg",
+      "name": "Paddle controller"
+    },
+    {
+      "file": "Philips-CDi-Controller-Gamepad.jpg",
+      "name": "Gamepad"
+    },
+    {
+      "file": "Philips-CDi-Controller-Rollerball.jpg",
+      "name": "Roller controller"
+    },
+    {
+      "file": "Philips-CDi-Digital-Video-Cartridge-1.jpg",
+      "name": "Digital Video Cartridge"
+    }
+  ],
+  "amiga500": [
+    {
+      "file": "Amiga500 system.jpg",
+      "name": "Amiga 500 with its monitor"
+    },
+    {
+      "file": "Commodore Amiga Mouse.jpg",
+      "name": "Mouse"
+    },
+    {
+      "file": "Amiga 500 Plus (transparent background) (no shadow).png",
+      "name": "Amiga 500 Plus"
+    }
+  ],
+  "amiga1200": [
+    {
+      "file": "Amiga 1200 with mouse, drives.jpg",
+      "name": "With mouse and floppy drive"
+    }
+  ],
+  "amigacd32": [
+    {
+      "file": "Amiga-CD32-Controller-L.jpg",
+      "name": "Controller"
+    },
+    {
+      "file": "Amiga-CD32-CD-Flap-Open.jpg",
+      "name": "Lid open"
+    },
+    {
+      "file": "Amiga-CD32-HFR.jpg",
+      "name": "Console"
+    }
+  ],
+  "amigacdtv": [
+    {
+      "file": "CDTV Remote.jpg",
+      "name": "Remote",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Commodore CDTV - keyboard top.JPG",
+      "name": "Keyboard"
+    }
+  ],
+  "amstradcpc": [
+    {
+      "file": "Amstrad CPC 6128.jpg",
+      "name": "CPC 6128 with monitor"
+    },
+    {
+      "file": "AMSTRAD CPC 6128.jpg",
+      "name": "CPC 6128",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Amstrad-GX4000-Console-FL.jpg",
+      "name": "GX4000"
+    },
+    {
+      "file": "Amstrad-GX4000-Controller-FL.jpg",
+      "name": "GX4000 pad"
+    }
+  ],
+  "apple2": [
+    {
+      "file": "Disk II.jpg",
+      "name": "Disk II drives"
+    },
+    {
+      "file": "Apple2paddles.jpg",
+      "name": "Paddles",
+      "mask": true
+    },
+    {
+      "file": "Apple Platinum IIe.jpg",
+      "name": "Apple IIe",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Apple IIc with monitor.jpg",
+      "name": "Apple IIc with monitor",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Apple IIc Plus (side).jpg",
+      "name": "Apple IIc Plus"
+    }
+  ],
+  "apple2gs": [
+    {
+      "file": "Apple IIgs 001 (transparent background).png",
+      "name": "Apple IIGS"
+    },
+    {
+      "file": "Apple Desktop Bus Mouse -- side.jpg",
+      "name": "ADB mouse",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Apple IIgs Keyboard B.jpg",
+      "name": "Keyboard",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "msx1": [
+    {
+      "file": "Sony HitBit HB-10P (White Background).jpg",
+      "name": "Sony HitBit HB-10P"
+    },
+    {
+      "file": "MSX Philips VG8020.jpg",
+      "name": "Philips VG-8020",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Talent MSX (restore).jpg",
+      "name": "Talent DPC-200",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "The Arcade Turbo Joystick Transparant.png",
+      "name": "Arcade Turbo joystick"
+    }
+  ],
+  "msx2": [
+    {
+      "file": "MSX FS-A1WX.JPG",
+      "name": "Panasonic FS-A1WX"
+    },
+    {
+      "file": "Panasonic FS-A1 20180519a.jpg",
+      "name": "Panasonic FS-A1",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "msx2+": [
+    {
+      "file": "Fs-a1wsx msx2+.jpg",
+      "name": "Panasonic FS-A1WSX",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "zx81": [
+    {
+      "file": "ZX81-IMG 0307 A.JPG",
+      "name": "ZX81"
+    },
+    {
+      "file": "Sinclair.zx.thermal.printer.jpg",
+      "name": "ZX Printer"
+    },
+    {
+      "file": "Timex Sinclair 1000 FL.jpg",
+      "name": "Timex Sinclair 1000"
+    }
+  ],
+  "bbcmicro": [
+    {
+      "file": "BBC Micro Front Restored.jpg",
+      "name": "BBC Micro Model B"
+    },
+    {
+      "file": "Acorn BBC Master Series Transparent.png",
+      "name": "BBC Master"
+    }
+  ],
+  "electron": [
+    {
+      "file": "Acorn Electron 2.jpg",
+      "name": "Acorn Electron"
+    },
+    {
+      "file": "Acorn Electron and Plus 1.jpg",
+      "name": "With the Plus 1"
+    }
+  ],
+  "c20": [
+    {
+      "file": "Commodore-VIC-20-FL.png",
+      "name": "VIC-20"
+    },
+    {
+      "file": "Commodore-Datasette-C2N-Mk1-Front.jpg",
+      "name": "Datasette"
+    },
+    {
+      "file": "Commodore-VIC-20-Video-RF-Adapter.jpg",
+      "name": "RF adapter"
+    },
+    {
+      "file": "4851 - VIC-1111 16K RAM For VIC-20.JPG",
+      "name": "16K RAM cartridge",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "c128": [
+    {
+      "file": "Commodore-128.jpg",
+      "name": "Commodore 128"
+    },
+    {
+      "file": "Commodore1084 first version front.jpg",
+      "name": "1084 monitor"
+    },
+    {
+      "file": "Commodore 1571.png",
+      "name": "1571 disk drive",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Commodore 128D-IMG 1726.jpg",
+      "name": "Commodore 128D",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "cplus4": [
+    {
+      "file": "Commodore 16 002f.jpg",
+      "name": "Commodore 16"
+    },
+    {
+      "file": "Commodore 116 Conté (transparent bg) (no shadow).png",
+      "name": "Commodore 116"
+    },
+    {
+      "file": "Commodore 1551 front.jpg",
+      "name": "1551 disk drive"
+    },
+    {
+      "file": "Commodore 116 system with Datassette 1531 and joystick.jpg",
+      "name": "116 with datasette and joystick",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "pet": [
+    {
+      "file": "Commodore 2001 Series-IMG 0448b.png",
+      "name": "PET 2001"
+    },
+    {
+      "file": "Commodore4040.jpg",
+      "name": "CBM 4040 disk drive",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Commodore 4032.jpg",
+      "name": "CBM 4032",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "x68000": [
+    {
+      "file": "Sharp X68030 and X68000 Expert.jpg",
+      "name": "X68030 and X68000 EXPERT"
+    },
+    {
+      "file": "X68000 EXPERT2.JPG",
+      "name": "EXPERT II with monitor",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "pc88": [
+    {
+      "file": "NEC PC-8001.png",
+      "name": "Its predecessor, the PC-8001"
+    },
+    {
+      "file": "NEC PC-8801 with keyboard.jpg",
+      "name": "PC-8801",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "NEC PC-8881 8-inch Floppy Disk Drive.jpg",
+      "name": "8-inch floppy drive",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "pc98": [
+    {
+      "file": "NEC PC-9800 series keyboard.jpg",
+      "name": "Keyboard"
+    },
+    {
+      "file": "NEC PC-9821Ap 5-inch FDD model.jpg",
+      "name": "PC-9821Ap",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "NEC PC-9801 RX Personal Computer.jpg",
+      "name": "PC-9801RX",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "fmtowns": [
+    {
+      "file": "FM-Towns-Marty-Console-Set.png",
+      "name": "FM Towns Marty"
+    },
+    {
+      "file": "FM-Towns-Marty-Controller-L.jpg",
+      "name": "Marty pad"
+    },
+    {
+      "file": "FMTOWNS 2F.jpg",
+      "name": "FM Towns II",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "fm7": [
+    {
+      "file": "FM-New7, May 2013 B.jpg",
+      "name": "FM-NEW7"
+    }
+  ],
+  "dos": [
+    {
+      "file": "IBM PC-IMG 7271.jpg",
+      "name": "IBM PC 5150"
+    },
+    {
+      "file": "Sound Blaster 16.JPG",
+      "name": "Sound Blaster 16"
+    },
+    {
+      "file": "AdLib Music Synthesizer Card.jpg",
+      "name": "AdLib card",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Gravis pc gamepad.jpg",
+      "name": "Gravis PC GamePad",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Gravis Destroyer PC gamepad c 2000 (iii).jpg",
+      "name": "Gravis Destroyer",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "macintosh": [
+    {
+      "file": "Macintosh 128k transparency.png",
+      "name": "Macintosh 128K"
+    },
+    {
+      "file": "Apple Macintosh Plus white background.jpg",
+      "name": "Macintosh Plus"
+    },
+    {
+      "file": "Macintosh classic.jpg",
+      "name": "Macintosh Classic",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Macintosh 128K - Macintosh mouse (3655725631).jpg",
+      "name": "Mouse",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "coco": [
+    {
+      "file": "TRS-80 Color Computer 1 front right.jpg",
+      "name": "Color Computer"
+    },
+    {
+      "file": "TRS-80 Color Computer 2 (PAL) 4x3.jpg",
+      "name": "Color Computer 2",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "TRS-80 MC-10 Microcomputer.jpg",
+      "name": "MC-10",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "dragon64": [
+    {
+      "file": "Dragon 32.jpg",
+      "name": "Dragon 32"
+    },
+    {
+      "file": "Dragon 64 top view black sticker.jpg",
+      "name": "Dragon 64"
+    }
+  ],
+  "ti99": [
+    {
+      "file": "TI-99 4A.JPG",
+      "name": "TI-99/4A",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "TI99-4A Joysticks.jpg",
+      "name": "Joysticks"
+    }
+  ],
+  "trs80": [
+    {
+      "file": "Radio Shack Tandy TRS-80 Model I Microcomputer.JPG",
+      "name": "Model I",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "TRS-80 Model 3 01.jpg",
+      "name": "Model III"
+    },
+    {
+      "file": "Radio Shack TRS-80 Model 4 no background.png",
+      "name": "Model 4"
+    },
+    {
+      "file": "Radio Shack TRS-80 Model 100.jpg",
+      "name": "Model 100",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "oricatmos": [
+    {
+      "file": "Oric1.jpg",
+      "name": "Oric-1"
+    },
+    {
+      "file": "ORIC ATMOS 48k - PERSPECTIVE HD.png",
+      "name": "Oric Atmos"
+    },
+    {
+      "file": "Microdisc.jpg",
+      "name": "Microdisc drive"
+    }
+  ],
+  "samcoupe": [
+    {
+      "file": "SAM Coupé (white bg and shadow).jpg",
+      "name": "SAM Coupé"
+    },
+    {
+      "file": "SAM Coupé - box.jpg",
+      "name": "In its box"
+    }
+  ],
+  "thomson": [
+    {
+      "file": "Thomson MO5-CnAM 437370-IMG 5380-white.jpg",
+      "name": "MO5"
+    },
+    {
+      "file": "MO5 Tape reader.JPG",
+      "name": "MO5 tape recorder"
+    },
+    {
+      "file": "Thomson TO7 Thomas Conté no background.png",
+      "name": "TO7"
+    },
+    {
+      "file": "MO6.jpg",
+      "name": "MO6"
+    }
+  ],
+  "spectravideo": [
+    {
+      "file": "Spectravideo SV-318.jpg",
+      "name": "SV-318",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Spectravideo SV 904 tape drive.jpg",
+      "name": "Tape drive"
+    },
+    {
+      "file": "Spectravideo SV 902 disc drive.jpg",
+      "name": "Disk drive"
+    },
+    {
+      "file": "SV328.jpg",
+      "name": "SV-328",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "mz700": [
+    {
+      "file": "Sharp MZ-700.jpg",
+      "name": "MZ-700"
+    },
+    {
+      "file": "Sharp MZ-80K computer.jpg",
+      "name": "MZ-80K"
+    }
+  ],
+  "sc3000": [
+    {
+      "file": "Sega SC-3000 wb (shadow removed version).jpg",
+      "name": "SC-3000"
+    },
+    {
+      "file": "Sega-SG-1000-Console-Set.png",
+      "name": "Its console twin, the SG-1000"
+    },
+    {
+      "file": "Sega SC-3000 and SG-1000 cartridge.jpg",
+      "name": "Cartridge",
       "mask": true,
       "largest": true
     }

@@ -45,8 +45,19 @@
     "64SolutionsUK01",
     "total-64-09"
   ],
-  "gamecube": ["cube-01", "egms-unofficial-game-cube-guide-march-2002"],
-  "gbc": ["Total_Game_Boy_Issue_01", "gbx-2001-12-06", "Total_Game_Boy_Issue_03"],
+  "gamecube": [
+    "cube-01",
+    "egms-unofficial-game-cube-guide-march-2002",
+    "famitsu-cube-advance-2002-02-separate-volume-supplement",
+    "Nintendo_Accion_Gamecube_99e"
+  ],
+  "gbc": [
+    "Total_Game_Boy_Issue_01",
+    "gbx-2001-12-06",
+    "Total_Game_Boy_Issue_03",
+    "GBCmania01",
+    "total-gbc-02"
+  ],
   "gba": [
     "gba-master-guide-01",
     "gba-master-guide-02",
@@ -151,7 +162,8 @@
     "AmstradAction052",
     "AmstradComputerUser200786",
     "computing-with-the-amstrad-vol.-3-no.-3-1987-03",
-    "amstrad-action-064"
+    "amstrad-action-064",
+    "amtix-magazine-15"
   ],
   "atarist": [
     "Atari_ST_User_Issue_067_1991-09_Europress_GB",
@@ -167,15 +179,41 @@
     "cuamiga-magazine-025",
     "cuamiga-magazine-046"
   ],
-  "msx1": ["MSXComputing", "msx-user-1985-09-images"],
-  "x68000": ["OhX1990-1995", "OhMZ198612X68000X6800X1turboZX", "OhX_1991-08", "OhX_1993-05"],
+  "msx1": [
+    "MSXComputing",
+    "msx-user-1985-09-images",
+    "MSXUser",
+    "MSXMagazine-Japan",
+    "MSX_Magazine_1992-07_ASCII_JP"
+  ],
+  "x68000": [
+    "OhX1990-1995",
+    "OhMZ198612X68000X6800X1turboZX",
+    "OhX_1991-08",
+    "OhX_1993-05",
+    "OhX_1989-04"
+  ],
   "c20": [
     "Personal_Computing_On_The_VIC-20_1982_Commodore",
     "computes-vic-20-collection_202206",
-    "VIC-20ProgrammersReferenceGuide1stEdition6thPrinti"
+    "VIC-20ProgrammersReferenceGuide1stEdition6thPrinti",
+    "computes.gazette",
+    "1979-Fall-compute-magazine"
   ],
-  "cplus4": ["Commodore_C16_Plus4_Reference_Book", "Videobasic-C16", "C16MSXN40"],
-  "gamegear": ["OfficialSegaGenesisGameGearStrategies3rdEdition"],
+  "cplus4": [
+    "Commodore_C16_Plus4_Reference_Book",
+    "Videobasic-C16",
+    "C16MSXN40",
+    "Commodore_Computing_International_Vol_05_No_04_1986-11_Croftward_GB",
+    "YourCommodoreIssue34Jul87"
+  ],
+  "gamegear": [
+    "OfficialSegaGenesisGameGearStrategies3rdEdition",
+    "game-gear_202310",
+    "sonic-the-hedgehog-2-sega-game-gear-manual",
+    "sonic-chaos-sega-game-gear-manual",
+    "dr-robotniks-mean-bean-machine-sega-game-gear-manual"
+  ],
   "megacd": [
     "mega-tech-supplement-mega-cd-guide",
     "mega-drive-fan-1991-12-15-appendix-mega-cd-fan-volume-1",
@@ -195,11 +233,30 @@
     "game-boy-official-magazine-3",
     "game-boy-players-guide",
     "n64-presents-the-game-boy-companion_202206",
-    "Total_Game_Boy_Issue_07"
+    "Total_Game_Boy_Issue_07",
+    "game-boy-official-magazine-1"
   ],
-  "fds": ["famimaga-1992-apr-17", "famimagajune1987", "famimaga5111990"],
-  "virtualboy": [],
-  "intellivision": [],
+  "fds": [
+    "famimaga-1992-apr-17",
+    "famimagajune1987",
+    "famimaga5111990",
+    "zines_zelda_famimaga_1987_aol_guide_600dpi",
+    "family-computer-magazine-issue-7-february-1986"
+  ],
+  "virtualboy": [
+    "virtual-boy-tsushin",
+    "nintendo-virtual-boy_202310",
+    "mit_press_book_9780262380669",
+    "must-see-3-d-sweepstakes-nbc-virtual-boy-promo-1995",
+    "Virtual_Boy_Wario_Land_1995_Nintendo_JP"
+  ],
+  "intellivision": [
+    "mit_press_book_9780262380553",
+    "All_New_Intellivision_The_1988_Intellivision_US",
+    "1980IntellivisionCatalog",
+    "intellivision-game-catalog-1981",
+    "Intellivision_Intelligent_Television_1980_Mattel_US"
+  ],
   "colecovision": [
     "1980-coleco-catalog",
     "coleco-vision-catalog-1982_202108",
@@ -233,10 +290,26 @@
     },
     "atari-7800-prosystem"
   ],
-  "vectrex": [],
+  "vectrex": [
+    "depliantvectrex",
+    "vectrex-passport-magazine",
+    "vectrex-french",
+    "spike-game-manual-vectrex-1983"
+  ],
   "odyssey2": [],
-  "ngpc": ["ngpc_20211014", "softv2"],
-  "wswan": [],
+  "ngpc": [
+    "ngpc_20211014",
+    "softv2",
+    "neogeo-pocket-color-information-vol.-1",
+    "dive-alert-matts-version"
+  ],
+  "wswan": [
+    "wonder-swan-magazine-vol-1",
+    "rockmanfortemiraikaranochousenshawshiresscans",
+    "clocktowerwshiresscans",
+    "pocketfighterwshiresscans",
+    "uzumakinoroisimulationwshiresscans"
+  ],
   "sgb": ["Nintendo_Players_Guide_Super_Game_Boy"],
   "gb2players": [
     "game-boy-official-magazine-3",
@@ -244,7 +317,13 @@
     "n64-presents-the-game-boy-companion_202206",
     "Total_Game_Boy_Issue_07"
   ],
-  "msx2": ["MSXComputing", "msx-user-1985-09-images"],
+  "msx2": [
+    "MSXComputing",
+    "msx-user-1985-09-images",
+    "MSXFAN199208",
+    "MSXFAN199310",
+    "msx_computer_magazine"
+  ],
   "msx2+": [
     "MSXMAGAZINE_201807",
     "h42_MSX_Computer_Magazine_02-1986",
@@ -257,8 +336,19 @@
     "h42_MSX_Computer_Magazine_02-1986",
     "MSXMAGAZINE_201807"
   ],
-  "ngp": ["softv2", "ngpc_20211014"],
-  "wswanc": [],
+  "ngp": [
+    "softv2",
+    "ngpc_20211014",
+    "snk-98-99-winter-neogeo-pocket-and-new-software-catalog",
+    "snk-my-game-neogeo-pocket"
+  ],
+  "wswanc": [
+    "finalfantasywscolorhiresscans",
+    "finalfantasyivwscolorhiresscans",
+    "romancingsagawscolorhiresscans",
+    "WSCFF",
+    "digimontamersbravetamerwscolorhiresscans"
+  ],
   "mastersystem": [
     "mean-machines-sega-magazine-04",
     "s-04_20200726",
@@ -266,9 +356,27 @@
     "MMSega01Oct92",
     "mean-machines-sega-magazine-03"
   ],
-  "pcenginecd": [],
-  "supergrafx": ["nec-supergrafx", "DaimakaimuraSuperGrafxHiResScans"],
-  "neogeocd": ["NeoGeoCDSoftCatalogue", "ngcd_20211014", "013-neo-geo-cd"],
+  "pcenginecd": [
+    "pce-last-armageddon-manual",
+    "ultrabox_4_pce_manual",
+    "super_cdrom_taiken_soft_shuu",
+    "pc-engine-all-catalog-94-pc-engine-fan-appendix-november-1994",
+    "castlevania-rondo-of-blood-strategy-guidebook-volume-2-pc-engine-fan-appendix-de"
+  ],
+  "supergrafx": [
+    "nec-supergrafx",
+    "DaimakaimuraSuperGrafxHiResScans",
+    "pc-engine-all-catalog-92-pc-engine-fan-appendix-august-1992",
+    "pc-engine-fan-february-1992",
+    "pc-engine-fan-june-1993"
+  ],
+  "neogeocd": [
+    "NeoGeoCDSoftCatalogue",
+    "ngcd_20211014",
+    "013-neo-geo-cd",
+    "neogeofreak0061",
+    "neo-geo-all-catalog"
+  ],
   "naomi": ["gamest-199"],
   "fbneo": ["gamest-183", "play-meter-volume-24-number-4-march-1998", "gamest0260", "gamest0068"],
   "daphne": [],
@@ -329,7 +437,232 @@
     },
     "ape-atari-newsletter-issue-21",
     "ape-atari-newsletter-issue-20",
-    "ape-atari-newsletter-issue-18"
+    "ape-atari-newsletter-issue-18",
+    "Battlemorph_1995_Atari"
   ],
-  "pv1000": ["casio-pv-1000-the-book", "casio-pv-1000"]
+  "pv1000": ["casio-pv-1000-the-book", "casio-pv-1000"],
+  "wii": [
+    "Nintendo-Power-Magazine-The-Wii-Era",
+    "Nintendo_Accion_XXX_Mario_Kart_Wii",
+    "EDGE.N169.2006.12-Supplement.Guide.to.Wii",
+    "game-pro-special-wii-gamers-guide-game-pro-2008",
+    "Nintendo_Accion_Nintendo_Generations_Conexion_Wii_Online"
+  ],
+  "wiiu": [
+    "megaconsolas-esp-wii-u",
+    "supersmashbrosfo0000vone",
+    "wii-u-operations-manual",
+    "wii-u-quick-start-guide"
+  ],
+  "switch": [
+    "legendofzeldabre0000yuw",
+    "nintendo-magazine-2025-nintendo-switch-2-japanese",
+    "2023-120525-a"
+  ],
+  "nds": [
+    "nintendo-ds-magazine-n-02-septembre-2005",
+    "nintendo-ds-magazine-n-01-mars-2005",
+    "nintendo-ds-magazine-n-10-octobre-2007",
+    "nintendo-ds-magazine-n-04-fevrier-mars-2006",
+    "the-legend-of-zelda-phantom-hourglass-prima-official-game-guide-2007-nds"
+  ],
+  "3ds": [
+    "the-legend-of-zelda-a-link-between-worlds-3-ds-prima-guide-hq",
+    "3DS_Special_Ultra_Console_Game_Magazine",
+    "zelda-no-densetsu-majora-no-kamen-3-d-termina-taizen-magazine-supplements-scan-jp-3-ds",
+    "Catalogo_Nintendo_Nintendo_3DS",
+    "tales-of-the-abyss-namco-guide-3ds"
+  ],
+  "psp": [
+    "PSP_Special_Ultra_Console_Game_Magazine_Spinoff",
+    "PSP_The_Official_Guide_Book_Issue_23_2006_Future_Publishing_GB",
+    "PSP_The_Official_Guide_Book_Issue_22_2006_Future_Publishing_GB",
+    "best-buy-psp-buyers-guide-game-pro-2005",
+    "PSM_Presents_100_Unofficial_PSP_Launch_Guide"
+  ],
+  "ps3": [
+    "PS3_Special_Ultra_Console_Game_Magazine_Spinoff",
+    "uncharted-drakes-fortune-official-strategy-guide-2007-ps-3",
+    "uncharted-3-drakes-deception-the-complete-official-guide-2011-ps-3",
+    "final-fantasy-xiii-the-complete-official-guide-2010-ps-3-x-360"
+  ],
+  "ps4": [
+    "disgaearefinemakaiseihukunotebikimagazinesupplementsscanjpps4",
+    "kingdomheartsiiifirstbreathmagazinesupplementsscanjpps4xboxone",
+    "kingdomheartsiiipreludemagazinesupplementsscanjpps4",
+    "PS4_Special_Ultra_Console_Game_Magazine_Spinoff",
+    "uncharted-4-a-thiefs-end-prima-official-guide-2016-ps-4"
+  ],
+  "psvita": [
+    "persona-4-golden",
+    "orenoshikabaneokoeteyuke2hyakkimatsurimagazinesupplementsscanjpvita",
+    "manualsbase-id-544385"
+  ],
+  "xbox": [
+    "Official_Xbox_Magazine-Ziff_Davis_Proof_2001",
+    "official-australian-xbox-magazine-issue-23-january-2004",
+    "official-australian-xbox-magazine-issue-25-march-2004",
+    "xbox-magazine-01-mars-2002",
+    "halo-combat-evolvedprimas-official-xbox-strategy-guide-2004"
+  ],
+  "xbox360": [
+    "Xbox_360_Special_Ultra_Console_Game_Magazine_Spinoff",
+    "xbox-360-ro-02",
+    "Xbox_360_Magazine_June_2013",
+    "tales-of-vesperia-xbox-360-famitsu-guide",
+    "xbox360pocketgui0000fark"
+  ],
+  "cdi": [
+    "CD-i_Magazine_Issue_12_1995-06_Haymarket_Publishing_GB",
+    "CD-i_Magazine_Issue_03_1993_Haymarket_Publishing_GB",
+    "CDi01SepOct1994",
+    "CD-i_Magazine_Issue_02_1993_Haymarket_Publishing_GB",
+    "HotelMarioUSAManual"
+  ],
+  "amiga500": [
+    "cuamiga-magazine-023",
+    "amiga-computing-magazine-043",
+    "Amiga_Action_Issue_21_1991-06_Europress_Interactive_GB",
+    "amiga-computing-magazine-075",
+    "Amiga_Action_Issue_68_1995-03_IDG_Media_GB"
+  ],
+  "amigacd32": [
+    "AmigaCD32Gamer01",
+    "Amiga_CD32_Issue_2_1994-01_Future_Publishing_GB",
+    "AmigaCD32GamerIssue11199504SeymourInternationalPress300dpi",
+    "AmigaFormatMagazine_201902",
+    "Power.Play.N80.1994.11"
+  ],
+  "amigacdtv": [
+    "amiga-cd-issue-1_202310",
+    "cu-amiga-1991-06",
+    "amiga-computing-magazine-055",
+    "amazing-computing-magazine-1991-07"
+  ],
+  "apple2": [
+    "inCider_83-11",
+    "inCider_86-11",
+    "softalkv3n09may1983",
+    "softalkv4n08apr1984",
+    "softalkv2n08apr1982"
+  ],
+  "apple2gs": [
+    "BYTE_Vol_11-10_1986-10_Apple_II_GS",
+    "II_Computing_Vol_2_No_1_Oct_Nov_86",
+    "II_Computing_Vol_1_No_1_Oct_Nov_85_Premiere",
+    "inCider_86-12",
+    "II_Computing_Vol_1_No_4_Apr_May_86"
+  ],
+  "zx81": ["ZXComputingJunJul1985", "SinclairUser033Dec84", "TimexSinclairUser"],
+  "bbcmicro": [
+    "Acorn_User_Number_029_1984-12_Redwood_Publishing_GB",
+    "Acorn_User_Issue_No._030_1985-01_Redwood_Publishing_GB",
+    "Acorn_User_Issue_117_1992-04_Redwood_Publishing_GB",
+    "AcornUser1993Magazine",
+    "Acorn_User_Issue_159_1995-09_IDG_Media_GB"
+  ],
+  "electron": [
+    "Electron_User_Vol._1_No._11_1984-08_Database_Publications_GB",
+    "ElectronUserVolume2",
+    "ElectronUserVolume3",
+    "ElectronUserVolume4",
+    "ElectronUserVolume5"
+  ],
+  "c128": [
+    "inside-the-128-commodore-128-compute-gazette",
+    "twin-cities-128-issue-26",
+    "twin-cities-128-64-issue-36-parsec",
+    "twin-cities-128-issue-21"
+  ],
+  "pet": [
+    "01-commodore-magazine",
+    "05-commodore-magazine",
+    "Commodore_Computing_International_Vol_02_No_09_1984-02_Nick_Hampshire_Publications_GB",
+    "Commodore_Computing_International_Vol_03_No_03_1984-09_Croftward_GB"
+  ],
+  "pc88": [
+    "logi-n-october-1984-600dpi",
+    "login-january-1987",
+    "popcom-1987-09",
+    "POPCOM198305",
+    "logi-n-august-1985"
+  ],
+  "pc98": [
+    "oh-pc-issue-136-dec-01-1990",
+    "oh-pc-issue-127-jul-01-1990",
+    "oh-pc-issue-129-aug-01-1990",
+    "oh-pc-issue-116-jan-01-1990",
+    "comptiq-vol.-73-december-1990"
+  ],
+  "fmtowns": [
+    "oh-fm-1989-09-300dpi",
+    "oh-fm-1988-12",
+    "comptiq-vol.-70-september-1990",
+    "popcom-1989-07"
+  ],
+  "fm7": [
+    "Oh-FM-Vol-2-hires",
+    "oh-fm-1983-000-winter",
+    "oh-fm-1985-12",
+    "Oh-FM-Vol-3-hires",
+    "oh-fmseptember-1984"
+  ],
+  "dos": [
+    "Computer_Gaming_World_Issue_113",
+    "Computer_Gaming_World_Issue_125",
+    "Computer_Gaming_World_Issue_148",
+    "pc-gamer-issue-081-february-2001",
+    "PCZONE065"
+  ],
+  "macintosh": [
+    "MacWorld_9205_May_1992",
+    "MacAddict-089-200401",
+    "MacWorld9603March1996",
+    "MacWorld_9506_June_1995",
+    "Macworld0712December2007"
+  ],
+  "coco": [
+    "rainbowmagazine-1983-12",
+    "rainbowmagazine-1985-12",
+    "rainbowmagazine-1984-02",
+    "rainbowmagazine-1988-02",
+    "rainbowmagazine-1986-01"
+  ],
+  "dragon64": ["dragon-user-magazine-08", "DragonUser08Dec83"],
+  "ti99": [
+    "99er8304",
+    "HomeComputerMagazine_Vol4_01",
+    "stx_Easy_Home_Computer_magazine_1984-06",
+    "99er-magazine",
+    "mp198907"
+  ],
+  "trs80": [
+    "softside-magazine-25",
+    "softside-magazine-35",
+    "softside-magazine-47",
+    "softside-magazine-51",
+    "softside-magazine-53"
+  ],
+  "oricatmos": ["theoric-01", "Oric_Owner_Issue_05.pdf", "theoric-11"],
+  "samcoupe": [
+    "sinclair-sam-computing-1",
+    "sinclair-sam-computing-3",
+    "sinclair-sam-computing-5",
+    "format-magazine-6-8",
+    "format-magazine-6-11"
+  ],
+  "spectravideo": [
+    "saug-newsletter-1985-12",
+    "spectravideo-radio-amateur-magazine-overdruk",
+    "saug-newsletter-1983-10"
+  ],
+  "x1": ["oh_mz_issue_28_september_1984", "OhMZ_1986-09", "OhMZ_1987-09", "OhMZ_1986-06"],
+  "mz700": ["OhMZ_1986-07", "OhMZ_1986-12", "oh-mz-1985", "oh-mz-1984-12"],
+  "sc3000": [
+    "Sega_Computer_1984-07_Nomac_Publishing_NZ",
+    "Sega_Computer_1985-06_Nomac_Publishing_NZ",
+    "Sega_Computer_1986-04_Nomac_Publishing_NZ",
+    "Sega_Computer_1986-10_Sega_Software_Support_NZ",
+    "Sega_Computer_1984-11_Nomac_Publishing_NZ"
+  ]
 }

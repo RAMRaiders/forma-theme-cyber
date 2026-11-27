@@ -1,7 +1,9 @@
 {
   "curiosities": [
     "Oric computers were especially popular in France.",
-    "The Atmos replaced the Oric-1's calculator-style keys with a typewriter-style keyboard."
+    "The Atmos replaced the Oric-1's calculator-style keys with a typewriter-style keyboard.",
+    "Tangerine Computer Systems created the Oric.",
+    "Its processor is a 6502 at 1 MHz."
   ],
   "unverified": [],
   "bestsellers": ["3D Fongus", "Zorgons Revenge", "Defence Force"],

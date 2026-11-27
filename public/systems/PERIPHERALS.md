@@ -22,14 +22,16 @@ screen. Built by `scripts/build-peripherals.mjs`.
 - **n64**: Expansion Pak, [Nintendo-64-Memory-Expansion-Pak.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-64-Memory-Expansion-Pak.jpg), by Evan-Amos, Public domain.
 - **gamecube**: WaveBird wireless controller, [Nintendo-GameCube-Wavebird-Silver.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-GameCube-Wavebird-Silver.jpg), by Evan-Amos, Public domain.
 - **gamecube**: Hori controller, [Hori-Nintendo-GameCube-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Hori-Nintendo-GameCube-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **gamecube**: Controller, [GameCube controller.png](https://commons.wikimedia.org/wiki/File:GameCube_controller.png), by Gamecube-controller.jpg: Evan-amos
+- **gamecube**: Memory Card, [Nintendo GameCube memory card.png](https://commons.wikimedia.org/wiki/File:Nintendo_GameCube_memory_card.png), by unknown, CC BY-SA 3.0.
+- **gamecube**: Broadband Adapter, [Nintendo-GameCube-Broadband-Adapter-01.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-GameCube-Broadband-Adapter-01.jpg), by Evan-Amos, Public domain.
+- **gamecube**: DK Bongos, [DK-Bongos.JPG](https://commons.wikimedia.org/wiki/File:DK-Bongos.JPG), by de:Benutzer:Waluigi, CC BY-SA 3.0.
 - **megadrive**: Six-button pad, [Sega-Genesis-6But-Cont.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-6But-Cont.jpg), by Evan-Amos, Public domain.
 - **megadrive**: Arcade Power Stick, [Sega-Genesis-Arcade-Stick.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-Arcade-Stick.jpg), by Evan-Amos, Public domain.
 - **megadrive**: Justifier light gun, [Konami-Justifiers-Genesis-Set.jpg](https://commons.wikimedia.org/wiki/File:Konami-Justifiers-Genesis-Set.jpg), by Evan-Amos, Public domain.
 - **megadrive**: Three-button pad, [Sega-Genesis-3But-Cont.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-3But-Cont.jpg), by Evan-Amos, Public domain.
 - **megadrive**: Sega Mouse and Mega Mouse, [Sega Mouse and Sega Mega Mouse.jpg](https://commons.wikimedia.org/wiki/File:Sega_Mouse_and_Sega_Mega_Mouse.jpg), by 32X, CC BY 2.5.
 - **megadrive**: Menacer light gun, [Sega Menacer cropped.jpg](https://commons.wikimedia.org/wiki/File:Sega_Menacer_cropped.jpg), by David Quach
-
-Edited by czar, CC BY 3.0.
 - **mastersystem**: Control Pads, [Sega-Master-System-Controllers.jpg](https://commons.wikimedia.org/wiki/File:Sega-Master-System-Controllers.jpg), by Evan-Amos, Public domain.
 - **mastersystem**: Control Stick, [Sega-Master-System-Control-Stick.jpg](https://commons.wikimedia.org/wiki/File:Sega-Master-System-Control-Stick.jpg), by Evan-Amos, Public domain.
 - **mastersystem**: 3-D Glasses, [Sega-Masters-Sys-3D-Glasses.jpg](https://commons.wikimedia.org/wiki/File:Sega-Masters-Sys-3D-Glasses.jpg), by Evan-Amos, Public domain.
@@ -57,8 +59,12 @@ Edited by czar, CC BY 3.0.
 - **ps2**: DualShock 2, [PS2-DualShock2.jpg](https://commons.wikimedia.org/wiki/File:PS2-DualShock2.jpg), by Evan-Amos, Public domain.
 - **ps2**: EyeToy, [PS2-Eyetoy.jpg](https://commons.wikimedia.org/wiki/File:PS2-Eyetoy.jpg), by Evan-Amos, Public domain.
 - **ps2**: 8 MB Memory Card, [PS2-8MB-Mem-Card.jpg](https://commons.wikimedia.org/wiki/File:PS2-8MB-Mem-Card.jpg), by Evan-Amos, Public domain.
+- **ps2**: Hard drive and Network Adaptor, [Sony-PlayStation-2-Hard-Drive-wNetwork-Adaptor.jpg](https://commons.wikimedia.org/wiki/File:Sony-PlayStation-2-Hard-Drive-wNetwork-Adaptor.jpg), by Evan-Amos, Public domain.
 - **gb**: Game Boy Camera, [Game-Boy-Camera.jpg](https://commons.wikimedia.org/wiki/File:Game-Boy-Camera.jpg), by Evan-Amos, Public domain.
 - **gb**: Link Cable, [Nintendo-Game-Boy-Link-Cable-Dual.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Game-Boy-Link-Cable-Dual.jpg), by Evan-Amos, Public domain.
+- **gb**: Game Boy Printer, [Game Boy Printer.jpg](https://commons.wikimedia.org/wiki/File:Game_Boy_Printer.jpg), by Game_Boy_Printer.png: Prime Blue
+- **gb**: Game Boy Pocket, [Game-Boy-Pocket-FL.jpg](https://commons.wikimedia.org/wiki/File:Game-Boy-Pocket-FL.jpg), by Evan-Amos, Public domain.
+- **gb**: Game Boy Light, [Game-Boy-Light-FL.jpg](https://commons.wikimedia.org/wiki/File:Game-Boy-Light-FL.jpg), by Evan-Amos, Public domain.
 - **gba**: e-Reader, [GameBoyAdvance-with-eReader.jpg](https://commons.wikimedia.org/wiki/File:GameBoyAdvance-with-eReader.jpg), by Gameboyadvance_gbacart_by_zeartul.JPG: Zeartul
 - **gba**: Wireless Adapter, [Game-Boy-Advance-Wireless-Adapter.jpg](https://commons.wikimedia.org/wiki/File:Game-Boy-Advance-Wireless-Adapter.jpg), by Evan-Amos, CC BY-SA 3.0.
 - **gba**: Game Boy Player, [Game-Boy-Advance-Player.jpg](https://commons.wikimedia.org/wiki/File:Game-Boy-Advance-Player.jpg), by Evan-Amos, Public domain.
@@ -67,6 +73,7 @@ Edited by czar, CC BY 3.0.
 - **virtualboy**: Stand, [Nintendo-Virtual-Boy-Stand-FL.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Virtual-Boy-Stand-FL.jpg), by Evan-Amos, Public domain.
 - **virtualboy**: AC adapter pack, [Nintendo-Virtual-Boy-AC-Adapter-Pack.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Virtual-Boy-AC-Adapter-Pack.jpg), by Evan-Amos, Public domain.
 - **gamegear**: TV Tuner, [Sega-Game-Gear-wTv-Tuner.jpg](https://commons.wikimedia.org/wiki/File:Sega-Game-Gear-wTv-Tuner.jpg), by Evan-Amos, Public domain.
+- **gamegear**: In white, [Sega Game Gear (13334167513).jpg](https://commons.wikimedia.org/wiki/File:Sega_Game_Gear_(13334167513).jpg), by Staffan Vilcans, CC BY-SA 2.0.
 - **atari2600**: CX40 Joystick, [Atari-2600-Joystick.jpg](https://commons.wikimedia.org/wiki/File:Atari-2600-Joystick.jpg), by Evan-Amos, Public domain.
 - **atari2600**: Paddles, [Atari-2600-Paddle-Controller-FR.jpg](https://commons.wikimedia.org/wiki/File:Atari-2600-Paddle-Controller-FR.jpg), by Evan-Amos, Public domain.
 - **atari2600**: Driving Controller, [Atari-2600-Driving-Controller.jpg](https://commons.wikimedia.org/wiki/File:Atari-2600-Driving-Controller.jpg), by Evan-Amos, Public domain.
@@ -78,10 +85,17 @@ Edited by czar, CC BY 3.0.
 - **neogeo**: AES joystick, [Neo-Geo-AES-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-AES-Controller-FL.jpg), by Evan-Amos, Public domain.
 - **neogeo**: CD controller, [Neo-Geo-CD-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-CD-Controller-FL.jpg), by Evan-Amos, Public domain.
 - **neogeo**: Memory Card, [Neo-Geo-Memory-Card.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-Memory-Card.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **neogeo**: Advanced controller, [Neo-Geo-Advanced-Controller.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-Advanced-Controller.jpg), by Evan-Amos, Public domain.
 - **neogeocd**: CD controller, [Neo-Geo-CD-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-CD-Controller-FL.jpg), by Evan-Amos, Public domain.
 - **neogeocd**: AES joystick, [Neo-Geo-AES-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-AES-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **neogeocd**: Top-loader, [Neo-Geo-CD-TL-FL.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-CD-TL-FL.jpg), by Evan-Amos, Public domain.
+- **neogeocd**: Front-loader, [Neo-Geo-CD-FrontLoader-wController-FL.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-CD-FrontLoader-wController-FL.jpg), by Evan-Amos, Public domain.
+- **neogeocd**: CDZ, [Neo-Geo-CDZ-FL.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-CDZ-FL.jpg), by Evan-Amos, Public domain.
 - **3do**: Controller, [Panasonic-3DO-Controller.jpg](https://commons.wikimedia.org/wiki/File:Panasonic-3DO-Controller.jpg), by WikiRami12, CC0.
 - **3do**: Capcom fighting pad, [Capcom-3DO-Fighting-Controller.jpg](https://commons.wikimedia.org/wiki/File:Capcom-3DO-Fighting-Controller.jpg), by Evan-Amos, Public domain.
+- **3do**: GoldStar controller, [3DO-101M-Controller.jpg](https://commons.wikimedia.org/wiki/File:3DO-101M-Controller.jpg), by Evan-Amos, CC0.
+- **3do**: GoldStar 3DO, [3DO-Goldstar-Console-FR.jpg](https://commons.wikimedia.org/wiki/File:3DO-Goldstar-Console-FR.jpg), by Evan-Amos, Public domain.
+- **3do**: Panasonic FZ-10, [3DO-FZ-10-Console-FL.jpg](https://commons.wikimedia.org/wiki/File:3DO-FZ-10-Console-FL.jpg), by Evan-Amos, Public domain.
 - **pcengine**: TurboPad, [NEC-TurboGrafx-16-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx-16-Controller-FL.jpg), by Evan-Amos, Public domain.
 - **pcengine**: TurboTap, [NEC-TurboGrafx-16-TurboTap.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx-16-TurboTap.jpg), by Evan-Amos, Public domain.
 - **pcengine**: CD-ROM² unit, [NEC-TurboGrafx-16-CD-Add-on-FL.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx-16-CD-Add-on-FL.jpg), by Evan-Amos, Public domain.
@@ -89,13 +103,20 @@ Edited by czar, CC BY 3.0.
 - **pcengine**: TurboStick, [NEC-TurboGrafx16-TurboStick-FL.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx16-TurboStick-FL.jpg), by Evan-Amos, Public domain.
 - **pcenginecd**: CD-ROM² unit, [NEC-TurboGrafx-16-CD-Add-on-FL.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx-16-CD-Add-on-FL.jpg), by Evan-Amos, Public domain.
 - **pcenginecd**: TurboPad, [NEC-TurboGrafx-16-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:NEC-TurboGrafx-16-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **pcenginecd**: PC Engine Duo, [PC-Engine-Duo-Console-Set.jpg](https://commons.wikimedia.org/wiki/File:PC-Engine-Duo-Console-Set.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **pcenginecd**: Duo-R, [PC-Engine-Duo-R.jpg](https://commons.wikimedia.org/wiki/File:PC-Engine-Duo-R.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **pcenginecd**: TurboDuo, [TurboDuo-Console-Set.jpg](https://commons.wikimedia.org/wiki/File:TurboDuo-Console-Set.jpg), by Evan-Amos, CC BY-SA 3.0.
 - **intellivision**: Controller, [Intellivision-Controller.jpg](https://commons.wikimedia.org/wiki/File:Intellivision-Controller.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **intellivision**: Intellivision II, [Intellivision-II-Console-Set.jpg](https://commons.wikimedia.org/wiki/File:Intellivision-II-Console-Set.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **intellivision**: Intellivoice, [Intellivoice.jpg](https://commons.wikimedia.org/wiki/File:Intellivoice.jpg), by Evan-Amos, CC BY-SA 3.0.
 - **colecovision**: Controller, [ColecoVision-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:ColecoVision-Controller-FL.jpg), by Evan-Amos, Public domain.
 - **colecovision**: Expansion Module #1, [ColecoVision-Expansion1-Front.jpg](https://commons.wikimedia.org/wiki/File:ColecoVision-Expansion1-Front.jpg), by Evan-Amos, Public domain.
 - **colecovision**: Expansion Module #2, [ColecoVision-Expansion2.jpg](https://commons.wikimedia.org/wiki/File:ColecoVision-Expansion2.jpg), by Evan-Amos, Public domain.
 - **colecovision**: Super Action Controllers, [Super Action Controller Coleco DSCF0353.JPG](https://commons.wikimedia.org/wiki/File:Super_Action_Controller_Coleco_DSCF0353.JPG), by Museo8bits, CC BY-SA 3.0.
 - **colecovision**: Adam (Expansion Module #3), [Coleco Adam (adjusted version).jpg](https://commons.wikimedia.org/wiki/File:Coleco_Adam_(adjusted_version).jpg), by Andrew Lih (AKA "Fuzheado"), CC BY-SA 2.0.
 - **vectrex**: Control panel, [GCE-Vectrex-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:GCE-Vectrex-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **vectrex**: Overlay and cartridge, [Vectrex-Overlay.jpg](https://commons.wikimedia.org/wiki/File:Vectrex-Overlay.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **vectrex**: Milton Bradley controller, [Vectrex controller MB.jpg](https://commons.wikimedia.org/wiki/File:Vectrex_controller_MB.jpg), by Ubahnverleih, CC0.
 - **c64**: Datasette, [Commodore-Datasette-C2N-Mk1-Front.jpg](https://commons.wikimedia.org/wiki/File:Commodore-Datasette-C2N-Mk1-Front.jpg), by Evan-Amos, Public domain.
 - **c64**: 1541 disk drive, [Commodore-64-1541-Floppy-Drive-03.jpg](https://commons.wikimedia.org/wiki/File:Commodore-64-1541-Floppy-Drive-03.jpg), by Evan-Amos, Public domain.
 - **c64**: 1702 monitor, [Commodore 1702 Video Monitor.jpg](https://commons.wikimedia.org/wiki/File:Commodore_1702_Video_Monitor.jpg), by shane doucette from Saskatoon, CA, CC BY-SA 2.0.
@@ -103,6 +124,9 @@ Edited by czar, CC BY 3.0.
 - **c64**: Quickshot II Turbo, [Spectravideo Quickshot II Turbo-IMG 1277-white.jpg](https://commons.wikimedia.org/wiki/File:Spectravideo_Quickshot_II_Turbo-IMG_1277-white.jpg), by Rama, CC BY-SA 3.0 fr.
 - **c64**: 1351 mouse, [Commodore blockomaus.jpg](https://commons.wikimedia.org/wiki/File:Commodore_blockomaus.jpg), by No machine-readable author provided. Boffy b assumed (based on copyright claims)., CC BY-SA 3.0.
 - **zxspectrum**: ZX Printer, [Sinclair.zx.thermal.printer.jpg](https://commons.wikimedia.org/wiki/File:Sinclair.zx.thermal.printer.jpg), by Jbattersby, Public domain.
+- **zxspectrum**: Spectrum 128, [ZX Spectrum128K.jpg](https://commons.wikimedia.org/wiki/File:ZX_Spectrum128K.jpg), by Bill Bertram, CC BY-SA 2.5.
+- **zxspectrum**: Spectrum +2, [ZX Spectrum Plus2 (retouched).jpg](https://commons.wikimedia.org/wiki/File:ZX_Spectrum_Plus2_(retouched).jpg), by No machine-readable author provided. StuartBrady assumed (based on copyright claims)., Public domain.
+- **zxspectrum**: Spectrum +3, [ZX Spectrum Plus3.jpeg](https://commons.wikimedia.org/wiki/File:ZX_Spectrum_Plus3.jpeg), by Frode Tennebø, Public domain.
 - **atari5200**: Controller, [Atari-5200-Controller.jpg](https://commons.wikimedia.org/wiki/File:Atari-5200-Controller.jpg), by Evan-Amos, Public domain.
 - **atari5200**: Trak-Ball, [Atari-5200-Trak-Ball-Controller.jpg](https://commons.wikimedia.org/wiki/File:Atari-5200-Trak-Ball-Controller.jpg), by Evan-Amos, Public domain.
 - **atari7800**: CX78 Joypad, [Atari-CX78-7800-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Atari-CX78-7800-Controller-FL.jpg), by Evan-Amos, Public domain.
@@ -116,9 +140,13 @@ Edited by czar, CC BY 3.0.
 - **xegs**: XG-1 light gun, [Atari XG-1 light gun.jpg](https://commons.wikimedia.org/wiki/File:Atari_XG-1_light_gun.jpg), by Bilby, CC BY 3.0.
 - **xegs**: Joystick, [Atari XE joystick (colour restored).jpg](https://commons.wikimedia.org/wiki/File:Atari_XE_joystick_(colour_restored).jpg), by Bilby, CC BY 3.0.
 - **atarist**: Mouse, [Atari st mouse.jpg](https://commons.wikimedia.org/wiki/File:Atari_st_mouse.jpg), by Supaste at English Wikipedia, Public domain.
+- **atarist**: With monitor and mouse, [Atari 1040STf.jpg](https://commons.wikimedia.org/wiki/File:Atari_1040STf.jpg), by © Bill Bertram, 2006, CC BY-SA 2.5.
+- **atarist**: STE, [Atari 1040 STE.jpg](https://commons.wikimedia.org/wiki/File:Atari_1040_STE.jpg), by Stefan Didam - Schmallenberg, CC BY-SA 3.0.
+- **atarist**: Falcon030, [Atari Falcon030 LHmod.jpg](https://commons.wikimedia.org/wiki/File:Atari_Falcon030_LHmod.jpg), by LosHawlos, CC BY-SA 3.0.
 - **lynx**: Sun Visor, [Atari-Lynx-I-Sun-Visor.jpg](https://commons.wikimedia.org/wiki/File:Atari-Lynx-I-Sun-Visor.jpg), by Evan-Amos, Public domain.
 - **lynx**: Carrying Case, [Atari-Lynx-Carrying-Case.jpg](https://commons.wikimedia.org/wiki/File:Atari-Lynx-Carrying-Case.jpg), by Evan-Amos, Public domain.
 - **lynx**: Car Adapter, [Atari-Lynx-Cig-Lighter-Adapter.jpg](https://commons.wikimedia.org/wiki/File:Atari-Lynx-Cig-Lighter-Adapter.jpg), by Evan-Amos, Public domain.
+- **lynx**: Lynx II, [Atari-Lynx-II-Handheld-Angled.jpg](https://commons.wikimedia.org/wiki/File:Atari-Lynx-II-Handheld-Angled.jpg), by Evan-Amos, Public domain.
 - **jaguarcd**: Memory Track, [Atari-Jaguar-CD-Memory-Track-Cart.jpg](https://commons.wikimedia.org/wiki/File:Atari-Jaguar-CD-Memory-Track-Cart.jpg), by Evan-Amos, Public domain.
 - **jaguarcd**: Controller, [Atari-Jaguar-Controller-Flat.jpg](https://commons.wikimedia.org/wiki/File:Atari-Jaguar-Controller-Flat.jpg), by Evan-Amos, Public domain.
 - **jaguarcd**: Pro Controller, [Atari-Jaguar-Pro-Controller-Flat.jpg](https://commons.wikimedia.org/wiki/File:Atari-Jaguar-Pro-Controller-Flat.jpg), by Evan-Amos, Public domain.
@@ -131,3 +159,176 @@ Edited by czar, CC BY 3.0.
 - **sega32x**: The 32X add-on, [Sega-Genesis-32X-01.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-32X-01.jpg), by Evan-Amos, Public domain.
 - **sega32x**: Its cartridge connector, [Sega-Genesis-32X-03.jpg](https://commons.wikimedia.org/wiki/File:Sega-Genesis-32X-03.jpg), by Evan-Amos, Public domain.
 - **sega32x**: On a Mega Drive, [Mega Drive (PAL) + 32X (PAL).jpg](https://commons.wikimedia.org/wiki/File:Mega_Drive_(PAL)_%2B_32X_(PAL).jpg), by 32X, CC BY-SA 3.0.
+- **gbc**: Game Boy Color, [Nintendo-Game-Boy-Color-FL.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Game-Boy-Color-FL.jpg), by Evan-Amos, Public domain.
+- **gbc**: In yellow, [Game-Boy-Color-Yellow.jpg](https://commons.wikimedia.org/wiki/File:Game-Boy-Color-Yellow.jpg), by Evan-Amos, Public domain.
+- **gbc**: With the Game Boy Camera, [Game Boy Camera 7996.jpg](https://commons.wikimedia.org/wiki/File:Game_Boy_Camera_7996.jpg), by Ashley Pomeroy, CC BY-SA 4.0.
+- **gbc**: Pikachu edition, [Game Boy Color Pikachu.jpg](https://commons.wikimedia.org/wiki/File:Game_Boy_Color_Pikachu.jpg), by Xabi Vazquez, CC BY 2.0.
+- **wii**: Wii Remote and Nunchuk, [Nintendo-Wii-Remote-wNunchuk.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Wii-Remote-wNunchuk.jpg), by Evan-Amos, Public domain.
+- **wii**: With MotionPlus, [Wii Remote with MotionPlus.jpg](https://commons.wikimedia.org/wiki/File:Wii_Remote_with_MotionPlus.jpg), by User:Kulshrax, Public domain.
+- **wii**: Classic Controller, [Wii-Classic-Controller-White.jpg](https://commons.wikimedia.org/wiki/File:Wii-Classic-Controller-White.jpg), by Evan-Amos, Public domain.
+- **wii**: Balance Board, [Wii Balance Board transparent.png](https://commons.wikimedia.org/wiki/File:Wii_Balance_Board_transparent.png), by Wii_Balance_Board.JPG: Dddeco
+- **wii**: Wii Zapper, [Wii Zapper.jpg](https://commons.wikimedia.org/wiki/File:Wii_Zapper.jpg), by Michael Greiner, CC BY-SA 3.0.
+- **wiiu**: GamePad, [Wii U Gamepad schwarz transparent.png](https://commons.wikimedia.org/wiki/File:Wii_U_Gamepad_schwarz_transparent.png), by Mariofan13, CC BY-SA 4.0.
+- **wiiu**: Pro Controller, [Nintendo-Wii-U-Pro-Controller-Black.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Wii-U-Pro-Controller-Black.jpg), by Evan-Amos, Public domain.
+- **wiiu**: Zelda edition, [Wii U "Wind Waker" edition GamePad and Console sitting together.jpg](https://commons.wikimedia.org/wiki/File:Wii_U_%22Wind_Waker%22_edition_GamePad_and_Console_sitting_together.jpg), by TzarN64, CC BY-SA 4.0.
+- **switch**: Joy-Con, [Nintendo Switch Joy-Con Controllers.png](https://commons.wikimedia.org/wiki/File:Nintendo_Switch_Joy-Con_Controllers.png), by Owen1962, Public domain.
+- **switch**: Pro Controller, [Nintendo-Switch-Pro-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Switch-Pro-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **switch**: Docked, [Nintendo-Switch-Console-Docked-wJoyConRB.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Switch-Console-Docked-wJoyConRB.jpg), by Evan-Amos, Public domain.
+- **switch**: OLED model, [Nintendo-Switch-OLED-Docked.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Switch-OLED-Docked.jpg), by https://commons.wikimedia.org/wiki/User:PantheraLeo1359531, CC BY 4.0.
+- **switch**: Switch Lite, [Nintendo Switch Lite Grey - 01.jpg](https://commons.wikimedia.org/wiki/File:Nintendo_Switch_Lite_Grey_-_01.jpg), by DYVER, CC BY-SA 4.0.
+- **nds**: DS Lite, [Nintendo-DS-Lite-Black-Open.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-DS-Lite-Black-Open.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **nds**: DSi, [Nintendo-DSi-Bl-Open.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-DSi-Bl-Open.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **nds**: DSi XL, [Nintendo-DSi-XL-Burg.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-DSi-XL-Burg.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **nds**: Rumble Pak, [Nintendo-DS Rumble Pack.png](https://commons.wikimedia.org/wiki/File:Nintendo-DS_Rumble_Pack.png), by No machine-readable author provided. Thaddius assumed (based on copyright claims).
+- **3ds**: 3DS XL, [Nintendo-3DS-XL-angled.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-3DS-XL-angled.jpg), by Evan-Amos, Public domain.
+- **3ds**: New Nintendo 3DS, [New Nintendo 3DS.png](https://commons.wikimedia.org/wiki/File:New_Nintendo_3DS.png), by Philip Terry Graham, CC0.
+- **3ds**: Nintendo 2DS, [Nintendo-2DS-angle.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-2DS-angle.jpg), by Evan-Amos, Public domain.
+- **3ds**: New 2DS XL, [New Nintendo 2DS LL (White & Orange).png](https://commons.wikimedia.org/wiki/File:New_Nintendo_2DS_LL_(White_%26_Orange).png), by Lemonix1004, CC0.
+- **3ds**: Circle Pad Pro, [3DS Circle Pad Pro.JPG](https://commons.wikimedia.org/wiki/File:3DS_Circle_Pad_Pro.JPG), by Umweltschützen, CC BY-SA 3.0.
+- **ps3**: Sixaxis, [PlayStation3-Sixaxis.jpg](https://commons.wikimedia.org/wiki/File:PlayStation3-Sixaxis.jpg), by Evan-Amos, Public domain.
+- **ps3**: Move, [Sony-PlayStation-Move-Controller.jpg](https://commons.wikimedia.org/wiki/File:Sony-PlayStation-Move-Controller.jpg), by Evan-Amos, Public domain.
+- **ps3**: Move Navigation, [Sony-PlayStation-Move-Navigator.jpg](https://commons.wikimedia.org/wiki/File:Sony-PlayStation-Move-Navigator.jpg), by Evan-Amos, Public domain.
+- **ps3**: PlayStation Eye, [Sony-PlayStation-3-Eye.jpg](https://commons.wikimedia.org/wiki/File:Sony-PlayStation-3-Eye.jpg), by Evan-Amos, Public domain.
+- **ps3**: Blu-ray remote, [Sony BD Remote Control for PlayStation 3 CECH-ZRC1J.jpg](https://commons.wikimedia.org/wiki/File:Sony_BD_Remote_Control_for_PlayStation_3_CECH-ZRC1J.jpg), by photo: Qurren (talk) Taken with Canon IXY 10S, CC BY-SA 3.0.
+- **ps4**: DualShock 4, [DualShock 4.jpg](https://commons.wikimedia.org/wiki/File:DualShock_4.jpg), by Evan-Amos, Public domain.
+- **ps4**: PlayStation VR, [Sony-PlayStation-4-PSVR-Headset-Mk1-FL.jpg](https://commons.wikimedia.org/wiki/File:Sony-PlayStation-4-PSVR-Headset-Mk1-FL.jpg), by Evan-Amos, Public domain.
+- **ps4**: PlayStation Camera, [Sony-PlayStation-4-Camera-Mk1.jpg](https://commons.wikimedia.org/wiki/File:Sony-PlayStation-4-Camera-Mk1.jpg), by Evan-Amos, Public domain.
+- **psp**: PSP Go, [PSP-Go-FL-Open.jpg](https://commons.wikimedia.org/wiki/File:PSP-Go-FL-Open.jpg), by Evan-Amos, Public domain.
+- **psp**: PSP-2000, [PSP-2000.jpg](https://commons.wikimedia.org/wiki/File:PSP-2000.jpg), by Evan-Amos, Public domain.
+- **psp**: PSP-3000, [PSP-3000-Silver.jpg](https://commons.wikimedia.org/wiki/File:PSP-3000-Silver.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **psp**: UMD, [Universal Media Disc, an optical disc medium developed by Sony for use on the PlayStation Portable.jpg](https://commons.wikimedia.org/wiki/File:Universal_Media_Disc,_an_optical_disc_medium_developed_by_Sony_for_use_on_the_PlayStation_Portable.jpg), by ja:User:Takobou, CC BY-SA 3.0.
+- **psvita**: Slim model, [PlayStation-Vita-2001-FL.jpg](https://commons.wikimedia.org/wiki/File:PlayStation-Vita-2001-FL.jpg), by Evan-Amos, Public domain.
+- **psvita**: PlayStation TV, [PlayStation-TV-BL.jpg](https://commons.wikimedia.org/wiki/File:PlayStation-TV-BL.jpg), by Evan-Amos, Public domain.
+- **psvita**: Memory card, [Sony Playstation Vita Memory Card 16GB.jpg](https://commons.wikimedia.org/wiki/File:Sony_Playstation_Vita_Memory_Card_16GB.jpg), by Xmagic5589, CC0.
+- **xbox**: Duke controller, [Xbox-Controller-Duke-FL.jpg](https://commons.wikimedia.org/wiki/File:Xbox-Controller-Duke-FL.jpg), by Evan-Amos, Public domain.
+- **xbox**: Controller S, [Xbox-Controller-S-FR.jpg](https://commons.wikimedia.org/wiki/File:Xbox-Controller-S-FR.jpg), by Evan-Amos, Public domain.
+- **xbox**: DVD remote, [Xbox-Remote-wReceiver.jpg](https://commons.wikimedia.org/wiki/File:Xbox-Remote-wReceiver.jpg), by Evan-Amos, Public domain.
+- **xbox360**: Wireless controller, [Xbox-360-Wireless-Controller-White.jpg](https://commons.wikimedia.org/wiki/File:Xbox-360-Wireless-Controller-White.jpg), by Evan-Amos, Public domain.
+- **xbox360**: Kinect, [Xbox-360-Kinect-Standalone.png](https://commons.wikimedia.org/wiki/File:Xbox-360-Kinect-Standalone.png), by Evan-Amos, Public domain.
+- **xbox360**: HD DVD drive, [Microsoft-Xbox-360-HD-DVD-Drive-Front.jpg](https://commons.wikimedia.org/wiki/File:Microsoft-Xbox-360-HD-DVD-Drive-Front.jpg), by Evan-Amos, Public domain.
+- **xbox360**: Big Button pads, [Big button remotes.JPG](https://commons.wikimedia.org/wiki/File:Big_button_remotes.JPG), by Deathtrap3000, CC BY-SA 3.0.
+- **xbox360**: Xbox 360 S, [Xbox-360S-Console-Set.jpg](https://commons.wikimedia.org/wiki/File:Xbox-360S-Console-Set.jpg), by Evan-Amos, Public domain.
+- **ngp**: Its successor, the Color, [Neo-Geo-Pocket-Color-Anthra-Left.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-Pocket-Color-Anthra-Left.jpg), by Evan-Amos, Public domain.
+- **ngp**: Link cable, [NeoGeoPocketLinkCable.jpg](https://commons.wikimedia.org/wiki/File:NeoGeoPocketLinkCable.jpg), by Malcohol, CC BY-SA 3.0.
+- **ngpc**: In blue, [Neo-Geo-Pocket-Color-Blue-Left.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-Pocket-Color-Blue-Left.jpg), by Evan-Amos, Public domain.
+- **ngpc**: Carbon, [Neo-Geo-Pocket-Color-Anthra-Left.jpg](https://commons.wikimedia.org/wiki/File:Neo-Geo-Pocket-Color-Anthra-Left.jpg), by Evan-Amos, Public domain.
+- **ngpc**: Platinum silver, [Neo-Geo Pocket Color.JPG](https://commons.wikimedia.org/wiki/File:Neo-Geo_Pocket_Color.JPG), by Mbt20257, CC BY-SA 3.0.
+- **ngpc**: Link cable, [NeoGeoPocketLinkCable.jpg](https://commons.wikimedia.org/wiki/File:NeoGeoPocketLinkCable.jpg), by Malcohol, CC BY-SA 3.0.
+- **wswan**: WonderSwan Color, [WonderSwan-Color-Blue-Left.jpg](https://commons.wikimedia.org/wiki/File:WonderSwan-Color-Blue-Left.jpg), by Evan-Amos, Public domain.
+- **wswan**: SwanCrystal, [SwanCrystal-Wine-Left.jpg](https://commons.wikimedia.org/wiki/File:SwanCrystal-Wine-Left.jpg), by Evan-Amos, Public domain.
+- **wswanc**: The first WonderSwan, [WonderSwan-Black-Left.jpg](https://commons.wikimedia.org/wiki/File:WonderSwan-Black-Left.jpg), by Evan-Amos, Public domain.
+- **wswanc**: SwanCrystal, [SwanCrystal-Wine-Left.jpg](https://commons.wikimedia.org/wiki/File:SwanCrystal-Wine-Left.jpg), by Evan-Amos, Public domain.
+- **wswanc**: Its battery, [WonderSwan-Color-Back-wBattery.jpg](https://commons.wikimedia.org/wiki/File:WonderSwan-Color-Back-wBattery.jpg), by Evan-Amos, Public domain.
+- **fds**: On a Famicom, [Nintendo-Famicom-Disk-System.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Famicom-Disk-System.jpg), by Evan-Amos, Public domain.
+- **fds**: Disk drive, [Nintendo-Famicom-Disk-System-Deck-01.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Famicom-Disk-System-Deck-01.jpg), by Evan-Amos, Public domain.
+- **fds**: Disk card, [Nintendo-Famicom-Disk-System-Floppy.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Famicom-Disk-System-Floppy.jpg), by Evan-Amos, Public domain.
+- **fds**: RAM Adapter, [Nintendo-Famicom-Disk-System-RAM-Adapter-3.jpg](https://commons.wikimedia.org/wiki/File:Nintendo-Famicom-Disk-System-RAM-Adapter-3.jpg), by Evan-Amos, Public domain.
+- **supergrafx**: Controller, [NEC-PC-Engine-SuperGrafx-Controller.jpg](https://commons.wikimedia.org/wiki/File:NEC-PC-Engine-SuperGrafx-Controller.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **supergrafx**: With the CD-ROM², [PCEngine SuperGrafx with SuperCDRom2.jpg](https://commons.wikimedia.org/wiki/File:PCEngine_SuperGrafx_with_SuperCDRom2.jpg), by PiaCarrot, CC BY-SA 3.0.
+- **odyssey2**: Videopac G7200, [Videopac G7200.jpg](https://commons.wikimedia.org/wiki/File:Videopac_G7200.jpg), by Bart Johannes Bernardus Dekker, CC BY-SA 4.0.
+- **odyssey2**: Videopac cartridge, [Philips Videopac race cartridge N.1.jpg](https://commons.wikimedia.org/wiki/File:Philips_Videopac_race_cartridge_N.1.jpg), by Studio Alijn, CC0.
+- **cdi**: Paddle controller, [Philips-CD-i-Paddle-Controller.jpg](https://commons.wikimedia.org/wiki/File:Philips-CD-i-Paddle-Controller.jpg), by Evan-Amos, Public domain.
+- **cdi**: Gamepad, [Philips-CDi-Controller-Gamepad.jpg](https://commons.wikimedia.org/wiki/File:Philips-CDi-Controller-Gamepad.jpg), by Evan-Amos, Public domain.
+- **cdi**: Roller controller, [Philips-CDi-Controller-Rollerball.jpg](https://commons.wikimedia.org/wiki/File:Philips-CDi-Controller-Rollerball.jpg), by Evan-Amos, Public domain.
+- **cdi**: Digital Video Cartridge, [Philips-CDi-Digital-Video-Cartridge-1.jpg](https://commons.wikimedia.org/wiki/File:Philips-CDi-Digital-Video-Cartridge-1.jpg), by Evan-Amos, Public domain.
+- **amiga500**: Amiga 500 with its monitor, [Amiga500 system.jpg](https://commons.wikimedia.org/wiki/File:Amiga500_system.jpg), by Bill Bertram, CC BY-SA 2.5.
+- **amiga500**: Mouse, [Commodore Amiga Mouse.jpg](https://commons.wikimedia.org/wiki/File:Commodore_Amiga_Mouse.jpg), by moparx, CC BY-SA 2.0.
+- **amiga500**: Amiga 500 Plus, [Amiga 500 Plus (transparent background) (no shadow).png](https://commons.wikimedia.org/wiki/File:Amiga_500_Plus_(transparent_background)_(no_shadow).png), by Sernot at it.wikipedia (Non-creditable modifications as described below made by Ubcule, Public domain.
+- **amiga1200**: With mouse and floppy drive, [Amiga 1200 with mouse, drives.jpg](https://commons.wikimedia.org/wiki/File:Amiga_1200_with_mouse,_drives.jpg), by No machine-readable author provided. Boffy b assumed (based on copyright claims)., CC BY-SA 3.0.
+- **amigacd32**: Controller, [Amiga-CD32-Controller-L.jpg](https://commons.wikimedia.org/wiki/File:Amiga-CD32-Controller-L.jpg), by Evan-Amos, Public domain.
+- **amigacd32**: Lid open, [Amiga-CD32-CD-Flap-Open.jpg](https://commons.wikimedia.org/wiki/File:Amiga-CD32-CD-Flap-Open.jpg), by Evan-Amos, Public domain.
+- **amigacd32**: Console, [Amiga-CD32-HFR.jpg](https://commons.wikimedia.org/wiki/File:Amiga-CD32-HFR.jpg), by Evan-Amos, Public domain.
+- **amigacdtv**: Remote, [CDTV Remote.jpg](https://commons.wikimedia.org/wiki/File:CDTV_Remote.jpg), by Mia Jaap, CC0.
+- **amigacdtv**: Keyboard, [Commodore CDTV - keyboard top.JPG](https://commons.wikimedia.org/wiki/File:Commodore_CDTV_-_keyboard_top.JPG), by snuci, Public domain.
+- **amstradcpc**: CPC 6128 with monitor, [Amstrad CPC 6128.jpg](https://commons.wikimedia.org/wiki/File:Amstrad_CPC_6128.jpg), by NaSH, CC BY-SA 3.0.
+- **amstradcpc**: CPC 6128, [AMSTRAD CPC 6128.jpg](https://commons.wikimedia.org/wiki/File:AMSTRAD_CPC_6128.jpg), by XxCHOYINxX, CC BY-SA 3.0.
+- **amstradcpc**: GX4000, [Amstrad-GX4000-Console-FL.jpg](https://commons.wikimedia.org/wiki/File:Amstrad-GX4000-Console-FL.jpg), by Evan-Amos, Public domain.
+- **amstradcpc**: GX4000 pad, [Amstrad-GX4000-Controller-FL.jpg](https://commons.wikimedia.org/wiki/File:Amstrad-GX4000-Controller-FL.jpg), by Evan-Amos, Public domain.
+- **apple2**: Disk II drives, [Disk II.jpg](https://commons.wikimedia.org/wiki/File:Disk_II.jpg), by unknown, CC BY-SA 3.0.
+- **apple2**: Paddles, [Apple2paddles.jpg](https://commons.wikimedia.org/wiki/File:Apple2paddles.jpg), by Florian Schäffer, CC BY-SA 4.0.
+- **apple2**: Apple IIe, [Apple Platinum IIe.jpg](https://commons.wikimedia.org/wiki/File:Apple_Platinum_IIe.jpg), by Bilby, CC BY 3.0.
+- **apple2**: Apple IIc with monitor, [Apple IIc with monitor.jpg](https://commons.wikimedia.org/wiki/File:Apple_IIc_with_monitor.jpg), by Bilby, CC BY 3.0.
+- **apple2**: Apple IIc Plus, [Apple IIc Plus (side).jpg](https://commons.wikimedia.org/wiki/File:Apple_IIc_Plus_(side).jpg), by Users SCEhardt, Apple2gs on en.wikipedia, CC BY-SA 3.0.
+- **apple2gs**: Apple IIGS, [Apple IIgs 001 (transparent background).png](https://commons.wikimedia.org/wiki/File:Apple_IIgs_001_(transparent_background).png), by Cbmeeks (Modifications as described below made by Ubcule, Public domain.
+- **apple2gs**: ADB mouse, [Apple Desktop Bus Mouse -- side.jpg](https://commons.wikimedia.org/wiki/File:Apple_Desktop_Bus_Mouse_--_side.jpg), by Daniel beardsmore, Public domain.
+- **apple2gs**: Keyboard, [Apple IIgs Keyboard B.jpg](https://commons.wikimedia.org/wiki/File:Apple_IIgs_Keyboard_B.jpg), by unknown, CC BY-SA 3.0.
+- **msx1**: Sony HitBit HB-10P, [Sony HitBit HB-10P (White Background).jpg](https://commons.wikimedia.org/wiki/File:Sony_HitBit_HB-10P_(White_Background).jpg), by Sony_hitbit_10p.jpg: Doppelgangland
+derivative work: User:Ubcule, Public domain.
+- **msx1**: Philips VG-8020, [MSX Philips VG8020.jpg](https://commons.wikimedia.org/wiki/File:MSX_Philips_VG8020.jpg), by No machine-readable author provided. SanderK assumed (based on copyright claims)., Public domain.
+- **msx1**: Talent DPC-200, [Talent MSX (restore).jpg](https://commons.wikimedia.org/wiki/File:Talent_MSX_(restore).jpg), by Australposta, CC BY-SA 4.0.
+- **msx1**: Arcade Turbo joystick, [The Arcade Turbo Joystick Transparant.png](https://commons.wikimedia.org/wiki/File:The_Arcade_Turbo_Joystick_Transparant.png), by No machine-readable author provided. SdeVries~commonswiki assumed (based on copyright claims)., Public domain.
+- **msx2**: Panasonic FS-A1WX, [MSX FS-A1WX.JPG](https://commons.wikimedia.org/wiki/File:MSX_FS-A1WX.JPG), by No machine-readable author provided. Xxmasaxx~commonswiki assumed (based on copyright claims)., CC BY-SA 3.0.
+- **msx2**: Panasonic FS-A1, [Panasonic FS-A1 20180519a.jpg](https://commons.wikimedia.org/wiki/File:Panasonic_FS-A1_20180519a.jpg), by Solomon203, CC BY-SA 4.0.
+- **msx2+**: Panasonic FS-A1WSX, [Fs-a1wsx msx2+.jpg](https://commons.wikimedia.org/wiki/File:Fs-a1wsx_msx2%2B.jpg), by Florian Schäffer, CC BY-SA 4.0.
+- **zx81**: ZX81, [ZX81-IMG 0307 A.JPG](https://commons.wikimedia.org/wiki/File:ZX81-IMG_0307_A.JPG), by Rama, CC BY-SA 2.0 fr.
+- **zx81**: ZX Printer, [Sinclair.zx.thermal.printer.jpg](https://commons.wikimedia.org/wiki/File:Sinclair.zx.thermal.printer.jpg), by Jbattersby, Public domain.
+- **zx81**: Timex Sinclair 1000, [Timex Sinclair 1000 FL.jpg](https://commons.wikimedia.org/wiki/File:Timex_Sinclair_1000_FL.jpg), by MarcoTangerino, Public domain.
+- **bbcmicro**: BBC Micro Model B, [BBC Micro Front Restored.jpg](https://commons.wikimedia.org/wiki/File:BBC_Micro_Front_Restored.jpg), by BBC_Micro.jpeg: Stuart Brady
+- **bbcmicro**: BBC Master, [Acorn BBC Master Series Transparent.png](https://commons.wikimedia.org/wiki/File:Acorn_BBC_Master_Series_Transparent.png), by Acorn_front.jpg: Dejdżer / Digga (at Flickr via Wikimedia Commons)
+- **electron**: Acorn Electron, [Acorn Electron 2.jpg](https://commons.wikimedia.org/wiki/File:Acorn_Electron_2.jpg), by derivative work: CarbonCaribou (talk)
+- **electron**: With the Plus 1, [Acorn Electron and Plus 1.jpg](https://commons.wikimedia.org/wiki/File:Acorn_Electron_and_Plus_1.jpg), by Bilby, CC BY 3.0.
+- **c20**: VIC-20, [Commodore-VIC-20-FL.png](https://commons.wikimedia.org/wiki/File:Commodore-VIC-20-FL.png), by OliverGalvin, CC0.
+- **c20**: Datasette, [Commodore-Datasette-C2N-Mk1-Front.jpg](https://commons.wikimedia.org/wiki/File:Commodore-Datasette-C2N-Mk1-Front.jpg), by Evan-Amos, Public domain.
+- **c20**: RF adapter, [Commodore-VIC-20-Video-RF-Adapter.jpg](https://commons.wikimedia.org/wiki/File:Commodore-VIC-20-Video-RF-Adapter.jpg), by Evan-Amos, Public domain.
+- **c20**: 16K RAM cartridge, [4851 - VIC-1111 16K RAM For VIC-20.JPG](https://commons.wikimedia.org/wiki/File:4851_-_VIC-1111_16K_RAM_For_VIC-20.JPG), by Sven.petersen, CC BY 3.0.
+- **c128**: Commodore 128, [Commodore-128.jpg](https://commons.wikimedia.org/wiki/File:Commodore-128.jpg), by Evan-Amos, CC BY-SA 3.0.
+- **c128**: 1084 monitor, [Commodore1084 first version front.jpg](https://commons.wikimedia.org/wiki/File:Commodore1084_first_version_front.jpg), by Gestumblindi, CC BY-SA 4.0.
+- **c128**: 1571 disk drive, [Commodore 1571.png](https://commons.wikimedia.org/wiki/File:Commodore_1571.png), by Crotalus horridus at English Wikipedia, Public domain.
+- **c128**: Commodore 128D, [Commodore 128D-IMG 1726.jpg](https://commons.wikimedia.org/wiki/File:Commodore_128D-IMG_1726.jpg), by Rama &amp; Musée Bolo, CC BY-SA 2.0 fr.
+- **cplus4**: Commodore 16, [Commodore 16 002f.jpg](https://commons.wikimedia.org/wiki/File:Commodore_16_002f.jpg), by derivative work: Ubcule (talk)
+- **cplus4**: Commodore 116, [Commodore 116 Conté (transparent bg) (no shadow).png](https://commons.wikimedia.org/wiki/File:Commodore_116_Cont%C3%A9_(transparent_bg)_(no_shadow).png), by Thomas Conté, CC BY-SA 2.0.
+- **cplus4**: 1551 disk drive, [Commodore 1551 front.jpg](https://commons.wikimedia.org/wiki/File:Commodore_1551_front.jpg), by Jumbo1435, CC BY-SA 3.0.
+- **cplus4**: 116 with datasette and joystick, [Commodore 116 system with Datassette 1531 and joystick.jpg](https://commons.wikimedia.org/wiki/File:Commodore_116_system_with_Datassette_1531_and_joystick.jpg), by Thomas Conté, CC BY-SA 2.0.
+- **pet**: PET 2001, [Commodore 2001 Series-IMG 0448b.png](https://commons.wikimedia.org/wiki/File:Commodore_2001_Series-IMG_0448b.png), by OliverGalvin, CC BY-SA 2.0 fr.
+- **pet**: CBM 4040 disk drive, [Commodore4040.jpg](https://commons.wikimedia.org/wiki/File:Commodore4040.jpg), by w:user:Malcolm Farmer, Public domain.
+- **pet**: CBM 4032, [Commodore 4032.jpg](https://commons.wikimedia.org/wiki/File:Commodore_4032.jpg), by unknown, CC BY-SA 3.0.
+- **x68000**: X68030 and X68000 EXPERT, [Sharp X68030 and X68000 Expert.jpg](https://commons.wikimedia.org/wiki/File:Sharp_X68030_and_X68000_Expert.jpg), by Manupkp, CC BY-SA 4.0.
+- **x68000**: EXPERT II with monitor, [X68000 EXPERT2.JPG](https://commons.wikimedia.org/wiki/File:X68000_EXPERT2.JPG), by Mocchy, Public domain.
+- **pc88**: Its predecessor, the PC-8001, [NEC PC-8001.png](https://commons.wikimedia.org/wiki/File:NEC_PC-8001.png), by unknown, CC0.
+- **pc88**: PC-8801, [NEC PC-8801 with keyboard.jpg](https://commons.wikimedia.org/wiki/File:NEC_PC-8801_with_keyboard.jpg), by phreakindee, CC0.
+- **pc88**: 8-inch floppy drive, [NEC PC-8881 8-inch Floppy Disk Drive.jpg](https://commons.wikimedia.org/wiki/File:NEC_PC-8881_8-inch_Floppy_Disk_Drive.jpg), by htomari, CC BY-SA 2.0.
+- **pc98**: Keyboard, [NEC PC-9800 series keyboard.jpg](https://commons.wikimedia.org/wiki/File:NEC_PC-9800_series_keyboard.jpg), by Darklanlan, CC BY 4.0.
+- **pc98**: PC-9821Ap, [NEC PC-9821Ap 5-inch FDD model.jpg](https://commons.wikimedia.org/wiki/File:NEC_PC-9821Ap_5-inch_FDD_model.jpg), by htomari, CC BY-SA 2.0.
+- **pc98**: PC-9801RX, [NEC PC-9801 RX Personal Computer.jpg](https://commons.wikimedia.org/wiki/File:NEC_PC-9801_RX_Personal_Computer.jpg), by Flickr user: htomari, CC BY 2.0.
+- **fmtowns**: FM Towns Marty, [FM-Towns-Marty-Console-Set.png](https://commons.wikimedia.org/wiki/File:FM-Towns-Marty-Console-Set.png), by Evan-Amos, Public domain.
+- **fmtowns**: Marty pad, [FM-Towns-Marty-Controller-L.jpg](https://commons.wikimedia.org/wiki/File:FM-Towns-Marty-Controller-L.jpg), by Evan-Amos, Public domain.
+- **fmtowns**: FM Towns II, [FMTOWNS 2F.jpg](https://commons.wikimedia.org/wiki/File:FMTOWNS_2F.jpg), by Picopon, CC BY-SA 3.0.
+- **fm7**: FM-NEW7, [FM-New7, May 2013 B.jpg](https://commons.wikimedia.org/wiki/File:FM-New7,_May_2013_B.jpg), by JCCyC, CC BY-SA 3.0.
+- **dos**: IBM PC 5150, [IBM PC-IMG 7271.jpg](https://commons.wikimedia.org/wiki/File:IBM_PC-IMG_7271.jpg), by Rama &amp; Musée Bolo, CC BY-SA 2.0 fr.
+- **dos**: Sound Blaster 16, [Sound Blaster 16.JPG](https://commons.wikimedia.org/wiki/File:Sound_Blaster_16.JPG), by No machine-readable author provided. Rosco~commonswiki assumed (based on copyright claims)., CC BY-SA 2.5.
+- **dos**: AdLib card, [AdLib Music Synthesizer Card.jpg](https://commons.wikimedia.org/wiki/File:AdLib_Music_Synthesizer_Card.jpg), by Austriacus, CC0.
+- **dos**: Gravis PC GamePad, [Gravis pc gamepad.jpg](https://commons.wikimedia.org/wiki/File:Gravis_pc_gamepad.jpg), by Tosiabunio, CC BY 3.0.
+- **dos**: Gravis Destroyer, [Gravis Destroyer PC gamepad c 2000 (iii).jpg](https://commons.wikimedia.org/wiki/File:Gravis_Destroyer_PC_gamepad_c_2000_(iii).jpg), by Multicherry, CC BY-SA 4.0.
+- **macintosh**: Macintosh 128K, [Macintosh 128k transparency.png](https://commons.wikimedia.org/wiki/File:Macintosh_128k_transparency.png), by w:User:Grm wnr, CC BY-SA 3.0.
+- **macintosh**: Macintosh Plus, [Apple Macintosh Plus white background.jpg](https://commons.wikimedia.org/wiki/File:Apple_Macintosh_Plus_white_background.jpg), by Felix Winkelnkemper, CC BY 2.0.
+- **macintosh**: Macintosh Classic, [Macintosh classic.jpg](https://commons.wikimedia.org/wiki/File:Macintosh_classic.jpg), by unknown, CC BY-SA 3.0.
+- **macintosh**: Mouse, [Macintosh 128K - Macintosh mouse (3655725631).jpg](https://commons.wikimedia.org/wiki/File:Macintosh_128K_-_Macintosh_mouse_(3655725631).jpg), by Marcin Wichary from San Francisco, U.S.A., CC BY 2.0.
+- **coco**: Color Computer, [TRS-80 Color Computer 1 front right.jpg](https://commons.wikimedia.org/wiki/File:TRS-80_Color_Computer_1_front_right.jpg), by Bilby, CC BY 3.0.
+- **coco**: Color Computer 2, [TRS-80 Color Computer 2 (PAL) 4x3.jpg](https://commons.wikimedia.org/wiki/File:TRS-80_Color_Computer_2_(PAL)_4x3.jpg), by Bilby, CC BY 3.0.
+- **coco**: MC-10, [TRS-80 MC-10 Microcomputer.jpg](https://commons.wikimedia.org/wiki/File:TRS-80_MC-10_Microcomputer.jpg), by unknown, CC BY-SA 3.0.
+- **dragon64**: Dragon 32, [Dragon 32.jpg](https://commons.wikimedia.org/wiki/File:Dragon_32.jpg), by Liftarn, Editing by: Bill Bertram  (Pixel8), CC BY-SA 2.0.
+- **dragon64**: Dragon 64, [Dragon 64 top view black sticker.jpg](https://commons.wikimedia.org/wiki/File:Dragon_64_top_view_black_sticker.jpg), by Miguel Durán, CC BY-SA 2.5.
+- **ti99**: TI-99/4A, [TI-99 4A.JPG](https://commons.wikimedia.org/wiki/File:TI-99_4A.JPG), by No machine-readable author provided. SanderK assumed (based on copyright claims)., Public domain.
+- **ti99**: Joysticks, [TI99-4A Joysticks.jpg](https://commons.wikimedia.org/wiki/File:TI99-4A_Joysticks.jpg), by Ron Reuter, CC BY-SA 3.0.
+- **trs80**: Model I, [Radio Shack Tandy TRS-80 Model I Microcomputer.JPG](https://commons.wikimedia.org/wiki/File:Radio_Shack_Tandy_TRS-80_Model_I_Microcomputer.JPG), by Binarysequence, CC BY-SA 4.0.
+- **trs80**: Model III, [TRS-80 Model 3 01.jpg](https://commons.wikimedia.org/wiki/File:TRS-80_Model_3_01.jpg), by Bilby, CC BY 3.0.
+- **trs80**: Model 4, [Radio Shack TRS-80 Model 4 no background.png](https://commons.wikimedia.org/wiki/File:Radio_Shack_TRS-80_Model_4_no_background.png), by 4throck, CC BY-SA 2.0 fr.
+- **trs80**: Model 100, [Radio Shack TRS-80 Model 100.jpg](https://commons.wikimedia.org/wiki/File:Radio_Shack_TRS-80_Model_100.jpg), by NapoliRoma, Public domain.
+- **oricatmos**: Oric-1, [Oric1.jpg](https://commons.wikimedia.org/wiki/File:Oric1.jpg), by unknown, CC BY-SA 3.0.
+- **oricatmos**: Oric Atmos, [ORIC ATMOS 48k - PERSPECTIVE HD.png](https://commons.wikimedia.org/wiki/File:ORIC_ATMOS_48k_-_PERSPECTIVE_HD.png), by Mathieu CHARREYRE (PhotoMat) – Président-fondateur de la WDA, CC BY-SA 4.0.
+- **oricatmos**: Microdisc drive, [Microdisc.jpg](https://commons.wikimedia.org/wiki/File:Microdisc.jpg), by ORIC DISC DRIVE, CC BY-SA 3.0.
+- **samcoupe**: SAM Coupé, [SAM Coupé (white bg and shadow).jpg](https://commons.wikimedia.org/wiki/File:SAM_Coup%C3%A9_(white_bg_and_shadow).jpg), by Simon Owen, CC BY-SA 3.0.
+- **samcoupe**: In its box, [SAM Coupé - box.jpg](https://commons.wikimedia.org/wiki/File:SAM_Coup%C3%A9_-_box.jpg), by Simon Owen, CC BY-SA 3.0.
+- **thomson**: MO5, [Thomson MO5-CnAM 437370-IMG 5380-white.jpg](https://commons.wikimedia.org/wiki/File:Thomson_MO5-CnAM_437370-IMG_5380-white.jpg), by Rama, CC BY-SA 3.0 fr.
+- **thomson**: MO5 tape recorder, [MO5 Tape reader.JPG](https://commons.wikimedia.org/wiki/File:MO5_Tape_reader.JPG), by Deep silence, CC BY-SA 3.0.
+- **thomson**: TO7, [Thomson TO7 Thomas Conté no background.png](https://commons.wikimedia.org/wiki/File:Thomson_TO7_Thomas_Cont%C3%A9_no_background.png), by 4throck, Thomas Conté, CC0.
+- **thomson**: MO6, [MO6.jpg](https://commons.wikimedia.org/wiki/File:MO6.jpg), by Philippe Dubois, CC0.
+- **spectravideo**: SV-318, [Spectravideo SV-318.jpg](https://commons.wikimedia.org/wiki/File:Spectravideo_SV-318.jpg), by Björn Elenfors, CC BY-SA 3.0.
+- **spectravideo**: Tape drive, [Spectravideo SV 904 tape drive.jpg](https://commons.wikimedia.org/wiki/File:Spectravideo_SV_904_tape_drive.jpg), by Knurrikowski, CC BY-SA 4.0.
+- **spectravideo**: Disk drive, [Spectravideo SV 902 disc drive.jpg](https://commons.wikimedia.org/wiki/File:Spectravideo_SV_902_disc_drive.jpg), by Knurrikowski, CC BY-SA 4.0.
+- **spectravideo**: SV-328, [SV328.jpg](https://commons.wikimedia.org/wiki/File:SV328.jpg), by Armigo, CC0.
+- **mz700**: MZ-700, [Sharp MZ-700.jpg](https://commons.wikimedia.org/wiki/File:Sharp_MZ-700.jpg), by Bilby, CC BY 3.0.
+- **mz700**: MZ-80K, [Sharp MZ-80K computer.jpg](https://commons.wikimedia.org/wiki/File:Sharp_MZ-80K_computer.jpg), by Wolfgang Stief, CC0.
+- **sc3000**: SC-3000, [Sega SC-3000 wb (shadow removed version).jpg](https://commons.wikimedia.org/wiki/File:Sega_SC-3000_wb_(shadow_removed_version).jpg), by Author:- Bilby (Cutout and shadow removal by Xiejunmingsa at [1]), CC BY 3.0.
+- **sc3000**: Its console twin, the SG-1000, [Sega-SG-1000-Console-Set.png](https://commons.wikimedia.org/wiki/File:Sega-SG-1000-Console-Set.png), by Evan-Amos, CC BY-SA 3.0.
+- **sc3000**: Cartridge, [Sega SC-3000 and SG-1000 cartridge.jpg](https://commons.wikimedia.org/wiki/File:Sega_SC-3000_and_SG-1000_cartridge.jpg), by Matthew Paul Argall, CC0.

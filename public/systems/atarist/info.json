@@ -42,7 +42,15 @@
     "It was nicknamed the \"Jackintosh\" after Jack Tramiel and its Mac-like desktop.",
     "Built-in MIDI ports made it a common studio computer, and Steinberg's Cubase first appeared on it.",
     "Its desktop was GEM, licensed from Digital Research.",
-    "The 1989 STE update added a blitter, a 4,096-colour palette and stereo DMA sound."
+    "The 1989 STE update added a blitter, a 4,096-colour palette and stereo DMA sound.",
+    "It launched in 1985.",
+    "Its processor is a Motorola 68000 at 8 MHz.",
+    "Its palette has 512 colours, 16 at once in its lowest resolution.",
+    "Its sharp black-and-white monitor at 640 × 400 suited desktop publishing and music.",
+    "Its sound chip is a Yamaha YM2149.",
+    "Dungeon Master first came out on it, in 1987.",
+    "TOS, its operating system, stands for The Operating System.",
+    "The Falcon030 of 1992 was its successor."
   ],
   "unverified": [],
   "bestsellers": ["Dungeon Master", "Bomb Jack", "Death Sword"],

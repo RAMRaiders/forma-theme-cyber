@@ -43,7 +43,8 @@
     "It can show 64 sprites, but only 8 on one line: beyond that they flicker.",
     "In Japan, Disk System games were rewritten onto the same floppy disks at shop kiosks.",
     "Nintendo allowed each licensee five NES games a year; Konami set up Ultra Games to release more.",
-    "Famicom is short for Family Computer, the console's name in Japan."
+    "Famicom is short for Family Computer, the console's name in Japan.",
+    "Its processor, the Ricoh 2A03, is a 6502 with the decimal mode left out and a sound generator added."
   ],
   "unverified": [],
   "bestsellers": ["Super Mario Bros.", "Duck Hunt", "Super Mario Bros. 3"],

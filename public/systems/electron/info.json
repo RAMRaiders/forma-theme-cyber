@@ -1,7 +1,12 @@
 {
   "curiosities": [
     "It is a cheaper, cut-down BBC Micro, with most of its circuitry in a single custom ULA chip.",
-    "Elite and Repton were among its best-loved games."
+    "Elite and Repton were among its best-loved games.",
+    "It launched in 1983.",
+    "It has 32 KB of memory.",
+    "Its 6502 slows down while the screen uses the memory, so it runs slower than the BBC Micro.",
+    "It has no teletext Mode 7.",
+    "Acorn made too many for Christmas 1984, and the surplus was sold off cheaply."
   ],
   "unverified": [],
   "bestsellers": ["Elite", "Chuckie Egg", "Repton"],
