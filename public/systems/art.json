@@ -152,6 +152,28 @@
         "file": "gear-3.webp",
         "name": "Amiga 500 Plus"
       }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "CU Amiga #23"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Amiga Computing #43"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Amiga Action #21"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Amiga Computing #75"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Amiga Action #68"
+      }
     ]
   },
   "amigacd32": {
@@ -179,6 +201,28 @@
         "file": "gear-3.webp",
         "name": "Console"
       }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Amiga CD32 Gamer #1"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Amiga CD32 #2"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Amiga CD32 Gamer #11"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Amiga CD Format"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Power Play 11/94"
+      }
     ]
   },
   "amigacdtv": {
@@ -198,6 +242,24 @@
       {
         "file": "gear-2.webp",
         "name": "Keyboard"
+      }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Amiga CD! #1"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "CU Amiga 6/91"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Amiga Computing #55"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Amazing Computing 7/91"
       }
     ]
   },
@@ -228,6 +290,10 @@
       {
         "file": "mag-4.webp",
         "title": "Amstrad Action #64"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Amtix! #15"
       }
     ],
     "peripherals": [
@@ -291,6 +357,28 @@
         "file": "gear-5.webp",
         "name": "Apple IIc Plus"
       }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "inCider 11/83"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "inCider 11/86"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Softalk 5/83"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Softalk 4/84"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Softalk 4/82"
+      }
     ]
   },
   "apple2gs": {
@@ -315,6 +403,28 @@
       {
         "file": "gear-3.webp",
         "name": "Keyboard"
+      }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "BYTE 10/86"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "II Computing 10/86"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "II Computing #1"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "inCider 12/86"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "II Computing 4/86"
       }
     ]
   },
@@ -646,6 +756,28 @@
         "file": "gear-2.webp",
         "name": "BBC Master"
       }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Acorn User #29"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Acorn User #30"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Acorn User #117"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Acorn User 1993"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Acorn User #159"
+      }
     ]
   },
   "beena": {
@@ -703,6 +835,24 @@
         "file": "gear-4.webp",
         "name": "Commodore 128D"
       }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Inside the 128"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Twin Cities 128 #26"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Twin Cities 128/64 #36"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Twin Cities 128 #21"
+      }
     ]
   },
   "c20": {
@@ -730,6 +880,14 @@
       {
         "file": "mag-3.webp",
         "title": "VIC-20 Reference Guide"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Compute!'s Gazette #1"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Compute! #1"
       }
     ],
     "peripherals": [
@@ -959,6 +1117,28 @@
         "file": "gear-3.webp",
         "name": "MC-10"
       }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "The Rainbow 12/83"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "The Rainbow 12/85"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "The Rainbow 2/84"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "The Rainbow 2/88"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "The Rainbow 1/86"
+      }
     ]
   },
   "colecovision": {
@@ -1059,6 +1239,14 @@
       {
         "file": "mag-3.webp",
         "title": "C16-MSX"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Commodore Computing 11/86"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Your Commodore #34"
       }
     ],
     "peripherals": [
@@ -1164,6 +1352,28 @@
         "file": "gear-5.webp",
         "name": "Gravis Destroyer"
       }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Computer Gaming World #113"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Computer Gaming World #125"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Computer Gaming World #148"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "PC Gamer #81"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "PC Zone #65"
+      }
     ]
   },
   "dragon64": {
@@ -1183,6 +1393,16 @@
       {
         "file": "gear-2.webp",
         "name": "Dragon 64"
+      }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Dragon User #8"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Dragon User"
       }
     ]
   },
@@ -1310,6 +1530,28 @@
       {
         "file": "gear-2.webp",
         "name": "With the Plus 1"
+      }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Electron User 8/84"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Electron User vol. 2"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Electron User vol. 3"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Electron User vol. 4"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Electron User vol. 5"
       }
     ]
   },
@@ -1475,6 +1717,28 @@
         "file": "gear-1.webp",
         "name": "FM-NEW7"
       }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Oh!FM vol. 2"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Oh!FM Winter 1983"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Oh!FM 12/85"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Oh!FM vol. 3"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Oh!FM 9/84"
+      }
     ]
   },
   "fmtowns": {
@@ -1501,6 +1765,24 @@
       {
         "file": "gear-3.webp",
         "name": "FM Towns II"
+      }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Oh!FM 9/89"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Oh!FM 12/88"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Comptiq 9/90"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "POPCOM 7/89"
       }
     ]
   },
@@ -2256,6 +2538,28 @@
         "file": "gear-4.webp",
         "name": "Mouse"
       }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Macworld 5/92"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "MacAddict #89"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Macworld 3/96"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Macworld 6/95"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Macworld 12/07"
+      }
     ]
   },
   "mame": {
@@ -2501,6 +2805,18 @@
       {
         "file": "mag-2.webp",
         "title": "MSX User"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "MSX User #1"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "MSX Magazine"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "MSX Magazine 7/92"
       }
     ],
     "peripherals": [
@@ -2534,6 +2850,18 @@
       {
         "file": "mag-2.webp",
         "title": "MSX User"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "MSX・FAN 8/92"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "MSX・FAN 10/93"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "MSX Computer Magazine"
       }
     ],
     "peripherals": [
@@ -2638,6 +2966,24 @@
       {
         "file": "gear-2.webp",
         "name": "MZ-80K"
+      }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Oh!MZ 7/86"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Oh!MZ 12/86"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Oh!MZ 1/85"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Oh!MZ 1984"
       }
     ]
   },
@@ -3157,6 +3503,20 @@
         "file": "gear-3.webp",
         "name": "Microdisc drive"
       }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Théoric #1"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Oric Owner #5"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Théoric #11"
+      }
     ]
   },
   "pc60": {
@@ -3190,6 +3550,28 @@
         "file": "gear-3.webp",
         "name": "8-inch floppy drive"
       }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "LOGiN 10/84"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "LOGiN 1/87"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "POPCOM 9/87"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "POPCOM 5/83"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "LOGiN 8/85"
+      }
     ]
   },
   "pc98": {
@@ -3208,6 +3590,28 @@
       {
         "file": "gear-3.webp",
         "name": "PC-9801RX"
+      }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Oh!PC #136"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Oh!PC #127"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Oh!PC #129"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Oh!PC #116"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Comptiq 12/90"
       }
     ]
   },
@@ -3357,6 +3761,24 @@
       {
         "file": "gear-3.webp",
         "name": "CBM 4032"
+      }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Commodore Magazine #1"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Commodore Magazine #5"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Commodore Computing 2/84"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Commodore Computing 9/84"
       }
     ]
   },
@@ -3659,6 +4081,28 @@
         "file": "gear-2.webp",
         "name": "In its box"
       }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Sinclair & SAM Computing #1"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Sinclair & SAM Computing #3"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Sinclair & SAM Computing #5"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Format 4/93"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Format 7/93"
+      }
     ]
   },
   "satellaview": {
@@ -3780,6 +4224,28 @@
       {
         "file": "gear-3.webp",
         "name": "Cartridge"
+      }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Sega Computer 7/84"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Sega Computer 6/85"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Sega Computer 4/86"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Sega Computer 10/86"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Sega Computer 11/84"
       }
     ]
   },
@@ -4139,6 +4605,20 @@
         "file": "gear-4.webp",
         "name": "SV-328"
       }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "SVI & MSX Newsletter"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Radio Amateur Magazine"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Spectravideo News Letter"
+      }
     ]
   },
   "sufami": {
@@ -4294,6 +4774,28 @@
         "file": "gear-2.webp",
         "name": "Joysticks"
       }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "99'er 4/83"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Home Computer Magazine"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Home Computer 6/84"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "99'er"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "MICROpendium 7/89"
+      }
     ]
   },
   "tic80": {
@@ -4341,6 +4843,28 @@
       {
         "file": "gear-4.webp",
         "name": "Model 100"
+      }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "SoftSide #25"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "SoftSide #35"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "SoftSide #47"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "SoftSide #51"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "SoftSide #53"
       }
     ]
   },
@@ -4693,6 +5217,24 @@
     "kind": "cutout",
     "consoleHues": [
       1
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "Oh!MZ 9/84"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Oh!MZ 9/86"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Oh!MZ 9/87"
+      },
+      {
+        "file": "mag-4.webp",
+        "title": "Oh!MZ 6/86"
+      }
     ]
   },
   "x68000": {
@@ -4718,6 +5260,10 @@
       {
         "file": "mag-4.webp",
         "title": "Oh! X '93"
+      },
+      {
+        "file": "mag-5.webp",
+        "title": "Oh!X 4/89"
       }
     ],
     "peripherals": [
@@ -4823,6 +5369,20 @@
       {
         "file": "gear-3.webp",
         "name": "Timex Sinclair 1000"
+      }
+    ],
+    "magazines": [
+      {
+        "file": "mag-1.webp",
+        "title": "ZX Computing"
+      },
+      {
+        "file": "mag-2.webp",
+        "title": "Sinclair User Annual 1982"
+      },
+      {
+        "file": "mag-3.webp",
+        "title": "Timex Sinclair User"
       }
     ]
   },
