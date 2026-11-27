@@ -21,7 +21,10 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SYSTEMS = join(ROOT, 'public', 'systems');
 const ART = join(SYSTEMS, 'art.json');
 const MASKS = join(ROOT, 'scripts', 'peripheral-masks');
-const UA = { 'User-Agent': 'forma-theme-cyber build script' };
+/** Wikimedia throttles clients that do not say who they are. */
+const UA = {
+  'User-Agent': 'forma-theme-cyber/1.0 (https://github.com/RAMRaiders/forma-theme-cyber)'
+};
 /** Shown about 4.4rem tall: twice that at 1080p. */
 const HEIGHT = 220;
 /** How close to white the background is, 0–255 per channel. */
@@ -29,9 +32,13 @@ const WHITE = 232;
 
 async function get(url, tries = 5) {
   for (let i = 0; ; i++) {
-    const res = await fetch(url, { headers: UA });
-    if (res.ok) return res;
-    if (i + 1 >= tries || (res.status !== 429 && res.status < 500)) {
+    // A dropped connection is retried like a busy server.
+    const res = await fetch(url, { headers: UA }).catch((e) => {
+      if (i + 1 >= tries) throw e;
+      return null;
+    });
+    if (res?.ok) return res;
+    if (res && (i + 1 >= tries || (res.status !== 429 && res.status < 500))) {
       throw new Error(`${res.status} ${url}`);
     }
     await new Promise((r) => setTimeout(r, 5000 * 2 ** i));

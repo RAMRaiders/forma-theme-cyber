@@ -1,7 +1,13 @@
 {
   "curiosities": [
     "It has a C64 mode that runs almost all Commodore 64 software.",
-    "A second processor, a Z80, gives it a third mode that runs CP/M."
+    "A second processor, a Z80, gives it a third mode that runs CP/M.",
+    "It launched in 1985.",
+    "It has 128 KB of memory.",
+    "Its VDC chip shows 80 columns of text on a monitor.",
+    "Its main processor is an 8502, which runs at up to 2 MHz.",
+    "Bil Herd led its design.",
+    "The C128D has the disk drive built into the case."
   ],
   "unverified": [],
   "bestsellers": ["Beyond Zork", "A Mind Forever Voyaging", "Elite"],

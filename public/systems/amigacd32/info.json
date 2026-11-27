@@ -2,7 +2,14 @@
   "curiosities": [
     "Commodore promoted it as the first 32-bit CD console in Europe.",
     "It is built on the same AGA chipset as the Amiga 1200.",
-    "The SX-1 and SX32 add-ons turned it into an Amiga computer with a keyboard and drive ports."
+    "The SX-1 and SX32 add-ons turned it into an Amiga computer with a keyboard and drive ports.",
+    "It launched in September 1993.",
+    "Its processor is a 68EC020 at 14 MHz, with 2 MB of memory.",
+    "Its Akiko chip runs the CD drive and speeds up 3D drawing.",
+    "Its controller has seven buttons.",
+    "An add-on module let it play Video CD films.",
+    "A patent dispute kept it out of the US, and Commodore went bankrupt in 1994.",
+    "Games save to 1 KB of memory built in."
   ],
   "unverified": [],
   "bestsellers": ["Akira", "Banshee", "The Chaos Engine"],

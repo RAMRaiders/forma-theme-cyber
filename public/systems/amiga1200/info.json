@@ -42,7 +42,14 @@
     "The Amiga CD32 console was built on essentially the same AGA hardware.",
     "It has a PCMCIA Type II slot on its side, used for RAM cards and network adapters.",
     "After Commodore's 1994 bankruptcy, the German company Escom bought the Amiga rights and put the A1200 back into production.",
-    "Its HAM8 mode can show up to 262,144 colours on screen at once."
+    "Its HAM8 mode can show up to 262,144 colours on screen at once.",
+    "It launched in October 1992.",
+    "Its processor is a Motorola 68EC020 at 14 MHz.",
+    "It has 2 MB of chip memory.",
+    "Its AGA chips choose colours from a palette of 16.7 million.",
+    "It has a connector inside for a 2.5-inch hard drive.",
+    "A trapdoor slot underneath takes accelerator cards.",
+    "It came with Kickstart and Workbench 3.0."
   ],
   "unverified": [],
   "bestsellers": ["Agony", "Lemmings", "Lotus Turbo Challenge 2"],

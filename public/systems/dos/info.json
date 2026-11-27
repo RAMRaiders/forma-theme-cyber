@@ -3,7 +3,13 @@
     "Many DOS games asked for a Sound Blaster's port, IRQ and DMA settings before they would play a sound.",
     "Commander Keen brought smooth side-scrolling to the PC with a technique called adaptive tile refresh.",
     "Doom was released as shareware in December 1993, its first episode free to copy.",
-    "Some games were copy-protected with questions from the manual or code wheels in the box."
+    "Some games were copy-protected with questions from the manual or code wheels in the box.",
+    "MS-DOS began as 86-DOS, which Microsoft bought from Seattle Computer Products.",
+    "It shipped with the IBM PC in 1981 as PC DOS.",
+    "Programs had 640 KB of conventional memory to work in.",
+    "The AdLib card of 1987 brought FM music to PC games, and the Sound Blaster of 1989 digital sound too.",
+    "VGA's mode 13h, 320 × 200 in 256 colours, was the standard for games of the early 1990s.",
+    "id Software's Wolfenstein 3D came out in 1992."
   ],
   "unverified": [],
   "bestsellers": ["DOOM", "DOOM II", "Duke Nukem 3D"],

@@ -81,6 +81,24 @@
     {
       "file": "Hori-Nintendo-GameCube-Controller-FL.jpg",
       "name": "Hori controller"
+    },
+    {
+      "file": "GameCube controller.png",
+      "name": "Controller"
+    },
+    {
+      "file": "Nintendo GameCube memory card.png",
+      "name": "Memory Card"
+    },
+    {
+      "file": "Nintendo-GameCube-Broadband-Adapter-01.jpg",
+      "name": "Broadband Adapter"
+    },
+    {
+      "file": "DK-Bongos.JPG",
+      "name": "DK Bongos",
+      "mask": true,
+      "largest": true
     }
   ],
   "megadrive": [
@@ -234,6 +252,10 @@
     {
       "file": "PS2-8MB-Mem-Card.jpg",
       "name": "8 MB Memory Card"
+    },
+    {
+      "file": "Sony-PlayStation-2-Hard-Drive-wNetwork-Adaptor.jpg",
+      "name": "Hard drive and Network Adaptor"
     }
   ],
   "gb": [
@@ -244,6 +266,18 @@
     {
       "file": "Nintendo-Game-Boy-Link-Cable-Dual.jpg",
       "name": "Link Cable"
+    },
+    {
+      "file": "Game Boy Printer.jpg",
+      "name": "Game Boy Printer"
+    },
+    {
+      "file": "Game-Boy-Pocket-FL.jpg",
+      "name": "Game Boy Pocket"
+    },
+    {
+      "file": "Game-Boy-Light-FL.jpg",
+      "name": "Game Boy Light"
     }
   ],
   "gba": [
@@ -282,6 +316,12 @@
     {
       "file": "Sega-Game-Gear-wTv-Tuner.jpg",
       "name": "TV Tuner"
+    },
+    {
+      "file": "Sega Game Gear (13334167513).jpg",
+      "name": "In white",
+      "mask": true,
+      "largest": true
     }
   ],
   "atari2600": [
@@ -332,6 +372,10 @@
     {
       "file": "Neo-Geo-Memory-Card.jpg",
       "name": "Memory Card"
+    },
+    {
+      "file": "Neo-Geo-Advanced-Controller.jpg",
+      "name": "Advanced controller"
     }
   ],
   "neogeocd": [
@@ -342,6 +386,22 @@
     {
       "file": "Neo-Geo-AES-Controller-FL.jpg",
       "name": "AES joystick"
+    },
+    {
+      "file": "Neo-Geo-CD-TL-FL.jpg",
+      "name": "Top-loader",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Neo-Geo-CD-FrontLoader-wController-FL.jpg",
+      "name": "Front-loader",
+      "mask": true,
+      "largest": false
+    },
+    {
+      "file": "Neo-Geo-CDZ-FL.jpg",
+      "name": "CDZ"
     }
   ],
   "3do": [
@@ -352,6 +412,18 @@
     {
       "file": "Capcom-3DO-Fighting-Controller.jpg",
       "name": "Capcom fighting pad"
+    },
+    {
+      "file": "3DO-101M-Controller.jpg",
+      "name": "GoldStar controller"
+    },
+    {
+      "file": "3DO-Goldstar-Console-FR.jpg",
+      "name": "GoldStar 3DO"
+    },
+    {
+      "file": "3DO-FZ-10-Console-FL.jpg",
+      "name": "Panasonic FZ-10"
     }
   ],
   "pcengine": [
@@ -384,12 +456,34 @@
     {
       "file": "NEC-TurboGrafx-16-Controller-FL.jpg",
       "name": "TurboPad"
+    },
+    {
+      "file": "PC-Engine-Duo-Console-Set.jpg",
+      "name": "PC Engine Duo",
+      "holes": true
+    },
+    {
+      "file": "PC-Engine-Duo-R.jpg",
+      "name": "Duo-R"
+    },
+    {
+      "file": "TurboDuo-Console-Set.jpg",
+      "name": "TurboDuo",
+      "holes": true
     }
   ],
   "intellivision": [
     {
       "file": "Intellivision-Controller.jpg",
       "name": "Controller"
+    },
+    {
+      "file": "Intellivision-II-Console-Set.jpg",
+      "name": "Intellivision II"
+    },
+    {
+      "file": "Intellivoice.jpg",
+      "name": "Intellivoice"
     }
   ],
   "colecovision": [
@@ -422,6 +516,16 @@
     {
       "file": "GCE-Vectrex-Controller-FL.jpg",
       "name": "Control panel"
+    },
+    {
+      "file": "Vectrex-Overlay.jpg",
+      "name": "Overlay and cartridge"
+    },
+    {
+      "file": "Vectrex controller MB.jpg",
+      "name": "Milton Bradley controller",
+      "mask": true,
+      "largest": true
     }
   ],
   "c64": [
@@ -539,6 +643,10 @@
     {
       "file": "Atari-Lynx-Cig-Lighter-Adapter.jpg",
       "name": "Car Adapter"
+    },
+    {
+      "file": "Atari-Lynx-II-Handheld-Angled.jpg",
+      "name": "Lynx II"
     }
   ],
   "jaguarcd": [
@@ -597,6 +705,364 @@
       "name": "On a Mega Drive",
       "mask": true,
       "largest": true
+    }
+  ],
+  "gbc": [
+    {
+      "file": "Nintendo-Game-Boy-Color-FL.jpg",
+      "name": "Game Boy Color"
+    },
+    {
+      "file": "Game-Boy-Color-Yellow.jpg",
+      "name": "In yellow"
+    },
+    {
+      "file": "Game Boy Camera 7996.jpg",
+      "name": "With the Game Boy Camera"
+    },
+    {
+      "file": "Game Boy Color Pikachu.jpg",
+      "name": "Pikachu edition",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "wii": [
+    {
+      "file": "Nintendo-Wii-Remote-wNunchuk.jpg",
+      "name": "Wii Remote and Nunchuk"
+    },
+    {
+      "file": "Wii Remote with MotionPlus.jpg",
+      "name": "With MotionPlus",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Wii-Classic-Controller-White.jpg",
+      "name": "Classic Controller",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Wii Balance Board transparent.png",
+      "name": "Balance Board"
+    },
+    {
+      "file": "Wii Zapper.jpg",
+      "name": "Wii Zapper",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "wiiu": [
+    {
+      "file": "Wii U Gamepad schwarz transparent.png",
+      "name": "GamePad"
+    },
+    {
+      "file": "Nintendo-Wii-U-Pro-Controller-Black.jpg",
+      "name": "Pro Controller"
+    },
+    {
+      "file": "Wii U \"Wind Waker\" edition GamePad and Console sitting together.jpg",
+      "name": "Zelda edition"
+    }
+  ],
+  "switch": [
+    {
+      "file": "Nintendo Switch Joy-Con Controllers.png",
+      "name": "Joy-Con"
+    },
+    {
+      "file": "Nintendo-Switch-Pro-Controller-FL.jpg",
+      "name": "Pro Controller"
+    },
+    {
+      "file": "Nintendo-Switch-Console-Docked-wJoyConRB.jpg",
+      "name": "Docked"
+    },
+    {
+      "file": "Nintendo-Switch-OLED-Docked.jpg",
+      "name": "OLED model"
+    },
+    {
+      "file": "Nintendo Switch Lite Grey - 01.jpg",
+      "name": "Switch Lite",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "nds": [
+    {
+      "file": "Nintendo-DS-Lite-Black-Open.jpg",
+      "name": "DS Lite"
+    },
+    {
+      "file": "Nintendo-DSi-Bl-Open.jpg",
+      "name": "DSi"
+    },
+    {
+      "file": "Nintendo-DSi-XL-Burg.jpg",
+      "name": "DSi XL"
+    },
+    {
+      "file": "Nintendo-DS Rumble Pack.png",
+      "name": "Rumble Pak"
+    }
+  ],
+  "3ds": [
+    {
+      "file": "Nintendo-3DS-XL-angled.jpg",
+      "name": "3DS XL"
+    },
+    {
+      "file": "New Nintendo 3DS.png",
+      "name": "New Nintendo 3DS"
+    },
+    {
+      "file": "Nintendo-2DS-angle.jpg",
+      "name": "Nintendo 2DS"
+    },
+    {
+      "file": "New Nintendo 2DS LL (White & Orange).png",
+      "name": "New 2DS XL"
+    },
+    {
+      "file": "3DS Circle Pad Pro.JPG",
+      "name": "Circle Pad Pro",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "ps3": [
+    {
+      "file": "PlayStation3-Sixaxis.jpg",
+      "name": "Sixaxis"
+    },
+    {
+      "file": "Sony-PlayStation-Move-Controller.jpg",
+      "name": "Move"
+    },
+    {
+      "file": "Sony-PlayStation-Move-Navigator.jpg",
+      "name": "Move Navigation"
+    },
+    {
+      "file": "Sony-PlayStation-3-Eye.jpg",
+      "name": "PlayStation Eye"
+    },
+    {
+      "file": "Sony BD Remote Control for PlayStation 3 CECH-ZRC1J.jpg",
+      "name": "Blu-ray remote"
+    }
+  ],
+  "ps4": [
+    {
+      "file": "DualShock 4.jpg",
+      "name": "DualShock 4"
+    },
+    {
+      "file": "Sony-PlayStation-4-PSVR-Headset-Mk1-FL.jpg",
+      "name": "PlayStation VR"
+    },
+    {
+      "file": "Sony-PlayStation-4-Camera-Mk1.jpg",
+      "name": "PlayStation Camera"
+    }
+  ],
+  "psp": [
+    {
+      "file": "PSP-Go-FL-Open.jpg",
+      "name": "PSP Go"
+    },
+    {
+      "file": "PSP-2000.jpg",
+      "name": "PSP-2000"
+    },
+    {
+      "file": "PSP-3000-Silver.jpg",
+      "name": "PSP-3000"
+    },
+    {
+      "file": "Universal Media Disc, an optical disc medium developed by Sony for use on the PlayStation Portable.jpg",
+      "name": "UMD",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "psvita": [
+    {
+      "file": "PlayStation-Vita-2001-FL.jpg",
+      "name": "Slim model"
+    },
+    {
+      "file": "PlayStation-TV-BL.jpg",
+      "name": "PlayStation TV"
+    },
+    {
+      "file": "Sony Playstation Vita Memory Card 16GB.jpg",
+      "name": "Memory card"
+    }
+  ],
+  "xbox": [
+    {
+      "file": "Xbox-Controller-Duke-FL.jpg",
+      "name": "Duke controller"
+    },
+    {
+      "file": "Xbox-Controller-S-FR.jpg",
+      "name": "Controller S"
+    },
+    {
+      "file": "Xbox-Remote-wReceiver.jpg",
+      "name": "DVD remote"
+    }
+  ],
+  "xbox360": [
+    {
+      "file": "Xbox-360-Wireless-Controller-White.jpg",
+      "name": "Wireless controller"
+    },
+    {
+      "file": "Xbox-360-Kinect-Standalone.png",
+      "name": "Kinect"
+    },
+    {
+      "file": "Microsoft-Xbox-360-HD-DVD-Drive-Front.jpg",
+      "name": "HD DVD drive",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Big button remotes.JPG",
+      "name": "Big Button pads",
+      "mask": true
+    },
+    {
+      "file": "Xbox-360S-Console-Set.jpg",
+      "name": "Xbox 360 S"
+    }
+  ],
+  "ngp": [
+    {
+      "file": "Neo-Geo-Pocket-Color-Anthra-Left.jpg",
+      "name": "Its successor, the Color"
+    },
+    {
+      "file": "NeoGeoPocketLinkCable.jpg",
+      "name": "Link cable",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "ngpc": [
+    {
+      "file": "Neo-Geo-Pocket-Color-Blue-Left.jpg",
+      "name": "In blue"
+    },
+    {
+      "file": "Neo-Geo-Pocket-Color-Anthra-Left.jpg",
+      "name": "Carbon"
+    },
+    {
+      "file": "Neo-Geo Pocket Color.JPG",
+      "name": "Platinum silver",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "NeoGeoPocketLinkCable.jpg",
+      "name": "Link cable",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "wswan": [
+    {
+      "file": "WonderSwan-Color-Blue-Left.jpg",
+      "name": "WonderSwan Color"
+    },
+    {
+      "file": "SwanCrystal-Wine-Left.jpg",
+      "name": "SwanCrystal"
+    }
+  ],
+  "wswanc": [
+    {
+      "file": "WonderSwan-Black-Left.jpg",
+      "name": "The first WonderSwan"
+    },
+    {
+      "file": "SwanCrystal-Wine-Left.jpg",
+      "name": "SwanCrystal"
+    },
+    {
+      "file": "WonderSwan-Color-Back-wBattery.jpg",
+      "name": "Its battery"
+    }
+  ],
+  "fds": [
+    {
+      "file": "Nintendo-Famicom-Disk-System.jpg",
+      "name": "On a Famicom"
+    },
+    {
+      "file": "Nintendo-Famicom-Disk-System-Deck-01.jpg",
+      "name": "Disk drive"
+    },
+    {
+      "file": "Nintendo-Famicom-Disk-System-Floppy.jpg",
+      "name": "Disk card"
+    },
+    {
+      "file": "Nintendo-Famicom-Disk-System-RAM-Adapter-3.jpg",
+      "name": "RAM Adapter",
+      "holes": true
+    }
+  ],
+  "supergrafx": [
+    {
+      "file": "NEC-PC-Engine-SuperGrafx-Controller.jpg",
+      "name": "Controller"
+    },
+    {
+      "file": "PCEngine SuperGrafx with SuperCDRom2.jpg",
+      "name": "With the CD-ROM²",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "odyssey2": [
+    {
+      "file": "Videopac G7200.jpg",
+      "name": "Videopac G7200",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Philips Videopac race cartridge N.1.jpg",
+      "name": "Videopac cartridge",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "cdi": [
+    {
+      "file": "Philips-CD-i-Paddle-Controller.jpg",
+      "name": "Paddle controller"
+    },
+    {
+      "file": "Philips-CDi-Controller-Gamepad.jpg",
+      "name": "Gamepad"
+    },
+    {
+      "file": "Philips-CDi-Controller-Rollerball.jpg",
+      "name": "Roller controller"
+    },
+    {
+      "file": "Philips-CDi-Digital-Video-Cartridge-1.jpg",
+      "name": "Digital Video Cartridge"
     }
   ]
 }

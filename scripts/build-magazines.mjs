@@ -20,7 +20,10 @@ import sharp from 'sharp';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SYSTEMS = join(ROOT, 'public', 'systems');
 const ART = join(SYSTEMS, 'art.json');
-const UA = { 'User-Agent': 'forma-theme-cyber build script' };
+/** Wikimedia throttles clients that do not say who they are. */
+const UA = {
+  'User-Agent': 'forma-theme-cyber/1.0 (https://github.com/RAMRaiders/forma-theme-cyber)'
+};
 /** Short names to show, by full title (`Mean Machines Sega #29`); the credits keep the full one. */
 const NAMES = JSON.parse(readFileSync(join(ROOT, 'scripts', 'magazine-names.json'), 'utf8'));
 /** Covers stand about 11rem tall: twice that in pixels at 1080p, for a sharp print. */
