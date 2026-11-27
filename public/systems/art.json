@@ -120,6 +120,12 @@
         "file": "mag-5.webp",
         "title": "CU Amiga #46"
       }
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "With mouse and floppy drive"
+      }
     ]
   },
   "amiga500": {
@@ -132,6 +138,20 @@
     ],
     "consoleHues": [
       205
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Amiga 500 with its monitor"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Mouse"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "Amiga 500 Plus"
+      }
     ]
   },
   "amigacd32": {
@@ -145,6 +165,20 @@
       15,
       55,
       225
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Controller"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Lid open"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "Console"
+      }
     ]
   },
   "amigacdtv": {
@@ -155,6 +189,16 @@
       247,
       281,
       332
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Remote"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Keyboard"
+      }
     ]
   },
   "amstradcpc": {
@@ -185,6 +229,24 @@
         "file": "mag-4.webp",
         "title": "Amstrad Action #64"
       }
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "CPC 6128 with monitor"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "CPC 6128"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "GX4000"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "GX4000 pad"
+      }
     ]
   },
   "apfm1000": {
@@ -207,6 +269,28 @@
     ],
     "consoleHues": [
       36
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Disk II drives"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Paddles"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "Apple IIe"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "Apple IIc with monitor"
+      },
+      {
+        "file": "gear-5.webp",
+        "name": "Apple IIc Plus"
+      }
     ]
   },
   "apple2gs": {
@@ -218,6 +302,20 @@
       66,
       245,
       125
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Apple IIGS"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "ADB mouse"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "Keyboard"
+      }
     ]
   },
   "arcadia": {
@@ -492,6 +590,18 @@
       {
         "file": "gear-1.webp",
         "name": "Mouse"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "With monitor and mouse"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "STE"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "Falcon030"
       }
     ]
   },
@@ -526,6 +636,16 @@
     "kind": "cutout",
     "consoleHues": [
       6
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "BBC Micro Model B"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "BBC Master"
+      }
     ]
   },
   "beena": {
@@ -565,6 +685,24 @@
     ],
     "consoleHues": [
       7
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Commodore 128"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "1084 monitor"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "1571 disk drive"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "Commodore 128D"
+      }
     ]
   },
   "c20": {
@@ -592,6 +730,24 @@
       {
         "file": "mag-3.webp",
         "title": "VIC-20 Reference Guide"
+      }
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "VIC-20"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Datasette"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "RF adapter"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "16K RAM cartridge"
       }
     ]
   },
@@ -789,6 +945,20 @@
       5,
       205,
       125
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Color Computer"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Color Computer 2"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "MC-10"
+      }
     ]
   },
   "colecovision": {
@@ -890,6 +1060,24 @@
         "file": "mag-3.webp",
         "title": "C16-MSX"
       }
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Commodore 16"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Commodore 116"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "1551 disk drive"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "116 with datasette and joystick"
+      }
     ]
   },
   "crvision": {
@@ -954,6 +1142,28 @@
     "hues": [
       45,
       355
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "IBM PC 5150"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Sound Blaster 16"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "AdLib card"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "Gravis PC GamePad"
+      },
+      {
+        "file": "gear-5.webp",
+        "name": "Gravis Destroyer"
+      }
     ]
   },
   "dragon64": {
@@ -964,6 +1174,16 @@
       6,
       55,
       214
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Dragon 32"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Dragon 64"
+      }
     ]
   },
   "dreamcast": {
@@ -1081,6 +1301,16 @@
     ],
     "consoleHues": [
       45
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Acorn Electron"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "With the Plus 1"
+      }
     ]
   },
   "enterprise": {
@@ -1239,6 +1469,12 @@
     ],
     "consoleHues": [
       35
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "FM-NEW7"
+      }
     ]
   },
   "fmtowns": {
@@ -1252,6 +1488,20 @@
     "consoleHues": [
       189,
       96
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "FM Towns Marty"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Marty pad"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "FM Towns II"
+      }
     ]
   },
   "fury": {
@@ -1988,6 +2238,24 @@
       65,
       245,
       125
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Macintosh 128K"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Macintosh Plus"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "Macintosh Classic"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "Mouse"
+      }
     ]
   },
   "mame": {
@@ -2234,6 +2502,24 @@
         "file": "mag-2.webp",
         "title": "MSX User"
       }
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Sony HitBit HB-10P"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Philips VG-8020"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "Talent DPC-200"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "Arcade Turbo joystick"
+      }
     ]
   },
   "msx2": {
@@ -2248,6 +2534,16 @@
       {
         "file": "mag-2.webp",
         "title": "MSX User"
+      }
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Panasonic FS-A1WX"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Panasonic FS-A1"
       }
     ]
   },
@@ -2274,6 +2570,12 @@
       {
         "file": "mag-4.webp",
         "title": "MSX Magazine Revival 2"
+      }
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Panasonic FS-A1WSX"
       }
     ]
   },
@@ -2327,6 +2629,16 @@
     "kind": "cutout",
     "consoleHues": [
       25
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "MZ-700"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "MZ-80K"
+      }
     ]
   },
   "mz800": {
@@ -2831,6 +3143,20 @@
     ],
     "consoleHues": [
       4
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Oric-1"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Oric Atmos"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "Microdisc drive"
+      }
     ]
   },
   "pc60": {
@@ -2850,12 +3176,40 @@
   "pc88": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Its predecessor, the PC-8001"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "PC-8801"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "8-inch floppy drive"
+      }
+    ]
   },
   "pc98": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Keyboard"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "PC-9821Ap"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "PC-9801RX"
+      }
+    ]
   },
   "pcengine": {
     "logo": "logo.webp",
@@ -2990,7 +3344,21 @@
   "pet": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "PET 2001"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "CBM 4040 disk drive"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "CBM 4032"
+      }
+    ]
   },
   "pico": {
     "logo": "logo.webp",
@@ -3281,6 +3649,16 @@
     "kind": "cutout",
     "hues": [
       225
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "SAM Coupé"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "In its box"
+      }
     ]
   },
   "satellaview": {
@@ -3389,6 +3767,20 @@
     "consoleHues": [
       45,
       205
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "SC-3000"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Its console twin, the SG-1000"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "Cartridge"
+      }
     ]
   },
   "scummvm": {
@@ -3729,6 +4121,24 @@
     ],
     "consoleHues": [
       5
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "SV-318"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Tape drive"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "Disk drive"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "SV-328"
+      }
     ]
   },
   "sufami": {
@@ -3851,12 +4261,40 @@
   "thomson": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "MO5"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "MO5 tape recorder"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "TO7"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "MO6"
+      }
+    ]
   },
   "ti99": {
     "logo": "logo.webp",
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "TI-99/4A"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Joysticks"
+      }
+    ]
   },
   "tic80": {
     "logo": "logo.webp",
@@ -3886,7 +4324,25 @@
     "logo": "logo.webp",
     "logoDark": true,
     "picture": "photo.webp",
-    "kind": "cutout"
+    "kind": "cutout",
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "Model I"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Model III"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "Model 4"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "Model 100"
+      }
+    ]
   },
   "tutor": {
     "logo": "logo.webp",
@@ -4263,6 +4719,16 @@
         "file": "mag-4.webp",
         "title": "Oh! X '93"
       }
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "X68030 and X68000 EXPERT"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "EXPERT II with monitor"
+      }
     ]
   },
   "xegs": {
@@ -4344,6 +4810,20 @@
       5,
       205,
       145
+    ],
+    "peripherals": [
+      {
+        "file": "gear-1.webp",
+        "name": "ZX81"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "ZX Printer"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "Timex Sinclair 1000"
+      }
     ]
   },
   "zxspectrum": {
@@ -4383,6 +4863,18 @@
       {
         "file": "gear-1.webp",
         "name": "ZX Printer"
+      },
+      {
+        "file": "gear-2.webp",
+        "name": "Spectrum 128"
+      },
+      {
+        "file": "gear-3.webp",
+        "name": "Spectrum +2"
+      },
+      {
+        "file": "gear-4.webp",
+        "name": "Spectrum +3"
       }
     ]
   },

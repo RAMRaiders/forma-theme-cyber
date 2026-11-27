@@ -565,6 +565,18 @@
     {
       "file": "Sinclair.zx.thermal.printer.jpg",
       "name": "ZX Printer"
+    },
+    {
+      "file": "ZX Spectrum128K.jpg",
+      "name": "Spectrum 128"
+    },
+    {
+      "file": "ZX Spectrum Plus2 (retouched).jpg",
+      "name": "Spectrum +2"
+    },
+    {
+      "file": "ZX Spectrum Plus3.jpeg",
+      "name": "Spectrum +3"
     }
   ],
   "atari5200": [
@@ -629,6 +641,22 @@
       "name": "Mouse",
       "limit": 190,
       "holes": true
+    },
+    {
+      "file": "Atari 1040STf.jpg",
+      "name": "With monitor and mouse"
+    },
+    {
+      "file": "Atari 1040 STE.jpg",
+      "name": "STE",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Atari Falcon030 LHmod.jpg",
+      "name": "Falcon030",
+      "mask": true,
+      "largest": true
     }
   ],
   "lynx": [
@@ -1063,6 +1091,545 @@
     {
       "file": "Philips-CDi-Digital-Video-Cartridge-1.jpg",
       "name": "Digital Video Cartridge"
+    }
+  ],
+  "amiga500": [
+    {
+      "file": "Amiga500 system.jpg",
+      "name": "Amiga 500 with its monitor"
+    },
+    {
+      "file": "Commodore Amiga Mouse.jpg",
+      "name": "Mouse"
+    },
+    {
+      "file": "Amiga 500 Plus (transparent background) (no shadow).png",
+      "name": "Amiga 500 Plus"
+    }
+  ],
+  "amiga1200": [
+    {
+      "file": "Amiga 1200 with mouse, drives.jpg",
+      "name": "With mouse and floppy drive"
+    }
+  ],
+  "amigacd32": [
+    {
+      "file": "Amiga-CD32-Controller-L.jpg",
+      "name": "Controller"
+    },
+    {
+      "file": "Amiga-CD32-CD-Flap-Open.jpg",
+      "name": "Lid open"
+    },
+    {
+      "file": "Amiga-CD32-HFR.jpg",
+      "name": "Console"
+    }
+  ],
+  "amigacdtv": [
+    {
+      "file": "CDTV Remote.jpg",
+      "name": "Remote",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Commodore CDTV - keyboard top.JPG",
+      "name": "Keyboard"
+    }
+  ],
+  "amstradcpc": [
+    {
+      "file": "Amstrad CPC 6128.jpg",
+      "name": "CPC 6128 with monitor"
+    },
+    {
+      "file": "AMSTRAD CPC 6128.jpg",
+      "name": "CPC 6128",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Amstrad-GX4000-Console-FL.jpg",
+      "name": "GX4000"
+    },
+    {
+      "file": "Amstrad-GX4000-Controller-FL.jpg",
+      "name": "GX4000 pad"
+    }
+  ],
+  "apple2": [
+    {
+      "file": "Disk II.jpg",
+      "name": "Disk II drives"
+    },
+    {
+      "file": "Apple2paddles.jpg",
+      "name": "Paddles",
+      "mask": true
+    },
+    {
+      "file": "Apple Platinum IIe.jpg",
+      "name": "Apple IIe",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Apple IIc with monitor.jpg",
+      "name": "Apple IIc with monitor",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Apple IIc Plus (side).jpg",
+      "name": "Apple IIc Plus"
+    }
+  ],
+  "apple2gs": [
+    {
+      "file": "Apple IIgs 001 (transparent background).png",
+      "name": "Apple IIGS"
+    },
+    {
+      "file": "Apple Desktop Bus Mouse -- side.jpg",
+      "name": "ADB mouse",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Apple IIgs Keyboard B.jpg",
+      "name": "Keyboard",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "msx1": [
+    {
+      "file": "Sony HitBit HB-10P (White Background).jpg",
+      "name": "Sony HitBit HB-10P"
+    },
+    {
+      "file": "MSX Philips VG8020.jpg",
+      "name": "Philips VG-8020",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Talent MSX (restore).jpg",
+      "name": "Talent DPC-200",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "The Arcade Turbo Joystick Transparant.png",
+      "name": "Arcade Turbo joystick"
+    }
+  ],
+  "msx2": [
+    {
+      "file": "MSX FS-A1WX.JPG",
+      "name": "Panasonic FS-A1WX"
+    },
+    {
+      "file": "Panasonic FS-A1 20180519a.jpg",
+      "name": "Panasonic FS-A1",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "msx2+": [
+    {
+      "file": "Fs-a1wsx msx2+.jpg",
+      "name": "Panasonic FS-A1WSX",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "zx81": [
+    {
+      "file": "ZX81-IMG 0307 A.JPG",
+      "name": "ZX81"
+    },
+    {
+      "file": "Sinclair.zx.thermal.printer.jpg",
+      "name": "ZX Printer"
+    },
+    {
+      "file": "Timex Sinclair 1000 FL.jpg",
+      "name": "Timex Sinclair 1000"
+    }
+  ],
+  "bbcmicro": [
+    {
+      "file": "BBC Micro Front Restored.jpg",
+      "name": "BBC Micro Model B"
+    },
+    {
+      "file": "Acorn BBC Master Series Transparent.png",
+      "name": "BBC Master"
+    }
+  ],
+  "electron": [
+    {
+      "file": "Acorn Electron 2.jpg",
+      "name": "Acorn Electron"
+    },
+    {
+      "file": "Acorn Electron and Plus 1.jpg",
+      "name": "With the Plus 1"
+    }
+  ],
+  "c20": [
+    {
+      "file": "Commodore-VIC-20-FL.png",
+      "name": "VIC-20"
+    },
+    {
+      "file": "Commodore-Datasette-C2N-Mk1-Front.jpg",
+      "name": "Datasette"
+    },
+    {
+      "file": "Commodore-VIC-20-Video-RF-Adapter.jpg",
+      "name": "RF adapter"
+    },
+    {
+      "file": "4851 - VIC-1111 16K RAM For VIC-20.JPG",
+      "name": "16K RAM cartridge",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "c128": [
+    {
+      "file": "Commodore-128.jpg",
+      "name": "Commodore 128"
+    },
+    {
+      "file": "Commodore1084 first version front.jpg",
+      "name": "1084 monitor"
+    },
+    {
+      "file": "Commodore 1571.png",
+      "name": "1571 disk drive",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Commodore 128D-IMG 1726.jpg",
+      "name": "Commodore 128D",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "cplus4": [
+    {
+      "file": "Commodore 16 002f.jpg",
+      "name": "Commodore 16"
+    },
+    {
+      "file": "Commodore 116 Conté (transparent bg) (no shadow).png",
+      "name": "Commodore 116"
+    },
+    {
+      "file": "Commodore 1551 front.jpg",
+      "name": "1551 disk drive"
+    },
+    {
+      "file": "Commodore 116 system with Datassette 1531 and joystick.jpg",
+      "name": "116 with datasette and joystick",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "pet": [
+    {
+      "file": "Commodore 2001 Series-IMG 0448b.png",
+      "name": "PET 2001"
+    },
+    {
+      "file": "Commodore4040.jpg",
+      "name": "CBM 4040 disk drive",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Commodore 4032.jpg",
+      "name": "CBM 4032",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "x68000": [
+    {
+      "file": "Sharp X68030 and X68000 Expert.jpg",
+      "name": "X68030 and X68000 EXPERT"
+    },
+    {
+      "file": "X68000 EXPERT2.JPG",
+      "name": "EXPERT II with monitor",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "pc88": [
+    {
+      "file": "NEC PC-8001.png",
+      "name": "Its predecessor, the PC-8001"
+    },
+    {
+      "file": "NEC PC-8801 with keyboard.jpg",
+      "name": "PC-8801",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "NEC PC-8881 8-inch Floppy Disk Drive.jpg",
+      "name": "8-inch floppy drive",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "pc98": [
+    {
+      "file": "NEC PC-9800 series keyboard.jpg",
+      "name": "Keyboard"
+    },
+    {
+      "file": "NEC PC-9821Ap 5-inch FDD model.jpg",
+      "name": "PC-9821Ap",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "NEC PC-9801 RX Personal Computer.jpg",
+      "name": "PC-9801RX",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "fmtowns": [
+    {
+      "file": "FM-Towns-Marty-Console-Set.png",
+      "name": "FM Towns Marty"
+    },
+    {
+      "file": "FM-Towns-Marty-Controller-L.jpg",
+      "name": "Marty pad"
+    },
+    {
+      "file": "FMTOWNS 2F.jpg",
+      "name": "FM Towns II",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "fm7": [
+    {
+      "file": "FM-New7, May 2013 B.jpg",
+      "name": "FM-NEW7"
+    }
+  ],
+  "dos": [
+    {
+      "file": "IBM PC-IMG 7271.jpg",
+      "name": "IBM PC 5150"
+    },
+    {
+      "file": "Sound Blaster 16.JPG",
+      "name": "Sound Blaster 16"
+    },
+    {
+      "file": "AdLib Music Synthesizer Card.jpg",
+      "name": "AdLib card",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Gravis pc gamepad.jpg",
+      "name": "Gravis PC GamePad",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Gravis Destroyer PC gamepad c 2000 (iii).jpg",
+      "name": "Gravis Destroyer",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "macintosh": [
+    {
+      "file": "Macintosh 128k transparency.png",
+      "name": "Macintosh 128K"
+    },
+    {
+      "file": "Apple Macintosh Plus white background.jpg",
+      "name": "Macintosh Plus"
+    },
+    {
+      "file": "Macintosh classic.jpg",
+      "name": "Macintosh Classic",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Macintosh 128K - Macintosh mouse (3655725631).jpg",
+      "name": "Mouse",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "coco": [
+    {
+      "file": "TRS-80 Color Computer 1 front right.jpg",
+      "name": "Color Computer"
+    },
+    {
+      "file": "TRS-80 Color Computer 2 (PAL) 4x3.jpg",
+      "name": "Color Computer 2",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "TRS-80 MC-10 Microcomputer.jpg",
+      "name": "MC-10",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "dragon64": [
+    {
+      "file": "Dragon 32.jpg",
+      "name": "Dragon 32"
+    },
+    {
+      "file": "Dragon 64 top view black sticker.jpg",
+      "name": "Dragon 64"
+    }
+  ],
+  "ti99": [
+    {
+      "file": "TI-99 4A.JPG",
+      "name": "TI-99/4A",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "TI99-4A Joysticks.jpg",
+      "name": "Joysticks"
+    }
+  ],
+  "trs80": [
+    {
+      "file": "Radio Shack Tandy TRS-80 Model I Microcomputer.JPG",
+      "name": "Model I",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "TRS-80 Model 3 01.jpg",
+      "name": "Model III"
+    },
+    {
+      "file": "Radio Shack TRS-80 Model 4 no background.png",
+      "name": "Model 4"
+    },
+    {
+      "file": "Radio Shack TRS-80 Model 100.jpg",
+      "name": "Model 100",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "oricatmos": [
+    {
+      "file": "Oric1.jpg",
+      "name": "Oric-1"
+    },
+    {
+      "file": "ORIC ATMOS 48k - PERSPECTIVE HD.png",
+      "name": "Oric Atmos"
+    },
+    {
+      "file": "Microdisc.jpg",
+      "name": "Microdisc drive"
+    }
+  ],
+  "samcoupe": [
+    {
+      "file": "SAM Coupé (white bg and shadow).jpg",
+      "name": "SAM Coupé"
+    },
+    {
+      "file": "SAM Coupé - box.jpg",
+      "name": "In its box"
+    }
+  ],
+  "thomson": [
+    {
+      "file": "Thomson MO5-CnAM 437370-IMG 5380-white.jpg",
+      "name": "MO5"
+    },
+    {
+      "file": "MO5 Tape reader.JPG",
+      "name": "MO5 tape recorder"
+    },
+    {
+      "file": "Thomson TO7 Thomas Conté no background.png",
+      "name": "TO7"
+    },
+    {
+      "file": "MO6.jpg",
+      "name": "MO6"
+    }
+  ],
+  "spectravideo": [
+    {
+      "file": "Spectravideo SV-318.jpg",
+      "name": "SV-318",
+      "mask": true,
+      "largest": true
+    },
+    {
+      "file": "Spectravideo SV 904 tape drive.jpg",
+      "name": "Tape drive"
+    },
+    {
+      "file": "Spectravideo SV 902 disc drive.jpg",
+      "name": "Disk drive"
+    },
+    {
+      "file": "SV328.jpg",
+      "name": "SV-328",
+      "mask": true,
+      "largest": true
+    }
+  ],
+  "mz700": [
+    {
+      "file": "Sharp MZ-700.jpg",
+      "name": "MZ-700"
+    },
+    {
+      "file": "Sharp MZ-80K computer.jpg",
+      "name": "MZ-80K"
+    }
+  ],
+  "sc3000": [
+    {
+      "file": "Sega SC-3000 wb (shadow removed version).jpg",
+      "name": "SC-3000"
+    },
+    {
+      "file": "Sega-SG-1000-Console-Set.png",
+      "name": "Its console twin, the SG-1000"
+    },
+    {
+      "file": "Sega SC-3000 and SG-1000 cartridge.jpg",
+      "name": "Cartridge",
+      "mask": true,
+      "largest": true
     }
   ]
 }
